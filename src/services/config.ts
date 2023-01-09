@@ -2,9 +2,9 @@ export type Config = {
     OWNER: string;
     CDN_REPO: string;
     APP_REPO: string;
+    REPO: string;
     clientId: string;
     authUrl: string;
-    REPO: string;
     previewServer: string;
     apiStagingServer: string;
     apiServer: string;
@@ -12,12 +12,12 @@ export type Config = {
 
 export function getConfig(): Config {
     return {
-        OWNER: "isaacphysics",
-        CDN_REPO: "isaac-cdn",
-        APP_REPO: "isaac-react-app",
-        clientId : getEnvVar("REACT_APP_CLIENT_ID") || "",
-        authUrl : getEnvVar("REACT_APP_AUTH_URL") || "",
+        OWNER: getEnvVar("REACT_APP_GITHUB_OWNER") || "isaacphysics",
+        CDN_REPO: getEnvVar("REACT_APP_CDN_REPO") || "isaac-cdn",
+        APP_REPO: getEnvVar("REACT_APP_APP_REPO") || "isaac-react-app",
         REPO: getEnvVar("REACT_APP_CONTENT_REPO") || "isaac-content-2",
+        authUrl : getEnvVar("REACT_APP_AUTH_URL") || "",
+        clientId : getEnvVar("REACT_APP_CLIENT_ID") || "",
         previewServer: getEnvVar("REACT_APP_PREVIEW_HOST") || "http://localhost:3001",
         apiStagingServer: getEnvVar("REACT_APP_API_STAGING_HOST") || "https://staging.isaaccomputerscience.org",
         apiServer: getEnvVar("REACT_APP_API_HOST") || "https://isaaccomputerscience.org",
