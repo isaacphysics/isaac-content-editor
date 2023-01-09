@@ -13,19 +13,17 @@ export function authorizationURL(target: string) {
     return `https://gitHub.com/login/oauth/authorize?scope=repo&client_id=${config.clientId}&redirect_uri=${encodeURIComponent(target)}`;
 }
 
-export async function doAuth(github_code: string) {
+export async function doAuth(code: string) {
     const config = getConfig();
+    const body = {
+      clientId: config.clientId,
+      code: code,
+    }
 
-    const url = `https://editor-auth.isaacphysics.org/_/api/authenticate?auth_code=${
-        // The OAuth proxy expects this format; it doesn't work with the format URLSearchParams produces
-        encodeURIComponent(config.authCode)
-    }&${
-        new URLSearchParams({
-            client_id: config.clientId,
-            github_code
-        })
-    }`;
-    const result = await fetch(url);
+    const result = await fetch(config.authUrl, {
+      method: "POST",
+      body: JSON.stringify(body)
+    });
 
     return result.json();
 }

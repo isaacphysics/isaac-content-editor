@@ -3,7 +3,7 @@ export type Config = {
     CDN_REPO: string;
     APP_REPO: string;
     clientId: string;
-    authCode: string;
+    authUrl: string;
     REPO: string;
     previewServer: string;
     apiStagingServer: string;
@@ -16,7 +16,7 @@ export function getConfig(): Config {
         CDN_REPO: "isaac-cdn",
         APP_REPO: "isaac-react-app",
         clientId : getEnvVar("REACT_APP_CLIENT_ID") || "",
-        authCode : getEnvVar("REACT_APP_AUTH_CODE") || "",
+        authUrl : getEnvVar("REACT_APP_AUTH_URL") || "",
         REPO: getEnvVar("REACT_APP_CONTENT_REPO") || "isaac-content-2",
         previewServer: getEnvVar("REACT_APP_PREVIEW_HOST") || "http://localhost:3001",
         apiStagingServer: getEnvVar("REACT_APP_API_STAGING_HOST") || "https://staging.isaaccomputerscience.org",

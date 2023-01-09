@@ -89,7 +89,7 @@ export async function processCode(code: string | null) {
     if (code) {
         // Exchange the code for a token, put that in a cookie
         const result = await doAuth(code);
-        Cookies.set(GITHUB_TOKEN_COOKIE, result.access_token, {
+        Cookies.set(GITHUB_TOKEN_COOKIE, result.accessToken, {
             expires: 7,
             sameSite: "strict",
         });
