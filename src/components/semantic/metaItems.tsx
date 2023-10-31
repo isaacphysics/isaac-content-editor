@@ -71,6 +71,7 @@ export const MetaItems = asMetaItems({
     linkedGameboards: ["Linked gameboards", {presenter: LinkedGameboardsPresenter}],
 
     // Events stuff
+    privateEvent: ["Private Event", { type: "checkbox" }],
     emailEventDetails: ["Email Event Details", {type: "textarea"}],
     emailConfirmedBookingText: ["Email Confirmed Booking Text", {type: "textarea"}],
     emailWaitingListBookingText: ["Email Waiting List Booking Text", {type: "textarea"}],

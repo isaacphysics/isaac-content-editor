@@ -217,7 +217,7 @@ const isaacEventPage: RegistryEntry = {
     ...basePage,
     name: "Event Page",
     headerPresenter: EventPagePresenter,
-    metadata: [...pageMeta, ...pageMetaTail, "emailEventDetails", "emailConfirmedBookingText", "emailWaitingListBookingText", "date", "end_date", "bookingDeadline", "prepWorkDeadline", "numberOfPlaces", "eventStatus", "location", "isaacGroupToken", "reservations", "preResources", "postResources"],
+    metadata: [...pageMeta, ...pageMetaTail, "privateEvent", "emailEventDetails", "emailConfirmedBookingText", "emailWaitingListBookingText", "date", "end_date", "bookingDeadline", "prepWorkDeadline", "numberOfPlaces", "eventStatus", "location", "isaacGroupToken", "reservations", "preResources", "postResources"],
 };
 
 const isaacQuiz: RegistryEntry = {

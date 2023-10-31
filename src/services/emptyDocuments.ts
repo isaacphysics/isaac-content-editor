@@ -134,7 +134,8 @@ const emptyDocuments: Document[] = [
                 postalCode: ""
             }
         },
-        published: false
+        published: false,
+        privateEvent: false
     } as Document,
     {
         type: "emailTemplate",

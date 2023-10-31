@@ -12,13 +12,13 @@ export type Config = {
 
 export function getConfig(): Config {
     return {
-        OWNER: getEnvVar("REACT_APP_GITHUB_OWNER") || "isaacphysics",
+        OWNER: getEnvVar("REACT_APP_GITHUB_OWNER") || "isaaccomputerscience",
         CDN_REPO: getEnvVar("REACT_APP_CDN_REPO") || "isaac-cdn",
         APP_REPO: getEnvVar("REACT_APP_APP_REPO") || "isaac-react-app",
-        REPO: getEnvVar("REACT_APP_CONTENT_REPO") || "isaac-content-2",
+        REPO: getEnvVar("REACT_APP_CONTENT_REPO") || "isaac-content",
         authUrl : getEnvVar("REACT_APP_AUTH_URL") || "",
         clientId : getEnvVar("REACT_APP_CLIENT_ID") || "",
-        previewServer: getEnvVar("REACT_APP_PREVIEW_HOST") || "http://localhost:3001",
+        previewServer: getEnvVar("REACT_APP_PREVIEW_HOST") || "http://localhost:8003",
         apiStagingServer: getEnvVar("REACT_APP_API_STAGING_HOST") || "https://staging.isaaccomputerscience.org",
         apiServer: getEnvVar("REACT_APP_API_HOST") || "https://isaaccomputerscience.org",
     }

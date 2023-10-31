@@ -73,6 +73,7 @@ export interface IsaacEventPage extends Content {
     isaacGroupToken?: string;
     address?: Address;
     endDate?: number;
+    privateEvent?: boolean;
 }
 
 export interface IsaacFastTrackQuestionPage extends IsaacQuestionPage {
