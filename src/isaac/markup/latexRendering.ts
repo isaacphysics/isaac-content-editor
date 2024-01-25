@@ -5,6 +5,7 @@ import katex, { KatexOptions } from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
 import {BooleanNotation, dropZoneRegex, FigureNumberingContext, FigureNumbersById} from "../IsaacTypes";
 import renderA11yString from "../katex-a11y";
+import { isAda, siteSpecific } from "../../services/site";
 
 type MathJaxMacro = string|[string, number];
 
@@ -38,7 +39,7 @@ const BooleanLogicMathsMacros: {[key: string]: MathJaxMacro} = {
     "false": "\\boldsymbol{\\rm{F}}",
     "and": ["{#1} \\land {#2}", 2],
     "or": ["{#1} \\lor {#2}", 2],
-    "not": ["\\lnot{#1}", 1],
+    ...(isAda ? {"not": ["\\lnot{#1}", 1]} : {}),
     "bracketnot": ["\\lnot{(#1)}", 1],
     "xor": ["{#1} \\veebar {#2}", 2],
     "equivalent": "=", // Fall back to equals rather than the more correct "\\equiv"
@@ -57,7 +58,7 @@ const BooleanLogicEngineeringMacros: {[key: string]: MathJaxMacro} = {
     "false" : "0",
     "and" : ["{#1} \\cdot {#2}", 2],
     "or" : ["{#1} + {#2}", 2],
-    "not" : ["\\overline{#1}", 1],
+    ...(isAda ? {"not": ["\\overline{#1}", 1]} : {}),
     "bracketnot" : ["\\overline{#1}", 1], // Don't do anything different to "not" for engineering syntax!
     "xor" : ["{#1} \\oplus {#2}", 2],
     "equivalent" : "=",
