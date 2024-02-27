@@ -15,7 +15,6 @@ function defaultAudience(): AudienceContext {
 type AudienceKey = keyof AudienceContext;
 type AudienceValue = ExtractRecordArrayValue<Required<AudienceContext>>;
 
-const phyStages: Stage[] = ["university", "further_a", "a_level", "gcse", "year_9", "year_7_and_8"];
 const difficulties: Difficulty[] = [
   "practice_1",
   "practice_2",
@@ -50,21 +49,11 @@ const roles: RoleRequirement[] = ["logged_in", "teacher"]; //, "event_leader", "
 
 type Possibilities = Partial<Record<AudienceKey, AudienceValue[]>>;
 function getPossibleFields(type?: string): Possibilities {
-  if (isCS()) {
-    switch (type) {
-      case "accordion":
-        return { stage: csStages, examBoard: csExamBoards, role: roles };
-      default:
-        return { stage: csStages, examBoard: csExamBoards, difficulty: difficulties };
-    }
-  } else {
-    // isPhy OR default
-    switch (type) {
-      case "accordion":
-        return { stage: phyStages };
-      default:
-        return { stage: phyStages, difficulty: difficulties };
-    }
+  switch (type) {
+    case "accordion":
+      return { stage: csStages, examBoard: csExamBoards, role: roles };
+    default:
+      return { stage: csStages, examBoard: csExamBoards, difficulty: difficulties };
   }
 }
 

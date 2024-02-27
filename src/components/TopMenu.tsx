@@ -22,7 +22,6 @@ function getPreviewLink(doc: Content) {
       case "isaacConceptPage":
         return `${StagingServer}/concepts/${doc.id}`;
       case "isaacQuestionPage":
-      case "isaacFastTrackQuestionPage":
         return `${StagingServer}/questions/${doc.id}`;
       case "isaacTopicSummaryPage":
         return `${StagingServer}/topics/${doc.id.slice("topic_summary_".length)}`;

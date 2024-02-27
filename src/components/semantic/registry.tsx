@@ -46,7 +46,6 @@ export type ContentType =
   | "content$tabs"
   | "isaacConceptPage"
   | "isaacQuestionPage"
-  | "isaacFastTrackQuestionPage"
   | "isaacEventPage"
   | "isaacTopicSummaryPage"
   | "isaacPageFragment"
@@ -261,7 +260,6 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
   isaacPageFragment: contentPage,
   isaacConceptPage,
   isaacQuestionPage,
-  isaacFastTrackQuestionPage: isaacQuestionPage,
   isaacEventPage,
   isaacQuiz,
   isaacWildcard,
@@ -271,19 +269,13 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
   content$tabs: tabs,
   hints,
   // Quick questions don't have choices or hints
-  isaacQuestion: {
-    ...question,
-    headerPresenter: QuickQuestionPresenter,
-    footerPresenter: AnswerPresenter,
-  },
+  isaacQuestion: { ...question, headerPresenter: QuickQuestionPresenter, footerPresenter: AnswerPresenter },
   isaacMultiChoiceQuestion: { ...question, headerPresenter: MultipleChoiceQuestionPresenter },
   choice: choice,
   isaacNumericQuestion: { ...question, headerPresenter: NumericQuestionPresenter },
   quantity: choice,
   isaacSymbolicQuestion,
   formula: choice,
-  isaacSymbolicChemistryQuestion: isaacSymbolicQuestion,
-  chemicalFormula: choice,
   isaacSymbolicLogicQuestion: isaacSymbolicQuestion,
   logicFormula: choice,
   isaacStringMatchQuestion,
@@ -292,8 +284,6 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
   freeTextRule: choice,
   isaacRegexMatchQuestion: isaacStringMatchQuestion,
   regexPattern: choice,
-  isaacGraphSketcherQuestion: { ...question, headerPresenter: QuestionMetaPresenter },
-  graphChoice: choice,
   isaacItemQuestion,
   isaacReorderQuestion: isaacItemQuestion,
   isaacParsonsQuestion: isaacItemQuestion,

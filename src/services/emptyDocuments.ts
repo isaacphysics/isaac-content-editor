@@ -23,19 +23,6 @@ const emptyDocuments: Document[] = [
     ],
   } as Document,
   {
-    type: "isaacFastTrackQuestionPage",
-    encoding: "markdown",
-    title: "New FastTrack Question Page",
-    level: 0,
-    children: [
-      {
-        type: "content",
-        encoding: "markdown",
-        value: "Add page content here",
-      },
-    ],
-  } as Document,
-  {
     type: "isaacConceptPage",
     encoding: "markdown",
     title: "New Page",

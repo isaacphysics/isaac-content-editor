@@ -1,20 +1,16 @@
 import React, { MutableRefObject, useContext, useEffect, useRef, useState } from "react";
 import { Alert, Button, Input, Label } from "reactstrap";
 import { InputType } from "reactstrap/lib/Input";
-
 import {
-  ChemicalFormula,
   Choice,
   Formula,
   FreeTextRule,
-  GraphChoice,
   IsaacNumericQuestion,
   ParsonsChoice,
   Quantity,
   RegexPattern,
   StringChoice,
 } from "../../../isaac-data-types";
-
 import {
   BaseValuePresenter,
   buildValuePresenter,
@@ -30,7 +26,6 @@ import { CHOICE_TYPES } from "../ChoiceInserter";
 import { PresenterProps } from "../registry";
 import { ListPresenterProp } from "../props/listProps";
 import { ClozeQuestionContext, ItemsContext } from "./ItemQuestionPresenter";
-
 import styles from "../styles/choice.module.css";
 import { QuestionContext } from "./questionPresenters";
 import { Markup } from "../../../isaac/markup";
@@ -139,30 +134,6 @@ const FormulaPresenter = (props: ValuePresenterProps<Formula>) => {
   );
 };
 
-export const ChemicalFormulaPresenter = buildValuePresenter(
-  function ChemicalFormulaValue({ editing, doc, value }) {
-    if (!editing) {
-      if (doc.mhchemExpression === undefined || doc.mhchemExpression === "") {
-        return (
-          <div>
-            <em>Enter mhchem formula here</em>
-          </div>
-        );
-      } else {
-        return <Markup trusted-markup-encoding="html">{`$\\ce{${doc.mhchemExpression}}$`}</Markup>;
-      }
-    } else {
-      return (
-        <>
-          <LabeledInput value={value} prop="mhchemExpression" label="mhchem formula" className={styles.fullWidth} />
-        </>
-      );
-    }
-  },
-  (doc: ChemicalFormula) => ({ mhchemExpression: doc.mhchemExpression }),
-  ({ mhchemExpression }, doc) => ({ ...doc, mhchemExpression }),
-);
-
 export const StringChoicePresenter = (props: ValuePresenterProps<StringChoice>) => {
   const { valueRef, ...rest } = props;
 
@@ -218,24 +189,6 @@ export const RegexPatternPresenter = (props: ValuePresenterProps<RegexPattern>) 
     </>
   );
 };
-
-export const GraphChoicePresenter = buildValuePresenter(
-  function GraphChoiceValue({ editing, doc, value }) {
-    if (!editing) {
-      if (doc.graphSpec === undefined || doc.graphSpec === "") {
-        return <em>Enter graph spec here</em>;
-      }
-
-      return <pre>{doc.graphSpec}</pre>;
-    } else {
-      return (
-        <LabeledInput value={value} prop="graphSpec" label="Graph spec" type="textarea" className={styles.graphSpec} />
-      );
-    }
-  },
-  (doc: GraphChoice) => ({ graphSpec: doc.graphSpec }),
-  ({ graphSpec }, doc) => ({ ...doc, graphSpec }),
-);
 
 export const ItemChoicePresenter = (props: ValuePresenterProps<ParsonsChoice>) => {
   const { items: maybeItems, withReplacement } = useContext(ItemsContext);
@@ -317,11 +270,9 @@ const CHOICE_REGISTRY: Record<CHOICE_TYPES, ValuePresenter<Choice>> = {
   choice: BaseValuePresenter,
   quantity: QuantityPresenter,
   formula: FormulaPresenter,
-  chemicalFormula: ChemicalFormulaPresenter,
   stringChoice: StringChoicePresenter,
   freeTextRule: FreeTextRulePresenter,
   logicFormula: FormulaPresenter,
-  graphChoice: GraphChoicePresenter,
   regexPattern: RegexPatternPresenter,
   itemChoice: ItemChoicePresenter,
   parsonsChoice: ItemChoicePresenter,

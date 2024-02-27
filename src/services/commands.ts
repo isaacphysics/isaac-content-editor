@@ -59,10 +59,6 @@ async function doNew(context: ContextType<typeof AppContext>, action: ActionFor<
               value: "isaacQuestionPage",
             },
             {
-              caption: "FastTrack Question",
-              value: "isaacFastTrackQuestionPage",
-            },
-            {
               caption: "Concept",
               value: "isaacConceptPage",
             },

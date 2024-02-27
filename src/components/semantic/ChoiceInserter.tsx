@@ -1,7 +1,5 @@
 import React, { FunctionComponent } from "react";
-
 import { Choice, Content } from "../../isaac-data-types";
-
 import { InsertButton, InserterProps } from "./presenters/ListChildrenPresenter";
 import { ContentType } from "./registry";
 
@@ -26,11 +24,9 @@ export type CHOICE_TYPES =
   | "choice"
   | "quantity"
   | "formula"
-  | "chemicalFormula"
   | "stringChoice"
   | "freeTextRule"
   | "logicFormula"
-  | "graphChoice"
   | "regexPattern"
   | "itemChoice"
   | "parsonsChoice";
@@ -39,11 +35,9 @@ const emptyChoices = [
   { ...emptyChoice, type: "choice" },
   { ...emptyChoice, type: "quantity", units: "" },
   { ...emptyChoice, type: "formula", pythonExpression: "", requiresExactMatch: false },
-  { ...emptyChoice, type: "chemicalFormula", mhchemExpression: "" },
   { ...emptyChoice, type: "stringChoice", caseInsensitive: false },
   { ...emptyChoice, type: "freeTextRule", caseInsensitive: true, allowsExtraWords: true },
   { ...emptyChoice, type: "logicFormula", pythonExpression: "", requiresExactMatch: false },
-  { ...emptyChoice, type: "graphChoice", graphSpec: "" },
   { ...emptyChoice, type: "regexPattern", matchWholeString: false, caseInsensitive: false, multiLineRegex: true },
   { ...emptyChoice, type: "itemChoice", children: [] },
   { ...emptyChoice, type: "parsonsChoice", children: [] },

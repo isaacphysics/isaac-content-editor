@@ -27,11 +27,9 @@ export type QUESTION_TYPES =
   | "isaacMultiChoiceQuestion"
   | "isaacNumericQuestion"
   | "isaacSymbolicQuestion"
-  | "isaacSymbolicChemistryQuestion"
   | "isaacStringMatchQuestion"
   | "isaacFreeTextQuestion"
   | "isaacSymbolicLogicQuestion"
-  | "isaacGraphSketcherQuestion"
   | "isaacRegexMatchQuestion"
   | "isaacItemQuestion"
   | "isaacReorderQuestion"
@@ -74,12 +72,6 @@ const QuestionTypes: Record<QUESTION_TYPES, { name: string }> = {
   },
   isaacClozeQuestion: {
     name: "Cloze (Drag and Drop) Question",
-  },
-  isaacSymbolicChemistryQuestion: {
-    name: "Chemistry Question",
-  },
-  isaacGraphSketcherQuestion: {
-    name: "Graph Sketcher Question",
   },
 };
 

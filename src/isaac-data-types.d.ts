@@ -1,5 +1,8 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2022-03-25 13:08:59.
+// Generated using typescript-generator version 2.12.476 on 2024-02-27 14:40:43.
+
+export interface AbstractUserPreferenceManager {
+}
 
 export interface AssignmentDO {
   id?: number;
@@ -7,8 +10,25 @@ export interface AssignmentDO {
   groupId?: number;
   ownerUserId?: number;
   notes?: string;
-  creationDate?: Date;
-  dueDate?: Date;
+  creationDate?: EpochTimeStamp;
+  dueDate?: EpochTimeStamp;
+  scheduledStartDate?: EpochTimeStamp;
+}
+
+export interface AssociationToken {
+  token?: string;
+  ownerUserId?: number;
+  groupId?: number;
+}
+
+export interface AudienceContext {
+  stage?: Stage[];
+  examBoard?: ExamBoard[];
+  difficulty?: Difficulty[];
+  role?: RoleRequirement[];
+}
+
+export interface FormulaValidationResponse extends QuestionValidationResponse {
 }
 
 export interface GameboardContentDescriptor {
@@ -22,12 +42,51 @@ export interface GameboardDO {
   contents?: GameboardContentDescriptor[];
   wildCard?: IsaacWildcard;
   wildCardPosition?: number;
-  creationDate?: Date;
+  creationDate?: EpochTimeStamp;
   gameFilter?: GameFilter;
   ownerUserId?: number;
   creationMethod?: GameboardCreationMethod;
   tags?: string[];
   _id?: string;
+}
+
+export interface GroupMembership {
+  groupId?: number;
+  userId?: number;
+  status?: GroupMembershipStatus;
+  updated?: EpochTimeStamp;
+  created?: EpochTimeStamp;
+}
+
+export interface ITransaction extends AutoCloseable {
+  connection?: any;
+}
+
+export interface IUserAlert {
+  message?: string;
+  id?: number;
+  dismissed?: EpochTimeStamp;
+  seen?: EpochTimeStamp;
+  clicked?: EpochTimeStamp;
+  link?: string;
+  userId?: number;
+  created?: EpochTimeStamp;
+}
+
+export interface IUserAlerts {
+}
+
+export interface IUserNotification {
+  contentNotificationId?: string;
+  status?: NotificationStatus;
+  userId?: number;
+  created?: EpochTimeStamp;
+}
+
+export interface IUserNotifications {
+}
+
+export interface IUserStreaksManager {
 }
 
 export interface IsaacAnvilQuestion extends IsaacQuestionBase {
@@ -37,6 +96,7 @@ export interface IsaacAnvilQuestion extends IsaacQuestionBase {
 export interface IsaacCard extends Content {
   image?: Image;
   clickUrl?: string;
+  buttonText?: string;
   disabled?: boolean;
   verticalContent?: boolean;
 }
@@ -50,12 +110,13 @@ export interface IsaacClozeQuestion extends IsaacItemQuestion {
   detailedItemFeedback?: boolean;
 }
 
-export interface IsaacConceptPage extends SeguePage {}
+export interface IsaacConceptPage extends SeguePage {
+}
 
 export interface IsaacEventPage extends Content {
-  date?: number;
-  bookingDeadline?: number;
-  prepWorkDeadline?: number;
+  date?: EpochTimeStamp;
+  bookingDeadline?: EpochTimeStamp;
+  prepWorkDeadline?: EpochTimeStamp;
   location?: Location;
   preResources?: ExternalReference[];
   postResources?: ExternalReference[];
@@ -63,6 +124,8 @@ export interface IsaacEventPage extends Content {
   numberOfPlaces?: number;
   groupReservationLimit?: number;
   allowGroupReservations?: boolean;
+  privateEvent?: boolean;
+  endDate?: EpochTimeStamp;
   preResourceContent?: Content[];
   emailEventDetails?: string;
   emailConfirmedBookingText?: string;
@@ -71,11 +134,7 @@ export interface IsaacEventPage extends Content {
   eventStatus?: EventStatus;
   isaacGroupToken?: string;
   address?: Address;
-  endDate?: number;
-  privateEvent?: boolean;
 }
-
-export interface IsaacFastTrackQuestionPage extends IsaacQuestionPage {}
 
 export interface IsaacFeaturedProfile extends Content {
   emailAddress?: string;
@@ -83,16 +142,16 @@ export interface IsaacFeaturedProfile extends Content {
   homepage?: string;
 }
 
-export interface IsaacFreeTextQuestion extends IsaacQuestionBase {}
-
-export interface IsaacGraphSketcherQuestion extends IsaacQuestionBase {}
+export interface IsaacFreeTextQuestion extends IsaacQuestionBase {
+}
 
 export interface IsaacItemQuestion extends IsaacQuestionBase {
   items?: Item[];
   randomiseItems?: boolean;
 }
 
-export interface IsaacMultiChoiceQuestion extends IsaacQuestionBase {}
+export interface IsaacMultiChoiceQuestion extends IsaacQuestionBase {
+}
 
 export interface IsaacNumericQuestion extends IsaacQuestionBase {
   requireUnits?: boolean;
@@ -111,17 +170,16 @@ export interface IsaacParsonsQuestion extends IsaacItemQuestion {
   disableIndentation?: boolean;
 }
 
-export interface IsaacReorderQuestion extends IsaacItemQuestion {}
-
 export interface IsaacPod extends Content {
   image?: Image;
   url?: string;
 }
 
-export interface IsaacQuestionBase extends ChoiceQuestion {}
+export interface IsaacQuestionBase extends ChoiceQuestion {
+}
 
 export interface IsaacQuestionPage extends SeguePage {
-  difficulty?: number;
+  difficulty?: Difficulty;
   passMark?: number;
   supersededBy?: string;
 }
@@ -136,10 +194,14 @@ export interface IsaacQuiz extends SeguePage {
   rubric?: Content;
 }
 
-export interface IsaacQuizSection extends Content {}
+export interface IsaacQuizSection extends Content {
+}
 
 export interface IsaacRegexMatchQuestion extends IsaacQuestionBase {
   multiLineEntry?: boolean;
+}
+
+export interface IsaacReorderQuestion extends IsaacItemQuestion {
 }
 
 export interface IsaacStringMatchQuestion extends IsaacQuestionBase {
@@ -148,9 +210,8 @@ export interface IsaacStringMatchQuestion extends IsaacQuestionBase {
   preserveTrailingWhitespace?: boolean;
 }
 
-export interface IsaacSymbolicChemistryQuestion extends IsaacSymbolicQuestion {}
-
-export interface IsaacSymbolicLogicQuestion extends IsaacSymbolicQuestion {}
+export interface IsaacSymbolicLogicQuestion extends IsaacSymbolicQuestion {
+}
 
 export interface IsaacSymbolicQuestion extends IsaacQuestionBase {
   formulaSeed?: string;
@@ -166,13 +227,66 @@ export interface IsaacWildcard extends Content {
   url?: string;
 }
 
+export interface ItemValidationResponse extends QuestionValidationResponse {
+  itemsCorrect?: boolean[];
+}
+
+export interface LightweightQuestionValidationResponse {
+  questionId?: string;
+  correct?: boolean;
+  dateAttempted?: EpochTimeStamp;
+}
+
+export interface LogEvent {
+  id?: string;
+  eventType?: string;
+  eventDetailsType?: string;
+  eventDetails?: any;
+  userId?: string;
+  anonymousUser?: boolean;
+  ipAddress?: string;
+  timestamp?: EpochTimeStamp;
+}
+
+export interface PgTransaction extends ITransaction {
+  connection?: Connection;
+}
+
+export interface PgUserAlert extends IUserAlert {
+}
+
+export interface PgUserAlerts extends IUserAlerts {
+}
+
+export interface PgUserNotification extends IUserNotification {
+}
+
+export interface PgUserNotifications extends IUserNotifications {
+}
+
+export interface PgUserPreferenceManager extends AbstractUserPreferenceManager {
+}
+
+export interface PgUserStreakManager extends IUserStreaksManager {
+}
+
+export interface QuantityValidationResponse extends QuestionValidationResponse {
+  correctValue?: boolean;
+  correctUnits?: boolean;
+}
+
+export interface QuestionValidationResponse extends LightweightQuestionValidationResponse {
+  answer?: Choice;
+  explanation?: Content;
+}
+
 export interface QuizAssignmentDO {
   id?: number;
   quizId?: string;
   groupId?: number;
   ownerUserId?: number;
-  creationDate?: Date;
-  dueDate?: Date;
+  creationDate?: EpochTimeStamp;
+  dueDate?: EpochTimeStamp;
   quizFeedbackMode?: QuizFeedbackMode;
 }
 
@@ -181,8 +295,8 @@ export interface QuizAttemptDO {
   userId?: number;
   quizId?: string;
   quizAssignmentId?: number;
-  startDate?: Date;
-  completedDate?: Date;
+  startDate?: EpochTimeStamp;
+  completedDate?: EpochTimeStamp;
 }
 
 export interface TestCase extends QuestionValidationResponse {
@@ -194,30 +308,39 @@ export interface TestQuestion {
   testCases?: TestCase[];
 }
 
-export interface EventBooking {
-  id?: number;
-  creationDate?: Date;
-  userId?: number;
-  eventId?: string;
-  additionalInformation?: { [index: string]: string };
-  reservedById?: number;
-  bookingStatus?: BookingStatus;
-  updateDate?: Date;
+export interface UserAssociation {
+  userIdGrantingPermission?: number;
+  userIdReceivingPermission?: number;
+  created?: EpochTimeStamp;
 }
 
-export interface EventBookings {}
+export interface UserBadge {
+  userId?: number;
+  badgeName?: Badge;
+  state?: any;
+}
 
-export interface PgEventBooking extends EventBooking {}
+export interface UserGroup {
+  id?: number;
+  groupName?: string;
+  ownerId?: number;
+  status?: GroupStatus;
+  created?: EpochTimeStamp;
+  archived?: boolean;
+  additionalManagerPrivileges?: boolean;
+  lastUpdated?: EpochTimeStamp;
+}
 
-export interface PgEventBookings extends EventBookings {}
+export interface UserPreference {
+  userId?: number;
+  preferenceType?: string;
+  preferenceName?: string;
+  preferenceValue?: boolean;
+}
 
 export interface AnvilApp extends Content {
   appId?: string;
   appAccessKey?: string;
-}
-
-export interface ChemicalFormula extends Choice {
-  mhchemExpression?: string;
 }
 
 export interface Choice extends Content {
@@ -237,7 +360,8 @@ export interface CodeSnippet extends Content {
   url?: string;
 }
 
-export interface CodeTabs extends Content {}
+export interface CodeTabs extends Content {
+}
 
 export interface Content extends ContentBase {
   title?: string;
@@ -253,6 +377,7 @@ export interface Content extends ContentBase {
   deprecated?: boolean;
   level?: number;
   searchableContent?: string;
+  expandable?: boolean;
 }
 
 export interface ContentBase {
@@ -281,7 +406,8 @@ export interface ExternalReference {
   url?: string;
 }
 
-export interface Figure extends Image {}
+export interface Figure extends Image {
+}
 
 export interface Formula extends Choice {
   pythonExpression?: string;
@@ -301,13 +427,16 @@ export interface GlossaryTerm extends Content {
   examBoard?: string;
 }
 
-export interface GraphChoice extends Choice {
-  graphSpec?: string;
-}
-
 export interface Image extends Media {
   clickUrl?: string;
   clickTarget?: string;
+}
+
+export interface InteractiveCodeSnippet extends CodeSnippet {
+  setupCode?: string;
+  testCode?: string;
+  expectedResult?: string;
+  wrapCodeInMain?: boolean;
 }
 
 export interface Item extends Content {
@@ -331,10 +460,11 @@ export interface Media extends Content {
 
 export interface Notification extends Content {
   externalReference?: ExternalReference;
-  expiry?: Date;
+  expiry?: EpochTimeStamp;
 }
 
-export interface ParsonsChoice extends ItemChoice {}
+export interface ParsonsChoice extends ItemChoice {
+}
 
 export interface ParsonsItem extends Item {
   indentation?: number;
@@ -364,13 +494,153 @@ export interface StringChoice extends Choice {
   caseInsensitive?: boolean;
 }
 
-export interface Video extends Media {}
+export interface Video extends Media {
+}
 
-export interface AudienceContext {
-  stage?: Stage[];
-  examBoard?: ExamBoard[];
-  difficulty?: Difficulty[];
-  role?: RoleRequirement[];
+export interface EventBooking {
+  id?: number;
+  additionalInformation?: { [index: string]: string };
+  creationDate?: EpochTimeStamp;
+  reservedById?: number;
+  bookingStatus?: BookingStatus;
+  userId?: number;
+  eventId?: string;
+  updateDate?: EpochTimeStamp;
+}
+
+export interface EventBookings {
+}
+
+export interface PgEventBooking extends EventBooking {
+}
+
+export interface PgEventBookings extends EventBookings {
+}
+
+export interface AbstractSegueUser {
+}
+
+export interface AnonymousUser extends AbstractSegueUser {
+  sessionId?: string;
+  dateCreated?: EpochTimeStamp;
+  lastUpdated?: EpochTimeStamp;
+}
+
+export interface FacebookTokenData {
+  appId?: string;
+  valid?: boolean;
+}
+
+export interface FacebookTokenInfo {
+  data?: FacebookTokenData;
+}
+
+export interface FacebookUser {
+  id?: string;
+  email?: string;
+  gender?: string;
+  link?: string;
+  locale?: string;
+  name?: string;
+  timezone?: number;
+  verified?: boolean;
+  firstName?: string;
+  lastName?: string;
+  updatedTime?: string;
+}
+
+export interface LinkedAccount {
+  id?: string;
+  localUserId?: string;
+  provider?: AuthenticationProvider;
+  providerUserId?: string;
+}
+
+export interface LocalUserCredential {
+  userId?: number;
+  password?: string;
+  secureSalt?: string;
+  securityScheme?: string;
+  resetToken?: string;
+  resetExpiry?: EpochTimeStamp;
+  created?: EpochTimeStamp;
+  lastUpdated?: EpochTimeStamp;
+}
+
+export interface RegisteredUser extends AbstractSegueUser {
+  _id?: number;
+  givenName?: string;
+  familyName?: string;
+  email?: string;
+  role?: Role;
+  dateOfBirth?: EpochTimeStamp;
+  gender?: Gender;
+  registrationDate?: EpochTimeStamp;
+  lastUpdated?: EpochTimeStamp;
+  emailToVerify?: string;
+  emailVerificationToken?: string;
+  emailVerificationStatus?: EmailVerificationStatus;
+  teacherPending?: boolean;
+  schoolId?: string;
+  schoolOther?: string;
+  registeredContexts?: UserContext[];
+  registeredContextsLastConfirmed?: EpochTimeStamp;
+  lastSeen?: EpochTimeStamp;
+  id?: number;
+}
+
+export interface School {
+  urn?: string;
+  name?: string;
+  postcode?: string;
+  closed?: boolean;
+  dataSource?: SchoolDataSource;
+}
+
+export interface TOTPSharedSecret {
+  userId?: number;
+  sharedSecret?: string;
+  created?: EpochTimeStamp;
+  lastUpdated?: EpochTimeStamp;
+}
+
+export interface UserAuthenticationSettings extends AbstractSegueUser {
+  linkedAccounts?: AuthenticationProvider[];
+  hasSegueAccount?: boolean;
+  mfaStatus?: boolean;
+  id?: number;
+}
+
+export interface UserContext {
+  stage?: Stage;
+  examBoard?: ExamBoard;
+}
+
+export interface UserExternalAccountChanges {
+  userId?: number;
+  providerUserId?: string;
+  accountEmail?: string;
+  role?: Role;
+  givenName?: string;
+  deleted?: boolean;
+  emailVerificationStatus?: EmailVerificationStatus;
+}
+
+export interface UserFromAuthProvider {
+  providerUserId?: string;
+  givenName?: string;
+  familyName?: string;
+  email?: string;
+  dateOfBirth?: EpochTimeStamp;
+  gender?: Gender;
+  emailVerificationStatus?: EmailVerificationStatus;
+}
+
+export interface UserSettings {
+  registeredUser?: RegisteredUser;
+  userPreferences?: { [index: string]: { [index: string]: boolean } };
+  registeredUserContexts?: UserContext[];
+  passwordCurrent?: string;
 }
 
 export interface GameFilter {
@@ -383,6 +653,9 @@ export interface GameFilter {
   examBoards?: string[];
   concepts?: string[];
   questionCategories?: string[];
+}
+
+export interface AutoCloseable {
 }
 
 export interface Location {
@@ -400,29 +673,242 @@ export interface Address {
   country?: string;
 }
 
-export interface QuestionValidationResponse extends LightweightQuestionValidationResponse {
-  answer?: Choice;
-  explanation?: Content;
+export interface Connection extends Wrapper, AutoCloseable {
+  closed?: boolean;
+  readOnly?: boolean;
+  transactionIsolation?: number;
+  networkTimeout?: number;
+  schema?: string;
+  autoCommit?: boolean;
+  metaData?: DatabaseMetaData;
+  catalog?: string;
+  warnings?: SQLWarning;
+  typeMap?: { [index: string]: Class<any> };
+  holdability?: number;
+  clientInfo?: { [index: string]: any };
 }
 
-export interface LightweightQuestionValidationResponse {
-  questionId?: string;
-  correct?: boolean;
-  dateAttempted?: Date;
+export interface DatabaseMetaData extends Wrapper {
+  connection?: Connection;
+  readOnly?: boolean;
+  url?: string;
+  resultSetHoldability?: number;
+  databaseProductVersion?: string;
+  identifierQuoteString?: string;
+  maxBinaryLiteralLength?: number;
+  maxCharLiteralLength?: number;
+  maxProcedureNameLength?: number;
+  maxCatalogNameLength?: number;
+  defaultTransactionIsolation?: number;
+  databaseMajorVersion?: number;
+  databaseMinorVersion?: number;
+  clientInfoProperties?: ResultSet;
+  databaseProductName?: string;
+  driverVersion?: string;
+  driverMajorVersion?: number;
+  driverMinorVersion?: number;
+  numericFunctions?: string;
+  stringFunctions?: string;
+  systemFunctions?: string;
+  timeDateFunctions?: string;
+  searchStringEscape?: string;
+  extraNameCharacters?: string;
+  procedureTerm?: string;
+  catalogAtStart?: boolean;
+  catalogSeparator?: string;
+  maxColumnNameLength?: number;
+  maxColumnsInGroupBy?: number;
+  maxColumnsInIndex?: number;
+  maxColumnsInOrderBy?: number;
+  maxColumnsInSelect?: number;
+  maxColumnsInTable?: number;
+  maxConnections?: number;
+  maxCursorNameLength?: number;
+  maxIndexLength?: number;
+  maxSchemaNameLength?: number;
+  maxStatementLength?: number;
+  maxStatements?: number;
+  maxTableNameLength?: number;
+  maxTablesInSelect?: number;
+  maxUserNameLength?: number;
+  jdbcmajorVersion?: number;
+  jdbcminorVersion?: number;
+  sqlstateType?: number;
+  rowIdLifetime?: RowIdLifetime;
+  maxLogicalLobSize?: number;
+  userName?: string;
+  driverName?: string;
+  sqlkeywords?: string;
+  schemaTerm?: string;
+  catalogTerm?: string;
+  maxRowSize?: number;
+  schemas?: ResultSet;
+  catalogs?: ResultSet;
+  tableTypes?: ResultSet;
+  typeInfo?: ResultSet;
 }
 
-export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";
+export interface SQLWarning extends SQLException {
+  nextWarning?: SQLWarning;
+}
 
-export type GameboardCreationMethod = "FILTER" | "BUILDER";
+export interface Class<T> extends Serializable, GenericDeclaration, Type, AnnotatedElement, OfField<Class<any>>, Constable {
+}
 
-export type QuizFeedbackMode = "NONE" | "OVERALL_MARK" | "SECTION_MARKS" | "DETAILED_FEEDBACK";
+export interface Wrapper {
+}
 
-export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
+export interface ResultSet extends Wrapper, AutoCloseable {
+  first?: boolean;
+  last?: boolean;
+  closed?: boolean;
+  type?: number;
+  fetchDirection?: number;
+  metaData?: ResultSetMetaData;
+  warnings?: SQLWarning;
+  holdability?: number;
+  cursorName?: string;
+  beforeFirst?: boolean;
+  afterLast?: boolean;
+  fetchSize?: number;
+  concurrency?: number;
+  statement?: Statement;
+  row?: number;
+}
 
-export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "all";
+export interface Throwable extends Serializable {
+  cause?: Throwable;
+  stackTrace?: StackTraceElement[];
+  message?: string;
+  suppressed?: Throwable[];
+  localizedMessage?: string;
+}
 
-export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "all";
+export interface StackTraceElement extends Serializable {
+  classLoaderName?: string;
+  moduleName?: string;
+  moduleVersion?: string;
+  methodName?: string;
+  fileName?: string;
+  lineNumber?: number;
+  className?: string;
+  nativeMethod?: boolean;
+}
+
+export interface SQLException extends Exception, Iterable<Throwable> {
+  nextException?: SQLException;
+  sqlstate?: string;
+  errorCode?: number;
+}
+
+export interface Serializable {
+}
+
+export interface GenericDeclaration extends AnnotatedElement {
+  typeParameters?: TypeVariable<any>[];
+}
+
+export interface Type {
+  typeName?: string;
+}
+
+export interface AnnotatedElement {
+  annotations?: Annotation[];
+  declaredAnnotations?: Annotation[];
+}
+
+export interface Constable {
+}
+
+export interface ResultSetMetaData extends Wrapper {
+  columnCount?: number;
+}
+
+export interface Statement extends Wrapper, AutoCloseable {
+  connection?: Connection;
+  closed?: boolean;
+  resultSetConcurrency?: number;
+  resultSetHoldability?: number;
+  fetchDirection?: number;
+  maxFieldSize?: number;
+  queryTimeout?: number;
+  resultSetType?: number;
+  closeOnCompletion?: boolean;
+  largeUpdateCount?: number;
+  largeMaxRows?: number;
+  generatedKeys?: ResultSet;
+  maxRows?: number;
+  warnings?: SQLWarning;
+  fetchSize?: number;
+  resultSet?: ResultSet;
+  updateCount?: number;
+  moreResults?: boolean;
+  poolable?: boolean;
+}
+
+export interface Exception extends Throwable {
+}
+
+export interface TypeVariable<D> extends Type, AnnotatedElement {
+  genericDeclaration?: D;
+  annotatedBounds?: AnnotatedType[];
+  name?: string;
+  bounds?: Type[];
+}
+
+export interface Annotation {
+}
+
+export interface OfField<F> extends TypeDescriptor {
+  array?: boolean;
+  primitive?: boolean;
+}
+
+export interface Iterable<T> {
+}
+
+export interface AnnotatedType extends AnnotatedElement {
+  annotatedOwnerType?: AnnotatedType;
+  type?: Type;
+}
+
+export interface TypeDescriptor {
+}
 
 export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge_1" | "challenge_2" | "challenge_3";
 
+export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";
+
+export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "all";
+
+export type GameboardCreationMethod = "FILTER" | "BUILDER";
+
+export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
+
+export type GroupStatus = "ACTIVE" | "DELETED";
+
+export type AlertEvents = "SEEN" | "CLICKED" | "DISMISSED";
+
+export type NotificationStatus = "ACKNOWLEDGED" | "POSTPONED" | "DISABLED" | "DISMISSED";
+
+export type QuizFeedbackMode = "NONE" | "OVERALL_MARK" | "SECTION_MARKS" | "DETAILED_FEEDBACK";
+
 export type RoleRequirement = "logged_in" | "teacher";
+
+export type Stage = "gcse" | "a_level" | "all";
+
+export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
+
+export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";
+
+export type Gender = "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY" | "UNKNOWN";
+
+export type Role = "STUDENT" | "TUTOR" | "TEACHER" | "EVENT_LEADER" | "CONTENT_EDITOR" | "EVENT_MANAGER" | "ADMIN";
+
+export type SchoolDataSource = "GOVERNMENT_UK" | "GOVERNMENT_IE" | "GOVERNMENT_SCO" | "GOVERNMENT_WAL" | "GOVERNMENT_NI" | "USER_ENTERED";
+
+export type Badge = "TEACHER_GROUPS_CREATED" | "TEACHER_ASSIGNMENTS_SET" | "TEACHER_GAMEBOARDS_CREATED" | "TEACHER_CPD_EVENTS_ATTENDED";
+
+export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE" | "RASPBERRYPI";
+
+export type RowIdLifetime = "ROWID_UNSUPPORTED" | "ROWID_VALID_OTHER" | "ROWID_VALID_SESSION" | "ROWID_VALID_TRANSACTION" | "ROWID_VALID_FOREVER";

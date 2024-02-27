@@ -24,11 +24,3 @@
 .fullWidth {
   display: block;
 }
-
-.graphSpec {
-  width: 100%;
-}
-
-.graphSpec textarea {
-  height: 6em;
-}
