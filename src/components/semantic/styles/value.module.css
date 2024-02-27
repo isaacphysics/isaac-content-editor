@@ -1,16 +1,16 @@
 .editButtons {
-    text-align: right;
-    margin-bottom: 0.5em;
+  text-align: right;
+  margin-bottom: 0.5em;
 }
 
 .editButtons button {
-    margin-left: 0.5em;
+  margin-left: 0.5em;
 }
 
 .editableValue {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .editableValue:hover {
-    outline: 1px dashed #bbb;
+  outline: 1px dashed #bbb;
 }

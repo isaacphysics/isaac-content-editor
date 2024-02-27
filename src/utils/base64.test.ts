@@ -8,7 +8,7 @@ const pairs = {
 };
 
 describe("base64", () => {
-  Object.keys(pairs).forEach((k ) => {
+  Object.keys(pairs).forEach((k) => {
     const key = k as keyof typeof pairs;
     test(`encoding ${key}`, () => {
       expect(encodeBase64(pairs[key][1])).toBe(pairs[key][0]);
@@ -16,7 +16,7 @@ describe("base64", () => {
     test(`decoding ${key}`, () => {
       expect(decodeBase64(pairs[key][0])).toBe(pairs[key][1]);
     });
-  })
+  });
 });
 /*
 test('ASCII decodes fine', () => {

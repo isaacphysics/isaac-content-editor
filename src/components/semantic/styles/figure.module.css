@@ -1,31 +1,31 @@
 .figureWrapper {
-    display: flex;
-    flex-direction: row;
-    align-content: flex-start;
-    margin-bottom: 0.5em;
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  margin-bottom: 0.5em;
 }
 
 .figureImage {
-    flex-basis: 0;
-    flex-grow: 1;
+  flex-basis: 0;
+  flex-grow: 1;
 }
 
 .figureImage button {
-    border: none;
+  border: none;
 }
 
 .figureCaption {
-    flex-basis: 0;
-    flex-grow: 1;
+  flex-basis: 0;
+  flex-grow: 1;
 }
 
 .muted {
-    color: #777;
+  color: #777;
 }
 
 .fileInput {
-    position: absolute;
-    left: -1000px;
-    top: -1000px;
-    visibility: hidden;
+  position: absolute;
+  left: -1000px;
+  top: -1000px;
+  visibility: hidden;
 }

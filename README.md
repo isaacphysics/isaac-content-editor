@@ -1,11 +1,13 @@
 # isaac-content-editor
 
-
 # Configuration
+
 ## Local
+
 There are two dotenv files for both physics and computer science: `.env.phys.local` and `.env.cs.local`. For local development, copying the local versions to a local override will set them on `process.env` in the app. For example, `cp .env.cs.local .env.local && npm start` would run the app locally with the CS app configuration.
 
 ## Production
+
 In production, the `docker-entrypoint-setup-envars.sh` script is used at container startup to find and replace templatized versions of the environment variables with environment values set on the server, allowing for runtime configuration. See the `getEnvVar` function in `config.ts` for how this works.
 
 # Getting Started with Create React App

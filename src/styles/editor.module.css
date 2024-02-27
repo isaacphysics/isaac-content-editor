@@ -1,304 +1,314 @@
 .editorScreen {
-    display: flex;
-    /*justify-content: stretch;*/
-    height: 100vh;
+  display: flex;
+  /*justify-content: stretch;*/
+  height: 100vh;
 }
 
 .leftMenuWrapper {
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid #eee;
-    transition: width 0.3s;
-    position: relative;
-    overflow: clip;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #eee;
+  transition: width 0.3s;
+  position: relative;
+  overflow: clip;
 }
 
 .leftMenuHeader {
-    display: flex;
-    min-height: 40px;
-    background: #f5f5f5;
+  display: flex;
+  min-height: 40px;
+  background: #f5f5f5;
 }
 
 .popup {
-    position: absolute;
-    z-index: 1049;
-    background-color: #fff;
-    border-radius: 2px;
-    box-shadow: 0 0 20px 0 #ccc;
+  position: absolute;
+  z-index: 1049;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 0 20px 0 #ccc;
 }
 
 .wordCount {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 
 .cmMenuBar .cmPanelButton + .cmPanelButton {
-    border-left: 1px solid rgba(0,0,0,0.2);
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .cmPanelButton {
-    border: none;
-    background: none;
+  border: none;
+  background: none;
 }
 
 .cmPanelPopup {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    max-width: 400px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  max-width: 400px;
 }
 
 .leftMenuPopupMenu {
-    list-style: none;
-    padding: 3px 0;
-    margin: 0;
-    height: auto;
+  list-style: none;
+  padding: 3px 0;
+  margin: 0;
+  height: auto;
 }
 
 .leftMenuPopupMenu li + li {
-    border-top: 1px solid rgba(0,0,0,0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .leftMenuPopupMenu button {
-    border: none;
-    background-color: #fff;
-    width: 100%;
-    text-align: left;
-    padding-left: 0.5em;
+  border: none;
+  background-color: #fff;
+  width: 100%;
+  text-align: left;
+  padding-left: 0.5em;
 }
 
 .leftMenuPopupMenu button:hover {
-    background: #eee;
+  background: #eee;
 }
 
 .leftMenuPopupMenu hr {
-    margin: 0.25em 0.5em;
+  margin: 0.25em 0.5em;
 }
 
 .fileBrowser {
-    flex: 1;
-    overflow: auto auto;
-    display: flex;
+  flex: 1;
+  overflow: auto auto;
+  display: flex;
 }
 
 .fileBrowser > .fileBrowserList:after {
-    content: " ";
-    padding-bottom: 30px;
+  content: " ";
+  padding-bottom: 30px;
 }
 
 .fileBrowser > .fileBrowserList {
-    padding-left: 0;
+  padding-left: 0;
 }
 
 .fileBrowserList .fileBrowserList {
-    margin: 0 0 0 15px;
+  margin: 0 0 0 15px;
 }
 
 .fileBrowserList {
-    padding: 0 0 0 6px;
-    border-left: 1px solid lightgray;
+  padding: 0 0 0 6px;
+  border-left: 1px solid lightgray;
 }
 
 .fileBrowserItem:hover {
-    background: #fff;
+  background: #fff;
 }
 
 .fileBrowserItem {
-    padding: 0;
-    border: none !important;
-    white-space: nowrap;
+  padding: 0;
+  border: none !important;
+  white-space: nowrap;
 }
-.fileBrowserItemSelected, .fileBrowserItemSelected:focus {
-    font-weight: bold;
-    background: #fff;
+.fileBrowserItemSelected,
+.fileBrowserItemSelected:focus {
+  font-weight: bold;
+  background: #fff;
 }
 .fileBrowserItemSelected:hover {
-    background: #fff;
+  background: #fff;
 }
 
 .fileBrowserItem:before {
-    content: "📄";
-    position: relative;
-    padding-left: 5px;
-    padding-right: 3px;
-    opacity: 0.5;
+  content: "📄";
+  position: relative;
+  padding-left: 5px;
+  padding-right: 3px;
+  opacity: 0.5;
 }
 
-.fileBrowserClosedFolder, .fileBrowserOpenFolder {
-    position: relative;
-    padding: 0;
-    border: none !important;
+.fileBrowserClosedFolder,
+.fileBrowserOpenFolder {
+  position: relative;
+  padding: 0;
+  border: none !important;
 }
 
-.fileBrowserClosedFolder:hover, .fileBrowserOpenFolder:hover {
-    background: #fff;
+.fileBrowserClosedFolder:hover,
+.fileBrowserOpenFolder:hover {
+  background: #fff;
 }
 
-.fileBrowserClosedFolder:before,  .fileBrowserOpenFolder:before {
-    content: "📁";
-    position: relative;
-    top: -3px;
-    padding-left: 7px;
-    padding-right: 5px;
-    display: inline-block;
+.fileBrowserClosedFolder:before,
+.fileBrowserOpenFolder:before {
+  content: "📁";
+  position: relative;
+  top: -3px;
+  padding-left: 7px;
+  padding-right: 5px;
+  display: inline-block;
 }
 
 .topMenuWrapper {
-    position: absolute;
-    top: 0;
-    height: 40px;
-    left: 200px;
-    right: 150px;
-    border-bottom-left-radius: 0.5em;
-    border-bottom-right-radius: 0.5em;
-    background: #f5f5f5;
-    z-index: 100;
-    display: flex;
+  position: absolute;
+  top: 0;
+  height: 40px;
+  left: 200px;
+  right: 150px;
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+  background: #f5f5f5;
+  z-index: 100;
+  display: flex;
 }
 
 .editorWrapper {
-    flex: 1;
-    display: flex;
-    height: 100%;
-    position: relative;
+  flex: 1;
+  display: flex;
+  height: 100%;
+  position: relative;
 }
 
 .editorScroller {
-    overflow: auto;
-    flex: 1;
+  overflow: auto;
+  flex: 1;
 }
 
 .centered {
-    flex: 1;
-    display: flex;
-    align-self: center;
-    justify-self: center;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
+  flex: 1;
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
 }
 
 .flexFill {
-    flex: 1;
-    display: flex;
+  flex: 1;
+  display: flex;
 }
 
 .displayNone {
-    display: none;
+  display: none;
 }
 
 .iconButton {
-    border: 1px solid #6c757d;
-    border-radius: 4px;
-    background: #fff;
-    margin: 5px 5px;
-    padding: 0 1rem;
-    min-width: 32px;
+  border: 1px solid #6c757d;
+  border-radius: 4px;
+  background: #fff;
+  margin: 5px 5px;
+  padding: 0 1rem;
+  min-width: 32px;
 }
 
 .iconButton + .iconButton {
-    margin-left: 0;
+  margin-left: 0;
 }
 
 .iconButton.sm {
-    padding: 0 3px;
-    width: 24px;
+  padding: 0 3px;
+  width: 24px;
 }
 
 .iconButton:hover {
-    background: #eee;
+  background: #eee;
 }
 
 @keyframes flash {
-    0%   { filter: drop-shadow(0 0 0.75rem #ff000000); }
-    50%  { filter: drop-shadow(0 0 0.75rem #ff000055); }
-    100% { filter: drop-shadow(0 0 0.75rem #ff000000); }
+  0% {
+    filter: drop-shadow(0 0 0.75rem #ff000000);
+  }
+  50% {
+    filter: drop-shadow(0 0 0.75rem #ff000055);
+  }
+  100% {
+    filter: drop-shadow(0 0 0.75rem #ff000000);
+  }
 }
 
 .undoButton {
-    animation-name: flash;
-    animation-iteration-count: 2;
-    animation-duration: 2s;
+  animation-name: flash;
+  animation-iteration-count: 2;
+  animation-duration: 2s;
 }
 
 .actionsModalContent {
-    height: calc(100vh - 3.5rem);
-    background: none;
-    border: none;
-    color: #fff;
+  height: calc(100vh - 3.5rem);
+  background: none;
+  border: none;
+  color: #fff;
 }
 
 .actionsModalContent :global(.spinner-border) {
-    width: 50px;
-    height: 50px;
+  width: 50px;
+  height: 50px;
 }
 
 .actionsModalContent h2 {
-    padding-left: 20px;
-    padding-top: 10px;
+  padding-left: 20px;
+  padding-top: 10px;
 }
 
 .menuModalButtons button {
-    margin: 0.2em;
+  margin: 0.2em;
 }
 
 .textEditor {
-    margin-top: 40px;
-    flex: 1;
+  margin-top: 40px;
+  flex: 1;
 }
 
 .textEditor :global(.cm-focused) {
-    outline: none !important;
+  outline: none !important;
 }
 
 .previewModal {
-    max-width: calc(100% - 3.5em);
+  max-width: calc(100% - 3.5em);
 }
 
 .previewModalContent {
-    height: calc(100vh - 3.5rem);
+  height: calc(100vh - 3.5rem);
 }
 
 .previewWrapper {
-    flex: 1;
-    margin-left: 3px;
-    border-left: 1px solid #eee;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  margin-left: 3px;
+  border-left: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
 }
 
 :global(.modal) .previewWrapper {
-    margin-left: 0;
-    border-left: none;
+  margin-left: 0;
+  border-left: none;
 }
 
 .previewTopMenu {
-    background: #f5f5f5;
-    height: 40px;
-    text-align: right;
+  background: #f5f5f5;
+  height: 40px;
+  text-align: right;
 }
 
 :global(.modal) .previewTopMenu {
-    border-top-left-radius: 0.3em;
-    border-top-right-radius: 0.3em;
+  border-top-left-radius: 0.3em;
+  border-top-right-radius: 0.3em;
 }
 
 .previewIframe {
-    border: none;
-    padding: 0;
-    margin: 0 3px;
-    flex: 1;
+  border: none;
+  padding: 0;
+  margin: 0 3px;
+  flex: 1;
 }
 
 .gutter {
-    background-color: #eee;
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    font-family: monospace;
-    padding-top: 0.5rem;
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: monospace;
+  padding-top: 0.5rem;
 }
 
 .gutter:hover {
-    cursor: col-resize;
+  cursor: col-resize;
 }

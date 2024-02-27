@@ -1,29 +1,30 @@
 .row {
-    display: flex;
-    flex-wrap: wrap;
-    margin-right: -15px;
-    margin-left: -15px;
-    align-items: baseline;
-    margin-bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  align-items: baseline;
+  margin-bottom: 0;
 }
 
 .label {
-    text-align: right;
+  text-align: right;
 }
 
-.row :global(.form-control), .row :global(.btn) {
-    margin-bottom: 0.5em;
+.row :global(.form-control),
+.row :global(.btn) {
+  margin-bottom: 0.5em;
 }
 
 .row :global(.form-check-input) {
-    position: static;
-    margin: 12px 0 calc(13px + 0.5em);
+  position: static;
+  margin: 12px 0 calc(13px + 0.5em);
 }
 
 .row :global(.btn-link.btn-sm) {
-    text-decoration: none !important;
+  text-decoration: none !important;
 }
 
 .groupReservationLimit {
-    height: 46px;
+  height: 46px;
 }

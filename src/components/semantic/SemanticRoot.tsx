@@ -8,17 +8,18 @@ import { SemanticItem } from "./SemanticItem";
 import styles from "./styles/semantic.module.css";
 
 interface SemanticRootProps {
-    doc: Content;
-    update: (newContent: Content, invertible?: boolean) => void;
+  doc: Content;
+  update: (newContent: Content, invertible?: boolean) => void;
 }
 
+export function SemanticRoot({ doc, update }: SemanticRootProps) {
+  const figureNumbers = useFigureNumbering(doc);
 
-export function SemanticRoot({doc, update}: SemanticRootProps) {
-    const figureNumbers = useFigureNumbering(doc);
-
-    return <FigureNumberingContext.Provider value={figureNumbers}>
-        <div className={styles.outerWrapper}>
-            <SemanticItem doc={doc} update={update} />
-        </div>
-    </FigureNumberingContext.Provider>;
+  return (
+    <FigureNumberingContext.Provider value={figureNumbers}>
+      <div className={styles.outerWrapper}>
+        <SemanticItem doc={doc} update={update} />
+      </div>
+    </FigureNumberingContext.Provider>
+  );
 }

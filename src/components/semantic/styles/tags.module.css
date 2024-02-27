@@ -1,17 +1,17 @@
 .wrapper button {
-    margin-right: 1em;
-    margin-bottom: 0.5em;
+  margin-right: 1em;
+  margin-bottom: 0.5em;
 }
 
 .wrapper em {
-    margin-right: 1em;
+  margin-right: 1em;
 }
 
 .wrapper input {
-    margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .gameboardButton {
-    min-width: 200px;
-    text-align: left;
+  min-width: 200px;
+  text-align: left;
 }

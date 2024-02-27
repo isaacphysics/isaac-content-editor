@@ -1,157 +1,158 @@
 :root {
-    --border-color: #ddd;
-    --border-radius: 4px;
+  --border-color: #ddd;
+  --border-radius: 4px;
 }
 
 .headerDisplayControls {
-    text-align: right;
-    margin-top: -1em;
-    margin-bottom: 0.5em;
+  text-align: right;
+  margin-top: -1em;
+  margin-bottom: 0.5em;
 }
 
 .headerDisplayControls :global(.form-control) {
-    display: inline-block;
-    width: auto;
+  display: inline-block;
+  width: auto;
 }
 
 .wrapper {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 1em;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
 }
 
 .button {
-    min-width: 110px;
+  min-width: 110px;
 }
 
 .buttons {
-    position: sticky;
-    min-width: 110px;
-    top: -20px;
-    align-self: flex-start;
+  position: sticky;
+  min-width: 110px;
+  top: -20px;
+  align-self: flex-start;
 }
 
 .buttonsShifter {
-    position: relative;
-    left: 1px;
-    align-items: flex-end;
-    display: flex;
-    flex-direction: column;
+  position: relative;
+  left: 1px;
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
 }
 
 .buttonsSpacer {
-    height: 40px;
-    border-right: var(--border-color) 1px solid;
-    margin-top: var(--border-radius);
+  height: 40px;
+  border-right: var(--border-color) 1px solid;
+  margin-top: var(--border-radius);
 }
 
 .buttonsFill {
-    border-right: var(--border-color) 1px solid;
-    height: 20px;
-    margin-bottom: var(--border-radius);
+  border-right: var(--border-color) 1px solid;
+  height: 20px;
+  margin-bottom: var(--border-radius);
 }
 
 .buttons button {
-    display: block;
-    border-radius: var(--border-radius) 0 0 var(--border-radius);
-    border-color: var(--border-color);
-    z-index: 2;
+  display: block;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+  border-color: var(--border-color);
+  z-index: 2;
 }
 .buttons button + button {
-    position: relative;
-    margin-top: -1px;
+  position: relative;
+  margin-top: -1px;
 }
 
 .buttons :global(.btn-outline-primary) {
-    border-right-color: #fff;
-    z-index: 1;
-    border-right-width: var(--border-radius);
+  border-right-color: #fff;
+  z-index: 1;
+  border-right-width: var(--border-radius);
 }
 
 .buttons :global(.btn-outline-primary) + button {
-    border-radius: var(--border-radius) var(--border-radius) 0 var(--border-radius);
+  border-radius: var(--border-radius) var(--border-radius) 0 var(--border-radius);
 }
 
 .main {
-    flex-grow: 1;
-    border: var(--border-color) 1px solid;
-    border-radius: var(--border-radius) 0 0 var(--border-radius);
+  flex-grow: 1;
+  border: var(--border-color) 1px solid;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
 }
 
 .header {
-    text-align: right;
-    padding: 0.5em;
-    padding-bottom: 0;
+  text-align: right;
+  padding: 0.5em;
+  padding-bottom: 0;
 }
 
-.main .header > * { /* For specificity */
-    margin-left: 10px;
+.main .header > * {
+  /* For specificity */
+  margin-left: 10px;
 }
 
 .header form {
-    display: inline-block;
+  display: inline-block;
 }
 
 .meta {
-    margin: 0.5em 0;
-    padding: 0 0.5em 0 1em;
-    z-index: 2;
-    position: relative;
+  margin: 0.5em 0;
+  padding: 0 0.5em 0 1em;
+  z-index: 2;
+  position: relative;
 }
 
 .meta h3 {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .meta::after {
-    content: "";
-    clear: both;
-    display: table;
+  content: "";
+  clear: both;
+  display: table;
 }
 
 .allAudienceControls {
-    float: right;
-    position: relative;
-    display: flex;
-    align-items: baseline;
-    flex-direction: column;
+  float: right;
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  flex-direction: column;
 }
 
 .audienceControls {
-    display: flex;
-    align-items: baseline;
+  display: flex;
+  align-items: baseline;
 }
 
 .audienceControlsLabel {
-    margin-right: 0.5em;
+  margin-right: 0.5em;
 }
 
 .audienceDisplayEdit {
-    margin-left: 0.5em;
+  margin-left: 0.5em;
 }
 
 .audienceDisplayControls {
-    margin-top: 0.5em;
+  margin-top: 0.5em;
 }
 
 .audienceDisplayControls :global(.form-control) {
-    display: inline-block;
-    width: auto;
+  display: inline-block;
+  width: auto;
 }
 
 .displayButtons {
-    text-align: right;
+  text-align: right;
 }
 
 .main > div {
-    border: none;
+  border: none;
 }
 
 .hideMargins {
-    margin-top: -1em;
+  margin-top: -1em;
 }
 
 .empty {
-    margin: 1em;
-    font-style: italic;
+  margin: 1em;
+  font-style: italic;
 }

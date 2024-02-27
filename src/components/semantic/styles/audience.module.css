@@ -1,16 +1,16 @@
 .view {
-    display: flex;
-    align-items: baseline;
+  display: flex;
+  align-items: baseline;
 }
 
 .wrapper button {
-    margin-left: 0.5em;
+  margin-left: 0.5em;
 }
 
 .rightAlign {
-    text-align: right;
+  text-align: right;
 }
 
 .editorRow button {
-    margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }

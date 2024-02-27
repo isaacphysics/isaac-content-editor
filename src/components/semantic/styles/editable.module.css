@@ -1,91 +1,90 @@
 .startEdit {
-    border: none;
-    background: none;
-    border-bottom: 1px dashed;
-    padding: 0;
-    margin: 0;
+  border: none;
+  background: none;
+  border-bottom: 1px dashed;
+  padding: 0;
+  margin: 0;
 }
 
 .isEditingWrapper button {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 .isEditingWrapper {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 div.isEditingWrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 div.isEditingWrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 div.isEditingWrapper button {
-    margin-bottom: 0.125rem;
+  margin-bottom: 0.125rem;
 }
 
 span.isEditingWrapper {
-    display: inline-flex;
+  display: inline-flex;
 }
 
-
 .controlWrapper {
-    display: inline-flex;
-    flex-direction: column;
-    flex-grow: 1;
+  display: inline-flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .controlWrapper :global(.form-control) {
-    display: inline-block;
-    width: auto;
+  display: inline-block;
+  width: auto;
 }
 
 .labelledInput {
-    display: inline-flex;
-    flex-grow: 1;
-    align-items: baseline;
+  display: inline-flex;
+  flex-grow: 1;
+  align-items: baseline;
 }
 
 .labelledInput input {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .feedback {
-    display: inline-block;
-    width: auto;
+  display: inline-block;
+  width: auto;
 }
 
 .notEditingWrapper {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .multiLine .controlWrapper {
-    display: flex;
-    text-align: left;
+  display: flex;
+  text-align: left;
 }
 
 .multiLine :global(.form-control) {
-    width: 100%;
-    height: 10em;
+  width: 100%;
+  height: 10em;
 }
 
 .isEditingWrapper.multiLine {
-    text-align: right;
+  text-align: right;
 }
 
 .multiLine .startEdit {
-    width: 100%;
-    text-align: left;
-    border: 1px dashed;
-    padding: 0.5em;
+  width: 100%;
+  text-align: left;
+  border: 1px dashed;
+  padding: 0.5em;
 }
 
 .codeFormat {
-    font-family: monospace;
+  font-family: monospace;
 }

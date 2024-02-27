@@ -1,34 +1,34 @@
 .choice {
-    display: flex;
-    flex-direction: row;
-    align-self: flex-start;
-    margin-bottom: 1em;
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+  margin-bottom: 1em;
 }
 
 .choice > button {
-    width: 38px;
+  width: 38px;
 }
 
 .choiceValue {
-    flex-grow: 1;
-    flex-basis: 0;
-    margin: 0.5em;
-    cursor: pointer;
+  flex-grow: 1;
+  flex-basis: 0;
+  margin: 0.5em;
+  cursor: pointer;
 }
 
 .choiceExplanation {
-    flex-grow: 1;
-    flex-basis: 0;
+  flex-grow: 1;
+  flex-basis: 0;
 }
 
 .fullWidth {
-    display: block;
+  display: block;
 }
 
 .graphSpec {
-    width: 100%;
+  width: 100%;
 }
 
 .graphSpec textarea {
-    height: 6em;
+  height: 6em;
 }

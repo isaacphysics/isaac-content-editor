@@ -1,221 +1,222 @@
 .wrapper {
-    margin-top: -1em;
-    text-align: center;
+  margin-top: -1em;
+  text-align: center;
 }
 
 .outerWrapper {
-    margin-bottom: 1em;
-    flex: 1;
-    height: max-content;
+  margin-bottom: 1em;
+  flex: 1;
+  height: max-content;
 }
 
 .box {
-    border: #eee 1px solid;
-    padding: 0 1em;
-    position: relative;
-    width: 100%;
-    min-height: 29px;
-    margin-top: -1px;
+  border: #eee 1px solid;
+  padding: 0 1em;
+  position: relative;
+  width: 100%;
+  min-height: 29px;
+  margin-top: -1px;
 }
 .box > .box {
-    margin: 1em 0;
+  margin: 1em 0;
 }
 .box.named {
-    border-top-left-radius: 0.5em;
+  border-top-left-radius: 0.5em;
 }
 .boxHeader {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 0 -1em 1em;
-    border-top-left-radius: 0.5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0 -1em 1em;
+  border-top-left-radius: 0.5em;
 }
 .boxLabel {
-    background: #eee;
-    padding: 0.5em;
-    position: relative;
-    color: #444;
-    border: 0;
-    border-bottom-right-radius: 0.5em;
-    border-top-left-radius: 0.5em;
+  background: #eee;
+  padding: 0.5em;
+  position: relative;
+  color: #444;
+  border: 0;
+  border-bottom-right-radius: 0.5em;
+  border-top-left-radius: 0.5em;
 }
 
 .metaLabel {
-    background: #eee;
-    padding: 0.5em;
-    position: absolute;
-    right: 100px;
-    color: #444;
-    border: 0;
-    border-bottom-left-radius: 0.5em;
-    border-bottom-right-radius: 0.5em;
+  background: #eee;
+  padding: 0.5em;
+  position: absolute;
+  right: 100px;
+  color: #444;
+  border: 0;
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
 }
 
 .outerWrapper > .box > .boxHeader > .metaLabel {
-    right: 0.5em;
+  right: 0.5em;
 }
 
 .boxSpacer {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .box:hover > .boxHeader button {
-    display: block;
+  display: block;
 }
 
 .iconButton {
-    position: absolute;
-    opacity: 0.5;
-    display: none;
-    height: 35px;
-    border: none;
-    background: none;
-    z-index: 1000;
-    transition: transform 0.2s;
+  position: absolute;
+  opacity: 0.5;
+  display: none;
+  height: 35px;
+  border: none;
+  background: none;
+  z-index: 1000;
+  transition: transform 0.2s;
 }
 
 .boxHeader:hover .iconButton {
-    opacity: 1;
+  opacity: 1;
 }
 
 .iconButton:hover {
-    transform: scale(150%);
+  transform: scale(150%);
 }
 
 .boxUp {
-    right: 56px;
-    top: -9px;
+  right: 56px;
+  top: -9px;
 }
 
 .boxDown {
-    right: 26px;
-    top: -9px;
+  right: 26px;
+  top: -9px;
 }
 
 .boxDelete {
-    right: -4px;
-    top: -7px;
+  right: -4px;
+  top: -7px;
 }
 
 .boxDeleteHovered {
-    border-color: #dc3545;
-    background: #dc354507;
-    z-index: 2;
+  border-color: #dc3545;
+  background: #dc354507;
+  z-index: 2;
 }
 
 .boxDeleteHovered > .boxHeader .boxLabel {
-    background: #dc3545;
-    color: #fff;
+  background: #dc3545;
+  color: #fff;
 }
 
 .boxDeleteHovered > *:not(:first-child) {
-    opacity: 0.4;
+  opacity: 0.4;
 }
 
 .metadata {
-    margin: -0.5em -1em 1em;
-    padding: 0 1em 0.5em;
-    border-bottom: #eee 1px solid;
+  margin: -0.5em -1em 1em;
+  padding: 0 1em 0.5em;
+  border-bottom: #eee 1px solid;
 }
 
 .box:hover > .inserter {
-    display: block !important;
+  display: block !important;
 }
 
 .inserter {
-    display: none;
+  display: none;
 }
 
 .inserter:last-child .inserterAdd button {
-    margin-bottom: -16px;
+  margin-bottom: -16px;
 }
 
 .inserterAdd {
-    margin-top: 16px; /* This won't show but makes the -32px work correctly below. */
+  margin-top: 16px; /* This won't show but makes the -32px work correctly below. */
 }
 
 .inserterAdd button {
-    opacity: 0.5;
-    position: absolute;
-    z-index: 2;
-    margin: -32px 0;
-    left: calc(50% - 31px);
-    transition: transform 0.2s;
+  opacity: 0.5;
+  position: absolute;
+  z-index: 2;
+  margin: -32px 0;
+  left: calc(50% - 31px);
+  transition: transform 0.2s;
 }
 
 .inserterAdd button:hover {
-    opacity: 1;
-    text-decoration: none;
-    z-index: 3;
-    transform: scale(150%);
+  opacity: 1;
+  text-decoration: none;
+  z-index: 3;
+  transform: scale(150%);
 }
 
 .editButtons {
-    text-align: right;
-    margin-bottom: 0.5em;
+  text-align: right;
+  margin-bottom: 0.5em;
 }
 
 .editButtons button {
-    margin-left: 0.5em;
+  margin-left: 0.5em;
 }
 
 /* CSS for horizontal content layout option */
 
 .horizontal:not(.jsonMode) {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 
 .horizontal > .box {
-    width: auto;
-    flex-basis: 25%;
-    flex-grow: 10;
+  width: auto;
+  flex-basis: 25%;
+  flex-grow: 10;
 }
 
 .horizontal > .boxHeader {
-    width: 103%;
+  width: 103%;
 }
 
 .horizontal > .box > .boxHeader > .iconButton {
-    transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
 .horizontal > .inserter > .inserterAdd button {
-    top: calc(50% - 24px);
-    left: calc(50% - 31px);
-    margin: unset;
+  top: calc(50% - 24px);
+  left: calc(50% - 31px);
+  margin: unset;
 }
 
 .horizontal > .inserter {
-    position: relative;
-    display: block;
-    opacity: 0;
-    flex-grow: 0.5;
-    min-width: 40px;
+  position: relative;
+  display: block;
+  opacity: 0;
+  flex-grow: 0.5;
+  min-width: 40px;
 }
 
 .horizontal > .box + .box {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .horizontal > .inserterBox {
-    max-width: 31%;
+  max-width: 31%;
 }
 
 /* Make sure that the first and last inserters don't take up space unless hovering */
 .horizontal > .inserter {
-    display: none;
+  display: none;
 }
 .horizontal > .inserter ~ .inserter {
-    display: block;
+  display: block;
 }
-.horizontal > .inserter:last-child { /* This selects "inserters that are last children of horizontal elements", meaning if an inserter is not the last child, then this breaks */
-    display: none;
+.horizontal > .inserter:last-child {
+  /* This selects "inserters that are last children of horizontal elements", meaning if an inserter is not the last child, then this breaks */
+  display: none;
 }
 
 .horizontal:hover > .inserter {
-    opacity: 1;
-    flex-grow: 2.5;
+  opacity: 1;
+  flex-grow: 2.5;
 }

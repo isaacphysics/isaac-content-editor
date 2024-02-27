@@ -1,120 +1,124 @@
 .questionType {
-    float: right;
-    margin-left: 1em;
+  float: right;
+  margin-left: 1em;
 }
 
 .checkboxLabel {
-    margin-left: 1.25rem;
-    margin-right: 0.5rem;
+  margin-left: 1.25rem;
+  margin-right: 0.5rem;
 }
 
 .questionLabel {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .editableFullwidth {
-    margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .editableFullwidth > span {
-    width: 100%
+  width: 100%;
 }
 
 .editableFullwidth span {
-    display: inline-flex;
-    flex-grow: 1;
+  display: inline-flex;
+  flex-grow: 1;
 }
 
 .editableFullwidth input {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .editableFullwidth span span span {
-    align-items: baseline;
+  align-items: baseline;
 }
 
 .symbolicMetaButtons {
-    margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .symbolicMetaButtons button {
-    margin-left: 0.5em;
+  margin-left: 0.5em;
 }
 
 .striped tr:nth-child(2n) {
-    background: #eee;
+  background: #eee;
 }
 
-.striped th, .center {
-    text-align: center;
+.striped th,
+.center {
+  text-align: center;
 }
 
 .nowrap {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 .itemsHeaderTitle {
-    margin-top: 1em;
+  margin-top: 1em;
 }
 
 .itemsHeaderRow {
-    margin-bottom: 1em; /* Without this margin, the first InserterButton cannot reposition itself correctly */
+  margin-bottom: 1em; /* Without this margin, the first InserterButton cannot reposition itself correctly */
 }
 
 .itemsChoiceRow {
-    margin-top: -0.5em;
-    margin-bottom: 0.5em;
+  margin-top: -0.5em;
+  margin-bottom: 0.5em;
 }
 
-.itemsChoiceRow .dropdownButton, .parsonsItem .dropdownButton {
-    width: 100%;
-    border: none !important;
-    background: none !important;
-    color: #000 !important;
+.itemsChoiceRow .dropdownButton,
+.parsonsItem .dropdownButton {
+  width: 100%;
+  border: none !important;
+  background: none !important;
+  color: #000 !important;
 }
 
 .itemsChoiceInserter {
-    margin-top: 0.5em;
-    width: 100%;
+  margin-top: 0.5em;
+  width: 100%;
 }
 
 .itemRowText {
-    white-space: normal !important;
-    overflow-wrap: break-word;
+  white-space: normal !important;
+  overflow-wrap: break-word;
 }
 
 .dropdownItem {
-    min-width: 300px;
+  min-width: 300px;
 }
 
-.dropdownItem[class*="active"], .dropdownItem:active {
-    border-radius: 3px;
+.dropdownItem[class*="active"],
+.dropdownItem:active {
+  border-radius: 3px;
 }
 
 /* Workaround using attribute selectors to inspect bootstrap classes */
-.dropdownItem[class*="active"] .expandTextButton, .dropdownItem:active .expandTextButton {
-    color: white !important;
+.dropdownItem[class*="active"] .expandTextButton,
+.dropdownItem:active .expandTextButton {
+  color: white !important;
 }
 
 .itemChoiceDropdown {
-    padding-top: 0;
-    padding-bottom: 0;
-    overflow-y: auto;
-    max-height: 100vh;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow-y: auto;
+  max-height: 100vh;
 }
 
 .parsonsItem {
-    border-left: 1px solid #eee;
-    position: relative;
-    margin-top: -1em;
-    margin-bottom: -1px;
-    padding-top: 0.5em;
-    padding-bottom: calc(1px + 0.5em);
-    margin-left: calc(-1em - 1px);
-    display: flex;
-    padding-right: 75px; /* Room for up/down/delete buttons */
+  border-left: 1px solid #eee;
+  position: relative;
+  margin-top: -1em;
+  margin-bottom: -1px;
+  padding-top: 0.5em;
+  padding-bottom: calc(1px + 0.5em);
+  margin-left: calc(-1em - 1px);
+  display: flex;
+  padding-right: 75px; /* Room for up/down/delete buttons */
 }
 
 .parsonsIndentPresenter {
-    min-width: 50px;
+  min-width: 50px;
 }

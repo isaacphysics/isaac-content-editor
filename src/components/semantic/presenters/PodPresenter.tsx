@@ -9,10 +9,14 @@ import { SemanticDocProp } from "../props/SemanticDocProp";
 const EditableUrlProp = EditableDocPropFor<IsaacPod>("url");
 
 export function PodPresenter(props: PresenterProps<IsaacPod>) {
-    return <>
-        <h4><EditableTitleProp {...props} label="Title" /></h4>
-        <EditableValueProp {...props} label="Pod text" block />
-        <EditableUrlProp {...props} label="Url" placeHolder="Pod link Url" block />
-        <SemanticDocProp {...props} prop="image" />
-    </>;
+  return (
+    <>
+      <h4>
+        <EditableTitleProp {...props} label="Title" />
+      </h4>
+      <EditableValueProp {...props} label="Pod text" block />
+      <EditableUrlProp {...props} label="Url" placeHolder="Pod link Url" block />
+      <SemanticDocProp {...props} prop="image" />
+    </>
+  );
 }

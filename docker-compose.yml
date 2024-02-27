@@ -9,7 +9,6 @@ networks:
   default:
     external:
       name: isaac
-
 #    network_mode: bridge
 #    ports:
 #      - "8421:80"
