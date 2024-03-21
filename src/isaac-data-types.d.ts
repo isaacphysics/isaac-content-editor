@@ -1,5 +1,5 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2024-02-27 14:40:43.
+// Generated using typescript-generator version 2.12.476 on 2024-03-21 09:17:21.
 
 export interface AbstractUserPreferenceManager {
 }
@@ -29,6 +29,7 @@ export interface AudienceContext {
 }
 
 export interface FormulaValidationResponse extends QuestionValidationResponse {
+  matchType?: string;
 }
 
 export interface GameboardContentDescriptor {
@@ -65,22 +66,22 @@ export interface ITransaction extends AutoCloseable {
 export interface IUserAlert {
   message?: string;
   id?: number;
-  dismissed?: EpochTimeStamp;
-  seen?: EpochTimeStamp;
-  clicked?: EpochTimeStamp;
-  link?: string;
   userId?: number;
   created?: EpochTimeStamp;
+  link?: string;
+  seen?: EpochTimeStamp;
+  clicked?: EpochTimeStamp;
+  dismissed?: EpochTimeStamp;
 }
 
 export interface IUserAlerts {
 }
 
 export interface IUserNotification {
-  contentNotificationId?: string;
   status?: NotificationStatus;
   userId?: number;
   created?: EpochTimeStamp;
+  contentNotificationId?: string;
 }
 
 export interface IUserNotifications {
@@ -125,6 +126,7 @@ export interface IsaacEventPage extends Content {
   groupReservationLimit?: number;
   allowGroupReservations?: boolean;
   privateEvent?: boolean;
+  hub?: Hub;
   endDate?: EpochTimeStamp;
   preResourceContent?: Content[];
   emailEventDetails?: string;
@@ -499,13 +501,13 @@ export interface Video extends Media {
 
 export interface EventBooking {
   id?: number;
-  additionalInformation?: { [index: string]: string };
   creationDate?: EpochTimeStamp;
   reservedById?: number;
   bookingStatus?: BookingStatus;
   userId?: number;
   eventId?: string;
   updateDate?: EpochTimeStamp;
+  additionalInformation?: { [index: string]: string };
 }
 
 export interface EventBookings {
@@ -676,7 +678,6 @@ export interface Address {
 export interface Connection extends Wrapper, AutoCloseable {
   closed?: boolean;
   readOnly?: boolean;
-  transactionIsolation?: number;
   networkTimeout?: number;
   schema?: string;
   autoCommit?: boolean;
@@ -686,23 +687,13 @@ export interface Connection extends Wrapper, AutoCloseable {
   typeMap?: { [index: string]: Class<any> };
   holdability?: number;
   clientInfo?: { [index: string]: any };
+  transactionIsolation?: number;
 }
 
 export interface DatabaseMetaData extends Wrapper {
   connection?: Connection;
   readOnly?: boolean;
   url?: string;
-  resultSetHoldability?: number;
-  databaseProductVersion?: string;
-  identifierQuoteString?: string;
-  maxBinaryLiteralLength?: number;
-  maxCharLiteralLength?: number;
-  maxProcedureNameLength?: number;
-  maxCatalogNameLength?: number;
-  defaultTransactionIsolation?: number;
-  databaseMajorVersion?: number;
-  databaseMinorVersion?: number;
-  clientInfoProperties?: ResultSet;
   databaseProductName?: string;
   driverVersion?: string;
   driverMajorVersion?: number;
@@ -746,6 +737,17 @@ export interface DatabaseMetaData extends Wrapper {
   catalogs?: ResultSet;
   tableTypes?: ResultSet;
   typeInfo?: ResultSet;
+  resultSetHoldability?: number;
+  databaseProductVersion?: string;
+  identifierQuoteString?: string;
+  maxBinaryLiteralLength?: number;
+  maxCharLiteralLength?: number;
+  maxProcedureNameLength?: number;
+  maxCatalogNameLength?: number;
+  defaultTransactionIsolation?: number;
+  databaseMajorVersion?: number;
+  databaseMinorVersion?: number;
+  clientInfoProperties?: ResultSet;
 }
 
 export interface SQLWarning extends SQLException {
@@ -759,11 +761,12 @@ export interface Wrapper {
 }
 
 export interface ResultSet extends Wrapper, AutoCloseable {
+  closed?: boolean;
   first?: boolean;
   last?: boolean;
-  closed?: boolean;
   type?: number;
   fetchDirection?: number;
+  row?: number;
   metaData?: ResultSetMetaData;
   warnings?: SQLWarning;
   holdability?: number;
@@ -773,7 +776,6 @@ export interface ResultSet extends Wrapper, AutoCloseable {
   fetchSize?: number;
   concurrency?: number;
   statement?: Statement;
-  row?: number;
 }
 
 export interface Throwable extends Serializable {
@@ -825,10 +827,9 @@ export interface ResultSetMetaData extends Wrapper {
 }
 
 export interface Statement extends Wrapper, AutoCloseable {
-  connection?: Connection;
   closed?: boolean;
-  resultSetConcurrency?: number;
-  resultSetHoldability?: number;
+  connection?: Connection;
+  generatedKeys?: ResultSet;
   fetchDirection?: number;
   maxFieldSize?: number;
   queryTimeout?: number;
@@ -836,7 +837,6 @@ export interface Statement extends Wrapper, AutoCloseable {
   closeOnCompletion?: boolean;
   largeUpdateCount?: number;
   largeMaxRows?: number;
-  generatedKeys?: ResultSet;
   maxRows?: number;
   warnings?: SQLWarning;
   fetchSize?: number;
@@ -844,6 +844,8 @@ export interface Statement extends Wrapper, AutoCloseable {
   updateCount?: number;
   moreResults?: boolean;
   poolable?: boolean;
+  resultSetConcurrency?: number;
+  resultSetHoldability?: number;
 }
 
 export interface Exception extends Throwable {
@@ -886,6 +888,8 @@ export type GameboardCreationMethod = "FILTER" | "BUILDER";
 export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 
 export type GroupStatus = "ACTIVE" | "DELETED";
+
+export type Hub = "BIRMINGHAM_AND_CENTRAL_MIDLANDS" | "CAMBRIDGE_AND_NORTHAMPTONSHIRE" | "CHESHIRE" | "CORNWALL" | "CUMBRIA_SATELLITE" | "DARTFORD_AND_EAST_SUSSEX" | "DEVON" | "GLOUCESTERSHIRE_WILTSHIRE_AND_NORTH_SOMERSET" | "GREATER_MANCHESTER" | "LANCASHIRE_SATELLITE" | "LEICESTER_NOTTINGHAMSHIRE_AND_RUTLAND" | "LINCOLNSHIRE" | "LONDON_HERTFORDSHIRE_AND_ESSEX" | "LONDON_HERTFORDSHIRE_AND_HAMPSHIRE" | "LONDON_SURREY_AND_WEST_SUSSEX" | "MAIDSTONE_AND_KENT" | "MILTON_KEYNES_AND_NORTHAMPTONSHIRE" | "NEWCASTLE_DURHAM_AND_EAST_CUMBRIA" | "NORFOLK" | "NORTH_EAST_AND_NORTHUMBERLAND" | "NORTH_YORKSHIRE_LEEDS_AND_WAKEFIELD";
 
 export type AlertEvents = "SEEN" | "CLICKED" | "DISMISSED";
 
