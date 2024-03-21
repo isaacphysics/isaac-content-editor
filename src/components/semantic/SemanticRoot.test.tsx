@@ -130,7 +130,6 @@ describe("can render existing docs without errors", () => {
   });
 
   describe("Can render Computer Science content correctly", () => testFiles("../isaac-content-2/content"));
-  describe("Can render Physics content correctly", () => testFiles("../rutherford-content/content"));
 
   it.skip("Checks specific files with errors found previously", () => {
     testFile("../rutherford-content/content/questions/chemistry/foundations/atomic_structure/elements_reversal.json");

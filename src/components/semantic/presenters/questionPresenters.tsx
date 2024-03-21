@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { EditableDocPropFor, EditableIDProp, EditableTitleProp } from "../props/EditableDocProp";
 import styles from "../styles/question.module.css";
-import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 import {
   Content,
   IsaacMultiChoiceQuestion,
@@ -384,13 +384,6 @@ export function FreeTextQuestionInstructions() {
   return (
     <div>
       <h5>Matching Rule Syntax</h5>
-      <Alert color="info">
-        A fuller set of instructions can be found{" "}
-        <a href="https://github.com/isaacphysics/rutherford-content/wiki/Editor-Notes#free-text-questions" target="_">
-          here
-        </a>
-        .
-      </Alert>
       <table className={styles.striped}>
         <thead>
           <tr>

@@ -1,16 +1,12 @@
 import React, { Fragment, useState } from "react";
 import { Button } from "reactstrap";
-
 import { AudienceContext, Difficulty, ExamBoard, RoleRequirement, Stage } from "../../../isaac-data-types";
-import { isCS } from "../../../services/config";
 import { ExtractRecordArrayValue, isDefined } from "../../../utils/types";
 
 import { PresenterProps } from "../registry";
 import styles from "../styles/audience.module.css";
 
-function defaultAudience(): AudienceContext {
-  return isCS() ? { stage: ["a_level"], examBoard: ["ocr"] } : { stage: ["a_level"] };
-}
+const defaultAudience: AudienceContext = { stage: ["a_level"], examBoard: ["ocr"] };
 
 type AudienceKey = keyof AudienceContext;
 type AudienceValue = ExtractRecordArrayValue<Required<AudienceContext>>;
@@ -79,7 +75,7 @@ function AudienceContextPresenter({
         values.forEach((value) => filteredUnusedOptions.delete(value));
 
         // Restrict Exam Board options by Stage selection if set
-        if (isCS() && key === "examBoard" && doc.stage && doc.stage.length === 1) {
+        if (key === "examBoard" && doc.stage && doc.stage.length === 1) {
           filteredUnusedOptions.forEach((value) => {
             if (!examBoardsForStage(doc).includes(value as ExamBoard)) {
               filteredUnusedOptions.delete(value);
@@ -331,7 +327,7 @@ function AudienceEditor({ doc, update, possible }: PresenterProps<AudienceContex
                 outline
                 size="sm"
                 onClick={() => {
-                  update([...doc, defaultAudience()]);
+                  update([...doc, defaultAudience]);
                 }}
               >
                 OR ➕
@@ -366,7 +362,7 @@ export function AudiencePresenter({ doc, update, type }: PresenterProps & { type
         <Button
           size="sm"
           onClick={() => {
-            setEditingAudience(doc.audience ?? [defaultAudience()]);
+            setEditingAudience(doc.audience ?? [defaultAudience]);
           }}
         >
           Edit

@@ -2,7 +2,6 @@
 // @ts-ignore typescript doesn't seem to think utils is in the place it is
 import { Remarkable, utils } from "remarkable";
 import { linkify } from "remarkable/linkify";
-import { isPhy } from "../../services/config";
 import styles from "../styles/markup.module.css";
 import { StagingServer } from "../../services/isaacApi";
 import { dropZoneRegex } from "../IsaacTypes";
@@ -81,12 +80,6 @@ export const regexProcessMarkdown = (markdown: string) => {
     [`<a href="${StagingServer}$2" target="_blank">$1</a>`]: /\\link{([^}]*)}{([^}]*)}/g,
   };
 
-  if (isPhy()) {
-    Object.assign(regexRules, {
-      "[**Glossary**](/glossary)": /\*\*Glossary\*\*/g,
-      "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,
-    });
-  }
   Object.entries(regexRules).forEach(([replacement, rule]) => (markdown = markdown.replace(rule, replacement)));
   return markdown;
 };

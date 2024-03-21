@@ -12,7 +12,6 @@ import { HistoryRouter } from "./components/HistoryRouter";
 import { defaultDispatch } from "./services/commands";
 import { MenuModalRef } from "./screens/MenuModal";
 import { defaultPreview } from "./components/Preview";
-import { defaultCdn } from "./components/CDNUploadModal";
 
 export const AppContext = createContext({
   selection: defaultSelectedContext,
@@ -24,7 +23,6 @@ export const AppContext = createContext({
   }) as NavigateFunction,
   menuModal: { current: null } as MutableRefObject<MenuModalRef | null>,
   preview: defaultPreview,
-  cdn: defaultCdn,
 });
 
 export const browserHistory = createBrowserHistory();

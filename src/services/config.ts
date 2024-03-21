@@ -24,14 +24,6 @@ export function getConfig(): Config {
   };
 }
 
-export function isPhy(): boolean {
-  return getEnvVar("REACT_APP_SITE") === "PHY";
-}
-
-export function isCS(): boolean {
-  return getEnvVar("REACT_APP_SITE") === "CS";
-}
-
 // This will use the normal REACT_APP_... variables from process.env on local/development envs.
 // For static production builds, it will leave the ENV_VAR_NAME as-is, which will be replaced
 // with the actual value at runtime by the docker-entrypoint.sh script.

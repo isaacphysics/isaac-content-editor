@@ -17,7 +17,6 @@ import { Preview, PreviewMode } from "../components/Preview";
 import { MenuModal, MenuModalRef } from "./MenuModal";
 import { buildPageError } from "../components/PageError";
 import Split from "react-split";
-import { CDNUploadModal } from "../components/CDNUploadModal";
 import hash from "object-hash";
 import { isDefined } from "../utils/types";
 import { compare, Operation, applyReducer } from "fast-json-patch";
@@ -328,7 +327,6 @@ export function EditorScreen() {
   return (
     <SWRConfig value={{ fetcher, revalidateOnFocus: false, revalidateOnReconnect: false }}>
       <AppContext.Provider value={appContext}>
-        <CDNUploadModal />
         <Split
           className={styles.editorScreen}
           sizes={[25, 75, 0]}
