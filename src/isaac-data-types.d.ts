@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-03-28 09:08:00.
+// Generated using typescript-generator version 3.2.1263 on 2024-03-28 16:12:22.
 
 export interface AbstractUserPreferenceManager {
 }
@@ -79,10 +79,10 @@ export interface IUserAlerts {
 }
 
 export interface IUserNotification {
-  contentNotificationId?: string;
   status?: NotificationStatus;
   userId?: number;
   created?: EpochTimeStamp;
+  contentNotificationId?: string;
 }
 
 export interface IUserNotifications {
@@ -509,13 +509,13 @@ export interface Video extends Media {
 
 export interface EventBooking {
   id?: number;
-  additionalInformation?: { [index: string]: string };
   eventId?: string;
   updateDate?: EpochTimeStamp;
   userId?: number;
+  creationDate?: EpochTimeStamp;
   reservedById?: number;
   bookingStatus?: BookingStatus;
-  creationDate?: EpochTimeStamp;
+  additionalInformation?: { [index: string]: string };
 }
 
 export interface EventBookings {
@@ -697,44 +697,33 @@ export interface Address {
 
 export interface Connection extends Wrapper, AutoCloseable {
   readOnly?: boolean;
-  transactionIsolation?: number;
-  autoCommit?: boolean;
+  closed?: boolean;
   schema?: string;
+  clientInfo?: { [index: string]: any };
+  autoCommit?: boolean;
   metaData?: DatabaseMetaData;
   catalog?: string;
   warnings?: SQLWarning;
   typeMap?: { [index: string]: Class<any> };
   holdability?: number;
-  clientInfo?: { [index: string]: any };
-  closed?: boolean;
   networkTimeout?: number;
+  transactionIsolation?: number;
 }
 
 export interface DatabaseMetaData extends Wrapper {
   connection?: Connection;
   readOnly?: boolean;
   url?: string;
-  resultSetHoldability?: number;
-  databaseProductVersion?: string;
-  identifierQuoteString?: string;
-  maxBinaryLiteralLength?: number;
-  maxCharLiteralLength?: number;
-  maxProcedureNameLength?: number;
-  maxCatalogNameLength?: number;
-  defaultTransactionIsolation?: number;
-  databaseMajorVersion?: number;
-  databaseMinorVersion?: number;
-  clientInfoProperties?: ResultSet;
+  userName?: string;
+  schemas?: ResultSet;
+  catalogs?: ResultSet;
+  tableTypes?: ResultSet;
+  typeInfo?: ResultSet;
   driverName?: string;
   sqlkeywords?: string;
   schemaTerm?: string;
   catalogTerm?: string;
   maxRowSize?: number;
-  schemas?: ResultSet;
-  catalogs?: ResultSet;
-  tableTypes?: ResultSet;
-  typeInfo?: ResultSet;
-  userName?: string;
   databaseProductName?: string;
   driverVersion?: string;
   driverMajorVersion?: number;
@@ -768,6 +757,17 @@ export interface DatabaseMetaData extends Wrapper {
   sqlstateType?: number;
   rowIdLifetime?: RowIdLifetime;
   maxLogicalLobSize?: number;
+  maxBinaryLiteralLength?: number;
+  resultSetHoldability?: number;
+  databaseMajorVersion?: number;
+  databaseMinorVersion?: number;
+  clientInfoProperties?: ResultSet;
+  databaseProductVersion?: string;
+  identifierQuoteString?: string;
+  maxCharLiteralLength?: number;
+  maxProcedureNameLength?: number;
+  maxCatalogNameLength?: number;
+  defaultTransactionIsolation?: number;
 }
 
 export interface SQLWarning extends SQLException {
@@ -782,6 +782,7 @@ export interface Wrapper {
 
 export interface ResultSet extends Wrapper, AutoCloseable {
   type?: number;
+  closed?: boolean;
   metaData?: ResultSetMetaData;
   warnings?: SQLWarning;
   holdability?: number;
@@ -792,7 +793,6 @@ export interface ResultSet extends Wrapper, AutoCloseable {
   fetchSize?: number;
   concurrency?: number;
   statement?: Statement;
-  closed?: boolean;
   last?: boolean;
   row?: number;
   fetchDirection?: number;
@@ -848,16 +848,15 @@ export interface ResultSetMetaData extends Wrapper {
 
 export interface Statement extends Wrapper, AutoCloseable {
   connection?: Connection;
-  resultSetConcurrency?: number;
-  resultSetHoldability?: number;
-  warnings?: SQLWarning;
   maxRows?: number;
+  closed?: boolean;
+  warnings?: SQLWarning;
+  fetchSize?: number;
   resultSet?: ResultSet;
   updateCount?: number;
   moreResults?: boolean;
   poolable?: boolean;
-  fetchSize?: number;
-  closed?: boolean;
+  generatedKeys?: ResultSet;
   maxFieldSize?: number;
   queryTimeout?: number;
   resultSetType?: number;
@@ -865,7 +864,8 @@ export interface Statement extends Wrapper, AutoCloseable {
   largeUpdateCount?: number;
   largeMaxRows?: number;
   fetchDirection?: number;
-  generatedKeys?: ResultSet;
+  resultSetConcurrency?: number;
+  resultSetHoldability?: number;
 }
 
 export interface Exception extends Throwable {
@@ -909,7 +909,7 @@ export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 
 export type GroupStatus = "ACTIVE" | "DELETED";
 
-export type Hub = "BIRMINGHAM_AND_CENTRAL_MIDLANDS" | "CAMBRIDGE_AND_NORTHAMPTONSHIRE" | "CHESHIRE" | "CORNWALL" | "CUMBRIA_SATELLITE" | "DARTFORD_AND_EAST_SUSSEX" | "DEVON" | "GLOUCESTERSHIRE_WILTSHIRE_AND_NORTH_SOMERSET" | "GREATER_MANCHESTER" | "LANCASHIRE_SATELLITE" | "LEICESTER_NOTTINGHAMSHIRE_AND_RUTLAND" | "LINCOLNSHIRE" | "LONDON_HERTFORDSHIRE_AND_ESSEX" | "LONDON_HERTFORDSHIRE_AND_HAMPSHIRE" | "LONDON_SURREY_AND_WEST_SUSSEX" | "MAIDSTONE_AND_KENT" | "MILTON_KEYNES_AND_NORTHAMPTONSHIRE" | "NEWCASTLE_DURHAM_AND_EAST_CUMBRIA" | "NORFOLK" | "NORTH_EAST_AND_NORTHUMBERLAND" | "NORTH_YORKSHIRE_LEEDS_AND_WAKEFIELD";
+export type Hub = "BIRMINGHAM_AND_CENTRAL_MIDLANDS" | "CAMBRIDGE_AND_NORTHAMPTONSHIRE" | "CHESHIRE" | "CORNWALL" | "CUMBRIA_SATELLITE" | "DARTFORD_AND_EAST_SUSSEX" | "DEVON" | "GLOUCESTERSHIRE_WILTSHIRE_AND_NORTH_SOMERSET" | "GREATER_MANCHESTER" | "LANCASHIRE_SATELLITE" | "LEICESTER_NOTTINGHAMSHIRE_AND_RUTLAND" | "LINCOLNSHIRE" | "LONDON_HERTFORDSHIRE_AND_ESSEX" | "LONDON_HERTFORDSHIRE_AND_HAMPSHIRE" | "LONDON_SURREY_AND_WEST_SUSSEX" | "MAIDSTONE_AND_KENT" | "MILTON_KEYNES_AND_NORTHAMPTONSHIRE" | "NEWCASTLE_DURHAM_AND_EAST_CUMBRIA" | "NORFOLK" | "NORTH_EAST_AND_NORTHUMBERLAND" | "NORTH_YORKSHIRE_LEEDS_AND_WAKEFIELD" | "OXFORDSHIRE_BUCKINGHAMSHIRE_AND_WEST_BERKSHIRE" | "SOMERSET" | "STOKE_ON_TRENT_STAFFORDSHIRE_AND_DERBYSHIRE" | "SUFFOLK" | "TEES_VALLEY_AND_RICHMONDSHIRE" | "WARRINGTON_AND_MERSEYSIDE" | "WEST_MIDLANDS_SATELLITE" | "WEST_SUSSEX_AND_HAMPSHIRE" | "WEST_YORKSHIRE" | "YORK_EAST_AND_SOUTH_YORKSHIRE";
 
 export type AlertEvents = "SEEN" | "CLICKED" | "DISMISSED";
 
