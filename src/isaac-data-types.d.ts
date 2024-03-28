@@ -1,5 +1,6 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2024-03-21 09:17:21.
+/* eslint-disable */
+// Generated using typescript-generator version 3.2.1263 on 2024-03-28 09:08:00.
 
 export interface AbstractUserPreferenceManager {
 }
@@ -78,10 +79,10 @@ export interface IUserAlerts {
 }
 
 export interface IUserNotification {
+  contentNotificationId?: string;
   status?: NotificationStatus;
   userId?: number;
   created?: EpochTimeStamp;
-  contentNotificationId?: string;
 }
 
 export interface IUserNotifications {
@@ -136,6 +137,8 @@ export interface IsaacEventPage extends Content {
   eventStatus?: EventStatus;
   isaacGroupToken?: string;
   address?: Address;
+  end_date?: EpochTimeStamp;
+  EventStatus?: EventStatus;
 }
 
 export interface IsaacFeaturedProfile extends Content {
@@ -175,6 +178,7 @@ export interface IsaacParsonsQuestion extends IsaacItemQuestion {
 export interface IsaacPod extends Content {
   image?: Image;
   url?: string;
+  emailAddress?: string;
 }
 
 export interface IsaacQuestionBase extends ChoiceQuestion {
@@ -191,6 +195,9 @@ export interface IsaacQuickQuestion extends IsaacQuestionBase {
 }
 
 export interface IsaacQuiz extends SeguePage {
+  /**
+   * @deprecated
+   */
   visibleToStudents?: boolean;
   hiddenFromRoles?: string[];
   rubric?: Content;
@@ -261,6 +268,7 @@ export interface PgUserAlerts extends IUserAlerts {
 }
 
 export interface PgUserNotification extends IUserNotification {
+  contentNotificationid?: string;
 }
 
 export interface PgUserNotifications extends IUserNotifications {
@@ -501,13 +509,13 @@ export interface Video extends Media {
 
 export interface EventBooking {
   id?: number;
-  creationDate?: EpochTimeStamp;
-  reservedById?: number;
-  bookingStatus?: BookingStatus;
-  userId?: number;
+  additionalInformation?: { [index: string]: string };
   eventId?: string;
   updateDate?: EpochTimeStamp;
-  additionalInformation?: { [index: string]: string };
+  userId?: number;
+  reservedById?: number;
+  bookingStatus?: BookingStatus;
+  creationDate?: EpochTimeStamp;
 }
 
 export interface EventBookings {
@@ -526,11 +534,14 @@ export interface AnonymousUser extends AbstractSegueUser {
   sessionId?: string;
   dateCreated?: EpochTimeStamp;
   lastUpdated?: EpochTimeStamp;
+  _id?: string;
 }
 
 export interface FacebookTokenData {
   appId?: string;
   valid?: boolean;
+  app_id?: string;
+  is_valid?: boolean;
 }
 
 export interface FacebookTokenInfo {
@@ -549,6 +560,9 @@ export interface FacebookUser {
   firstName?: string;
   lastName?: string;
   updatedTime?: string;
+  first_name?: string;
+  last_name?: string;
+  updated_time?: string;
 }
 
 export interface LinkedAccount {
@@ -556,6 +570,7 @@ export interface LinkedAccount {
   localUserId?: string;
   provider?: AuthenticationProvider;
   providerUserId?: string;
+  providerId?: string;
 }
 
 export interface LocalUserCredential {
@@ -570,6 +585,9 @@ export interface LocalUserCredential {
 }
 
 export interface RegisteredUser extends AbstractSegueUser {
+  /**
+   * @deprecated
+   */
   _id?: number;
   givenName?: string;
   familyName?: string;
@@ -626,6 +644,8 @@ export interface UserExternalAccountChanges {
   givenName?: string;
   deleted?: boolean;
   emailVerificationStatus?: EmailVerificationStatus;
+  allowsNewsEmails?: boolean;
+  allowsEventsEmails?: boolean;
 }
 
 export interface UserFromAuthProvider {
@@ -676,24 +696,45 @@ export interface Address {
 }
 
 export interface Connection extends Wrapper, AutoCloseable {
-  closed?: boolean;
   readOnly?: boolean;
-  networkTimeout?: number;
-  schema?: string;
+  transactionIsolation?: number;
   autoCommit?: boolean;
+  schema?: string;
   metaData?: DatabaseMetaData;
   catalog?: string;
   warnings?: SQLWarning;
   typeMap?: { [index: string]: Class<any> };
   holdability?: number;
   clientInfo?: { [index: string]: any };
-  transactionIsolation?: number;
+  closed?: boolean;
+  networkTimeout?: number;
 }
 
 export interface DatabaseMetaData extends Wrapper {
   connection?: Connection;
   readOnly?: boolean;
   url?: string;
+  resultSetHoldability?: number;
+  databaseProductVersion?: string;
+  identifierQuoteString?: string;
+  maxBinaryLiteralLength?: number;
+  maxCharLiteralLength?: number;
+  maxProcedureNameLength?: number;
+  maxCatalogNameLength?: number;
+  defaultTransactionIsolation?: number;
+  databaseMajorVersion?: number;
+  databaseMinorVersion?: number;
+  clientInfoProperties?: ResultSet;
+  driverName?: string;
+  sqlkeywords?: string;
+  schemaTerm?: string;
+  catalogTerm?: string;
+  maxRowSize?: number;
+  schemas?: ResultSet;
+  catalogs?: ResultSet;
+  tableTypes?: ResultSet;
+  typeInfo?: ResultSet;
+  userName?: string;
   databaseProductName?: string;
   driverVersion?: string;
   driverMajorVersion?: number;
@@ -727,27 +768,6 @@ export interface DatabaseMetaData extends Wrapper {
   sqlstateType?: number;
   rowIdLifetime?: RowIdLifetime;
   maxLogicalLobSize?: number;
-  userName?: string;
-  driverName?: string;
-  sqlkeywords?: string;
-  schemaTerm?: string;
-  catalogTerm?: string;
-  maxRowSize?: number;
-  schemas?: ResultSet;
-  catalogs?: ResultSet;
-  tableTypes?: ResultSet;
-  typeInfo?: ResultSet;
-  resultSetHoldability?: number;
-  databaseProductVersion?: string;
-  identifierQuoteString?: string;
-  maxBinaryLiteralLength?: number;
-  maxCharLiteralLength?: number;
-  maxProcedureNameLength?: number;
-  maxCatalogNameLength?: number;
-  defaultTransactionIsolation?: number;
-  databaseMajorVersion?: number;
-  databaseMinorVersion?: number;
-  clientInfoProperties?: ResultSet;
 }
 
 export interface SQLWarning extends SQLException {
@@ -761,21 +781,21 @@ export interface Wrapper {
 }
 
 export interface ResultSet extends Wrapper, AutoCloseable {
-  closed?: boolean;
-  first?: boolean;
-  last?: boolean;
   type?: number;
-  fetchDirection?: number;
-  row?: number;
   metaData?: ResultSetMetaData;
   warnings?: SQLWarning;
   holdability?: number;
   cursorName?: string;
   beforeFirst?: boolean;
   afterLast?: boolean;
+  first?: boolean;
   fetchSize?: number;
   concurrency?: number;
   statement?: Statement;
+  closed?: boolean;
+  last?: boolean;
+  row?: number;
+  fetchDirection?: number;
 }
 
 export interface Throwable extends Serializable {
@@ -798,9 +818,9 @@ export interface StackTraceElement extends Serializable {
 }
 
 export interface SQLException extends Exception, Iterable<Throwable> {
-  nextException?: SQLException;
   sqlstate?: string;
   errorCode?: number;
+  nextException?: SQLException;
 }
 
 export interface Serializable {
@@ -827,25 +847,25 @@ export interface ResultSetMetaData extends Wrapper {
 }
 
 export interface Statement extends Wrapper, AutoCloseable {
-  closed?: boolean;
   connection?: Connection;
-  generatedKeys?: ResultSet;
-  fetchDirection?: number;
+  resultSetConcurrency?: number;
+  resultSetHoldability?: number;
+  warnings?: SQLWarning;
+  maxRows?: number;
+  resultSet?: ResultSet;
+  updateCount?: number;
+  moreResults?: boolean;
+  poolable?: boolean;
+  fetchSize?: number;
+  closed?: boolean;
   maxFieldSize?: number;
   queryTimeout?: number;
   resultSetType?: number;
   closeOnCompletion?: boolean;
   largeUpdateCount?: number;
   largeMaxRows?: number;
-  maxRows?: number;
-  warnings?: SQLWarning;
-  fetchSize?: number;
-  resultSet?: ResultSet;
-  updateCount?: number;
-  moreResults?: boolean;
-  poolable?: boolean;
-  resultSetConcurrency?: number;
-  resultSetHoldability?: number;
+  fetchDirection?: number;
+  generatedKeys?: ResultSet;
 }
 
 export interface Exception extends Throwable {
