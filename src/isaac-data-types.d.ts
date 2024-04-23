@@ -130,6 +130,7 @@ export interface IsaacEventPage extends Content {
   hub?: Hub;
   endDate?: EpochTimeStamp;
   preResourceContent?: Content[];
+  meetingUrl?: string;
   emailEventDetails?: string;
   emailConfirmedBookingText?: string;
   emailWaitingListBookingText?: string;

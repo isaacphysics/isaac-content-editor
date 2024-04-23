@@ -129,6 +129,7 @@ export const MetaItems = asMetaItems({
       deleteIfEmpty: true,
     },
   ],
+  meetingUrl: "Meeting URL",
   emailEventDetails: ["Email Event Details", { type: "textarea" }],
   emailConfirmedBookingText: ["Email Confirmed Booking Text", { type: "textarea" }],
   emailWaitingListBookingText: ["Email Waiting List Booking Text", { type: "textarea" }],
