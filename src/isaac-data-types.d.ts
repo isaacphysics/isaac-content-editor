@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-03-28 16:12:22.
+// Generated using typescript-generator version 3.2.1263 on 2024-05-24 11:06:09.
 
 export interface AbstractUserPreferenceManager {
 }
@@ -67,12 +67,12 @@ export interface ITransaction extends AutoCloseable {
 export interface IUserAlert {
   message?: string;
   id?: number;
-  userId?: number;
-  created?: EpochTimeStamp;
-  link?: string;
   seen?: EpochTimeStamp;
+  link?: string;
   clicked?: EpochTimeStamp;
   dismissed?: EpochTimeStamp;
+  userId?: number;
+  created?: EpochTimeStamp;
 }
 
 export interface IUserAlerts {
@@ -128,9 +128,9 @@ export interface IsaacEventPage extends Content {
   allowGroupReservations?: boolean;
   privateEvent?: boolean;
   hub?: Hub;
+  meetingUrl?: string;
   endDate?: EpochTimeStamp;
   preResourceContent?: Content[];
-  meetingUrl?: string;
   emailEventDetails?: string;
   emailConfirmedBookingText?: string;
   emailWaitingListBookingText?: string;
@@ -269,7 +269,6 @@ export interface PgUserAlerts extends IUserAlerts {
 }
 
 export interface PgUserNotification extends IUserNotification {
-  contentNotificationid?: string;
 }
 
 export interface PgUserNotifications extends IUserNotifications {
@@ -510,12 +509,12 @@ export interface Video extends Media {
 
 export interface EventBooking {
   id?: number;
-  eventId?: string;
-  updateDate?: EpochTimeStamp;
-  userId?: number;
   creationDate?: EpochTimeStamp;
   reservedById?: number;
   bookingStatus?: BookingStatus;
+  userId?: number;
+  eventId?: string;
+  updateDate?: EpochTimeStamp;
   additionalInformation?: { [index: string]: string };
 }
 
@@ -698,16 +697,16 @@ export interface Address {
 
 export interface Connection extends Wrapper, AutoCloseable {
   readOnly?: boolean;
+  networkTimeout?: number;
   closed?: boolean;
-  schema?: string;
-  clientInfo?: { [index: string]: any };
   autoCommit?: boolean;
+  schema?: string;
   metaData?: DatabaseMetaData;
   catalog?: string;
   warnings?: SQLWarning;
   typeMap?: { [index: string]: Class<any> };
   holdability?: number;
-  networkTimeout?: number;
+  clientInfo?: { [index: string]: any };
   transactionIsolation?: number;
 }
 
@@ -715,16 +714,6 @@ export interface DatabaseMetaData extends Wrapper {
   connection?: Connection;
   readOnly?: boolean;
   url?: string;
-  userName?: string;
-  schemas?: ResultSet;
-  catalogs?: ResultSet;
-  tableTypes?: ResultSet;
-  typeInfo?: ResultSet;
-  driverName?: string;
-  sqlkeywords?: string;
-  schemaTerm?: string;
-  catalogTerm?: string;
-  maxRowSize?: number;
   databaseProductName?: string;
   driverVersion?: string;
   driverMajorVersion?: number;
@@ -758,17 +747,27 @@ export interface DatabaseMetaData extends Wrapper {
   sqlstateType?: number;
   rowIdLifetime?: RowIdLifetime;
   maxLogicalLobSize?: number;
-  maxBinaryLiteralLength?: number;
+  userName?: string;
+  driverName?: string;
+  sqlkeywords?: string;
+  schemaTerm?: string;
+  catalogTerm?: string;
+  maxRowSize?: number;
+  schemas?: ResultSet;
+  catalogs?: ResultSet;
+  tableTypes?: ResultSet;
+  typeInfo?: ResultSet;
   resultSetHoldability?: number;
-  databaseMajorVersion?: number;
-  databaseMinorVersion?: number;
-  clientInfoProperties?: ResultSet;
   databaseProductVersion?: string;
   identifierQuoteString?: string;
+  maxBinaryLiteralLength?: number;
   maxCharLiteralLength?: number;
   maxProcedureNameLength?: number;
   maxCatalogNameLength?: number;
   defaultTransactionIsolation?: number;
+  databaseMajorVersion?: number;
+  databaseMinorVersion?: number;
+  clientInfoProperties?: ResultSet;
 }
 
 export interface SQLWarning extends SQLException {
@@ -783,10 +782,10 @@ export interface Wrapper {
 
 export interface ResultSet extends Wrapper, AutoCloseable {
   type?: number;
+  fetchDirection?: number;
+  last?: boolean;
+  row?: number;
   closed?: boolean;
-  metaData?: ResultSetMetaData;
-  warnings?: SQLWarning;
-  holdability?: number;
   cursorName?: string;
   beforeFirst?: boolean;
   afterLast?: boolean;
@@ -794,9 +793,9 @@ export interface ResultSet extends Wrapper, AutoCloseable {
   fetchSize?: number;
   concurrency?: number;
   statement?: Statement;
-  last?: boolean;
-  row?: number;
-  fetchDirection?: number;
+  metaData?: ResultSetMetaData;
+  warnings?: SQLWarning;
+  holdability?: number;
 }
 
 export interface Throwable extends Serializable {
@@ -819,9 +818,9 @@ export interface StackTraceElement extends Serializable {
 }
 
 export interface SQLException extends Exception, Iterable<Throwable> {
+  nextException?: SQLException;
   sqlstate?: string;
   errorCode?: number;
-  nextException?: SQLException;
 }
 
 export interface Serializable {
@@ -843,30 +842,30 @@ export interface AnnotatedElement {
 export interface Constable {
 }
 
-export interface ResultSetMetaData extends Wrapper {
-  columnCount?: number;
-}
-
 export interface Statement extends Wrapper, AutoCloseable {
   connection?: Connection;
-  maxRows?: number;
-  closed?: boolean;
-  warnings?: SQLWarning;
-  fetchSize?: number;
-  resultSet?: ResultSet;
-  updateCount?: number;
-  moreResults?: boolean;
-  poolable?: boolean;
   generatedKeys?: ResultSet;
+  fetchDirection?: number;
   maxFieldSize?: number;
   queryTimeout?: number;
   resultSetType?: number;
   closeOnCompletion?: boolean;
   largeUpdateCount?: number;
   largeMaxRows?: number;
-  fetchDirection?: number;
+  closed?: boolean;
+  maxRows?: number;
+  fetchSize?: number;
+  warnings?: SQLWarning;
+  resultSet?: ResultSet;
+  updateCount?: number;
+  moreResults?: boolean;
+  poolable?: boolean;
   resultSetConcurrency?: number;
   resultSetHoldability?: number;
+}
+
+export interface ResultSetMetaData extends Wrapper {
+  columnCount?: number;
 }
 
 export interface Exception extends Throwable {
@@ -934,6 +933,6 @@ export type SchoolDataSource = "GOVERNMENT_UK" | "GOVERNMENT_IE" | "GOVERNMENT_S
 
 export type Badge = "TEACHER_GROUPS_CREATED" | "TEACHER_ASSIGNMENTS_SET" | "TEACHER_GAMEBOARDS_CREATED" | "TEACHER_CPD_EVENTS_ATTENDED";
 
-export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE" | "RASPBERRYPI";
+export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "TEST" | "SEGUE";
 
 export type RowIdLifetime = "ROWID_UNSUPPORTED" | "ROWID_VALID_OTHER" | "ROWID_VALID_SESSION" | "ROWID_VALID_TRANSACTION" | "ROWID_VALID_FOREVER";
