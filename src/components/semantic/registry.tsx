@@ -229,6 +229,7 @@ const isaacEventPage: RegistryEntry = {
     "end_date",
     "bookingDeadline",
     "prepWorkDeadline",
+    "publicationDate",
     "numberOfPlaces",
     "eventStatus",
     "location",
