@@ -5,6 +5,7 @@
   "dependencies": {
     "@codemirror/lang-json": "^0.20.0",
     "@codemirror/lang-markdown": "^0.20.1",
+    "@popperjs/core": "^2.11.8",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -15,7 +16,7 @@
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^16.8.5",
     "@uiw/react-codemirror": "~4.7.0",
-    "bootstrap": "^4.6.1",
+    "bootstrap": "^5.3.3",
     "classnames": "^2.3.1",
     "fast-json-patch": "^3.1.1",
     "he": "^1.2.0",
