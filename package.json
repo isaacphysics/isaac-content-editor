@@ -29,7 +29,7 @@
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^16.8.5",
     "@uiw/react-codemirror": "^4.22.2",
-    "bootstrap": "^5.3.3",
+    "bootstrap": "^4.6.2",
     "classnames": "^2.5.1",
     "codemirror": "^6.0.0",
     "fast-json-patch": "^3.1.1",
