@@ -97,6 +97,7 @@ export const MetaItems = asMetaItems({
     },
   ],
   summary: "Summary",
+  publicationDate: ["Publication Date", { presenter: DateTimeInput }],
   published: [
     "Published",
     {
@@ -159,7 +160,6 @@ export const MetaItems = asMetaItems({
   ],
   bookingDeadline: ["Booking Deadline", { presenter: DateTimeInput }],
   prepWorkDeadline: ["Prep-work Deadline", { presenter: DateTimeInput }],
-  publicationDate: ["Publication Date", { presenter: DateTimeInput }],
   numberOfPlaces: ["Number of places", { type: "number" }],
   eventStatus: [
     "Status",
