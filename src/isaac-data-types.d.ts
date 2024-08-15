@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-05-24 14:04:42.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-12 11:50:50.
 
 export interface AbstractUserPreferenceManager {
 }
@@ -123,6 +123,7 @@ export interface IsaacEventPage extends Content {
   location?: Location;
   preResources?: ExternalReference[];
   postResources?: ExternalReference[];
+  eventSurvey?: ExternalReference[];
   eventThumbnail?: Image;
   numberOfPlaces?: number;
   groupReservationLimit?: number;
