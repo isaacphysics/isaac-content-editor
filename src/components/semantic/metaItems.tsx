@@ -178,6 +178,7 @@ export const MetaItems = asMetaItems({
   reservations: ["Reservations", { presenter: ReservationsMetaPresenter }],
   preResources: ["Pre-Resources", { presenter: ResourcesMetaPresenter }],
   postResources: ["Post-Resources", { presenter: ResourcesMetaPresenter }],
+  eventSurvey: "Event Survey URL",
 });
 
 function ReservationsMetaPresenter(props: MetaItemPresenterProps<IsaacEventPage>) {
@@ -461,7 +462,7 @@ function ResourcesMetaPresenter({ doc, update, prop, name }: MetaItemPresenterPr
       <Button
         onClick={() => insert(resources?.length ?? 0, { title: "Event brochure", url: "somewhere/interesting.pdf" })}
       >
-        Add {name.substring(0, name.length - 1)}
+        Add {name.substring(0, name.length)}
       </Button>
     </>
   );
