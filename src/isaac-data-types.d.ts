@@ -197,6 +197,7 @@ export interface IsaacInlinePart extends IsaacQuestionBase {
 export interface IsaacSymbolicChemistryQuestion extends IsaacSymbolicQuestion {
     isNuclear?: boolean;
     allowPermutations?: boolean;
+    allowScalingCoefficients?: boolean;
 }
 
 export interface IsaacSymbolicLogicQuestion extends IsaacSymbolicQuestion {

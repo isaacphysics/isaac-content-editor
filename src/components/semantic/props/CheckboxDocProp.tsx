@@ -1,6 +1,6 @@
 import { Input, Label } from "reactstrap";
 import styles from "../styles/question.module.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { PresenterProps } from "../registry";
 
 type CheckboxDocProps<K extends keyof D, D> =
@@ -9,6 +9,7 @@ type CheckboxDocProps<K extends keyof D, D> =
     prop: K;
     label: string;
     checkedIfUndefined?: boolean;
+    disabled?: boolean;
 };
 
 export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: boolean }>({
@@ -16,11 +17,23 @@ export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: bool
     update,
     prop,
     label,
-    checkedIfUndefined
+    checkedIfUndefined,
+    disabled,
 }: CheckboxDocProps<K, D>) {
-    return <Label className={styles.checkboxLabel}>
+    useEffect(()=> {
+        if (disabled && doc[prop]) {
+            update({
+                ...doc,
+                [prop]: false,
+            });
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [disabled, doc[prop]]);
+
+    return <Label className={styles.checkboxLabel} style={{color: disabled ? "gray" : "black"}}>
         <Input type="checkbox"
-               checked={doc[prop] ?? checkedIfUndefined ?? false}
+               disabled={disabled}
+               checked={(!disabled && doc[prop]) ?? checkedIfUndefined ?? false}
                onChange={(e) => {
                    update({
                        ...doc,
