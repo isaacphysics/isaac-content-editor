@@ -14,15 +14,19 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
     const [height, setHeight] = useState<number>();
     const [id, setID] = useState<string>();
     const [valid, setValid] = useState<boolean>(true);
+    const [classes, setClasses] = useState<string>();
+    const [mode, setMode] = useState<"classes" | "dimensions">("classes");
 
     const generateAndInsertInlinePart = useCallback(() => {
         const partId = id ? id : (inlineContext.numParts ?? 0) + 1;
-        const inlinePartSyntax = `[inline-question:${partId}${(width || height) ? "|" : ""}${width ? `w-${width}` : ""}${height ? `h-${height}` : ""}]`;
+        const inlinePartSyntax = mode === "classes" ? 
+            `[inline-question:${partId}${classes ? " class=\"" + classes + "\"" : ""}]` : 
+            `[inline-question:${partId}${(width || height) ? "|" : ""}${width ? `w-${width}` : ""}${height ? `h-${height}` : ""}]`;
         codemirror.current?.view?.dispatch(
             codemirror.current?.view?.state.replaceSelection(inlinePartSyntax)
         );
         inlineContext.addPart?.("" + partId);
-    }, [width, height, id, codemirror, inlineContext]);
+    }, [id, inlineContext, mode, classes, width, height, codemirror]);
 
     const ifValidNumericalInputThen = (f: (n: number | undefined) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const n = parseInt(e.target.value);
@@ -42,18 +46,36 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
             <Container className={styles.cmPanelPopup}>
                 <Label for={"inline-part-index"}>Part ID</Label>
                 <Input id={"inline-part-index"} placeholder={"Default"} onChange={(e) => setID(e.target.value)} />
-                <hr/>
-                <Label for={"inline-part-width"}>Width:</Label>
-                <Input id={"inline-part-width"} placeholder={"Default"} onChange={ifValidNumericalInputThen(setWidth)}/>
-                <hr/>
-                <Label for={"inline-part-height"}>Height:</Label>
-                <Input id={"inline-part-height"} placeholder={"Default"} onChange={ifValidNumericalInputThen(setHeight)} />
-                <hr/>
+                <hr className="mb-1"/>
+                {mode === "classes" ? <>
+                    <Label for={"inline-part-classes"}>Classes:</Label>
+                    <Input id={"inline-part-classes"} placeholder={"e.g. wf-8"} onChange={(e) => setClasses(e.target.value)}/>
+                </> : <>
+                    <Label for={"inline-part-width"}>Width (px):</Label>
+                    <Input id={"inline-part-width"} placeholder={"Default (100)"} onChange={ifValidNumericalInputThen(setWidth)}/>
+                    <hr/>
+                    <Label for={"inline-part-height"}>Height (px):</Label>
+                    <Input id={"inline-part-height"} placeholder={"Default (27)"} onChange={ifValidNumericalInputThen(setHeight)}/>
+                </>}
+                <hr className="my-1"/>
+                <div className="float-right mb-2">
+                    <a className="mr-1" target="_blank" rel="noreferrer" href="https://github.com/isaacphysics/rutherford-content/wiki/Isaac-Content-Editor#inline-regions--inline-questions">Help</a>
+                    ⋅
+                    <Button 
+                        color="link"
+                        className="p-0 ml-1 mb-1 text-muted"
+                        onClick={() => setMode(mode === "classes" ? "dimensions" : "classes")}
+                        >
+                        Switch to {mode === "classes" ? "dimensions" : "classes"}
+                    </Button>
+                </div>
+                <br/>
                 <PopupCloseContext.Consumer>
                     {close => <Button disabled={!valid} onClick={() => {
                         generateAndInsertInlinePart();
                         setWidth(undefined);
                         setHeight(undefined);
+                        setClasses(undefined);
                         setID(undefined);
                         close?.();
                     }}>Insert</Button>}
