@@ -1,12 +1,25 @@
 import React from "react";
 import { PresenterProps } from "../registry";
-import { IsaacLLMFreeTextQuestion, LLMFreeTextMarkedExample, LLMFreeTextMarkSchemeEntry } from "../../../isaac-data-types";
+import { IsaacLLMFreeTextQuestion, LLMFormulaNode, LLMFreeTextMarkedExample, LLMFreeTextMarkSchemeEntry, LLMFunctionNode, LLMVariableNode, LLMConstantNode } from "../../../isaac-data-types";
 import { NumberDocPropFor } from "../props/NumberDocPropFor";
 import { EditableText } from "../props/EditableText";
 import { isDefined } from "../../../utils/types";
 import { CheckboxDocProp } from "../props/CheckboxDocProp";
+import { parseMarkingFormula } from "../../../services/llmMarkingFormula";
+import styles from "../styles/editable.module.css";
 
 const MaxMarksEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("maxMarks");
+
+// Type guards for LLMFormulaNode
+export function isLLMFunctionNode(node: LLMFormulaNode): node is LLMFunctionNode {
+    return node.type === "LLMMarkingFunction";
+}
+export function isLLMVariableNode(node: LLMFormulaNode): node is LLMVariableNode {
+    return node.type === "LLMMarkingVariable";
+}
+export function isLLMConstantNode(node: LLMFormulaNode): node is LLMConstantNode {
+    return node.type === "LLMMarkingConstant";
+}
 
 export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuestion>) {
     const {doc, update} = props;
@@ -66,11 +79,63 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
         });
     }
 
+    function evaluateMarkingFormula<T extends keyof LLMFreeTextMarkedExample>(markingFormula: LLMFormulaNode, value: LLMFreeTextMarkedExample[T]): number { 
+        if (isLLMConstantNode(markingFormula)) { 
+            return markingFormula.value; 
+        } else if (isLLMVariableNode(markingFormula)) {
+            if (typeof value === 'object') {
+                return value[markingFormula.name] ?? 0;
+            }
+            return 0;
+        } else if (isLLMFunctionNode(markingFormula)) {
+            const args: LLMFormulaNode[] = markingFormula.arguments;
+            switch (markingFormula.name) {
+                case "SUM":
+                    return args.map((arg: LLMFormulaNode) => evaluateMarkingFormula(arg, value)).reduce((acc: number, val: number) => acc + val, 0);
+                case "MAX":
+                    return Math.max(...args.map((arg: LLMFormulaNode) => evaluateMarkingFormula(arg, value)));
+                case "MIN":
+                    return Math.min(...args.map((arg: LLMFormulaNode) => evaluateMarkingFormula(arg, value)));
+                default:
+                    throw new Error("Unknown marking function: " + markingFormula.name);
+            }
+        }
+        throw new Error("Unknown marking expression type: " + markingFormula.type);
+    }
+
+    function evaluateMarkTotal<T extends keyof LLMFreeTextMarkedExample>(markingFormula?: LLMFormulaNode, value?: LLMFreeTextMarkedExample[T]): number {
+        function defaultMarkingFormula(): number {
+            if (typeof value === 'object' && value !== null) {
+                let total: number = 0;
+                for (const key in value) {
+                    total = total + (key !== "maxMarks" && value[key] ? value[key] : 0);
+                }
+    
+                return Math.min(doc.maxMarks ?? 0, total);
+            }
+            return 0;
+        }
+        
+        if (markingFormula === undefined) {
+            return defaultMarkingFormula();
+        } 
+
+        try {
+            return evaluateMarkingFormula(markingFormula, value);
+        } catch {
+            return defaultMarkingFormula();
+        }
+    } 
+
     // Marked example operations
     function updateExample<T extends keyof LLMFreeTextMarkedExample>(index: number, field: T, value: LLMFreeTextMarkedExample[T]) {
         update({
             ...doc,
-            markedExamples: doc.markedExamples?.map((me, i) => i === index ? {...me, [field]: value} : me)
+            markedExamples: doc.markedExamples?.map((me, i) => i === index ? {
+                ...me, 
+                [field]: value, 
+                marksAwarded: evaluateMarkTotal(doc.markingFormula, {...(value as Record<string, unknown>), "maxMarks": doc.maxMarks ?? 0})
+            } : me)
         });
     }
 
@@ -92,6 +157,44 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
         });
     }
 
+    function validateMarkingFormula(value?: string) {
+        value = value ?? "";
+        const regexStr = /[^a-zA-Z0-9(),\s]+/;
+        const badCharacters = new RegExp(regexStr);
+        if (badCharacters.test(value)) {
+            const usedBadChars: string[] = [];
+            for(let i = 0; i < value.length; i++) {
+                const char = value.charAt(i);
+                if (badCharacters.test(char)) {
+                    if (!usedBadChars.includes(char)) {
+                        usedBadChars.push(char);
+                    }
+                }
+            }
+            return 'Some of the characters you are using are not allowed: ' + usedBadChars.join(" ");
+        }
+        try { parseMarkingFormula(value); } 
+        catch (e) { 
+            if (e === "Ambiguous grammar") { 
+                return "Ambiguous marking formula"; 
+            }
+            return "Invalid marking formula";
+        }
+    }
+
+    function updateMarkingFormula(value?: string) {
+        update({
+            ...doc,
+            markingFormulaString: value,
+            markingFormula: parseMarkingFormula(value),
+            markedExamples: doc.markedExamples?.map(me => ({...me, marksAwarded: evaluateMarkTotal(parseMarkingFormula(value), me.marks)}))
+        })
+    }
+
+    const functionNamesMap: [string, string][] = [["SUM", "SUM("], ["MAX", "MAX("], ["MIN", "MIN("], [")", ")"]]; // These are the only functions we support for now
+    const constantNamesMap: [string, string][] = [["0", "0"], ["1", "1"]];
+    const variableNamesMap: [string, string][] = doc.markScheme?.map(msi => msi.jsonField ? [msi.jsonField, msi.jsonField] as [string, string] : ["", ""]) ?? [["", ""]];
+    const buttonStrings: [string, string][] = [...functionNamesMap, ...constantNamesMap, ...variableNamesMap, ["maxMarks", "maxMarks"]];
 
     return <div>
         <h2 className="h5">Mark scheme</h2>
@@ -133,7 +236,21 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                 </tr>
                 <tr>
                     <td><strong>Marking formula</strong></td>
-                    <td>{"/* TODO MT: Input coming soon */"}<input className="w-100" placeholder="MIN(maxMarks, SUM(... all marks ...))" /></td>
+                    <td>
+                        <div className="flex-fill">
+                            <EditableText
+                                multiLine={true}
+                                block={true}
+                                label="Marking formula"
+                                placeHolder="e.g. MIN(maxMarks, SUM(... all marks ...))"
+                                text={doc.markingFormulaString}
+                                hasError={value => validateMarkingFormula(value)}
+                                onSave={value => updateMarkingFormula(value)}
+                                buttonStrings={buttonStrings}
+                                inputProps={{ className: styles["llm_formula_input"] }}
+                            />
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td><strong>Additional marking instructions</strong></td>
@@ -175,11 +292,16 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     <td>
                         <div className="d-flex justify-content-between">
                             <div className="flex-fill">
+                                {doc.markingFormula ? 
+                                <div>
+                                    {example.marksAwarded}
+                                </div> 
+                                :
                                 <EditableText
                                     text={example.marksAwarded?.toString()}
                                     hasError={value => doc.maxMarks && parseInt(value ?? "0", 10) > doc.maxMarks ? "Exceeds question's max marks" : undefined}
                                     onSave={value => updateExample(i, "marksAwarded", parseInt(value ?? "0", 10))}
-                                />
+                                />}
                             </div>
                             <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteExample(i)}>❌</button>
                         </div>
