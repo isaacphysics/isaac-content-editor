@@ -145,6 +145,12 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
         // Remove the defaultFeedback property as it is not applicable to quick questions
         delete newDoc.defaultFeedback;
     }
+    
+    if (newType === "isaacLLMFreeTextQuestion") {
+        // Remove the choices and answer properties as they are not applicable to LLM-Marked questions
+        delete newDoc.answer;
+        delete newDoc.choices;
+    }
 
     if (!(newDoc.hasOwnProperty("significantFiguresMin") && newDoc.hasOwnProperty("significantFiguresMax"))) {
         delete newDoc.significantFiguresMin;

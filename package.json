@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.25.9",
     "@codemirror/lang-json": "^0.20.0",
     "@codemirror/lang-markdown": "^0.20.1",
     "@testing-library/jest-dom": "^5.16.1",
@@ -41,9 +42,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start --verbose",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -84,11 +85,19 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/preset-typescript": "^7.26.0",
+    "@craco/craco": "^7.1.0",
+    "@craco/types": "^7.1.0",
     "@types/he": "^1.1.2",
     "@types/js-cookie": "^3.0.1",
     "@types/katex": "^0.11.1",
+    "@types/moo": "^0.5.9",
+    "@types/nearley": "^2.11.5",
     "@types/react-test-renderer": "^16.0.0",
     "@types/remarkable": "^2.0.1",
+    "moo": "^0.5.2",
+    "nearley": "^2.20.1",
+    "nearley-loader": "^2.0.0",
     "react-test-renderer": "^16.14.0"
   }
 }

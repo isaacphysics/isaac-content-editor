@@ -89,3 +89,8 @@ span.isEditingWrapper {
 .codeFormat {
     font-family: monospace;
 }
+
+.multiLine .llm_formula_input {
+    resize: none;
+    height: 80px;
+}
