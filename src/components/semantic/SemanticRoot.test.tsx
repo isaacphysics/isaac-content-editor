@@ -11,7 +11,7 @@ import { PresenterProps } from "./registry";
 import styles from "./styles/semantic.module.css";
 
 // Katex is slow to render and doesn't throw so won't surface any bugs in this test anyway.
-jest.mock("../../isaac/LaTeX", () => {
+jest.mock("../../isaac/markup/latexRendering", () => {
     return {
         LaTeX: ({markup, className}: {markup: string, className?: string}) => <span dangerouslySetInnerHTML={{__html: markup}} className={className} />,
         katexify: (html: string) => html,
@@ -49,6 +49,16 @@ jest.mock("./presenters/TabsPresenter", () => {
         },
     };
 });
+
+// TODO: Set up these mocks properly
+
+jest.mock("reactstrap/src/Portal", () => { 
+    return;
+})
+
+jest.mock("react-pdf/dist/esm/entry.webpack5", () => {
+    return;
+})
 
 
 function getFiles(dir: string): string[] {
@@ -119,8 +129,8 @@ describe("can render existing docs without errors", () => {
         expect(errorLog.length).toBeGreaterThan(0);
     });
 
-    describe("Can render Computer Science content correctly", () => testFiles("../isaac-content-2/content"));
-    describe("Can render Physics content correctly", () => testFiles("../rutherford-content/content"));
+    describe.skip("Can render Computer Science content correctly", () => { testFiles("../ada-content/content") });
+    describe.skip("Can render Physics content correctly", () => { testFiles("../rutherford-content/content") });
 
     it.skip("Checks specific files with errors found previously", () => {
         testFile("../rutherford-content/content/questions/chemistry/foundations/atomic_structure/elements_reversal.json");

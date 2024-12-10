@@ -103,6 +103,26 @@ export interface LLMFreeTextMarkSchemeEntry {
     marks?: number;
 }
 
+export interface LLMFormulaNode {
+    type: "LLMMarkingFunction" | "LLMMarkingVariable" | "LLMMarkingConstant";
+}
+
+export interface LLMFunctionNode extends LLMFormulaNode{
+    arguments: LLMFormulaNode[];
+    name: string;
+    type: "LLMMarkingFunction";
+}
+
+export interface LLMVariableNode extends LLMFormulaNode {
+    name: string;
+    type: "LLMMarkingVariable";
+}
+
+export interface LLMConstantNode extends LLMFormulaNode {
+    value: number;
+    type: "LLMMarkingConstant";
+}
+
 export interface LLMFreeTextMarkedExample {
     answer?: string;
     marks?: Record<string, number>;
@@ -113,7 +133,8 @@ export interface IsaacLLMFreeTextQuestion extends IsaacQuestionBase {
     markScheme?: LLMFreeTextMarkSchemeEntry[];
     maxMarks?: number;
     additionalMarkingInstructions?: string;
-    markCalculationInstructions?: string;
+    markingFormula?: LLMFormulaNode;
+    markingFormulaString?: string;
     markedExamples?: LLMFreeTextMarkedExample[];
 }
 
