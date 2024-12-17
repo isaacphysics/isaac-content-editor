@@ -122,6 +122,7 @@ export const MetaItems = asMetaItems({
 
   // Events stuff
   privateEvent: ["Private Event", { type: "checkbox" }],
+  competitionEvent: ["Competition Event", { type: "checkbox" }],
   hub: [
     "Hub",
     {
