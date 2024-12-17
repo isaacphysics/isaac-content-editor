@@ -363,12 +363,16 @@ export async function githubSave(context: ContextType<typeof AppContext>) {
         isContent = false;
     }
     const path = context.selection.getSelection()?.path as string;
-    const initialCommitMessage = `${isPublishedChange ? "* " : ""}Edited ${path.split("/").at(-1)}`;
+    const initialCommitMessage = `${isPublishedChange ? "* " : ""}Edited ${path.split("/").at(-1)}: `;
 
-    const message = window.prompt("Enter your commit message", initialCommitMessage);
+    let userMessage = window.prompt("Enter your commit message:");
+    while (userMessage === "") {
+        userMessage = window.prompt("Could not save file with no commit message.\nEnter your commit message:")
+    }
     const {sha} = context.github.cache.get(contentsPath(path, context.github.branch))?.data ?? {};
-    if (!sha || !message) return;
+    if (!sha || !userMessage) return;
 
+    const message = initialCommitMessage + userMessage;
     const encodedContent = encodeContent(context.editor.getCurrentDocAsString(), context.editor.getCurrentDocExt());
 
     const body = {
