@@ -7,10 +7,10 @@ import { GITHUB_TOKEN_COOKIE } from "./github";
 import styles from "../styles/editor.module.css";
 import { getConfig } from "./config";
 
-export function authorizationURL(target: string) {
+export function authorizationURL() {
   const config = getConfig();
 
-  return `https://gitHub.com/login/oauth/authorize?scope=repo&client_id=${config.clientId}&redirect_uri=${encodeURIComponent(target)}`;
+  return `https://gitHub.com/login/oauth/authorize?scope=repo&client_id=${config.clientId}`;
 }
 
 export async function doAuth(code: string) {
@@ -37,7 +37,7 @@ export function LoginPrompt() {
     <div className={`m-5 {styles.centered} {styles.flexFill}`}>
       <h2 className={styles.centered}>Isaac Editor</h2>
       <div className="text-center">
-        <a className="btn btn-primary w-25" href={authorizationURL(document.location.href)}>
+        <a className="btn btn-primary w-25" href={authorizationURL()}>
           Log in
         </a>
       </div>

@@ -1,7 +1,6 @@
 import { ContextType } from "react";
 import Cookies from "js-cookie";
 import useSWR, { Cache, mutate } from "swr";
-
 import { authorizationURL, doAuth } from "./auth";
 import { AppContext } from "../App";
 import { encodeBase64 } from "../utils/base64";
@@ -64,7 +63,7 @@ export const fetcher = async (
     if (result.status === 401) {
       // Re-login is needed
       if (window.confirm("You need to login again. We'll do that in a new window so your changes aren't lost.")) {
-        window.open(authorizationURL(`${document.location.origin}/login_finished`), "_blank");
+        window.open(authorizationURL(), "_blank");
       }
     }
     throw json.message;
