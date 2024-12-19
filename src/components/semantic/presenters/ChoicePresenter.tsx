@@ -26,7 +26,7 @@ import {
 } from "./BaseValuePresenter";
 import {SemanticDocProp} from "../props/SemanticDocProp";
 import {CheckboxDocProp} from "../props/CheckboxDocProp";
-import {EditableValueProp, EditableXProp, EditableYProp} from "../props/EditableDocProp";
+import {EditableValueProp, EditableCoordProp} from "../props/EditableDocProp";
 import {CHOICE_TYPES} from "../ChoiceInserter";
 import {PresenterProps} from "../registry";
 import {ListPresenterProp} from "../props/listProps";
@@ -254,19 +254,19 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ParsonsChoice>) =
 }
 
 export function CoordinateItemPresenter(props: PresenterProps<CoordinateItem>) {
-    return <div className={"mb-3"}>
-        <EditableXProp {...props} label={"x"} />
+    const numberOfDimensions = useContext(CoordinateQuestionContext).numberOfDimensions;
+    return <>{[...Array(numberOfDimensions)].map((_, i) =>
+        <div className={"mb-3"} key={i}>
+            <EditableCoordProp {...props} dim={i} prop={"coordinates"} label={"Dimension ".concat((i+1).toString())} />
         <div className={styles.questionLabel} />
-        <EditableYProp {...props} label={"y"} />
-    </div>;
+    </div>)}</>
 }
 
 export const CoordinateChoicePresenter = (props: ValuePresenterProps<CoordinateChoice>) => {
-    const {numberOfCoordinates} = useContext(CoordinateQuestionContext);
-
+    const numberOfCoordinates = useContext(CoordinateQuestionContext).numberOfCoordinates;
     useEffect(() => {
         if (numberOfCoordinates !== undefined && props.doc.items?.length !== numberOfCoordinates) {
-            props.update({...props.doc, items: Array(numberOfCoordinates).fill({x: 0, y: 0, type: "coordinateItem"}).map((placeholder, i) => props.doc.items && props.doc.items[i] ? props.doc.items[i] : placeholder)});
+            props.update({...props.doc, items: Array(numberOfCoordinates).fill({coordinates: [], type: "coordinateItem"}).map((placeholder, i) => props.doc.items && props.doc.items[i] ? props.doc.items[i] : placeholder)});
         }
     }, [numberOfCoordinates]);
 
