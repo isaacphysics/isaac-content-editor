@@ -222,7 +222,6 @@ const isaacEventPage: RegistryEntry = {
     ...pageMetaTail,
     "privateEvent",
     "competitionEvent",
-    "hub",
     "meetingUrl",
     "emailEventDetails",
     "emailConfirmedBookingText",
