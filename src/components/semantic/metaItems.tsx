@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Button, Col, FormText, Input, Label, Row } from "reactstrap";
 
-import { Content, ExternalReference, Hub, IsaacEventPage, IsaacQuiz, Location } from "../../isaac-data-types";
+import { Content, ExternalReference, IsaacEventPage, IsaacQuiz, Location } from "../../isaac-data-types";
 import { useFixedRef } from "../../utils/hooks";
 import { useKeyedList } from "../../utils/keyedListHook";
 
@@ -16,40 +16,6 @@ import { isDefined } from "../../utils/types";
 import { AppContext } from "../../App";
 
 const TITLE_MAX_LENGTH = 32;
-
-const hubOptions: { [key in Hub]: string } = {
-  BIRMINGHAM_AND_CENTRAL_MIDLANDS: "Birmingham and Central Midlands",
-  CAMBRIDGE_AND_NORTHAMPTONSHIRE: "Cambridge and Northamptonshire",
-  CHESHIRE: "Cheshire",
-  CORNWALL: "Cornwall",
-  CUMBRIA_SATELLITE: "Cumbria Satellite",
-  DARTFORD_AND_EAST_SUSSEX: "Dartford and East Sussex",
-  DEVON: "Devon",
-  GLOUCESTERSHIRE_WILTSHIRE_AND_NORTH_SOMERSET: "Gloucestershire, Wiltshire, and North Somerset",
-  GREATER_MANCHESTER: "Greater Manchester",
-  LANCASHIRE_SATELLITE: "Lancashire Satellite",
-  LEICESTER_NOTTINGHAMSHIRE_AND_RUTLAND: "Leicester, Nottinghamshire, and Rutland",
-  LINCOLNSHIRE: "Lincolnshire",
-  LONDON_HERTFORDSHIRE_AND_ESSEX: "London, Hertfordshire, and Essex",
-  LONDON_HERTFORDSHIRE_AND_HAMPSHIRE: "London, Hertfordshire, and Hampshire",
-  LONDON_SURREY_AND_WEST_SUSSEX: "London, Surrey, and West Sussex",
-  MAIDSTONE_AND_KENT: "Maidstone and Kent",
-  MILTON_KEYNES_AND_NORTHAMPTONSHIRE: "Milton Keynes and Northamptonshire",
-  NEWCASTLE_DURHAM_AND_EAST_CUMBRIA: "Newcastle, Durham, and East Cumbria",
-  NORFOLK: "Norfolk",
-  NORTH_EAST_AND_NORTHUMBERLAND: "North East and Northumberland",
-  NORTH_YORKSHIRE_LEEDS_AND_WAKEFIELD: "North Yorkshire, Leeds, and Wakefield",
-  OXFORDSHIRE_BUCKINGHAMSHIRE_AND_WEST_BERKSHIRE: "Oxfordshire, Buckinghamshire, and West Berkshire",
-  SOMERSET: "Somerset",
-  STOKE_ON_TRENT_STAFFORDSHIRE_AND_DERBYSHIRE: "Stoke-on-Trent, Staffordshire, and Derbyshire",
-  SUFFOLK: "Suffolk",
-  TEES_VALLEY_AND_RICHMONDSHIRE: "Tees Valley and Richmondshire",
-  WARRINGTON_AND_MERSEYSIDE: "Warrington and Merseyside",
-  WEST_MIDLANDS_SATELLITE: "West Midlands Satellite",
-  WEST_SUSSEX_AND_HAMPSHIRE: "West Sussex and Hampshire",
-  WEST_YORKSHIRE: "West Yorkshire",
-  YORK_EAST_AND_SOUTH_YORKSHIRE: "York, East, and South Yorkshire",
-};
 
 export const MetaItems = asMetaItems({
   tags: ["Tags", { presenter: TagsPresenter }],
@@ -123,14 +89,6 @@ export const MetaItems = asMetaItems({
   // Events stuff
   privateEvent: ["Private Event", { type: "checkbox" }],
   competitionEvent: ["Competition Event", { type: "checkbox" }],
-  hub: [
-    "Hub",
-    {
-      type: "select",
-      options: { "": "N/A", ...hubOptions },
-      deleteIfEmpty: true,
-    },
-  ],
   meetingUrl: "Meeting URL",
   emailEventDetails: ["Email Event Details", { type: "textarea" }],
   emailConfirmedBookingText: ["Email Confirmed Booking Text", { type: "textarea" }],
