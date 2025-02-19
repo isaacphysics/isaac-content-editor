@@ -13,6 +13,9 @@ const EditableUrl = EditableDocPropFor<CodeSnippet>("url");
 const Languages = {
     assembly: "Assembly",
     csharp: "C#",
+    css: "CSS",
+    haskell: "Haskell",
+    html: "HTML / XML",
     pseudocode: "Isaac Pseudocode",
     java: "Java",
     javascript: "Javascript",
@@ -20,7 +23,6 @@ const Languages = {
     python: "Python",
     sql: "SQL",
     vba: "Visual Basic",
-    haskell: "Haskell",
 };
 const LanguageSelector = EnumPropFor<CodeSnippet>("language", Languages);
 
