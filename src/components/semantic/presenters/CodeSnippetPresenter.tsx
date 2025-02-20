@@ -11,11 +11,11 @@ const EditableCode = EditableDocPropFor<CodeSnippet>("code", {format: "code"});
 const EditableUrl = EditableDocPropFor<CodeSnippet>("url");
 
 const Languages = {
-    assembly: "Assembly",
+    assembly: "AQA/LMC Assembly",
     csharp: "C#",
     css: "CSS",
     haskell: "Haskell",
-    html: "HTML / XML",
+    html: "HTML",
     pseudocode: "Isaac Pseudocode",
     java: "Java",
     javascript: "Javascript",
