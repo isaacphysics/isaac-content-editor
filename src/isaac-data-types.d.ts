@@ -190,7 +190,6 @@ export interface IsaacQuickQuestion extends IsaacQuestionBase {
 }
 
 export interface IsaacQuiz extends SeguePage {
-    visibleToStudents?: boolean;
     hiddenFromRoles?: string[];
     rubric?: Content;
 }
