@@ -233,7 +233,7 @@ const isaacInlineRegion: RegistryEntry = {
     footerPresenter: HintsPresenter,
 };
 const isaacInlineQuestionPart: RegistryEntry = {
-    name: "Inline Question Part", 
+    name: "Inline Question Part",
     bodyPresenter: InlineQuestionPartPresenter,
 };
 
@@ -275,7 +275,7 @@ const isaacEventPage: RegistryEntry = {
 const isaacQuiz: RegistryEntry = {
     name: "Test",
     bodyPresenter: QuizPagePresenter,
-    metadata: ["audience", ...defaultMeta, "visibleToStudents", "hiddenFromTeachers", "published", "deprecated", "attribution"],
+    metadata: ["audience", ...defaultMeta, "hiddenFromStudentsAndTutors", "hiddenFromTeachers", "published", "deprecated", "attribution"],
 };
 const isaacQuizSection: RegistryEntry = {
     ...content,
