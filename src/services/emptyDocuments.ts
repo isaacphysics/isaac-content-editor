@@ -13,7 +13,6 @@ const emptyDocuments: Document[] = [
         type: "isaacQuestionPage",
         encoding: "markdown",
         title: "New Question Page",
-        level: 0,
         children: [
             {
                 type: "content",
