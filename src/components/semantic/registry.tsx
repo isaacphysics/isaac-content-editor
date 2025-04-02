@@ -237,7 +237,7 @@ const isaacInlineQuestionPart: RegistryEntry = {
     bodyPresenter: InlineQuestionPartPresenter,
 };
 
-const pageMeta: MetaItemKey[] = ["audience", ...defaultMeta, "relatedContent", "permissions", "notes"];
+const pageMeta: MetaItemKey[] = ["audience", ...defaultMeta, "relatedContent", "permissions", "notes", "teacherNotes"];
 const pageMetaTail: MetaItemKey[] = ["published", "deprecated"];
 const basePage: RegistryEntry = {
     ...content,
