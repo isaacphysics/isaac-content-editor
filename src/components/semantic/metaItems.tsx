@@ -48,6 +48,7 @@ export const MetaItems = asMetaItems({
     attribution: ["Attribution", {deleteIfEmpty: true}],
     permissions: ["Permissions", {deleteIfEmpty: true}],
     notes: ["Notes", {deleteIfEmpty: true}],
+    teacherNotes: ["Teacher Notes", {type: "textarea", deleteIfEmpty: true}],
     supersededBy: ["Superseded By", {deleteIfEmpty: true}],
     level: ["Level", {type: "number", hasWarning: (value) => {
         const level = value as number; // Already parsed by virtue of type: "number"
