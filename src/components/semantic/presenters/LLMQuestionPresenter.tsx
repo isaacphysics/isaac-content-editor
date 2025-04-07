@@ -7,7 +7,8 @@ import { isDefined } from "../../../utils/types";
 import { CheckboxDocProp } from "../props/CheckboxDocProp";
 import { parseMarkingFormula } from "../../../services/llmMarkingFormula";
 import styles from "../styles/editable.module.css";
-import { evaluateMarkTotal } from "../../../utils/llmMarkingFormula";
+import { evaluateMarkingFormula, evaluateMarkTotal } from "../../../utils/llmMarkingFormula";
+import { FormFeedback } from "reactstrap";
 
 const MaxMarksEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("maxMarks");
 
@@ -115,12 +116,14 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             }
             return 'Some of the characters you are using are not allowed: ' + usedBadChars.join(" ");
         }
-        try { parseMarkingFormula(value); } 
-        catch (e) { 
-            if (e === "Ambiguous grammar") { 
-                return "Ambiguous marking formula"; 
-            }
-            return "Invalid marking formula";
+        try { 
+            const formula = parseMarkingFormula(value);
+            evaluateMarkingFormula(formula, {...doc.markScheme?.reduce<Record<string, number>>((acc, mark) => ({...acc, [mark.jsonField ?? ""]: 0}), {}) ?? {}, 
+                                                            "maxMarks": doc.maxMarks ?? 0
+                                                        });
+        } 
+        catch (e: any) { 
+            return `${e}`;
         }
     }
 
@@ -177,7 +180,10 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     <td><MaxMarksEditor {...props} /></td>
                 </tr>
                 <tr>
-                    <td><strong>Marking formula</strong></td>
+                    <td>
+                        <strong>Marking formula</strong>
+                        {validateMarkingFormula(doc.markingFormulaString) && <><br/> <FormFeedback className={styles.feedback}>Using default marking formula</FormFeedback></>}
+                    </td>
                     <td>
                         <div className="flex-fill">
                             <EditableText
