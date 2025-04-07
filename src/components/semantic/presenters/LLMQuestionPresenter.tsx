@@ -23,7 +23,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                 possiblyUpdatedMarkedExamples = doc.markedExamples?.map(me => {
                     const newMarks = {...me.marks, [value as string]: me.marks?.[prevJsonFieldValue] ?? 0};
                     delete newMarks[prevJsonFieldValue];
-                    return { ...me, marks: newMarks };
+                    return { ...me, marks: newMarks, marksAwarded: evaluateMarkTotal(doc.markingFormula, {...newMarks, "maxMarks": doc.maxMarks ?? 0}) };
                 });
             }
         }
@@ -75,8 +75,8 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             ...doc,
             markedExamples: doc.markedExamples?.map((me, i) => i === index ? {
                 ...me, 
+                marksAwarded: field === "marks" ? evaluateMarkTotal(doc.markingFormula, {...(value as Record<string, number>), "maxMarks": doc.maxMarks ?? 0}) : me.marksAwarded,
                 [field]: value, 
-                marksAwarded: evaluateMarkTotal(doc.markingFormula, {...(value as Record<string, number>), "maxMarks": doc.maxMarks ?? 0})
             } : me)
         });
     }
