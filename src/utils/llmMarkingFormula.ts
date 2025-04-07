@@ -16,11 +16,15 @@ export function evaluateMarkingFormula<T extends LLMFormulaNode>(markingFormula:
         return markingFormula.value; 
     } else if (isLLMVariableNode(markingFormula)) {
         if (typeof value === 'object') {
-            return value[markingFormula.name] ?? 0;
+            if (value.hasOwnProperty(markingFormula.name)) {
+                return value[markingFormula.name] ?? 0;
+            } else {
+                throw new Error("Marking variable not found: " + markingFormula.name);
+            }
         }
         return 0;
     } else if (isLLMFunctionNode(markingFormula)) {
-        const args: LLMFormulaNode[] = markingFormula.arguments;
+        const args: LLMFormulaNode[] = Array.isArray(markingFormula.arguments) ? markingFormula.arguments : [markingFormula.arguments];
         switch (markingFormula.name) {
             case "SUM":
                 return args.map((arg: LLMFormulaNode) => evaluateMarkingFormula(arg, value)).reduce((acc: number, val: number) => acc + val, 0);

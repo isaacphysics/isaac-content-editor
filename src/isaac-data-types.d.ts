@@ -108,7 +108,7 @@ export interface LLMFormulaNode {
 }
 
 export interface LLMFunctionNode extends LLMFormulaNode{
-    arguments: LLMFormulaNode[];
+    arguments: LLMFormulaNode[] | LLMFormulaNode;
     name: string;
     type: "LLMMarkingFunction";
 }

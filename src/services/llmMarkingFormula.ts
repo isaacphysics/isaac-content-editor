@@ -8,12 +8,16 @@ export function parseMarkingFormula(markingFormula?: string) {
     }
     
     const parser = new Parser(Grammar.fromCompiled(grammar));
-    parser.feed(markingFormula);
+    try {
+        parser.feed(markingFormula);
+    } catch (e) {
+        throw new Error('Invalid marking formula');
+    }
     if (parser.results.length > 1) {
-        throw new Error('Ambiguous grammar');
+        throw new Error('Ambiguous marking formula');
     }
     if (parser.results.length === 0) {
-        throw new Error('Invalid grammar');
+        throw new Error('Invalid marking formula');
     }
     return parser.results[0];
 }
