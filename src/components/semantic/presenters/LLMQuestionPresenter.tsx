@@ -101,7 +101,10 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
     }
 
     function validateMarkingFormula(value?: string) {
-        value = value ?? "";
+        if (!value) {
+            return;
+        }
+
         const regexStr = /[^a-zA-Z0-9(),\s]+/;
         const badCharacters = new RegExp(regexStr);
         if (badCharacters.test(value)) {
@@ -182,7 +185,10 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                 <tr>
                     <td>
                         <strong>Marking formula</strong>
-                        {validateMarkingFormula(doc.markingFormulaString) && <><br/> <FormFeedback className={styles.feedback}>Using default marking formula</FormFeedback></>}
+                        <br/>
+                        {(validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
+                            <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
+                        }
                     </td>
                     <td>
                         <div className="flex-fill">
