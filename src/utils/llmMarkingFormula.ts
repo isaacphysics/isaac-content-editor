@@ -24,7 +24,7 @@ export function evaluateMarkingFormula<T extends LLMFormulaNode>(markingFormula:
         }
         return 0;
     } else if (isLLMFunctionNode(markingFormula)) {
-        const args: LLMFormulaNode[] = markingFormula.arguments;
+        const args: LLMFormulaNode[] = Array.isArray(markingFormula.arguments) ? markingFormula.arguments : [markingFormula.arguments];
         switch (markingFormula.name) {
             case "SUM":
                 return args.map((arg: LLMFormulaNode) => evaluateMarkingFormula(arg, value)).reduce((acc: number, val: number) => acc + val, 0);
