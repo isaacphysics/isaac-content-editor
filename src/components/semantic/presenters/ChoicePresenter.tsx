@@ -33,7 +33,7 @@ import {ListPresenterProp} from "../props/listProps";
 import {ClozeQuestionContext, ItemsContext} from "./ItemQuestionPresenter";
 
 import styles from "../styles/choice.module.css";
-import {CoordinateQuestionContext, QuestionContext} from "./questionPresenters";
+import {CoordinateQuestionContext, InlineQuestionContext, QuestionContext} from "./questionPresenters";
 import {Markup} from "../../../isaac/markup";
 import {NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../isaac/IsaacTypes";
 
@@ -160,6 +160,8 @@ export const FreeTextRulePresenter = (props: ValuePresenterProps<FreeTextRule>) 
 export const RegexPatternPresenter = (props: ValuePresenterProps<RegexPattern>) => {
     const {valueRef, ...rest} = props;
 
+    const inlineQuestionContext = useContext(InlineQuestionContext);
+
     function regexHelper() {
         let regex = props.doc.value ?? "";
         if (props.doc.matchWholeString) {
@@ -176,7 +178,9 @@ export const RegexPatternPresenter = (props: ValuePresenterProps<RegexPattern>) 
         <CheckboxDocProp {...rest} prop="matchWholeString" label="Entire answer has to match this pattern exactly" />
         <br />
         <CheckboxDocProp {...rest} prop="caseInsensitive" label="Case insensitive" />
-        <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" />
+        {inlineQuestionContext?.isInlineQuestion 
+            ? <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" disabled checkedIfUndefined={false} />
+            : <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" />}
         <br />
         <Button onClick={regexHelper}>Test Regex</Button>
     </>;

@@ -522,6 +522,7 @@ const getInlineQuestionPresenter = (type: INLINE_TYPES, props: PresenterProps<Is
                 <hr/>
                 <MultipleChoiceQuestionPresenter {...props} showMeta={false} />
             </>;
+        case "isaacRegexMatchQuestion":
         case "isaacStringMatchQuestion":
             return null;
     }
