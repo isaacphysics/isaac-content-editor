@@ -179,7 +179,12 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             </tbody>
             <tfoot>
                 <tr>
-                    <td><strong><pre>maxMarks</pre></strong></td>
+                    <td>
+                        <strong><pre>maxMarks</pre></strong>
+                        {doc.maxMarks === undefined && 
+                            <FormFeedback className={styles.feedback}> maxMarks is a required field </FormFeedback>
+                        }
+                    </td>
                     <td><MaxMarksEditor {...props} /></td>
                 </tr>
                 <tr>
