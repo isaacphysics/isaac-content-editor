@@ -44,9 +44,12 @@ interface LabeledInputProps<V extends Record<string, string | undefined>> {
     label: string;
     className?: string;
     type?: InputType;
+    warningFunction?: (inputText: string) => string;
 }
 
-function LabeledInput<V extends Record<string, string | undefined>>({value, prop, label, className, type}: LabeledInputProps<V>) {
+function LabeledInput<V extends Record<string, string | undefined>>({value, prop, label, className, type, warningFunction}: LabeledInputProps<V>) {
+    const [warning, setWarning] = useState<string>();
+
     return <Label className={className}>
         {label}
         <Input type={type ?? "text"}
@@ -56,9 +59,12 @@ function LabeledInput<V extends Record<string, string | undefined>>({value, prop
                onChange={(e) => {
                    if (value.current !== undefined) {
                        value.current[prop] = e.target.value as V[keyof V];
+                       setWarning(warningFunction ? warningFunction(e.target.value) : "");
                    }
                }}
+               invalid={!!warning}
         />
+        {warning && <div className="text-danger">{warning}</div>}
     </Label>;
 }
 
@@ -87,6 +93,14 @@ export const QuantityPresenter = buildValuePresenter(
     ({value, units}, doc) => ({...doc, value, units}),
 );
 
+const hasFiveOrMoreDigits = () => {
+    return (inputText: string) => {
+        const regex = /\d{5,}/;
+        const matches = inputText.match(regex);
+        return matches && matches.length > 0 ? "5+ digit numbers are not supported by the symbolic editor: " + matches : "";
+    }
+}
+
 export const FormulaPresenterInner = buildValuePresenter(
     function FormulaValue({editing, doc, value}) {
         if (!editing) {
@@ -97,7 +111,7 @@ export const FormulaPresenterInner = buildValuePresenter(
             }
         } else {
             return <>
-                <LabeledInput value={value} prop="value" label="LaTeX formula" className={styles.fullWidth} />
+                <LabeledInput value={value} prop="value" label="LaTeX formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>
                 <LabeledInput value={value} prop="pythonExpression" label="Python expression" className={styles.fullWidth} />
             </>;
         }
@@ -124,7 +138,7 @@ export const ChemicalFormulaPresenter = buildValuePresenter(
             }
         } else {
             return <>
-                <LabeledInput value={value} prop="mhchemExpression" label="mhchem formula" className={styles.fullWidth} />
+                <LabeledInput value={value} prop="mhchemExpression" label="mhchem formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>
             </>;
         }
     },
@@ -178,7 +192,7 @@ export const RegexPatternPresenter = (props: ValuePresenterProps<RegexPattern>) 
         <CheckboxDocProp {...rest} prop="matchWholeString" label="Entire answer has to match this pattern exactly" />
         <br />
         <CheckboxDocProp {...rest} prop="caseInsensitive" label="Case insensitive" />
-        {inlineQuestionContext?.isInlineQuestion 
+        {inlineQuestionContext?.isInlineQuestion
             ? <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" disabled checkedIfUndefined={false} />
             : <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" />}
         <br />
