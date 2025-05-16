@@ -1,13 +1,15 @@
 import React from "react";
 import { Button } from "reactstrap";
 
-import { IsaacEventPage, IsaacQuiz, IsaacQuizSection } from "../../../isaac-data-types";
+import { IsaacBookDetailPage, IsaacEventPage, IsaacQuiz, IsaacQuizSection } from "../../../isaac-data-types";
 
 import { PresenterProps } from "../registry";
 import { SemanticDocProp } from "../props/SemanticDocProp";
 import { EditableSubtitleProp, EditableTitleProp } from "../props/EditableDocProp";
 import { ListChildrenPresenter } from "./ListChildrenPresenter";
 import {EMPTY_DOCUMENTS} from "../../../services/emptyDocuments";
+import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresenter";
+import { ArrayPropPresenter } from "./ArrayPropPresenter";
 
 export function PagePresenter(props: PresenterProps) {
     return <>
@@ -50,4 +52,15 @@ export function EventPagePresenter(props: PresenterProps<IsaacEventPage>) {
         </>}
         <SemanticDocProp {...props} prop="eventThumbnail" name="Thumbnail"/>
     </>;
+}
+
+export function BookDetailPagePresenter(props: PresenterProps<IsaacBookDetailPage>) {
+    return <>
+        <h3>Gameboards</h3>
+        <ArrayPropPresenter {...props} prop="gameboards" />
+        <h3>Page content</h3>
+        <ContentValueOrChildrenPresenter {...props} />
+        <h3>Extension gameboards</h3>
+        <ArrayPropPresenter {...props} prop="extensionGameboards" />
+    </>
 }

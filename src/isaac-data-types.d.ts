@@ -194,6 +194,11 @@ export interface IsaacQuiz extends SeguePage {
     rubric?: Content;
 }
 
+export interface IsaacBookDetailPage extends SeguePage {
+    gameboards?: string[];
+    extensionGameboards?: string[];
+}
+
 export interface IsaacQuizSection extends Content {
 }
 
