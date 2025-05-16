@@ -3,6 +3,9 @@ import { EditableText, EditableTextProps, EditableTextRef } from "./EditableText
 import React, { forwardRef } from "react";
 import { KeysWithValsOfType } from "../../../utils/types";
 import { PresenterProps } from "../registry";
+import Select from "react-select";
+import { Label } from "reactstrap";
+import { generateGuid } from "../../../utils/strings";
 
 export type CustomTextProps = Omit<EditableTextProps, "onSave" | "text">;
 export type EditableDocProps<D extends Content> =
@@ -29,6 +32,38 @@ export const EditableDocPropFor = <
             ref={ref} />
     };
     return forwardRef(typedRender);
+};
+
+export const EditableDocPropWithStyle = <
+    D extends Content,
+    O extends {value: string | undefined; label: string;}[],
+    K extends KeysWithValsOfType<D, string | undefined> = KeysWithValsOfType<D, string | undefined>,
+>(prop: K, options: O, label?: string, defaultValue?: O[number], defaultProps?: CustomTextProps) => {
+    const typedRender = <D extends Content>({doc, update, ...rest}: EditableDocProps<D>) => {
+        const docProp = doc[prop] as string | undefined;
+        const id = generateGuid();
+        return <div className="d-flex align-items-center mb-3">
+            <Label for={id} className="m-0 mr-2">{label || "Select style:"}</Label>
+            <Select inputId={id}
+                isClearable
+                onChange={option => {
+                    update({
+                        ...doc,
+                        [prop]: option?.value ? `${docProp?.split("/")[0]}/${option.value}` : docProp?.split("/")[0]
+                        // if using the undefined (default) option, remove the style from the docProp
+                    });
+                }}
+                value={options.find(o => o.value === docProp?.split("/")[1]) ?? defaultValue}
+                options={options}
+                placeholder={"Select style..."}
+                menuPortalTarget={document.body}
+                styles={{menuPortal: (base) => ({...base, zIndex: 10})}}
+                {...defaultProps}
+                {...rest}
+            />
+        </div>;
+    };
+    return typedRender;
 };
 
 function arrayWith<T>(array: T[], index: number, value: T): T[] {
