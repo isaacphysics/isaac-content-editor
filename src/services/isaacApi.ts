@@ -1,7 +1,17 @@
 import {siteSpecific} from "./site";
 
+export const LocalServer = siteSpecific(
+    "http://localhost:8080",
+    "http://localhost:8081",
+);
+
 export const StagingServer = siteSpecific(
     "https://staging.isaacphysics.org",
+    "https://staging.adacomputerscience.org"
+);
+
+export const RedesignServer = siteSpecific(
+    "https://redesign.isaacphysics.org",
     "https://staging.adacomputerscience.org"
 );
 
@@ -12,7 +22,7 @@ const LiveServer = siteSpecific(
 
 function makeFetcher(server: string) {
     return async function apiFetcher(path: string, options?: RequestInit) {
-        const fullPath = `${server}/api/any/api/${path}`;
+        const fullPath = server.includes("localhost") ? `${server}/isaac-api/api/${path}` : `${server}/api/any/api/${path}`;
 
         const fullOptions: RequestInit = {
             ...options,
@@ -27,5 +37,6 @@ function makeFetcher(server: string) {
     };
 }
 
+export const localFetcher = makeFetcher(LocalServer);
 export const stagingFetcher = makeFetcher(StagingServer);
 export const liveFetcher = makeFetcher(LiveServer);
