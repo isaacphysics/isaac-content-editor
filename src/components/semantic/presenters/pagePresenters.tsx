@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "reactstrap";
 
-import { IsaacBookDetailPage, IsaacEventPage, IsaacQuiz, IsaacQuizSection } from "../../../isaac-data-types";
+import { IsaacBookDetailPage, IsaacBookIndexPage, IsaacEventPage, IsaacQuiz, IsaacQuizSection } from "../../../isaac-data-types";
 
 import { PresenterProps } from "../registry";
 import { SemanticDocProp } from "../props/SemanticDocProp";
@@ -10,6 +10,7 @@ import { ListChildrenPresenter } from "./ListChildrenPresenter";
 import {EMPTY_DOCUMENTS} from "../../../services/emptyDocuments";
 import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresenter";
 import { ArrayPropPresenter } from "./ArrayPropPresenter";
+import { ListPresenterProp } from "../props/listProps";
 
 export function PagePresenter(props: PresenterProps) {
     return <>
@@ -62,5 +63,14 @@ export function BookDetailPagePresenter(props: PresenterProps<IsaacBookDetailPag
         <ContentValueOrChildrenPresenter {...props} />
         <h3>Extension gameboards</h3>
         <ArrayPropPresenter {...props} prop="extensionGameboards" />
+    </>
+}
+
+export function BookIndexPagePresenter(props: PresenterProps<IsaacBookIndexPage>) {
+    return <>
+        <h3>Page content</h3>
+        <ContentValueOrChildrenPresenter {...props} />
+        <h3>Chapters</h3>
+        <ListPresenterProp {...props} prop="chapters" childTypeOverride="bookChapter" />
     </>
 }

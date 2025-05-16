@@ -30,7 +30,7 @@ import {VideoPresenter} from "./presenters/VideoPresenter";
 import {GlossaryTermPresenter} from "./presenters/GlossaryTermPresenter";
 import {EmailTemplatePresenter} from "./presenters/EmailTemplatePresenter";
 import {AnvilAppPresenter} from "./presenters/AnvilAppPresenter";
-import {BookDetailPagePresenter, EventPagePresenter, PagePresenter, QuizPagePresenter, QuizSectionPresenter} from "./presenters/pagePresenters";
+import {BookDetailPagePresenter, BookIndexPagePresenter, EventPagePresenter, PagePresenter, QuizPagePresenter, QuizSectionPresenter} from "./presenters/pagePresenters";
 import {PodPresenter} from "./presenters/PodPresenter";
 import {defaultMeta, MetaItemKey} from "./Metadata";
 import {CardDeckPresenter, CardPresenter} from "./presenters/CardPresenter";
@@ -45,6 +45,8 @@ import {ListChildrenPresenter} from "./presenters/ListChildrenPresenter";
 import {InteractiveCodeSnippetPresenter} from "./presenters/InteractiveCodeSnippetPresenter";
 import {CalloutPresenter} from "./presenters/CalloutPresenter";
 import {LLMQuestionPresenter} from "./presenters/LLMQuestionPresenter";
+import { BookChapterPresenter } from "./presenters/BookChapterPresenter";
+import { BookSectionPresenter } from "./presenters/BookSectionPresenter";
 
 export type ContentType =
     | "content"
@@ -57,6 +59,7 @@ export type ContentType =
     | "isaacQuestionPage"
     | "isaacFastTrackQuestionPage"
     | "isaacEventPage"
+    | "isaacBookIndexPage"
     | "isaacBookDetailPage"
     | "isaacTopicSummaryPage"
     | "isaacPageFragment"
@@ -72,6 +75,8 @@ export type ContentType =
     | "glossaryTerm"
     | "emailTemplate"
     | "anvilApp"
+    | "bookChapter"
+    | "bookSection"
     | "isaacQuizSection"
     | "isaacPod"
     | "isaacCard"
@@ -209,6 +214,14 @@ const anvilApp: RegistryEntry = {
     bodyPresenter: AnvilAppPresenter,
     metadata: [...defaultMeta, "appId", "appAccessKey"],
 };
+const bookChapter: RegistryEntry = {
+    name: "Book Chapter",
+    bodyPresenter: BookChapterPresenter,
+};
+const bookSection: RegistryEntry = {
+    name: "Book Section",
+    bodyPresenter: BookSectionPresenter,
+};
 const isaacPod: RegistryEntry = {
     name: "Pod",
     bodyPresenter: PodPresenter,
@@ -272,6 +285,12 @@ const isaacEventPage: RegistryEntry = {
     headerPresenter: EventPagePresenter,
     metadata: [...pageMeta, ...pageMetaTail, "emailEventDetails", "emailConfirmedBookingText", "emailWaitingListBookingText", "date", "end_date", "bookingDeadline", "prepWorkDeadline", "numberOfPlaces", "eventStatus", "location", "isaacGroupToken", "reservations", "preResources", "postResources"],
 };
+const isaacBookIndexPage: RegistryEntry = {
+    ...basePage,
+    name: "Book Index Page",
+    bodyPresenter: BookIndexPagePresenter,
+    metadata: [...pageMeta, ...pageMetaTail],
+};
 const isaacBookDetailPage: RegistryEntry = {
     ...basePage,
     name: "Book Detail Page",
@@ -305,6 +324,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacQuestionPage,
     isaacFastTrackQuestionPage: isaacQuestionPage,
     isaacEventPage,
+    isaacBookIndexPage,
     isaacBookDetailPage,
     isaacQuiz,
     isaacWildcard,
@@ -362,6 +382,8 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     glossaryTerm,
     emailTemplate,
     anvilApp,
+    bookChapter,
+    bookSection,
     isaacQuizSection,
     isaacPod,
     isaacCard,
