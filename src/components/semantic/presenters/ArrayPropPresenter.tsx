@@ -42,7 +42,7 @@ export function ArrayPropPresenter<T extends ContentBase>({doc, update, prop, ge
 export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, prop, getChildId=((c) => `${c}`), allowDuplicates=false, calculateButtonProps=(() => ({}))}: PresenterProps<T> & { prop: keyof T, getChildId?: (c: (typeof doc[typeof prop] & any[])[number]) => string, allowDuplicates?: boolean, calculateButtonProps?: (c: (typeof doc[typeof prop] & any[])[number]) => Record<string, unknown>}) {
     const context = useContext(ArrayPropValueConstraintContext);
 
-    if (!Array.isArray(doc[prop])) {
+    if (doc[prop] !== undefined && !Array.isArray(doc[prop])) {
         return <Alert color={"warning"}>
             The property <code>{prop}</code> is not an array, but is expected to be.
         </Alert>;
@@ -53,8 +53,8 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
             The <code>{prop}</code> presenter is missing a context provider. Try wrapping it in an <code>ArrayPropValueConstraintContext</code>.
         </Alert>;
     }
-
-    const docProp = doc[prop] as typeof doc[typeof prop] & unknown[];
+    
+    const docProp = (doc[prop] || []) as typeof doc[typeof prop] & unknown[];
 
     function addItemToArray(id: string) {
         if (!allowDuplicates && docProp.includes(id)) {
