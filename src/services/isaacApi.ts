@@ -5,6 +5,11 @@ export const StagingServer = siteSpecific(
     "https://staging.adacomputerscience.org"
 );
 
+export const RedesignServer = siteSpecific(
+    "https://redesign.isaacphysics.org",
+    "https://staging.adacomputerscience.org"
+);
+
 const LiveServer = siteSpecific(
     "https://isaacphysics.org",
     "https://adacomputerscience.org",
