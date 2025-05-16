@@ -370,6 +370,6 @@ export function getEntryType(doc: ContentType | Content) {
     if (typeof doc === "string") {
         return REGISTRY[doc];
     }
-    const typeWithLayout = `${doc.type}$${doc.layout}` as ContentType;
+    const typeWithLayout = `${doc.type}$${doc.layout?.includes("/") ? doc.layout?.slice(0, doc.layout.indexOf("/")) : doc.layout}` as ContentType;
     return REGISTRY[typeWithLayout] || REGISTRY[doc.type as ContentType] || unknown;
 }
