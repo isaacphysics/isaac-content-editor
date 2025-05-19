@@ -16,7 +16,7 @@ export const EditableDocPropFor = <
     D extends Content,
     K extends KeysWithValsOfType<D, string | undefined> = KeysWithValsOfType<D, string | undefined>,
 >(prop: K, defaultProps?: CustomTextProps) => {
-    const typedRender = <D extends Content>({doc, update, ...rest}: EditableDocProps<D>, ref: React.ForwardedRef<EditableTextRef>) => {
+    const typedRender = ({doc, update, ...rest}: EditableDocProps<D>, ref: React.ForwardedRef<EditableTextRef>) => {
         return <EditableText
             onSave={(newText) => {
                 update({
@@ -24,9 +24,8 @@ export const EditableDocPropFor = <
                     [prop]: newText,
                 });
             }}
-            /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-            // @ts-ignore
-            text={doc[prop]}
+            // unfortunately, while this typing is correct (i.e. should work without these 'as'), TS cannot correctly infer it - see https://github.com/microsoft/TypeScript/issues/48992 and related
+            text={doc[prop] as unknown as string | undefined}
             {...defaultProps}
             {...rest}
             ref={ref} />
@@ -38,9 +37,15 @@ export const EditableDocPropWithStyle = <
     D extends Content,
     O extends {value: string | undefined; label: string;}[],
     K extends KeysWithValsOfType<D, string | undefined> = KeysWithValsOfType<D, string | undefined>,
->(prop: K, options: O, label?: string, defaultValue?: O[number], defaultProps?: CustomTextProps) => {
-    const typedRender = <D extends Content>({doc, update, ...rest}: EditableDocProps<D>) => {
-        const docProp = doc[prop] as string | undefined;
+>(
+    prop: K,
+    options: O,
+    label?: string,
+    defaultValue?: O[number],
+    defaultProps?: CustomTextProps
+) => {
+    const typedRender = ({doc, update, ...rest}: EditableDocProps<D>) => {
+        const docProp = doc[prop] as unknown as string | undefined;
         const id = generateGuid();
         return <div className="d-flex align-items-center mb-3">
             <Label for={id} className="m-0 mr-2">{label || "Select style:"}</Label>
