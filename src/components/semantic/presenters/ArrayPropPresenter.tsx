@@ -94,7 +94,7 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
                             style={provided.draggableProps.style} className="btn btn-outline-secondary mr-3"
                         >
                             𓃑
-                            <span className="ml-2">{id}</span>
+                            <span className="ml-2">{getChildId(id as typeof docProp[number])}</span>
                             <button className="bg-transparent border-0 m-0 pr-0" onClick={() => removeRelatedContent(getChildId(id as typeof docProp[number]))}>➖</button>
                         </div>}
                     </Draggable>)}
