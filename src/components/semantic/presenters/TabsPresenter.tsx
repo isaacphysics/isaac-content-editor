@@ -8,7 +8,7 @@ import { useFixedRef } from "../../../utils/hooks";
 
 import { SemanticItem } from "../SemanticItem";
 import { deriveNewDoc } from "./ListChildrenPresenter";
-import { EditableIDProp, EditableTitleProp } from "../props/EditableDocProp";
+import { EditableDocPropWithStyle, EditableIDProp, EditableTitleProp } from "../props/EditableDocProp";
 import { EditableTextRef } from "../props/EditableText";
 import { PresenterProps } from "../registry";
 import styles from "../styles/tabs.module.css";
@@ -33,6 +33,13 @@ export type TabsProps = {
     index: number;
     setIndex: (newIndex: number) => void;
 } & TabsSettings;
+
+const EditableTabsLayoutProp = EditableDocPropWithStyle("layout", [
+    {value: "tabs", label: "Tabs"},
+    {value: "buttons", label: "Buttons"},
+    {value: "dropdowns", label: "Dropdowns"},
+    {value: undefined, label: "Default"}
+], "Tab display type:", {value: "tabs", label: "Tabs"}, {block: true});
 
 export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styles, suppressHeaderNames, showTitles}: TabsProps) {
     const elementNameLC = safeLowercase(elementName);
@@ -185,7 +192,8 @@ export function TabsPresenter(props: TabsPresenterProps) {
     });
 
     return <div className={styles.wrapper}>
-        <TabsHeader {...allProps} />
+        <EditableTabsLayoutProp {...props}/>
+        <TabsHeader {...allProps} {...props} />
         <TabsMain {...allProps} back="◀" forward="▶" contentHeader={
             showTitles && currentChild ? <div className={styles.meta}>
                 <h3><EditableTitleProp ref={editTitleRef} {...currentChildProps}
