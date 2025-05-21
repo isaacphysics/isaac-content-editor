@@ -67,10 +67,9 @@ export function BookDetailPagePresenter(props: PresenterProps<IsaacBookDetailPag
 }
 
 export function BookIndexPagePresenter(props: PresenterProps<IsaacBookIndexPage>) {
-    const {doc} = props;
     return <>
         <h3>Page content</h3>
-        <ContentValueOrChildrenPresenter {...(doc.value ? {...props, doc: {...doc, encoding: "markdown"}} : props)} />
+        <ContentValueOrChildrenPresenter {...props} />
         <h3>Chapters</h3>
         <ListPresenterProp {...props} prop="chapters" childTypeOverride="bookChapter" />
     </>
