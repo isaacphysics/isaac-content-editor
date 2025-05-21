@@ -8,7 +8,7 @@ import {Entry} from "./FileBrowser";
 
 import styles from "../styles/editor.module.css";
 import {Content} from "../isaac-data-types";
-import {StagingServer} from "../services/isaacApi";
+import {RedesignServer, StagingServer} from "../services/isaacApi";
 import classNames from "classnames";
 
 function filePathToEntry(path: string | undefined, sha: string): Entry {
@@ -32,6 +32,11 @@ function getPreviewLink(doc: Content) {
                 return `${StagingServer}/pages/${doc.id}`;
             case "isaacQuiz":
                 return `${StagingServer}/quiz/preview/${doc.id}`;
+            case "isaacBookDetailPage":
+                const pageId = doc.id.split("_").pop() || "";
+                return `${RedesignServer}/books/${doc.id.slice("book_".length, -(pageId.length + 1))}/${pageId}`;
+            case "isaacBookIndexPage":
+                return `${RedesignServer}/books/${doc.id.slice("book_".length)}`;
         }
     }
 }
