@@ -35,6 +35,8 @@ function getPreviewLink(doc: Content) {
             case "isaacBookDetailPage":
                 const pageId = doc.id.split("_").pop() || "";
                 return `${RedesignServer}/books/${doc.id.slice("book_".length, -(pageId.length + 1))}/${pageId}`;
+            case "isaacBookIndexPage":
+                return `${RedesignServer}/books/${doc.id.slice("book_".length)}`;
         }
     }
 }
