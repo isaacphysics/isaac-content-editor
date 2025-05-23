@@ -28,13 +28,14 @@ function ContentDescription({content}: { content: Content }) {
 
 export const ArrayPropValueConstraintContext = React.createContext<{
     content: unknown[];
+    mapContentToId: (c: any) => string;
     searchString: string;
     setSearchString: React.Dispatch<React.SetStateAction<string>>;
 } | undefined>(undefined);
 
 export function ArrayPropPresenter<T extends ContentBase>({doc, update, prop, getChildId=((c) => `${c}`), allowDuplicates=false, calculateButtonProps=(() => ({}))}: PresenterProps<T> & { prop: keyof T, getChildId?: (c: (typeof doc[typeof prop] & any[])[number]) => string, allowDuplicates?: boolean, calculateButtonProps?: (c: (typeof doc[typeof prop] & any[])[number]) => Record<string, unknown>}) {
     const [searchString, setSearchString] = useState("");
-    return <ArrayPropValueConstraintContext.Provider value={{searchString, setSearchString, content: []}}>
+    return <ArrayPropValueConstraintContext.Provider value={{searchString, setSearchString, content: [], mapContentToId: (c) => `${c}`}}>
         <ArrayPropPresenterInner doc={doc} update={update} prop={prop} getChildId={getChildId} allowDuplicates={allowDuplicates} />
     </ArrayPropValueConstraintContext.Provider>;
 }
@@ -109,13 +110,13 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
         {context?.searchString !== "" && <div>
             {context?.content.length ?
                 (context?.content?.map((content, index) => {
-                    if (!getChildId(content as typeof docProp[number])) return null;
-                    if (!allowDuplicates && docProp.includes(getChildId(content as typeof docProp[number]))) {
+                    if (!context.mapContentToId(content)) return null;
+                    if (!allowDuplicates && docProp.includes(context.mapContentToId(content))) {
                         return null;
                     }
                     return <Button 
                         key={index} outline 
-                        onClick={() => addItemToArray(getChildId(content as typeof docProp[number]) as string)}
+                        onClick={() => addItemToArray(context.mapContentToId(content))}
                         {...calculateButtonProps(content)}
                     >
                         {(content as Content)?.type && <ContentDescription content={content as Content} />}
