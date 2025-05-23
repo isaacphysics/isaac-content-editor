@@ -13,9 +13,9 @@ export function RelatedContentPresenter({doc, update}: PresenterProps) {
         stagingFetcher,
     );
 
-    return <ArrayPropValueConstraintContext.Provider value={{searchString, setSearchString, content: relatedContent?.results ?? []}}>
+    return <ArrayPropValueConstraintContext.Provider value={{searchString, setSearchString, content: relatedContent?.results ?? [], mapContentToId: (c: Content) => c.id ?? ""}}>
         <ArrayPropPresenterInner 
-            doc={doc} update={update} prop="relatedContent" getChildId={(c: Content) => c.id ?? ""} 
+            doc={doc} update={update} prop="relatedContent" getChildId={(c: string) => c ?? ""} 
             calculateButtonProps={(c: Content) => ({
                 color: c.type === "isaacQuestionPage" ? "success" : "primary",
             })}
