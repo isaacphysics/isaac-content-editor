@@ -238,7 +238,7 @@ const isaacEventPage: RegistryEntry = {
     "preResources",
     "postResources",
     "eventSurveyTitle",
-    "eventSurveyUrl",
+    "eventSurvey",
   ],
 };
 

@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2025-06-10 20:58:23.
+// Generated using typescript-generator version 3.2.1263 on 2025-06-11 15:39:27.
 
 export interface AbstractUserPreferenceManager {
 }
@@ -141,7 +141,7 @@ export interface IsaacEventPage extends Content {
   address?: Address;
   end_date?: EpochTimeStamp;
   eventSurveyTitle?: string;
-  eventSurveyUrl?: string;
+  eventSurvey?: string;
   EventStatus?: EventStatus;
 }
 
@@ -512,9 +512,9 @@ export interface Video extends Media {
 
 export interface EventBooking {
   id?: number;
+  creationDate?: EpochTimeStamp;
   reservedById?: number;
   bookingStatus?: BookingStatus;
-  creationDate?: EpochTimeStamp;
   userId?: number;
   eventId?: string;
   updateDate?: EpochTimeStamp;
@@ -702,7 +702,6 @@ export interface Address {
 export interface Connection extends Wrapper, AutoCloseable {
   readOnly?: boolean;
   networkTimeout?: number;
-  schema?: string;
   closed?: boolean;
   autoCommit?: boolean;
   metaData?: DatabaseMetaData;
@@ -711,6 +710,7 @@ export interface Connection extends Wrapper, AutoCloseable {
   typeMap?: { [index: string]: Class<any> };
   holdability?: number;
   clientInfo?: { [index: string]: any };
+  schema?: string;
   transactionIsolation?: number;
 }
 
@@ -718,6 +718,11 @@ export interface DatabaseMetaData extends Wrapper {
   connection?: Connection;
   readOnly?: boolean;
   url?: string;
+  jdbcmajorVersion?: number;
+  jdbcminorVersion?: number;
+  sqlstateType?: number;
+  rowIdLifetime?: RowIdLifetime;
+  maxLogicalLobSize?: number;
   databaseProductName?: string;
   driverVersion?: string;
   driverMajorVersion?: number;
@@ -746,11 +751,6 @@ export interface DatabaseMetaData extends Wrapper {
   maxTableNameLength?: number;
   maxTablesInSelect?: number;
   maxUserNameLength?: number;
-  jdbcmajorVersion?: number;
-  jdbcminorVersion?: number;
-  sqlstateType?: number;
-  rowIdLifetime?: RowIdLifetime;
-  maxLogicalLobSize?: number;
   userName?: string;
   driverName?: string;
   sqlkeywords?: string;
@@ -761,6 +761,9 @@ export interface DatabaseMetaData extends Wrapper {
   catalogs?: ResultSet;
   tableTypes?: ResultSet;
   typeInfo?: ResultSet;
+  databaseMajorVersion?: number;
+  databaseMinorVersion?: number;
+  clientInfoProperties?: ResultSet;
   resultSetHoldability?: number;
   databaseProductVersion?: string;
   identifierQuoteString?: string;
@@ -769,9 +772,6 @@ export interface DatabaseMetaData extends Wrapper {
   maxProcedureNameLength?: number;
   maxCatalogNameLength?: number;
   defaultTransactionIsolation?: number;
-  databaseMajorVersion?: number;
-  databaseMinorVersion?: number;
-  clientInfoProperties?: ResultSet;
 }
 
 export interface SQLWarning extends SQLException {
@@ -861,8 +861,8 @@ export interface Statement extends Wrapper, AutoCloseable {
   largeUpdateCount?: number;
   largeMaxRows?: number;
   closed?: boolean;
-  maxRows?: number;
   warnings?: SQLWarning;
+  maxRows?: number;
   fetchSize?: number;
   resultSet?: ResultSet;
   updateCount?: number;

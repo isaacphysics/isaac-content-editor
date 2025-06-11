@@ -97,7 +97,7 @@ const emptyDocuments: Document[] = [
     preResources: [],
     postResources: [],
     eventSurveyTitle: "",
-    eventSurveyUrl: "",
+    eventSurvey: "",
     emailEventDetails: "Check the online events page for additional details.",
     emailConfirmedBookingText: "",
     emailWaitingListBookingText: "",
