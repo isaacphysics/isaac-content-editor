@@ -45,8 +45,6 @@ import {ListChildrenPresenter} from "./presenters/ListChildrenPresenter";
 import {InteractiveCodeSnippetPresenter} from "./presenters/InteractiveCodeSnippetPresenter";
 import {CalloutPresenter} from "./presenters/CalloutPresenter";
 import {LLMQuestionPresenter} from "./presenters/LLMQuestionPresenter";
-import { BookChapterPresenter } from "./presenters/BookChapterPresenter";
-import { BookSectionPresenter } from "./presenters/BookSectionPresenter";
 import { SidebarEntryPresenter, SidebarPresenter } from "./presenters/SidebarPresenters";
 
 export type ContentType =
@@ -79,8 +77,6 @@ export type ContentType =
     | "glossaryTerm"
     | "emailTemplate"
     | "anvilApp"
-    | "bookChapter"
-    | "bookSection"
     | "isaacQuizSection"
     | "isaacPod"
     | "isaacCard"
@@ -217,14 +213,6 @@ const anvilApp: RegistryEntry = {
     name: "Anvil app",
     bodyPresenter: AnvilAppPresenter,
     metadata: [...defaultMeta, "appId", "appAccessKey"],
-};
-const bookChapter: RegistryEntry = {
-    name: "Book Chapter",
-    bodyPresenter: BookChapterPresenter,
-};
-const bookSection: RegistryEntry = {
-    name: "Book Section",
-    bodyPresenter: BookSectionPresenter,
 };
 const isaacPod: RegistryEntry = {
     name: "Pod",
@@ -404,8 +392,6 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     glossaryTerm,
     emailTemplate,
     anvilApp,
-    bookChapter,
-    bookSection,
     isaacQuizSection,
     isaacPod,
     isaacCard,

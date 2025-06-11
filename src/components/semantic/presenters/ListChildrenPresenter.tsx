@@ -63,9 +63,6 @@ const INSERTER_MAP: Partial<Record<ContentType, React.FunctionComponent<Inserter
     coordinateItem$choice: CoordinateChoiceItemInserter,
     inlineQuestionPart: InlinePartInserter,
     item$choice: ItemChoiceItemInserter,
-    bookChapter: PlainInserter({type: "bookChapter", title: ""}),
-    bookSection: PlainInserter({type: "bookSection", title: ""}),
-    // sidebarEntry: PlainInserter({type: "sidebarEntry", title: ""}),
     sidebarEntry: (props: InserterProps) => <Inserter {...props} blockTypes={{
         "Group": {type: "sidebarGroup", title: "", children: []},
         "Entry": {type: "sidebarEntry", title: "", children: []},

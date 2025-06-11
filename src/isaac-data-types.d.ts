@@ -309,15 +309,6 @@ export interface PgEventBooking extends EventBooking {
 export interface PgEventBookings extends EventBookings {
 }
 
-export interface BookSection extends Content {
-    label?: string;
-    bookPageId?: string;
-}
-export interface BookChapter extends Content {
-    label?: string;
-    sections?: BookSection[];
-}
-
 export interface AnvilApp extends Content {
     appId?: string;
     appAccessKey?: string;
