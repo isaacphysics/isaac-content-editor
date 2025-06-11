@@ -7,7 +7,7 @@ import styles from "./styles/semantic.module.css";
 import { generate } from "../../utils/keyedListHook";
 import { Content } from "../../isaac-data-types";
 
-const blockTypes = {
+const defaultBlockTypes = {
     "content": {type: "content", encoding: "markdown", value: ""},
     "question": {
         type: "isaacQuestion",
@@ -53,7 +53,7 @@ const blockTypes = {
     }
 };
 
-export function Inserter({insert, forceOpen, position, blockTypes}: InserterProps & {blockTypes?: Record<string, Content>}) {
+export function Inserter({insert, forceOpen, position, blockTypes = defaultBlockTypes}: InserterProps & {blockTypes?: Record<string, Content>}) {
     const [isInserting, setInserting] = useState(false);
 
     const isOpen = forceOpen || isInserting;
