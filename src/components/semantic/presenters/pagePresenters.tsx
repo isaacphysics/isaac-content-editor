@@ -69,9 +69,12 @@ const EditableSidebarIdProp = EditableDocPropFor<IsaacBookIndexPage>("sidebar", 
 
 export function BookIndexPagePresenter(props: PresenterProps<IsaacBookIndexPage>) {
     return <>
-        <h3>Sidebar</h3>
-        <EditableSidebarIdProp {...props} />
         <h3>Page content</h3>
+        <div className="d-flex">
+            Sidebar ID: &nbsp;
+            <EditableSidebarIdProp {...props} />
+        </div>
+        <hr/>
         <ContentValueOrChildrenPresenter {...props} />
     </>
 }
