@@ -138,7 +138,7 @@ export const MetaItems = asMetaItems({
   preResources: ["Pre-Resources", { presenter: ResourcesMetaPresenter }],
   postResources: ["Post-Resources", { presenter: ResourcesMetaPresenter }],
   eventSurveyTitle: "Event Survey Title",
-  eventSurveyUrl: "Event Survey URL",
+  eventSurvey: "Event Survey",
 });
 
 function ReservationsMetaPresenter(props: MetaItemPresenterProps<IsaacEventPage>) {
