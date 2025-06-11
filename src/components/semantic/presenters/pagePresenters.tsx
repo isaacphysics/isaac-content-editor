@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "reactstrap";
 
-import { IsaacBookDetailPage, IsaacBookIndexPage, IsaacEventPage, IsaacQuiz, IsaacQuizSection } from "../../../isaac-data-types";
+import { IsaacBookDetailPage, IsaacBookIndexPage, IsaacEventPage, IsaacQuiz, IsaacQuizSection, SeguePage } from "../../../isaac-data-types";
 
 import { PresenterProps } from "../registry";
 import { SemanticDocProp } from "../props/SemanticDocProp";
@@ -54,6 +54,16 @@ export function EventPagePresenter(props: PresenterProps<IsaacEventPage>) {
     </>;
 }
 
+export function GenericPagePresenter(props: PresenterProps<SeguePage>) {
+    return <>
+        <div className="d-flex">
+            Sidebar ID: &nbsp;
+            <EditableSidebarIdProp {...props} />
+        </div>
+        <ContentValueOrChildrenPresenter {...props} />
+    </>
+}
+
 export function BookDetailPagePresenter(props: PresenterProps<IsaacBookDetailPage>) {
     return <>
         <h3>Gameboards</h3>
@@ -75,6 +85,19 @@ export function BookIndexPagePresenter(props: PresenterProps<IsaacBookIndexPage>
             <EditableSidebarIdProp {...props} />
         </div>
         <hr/>
+        <ContentValueOrChildrenPresenter {...props} />
+    </>
+}
+
+export function RevisionPagePresenter(props: PresenterProps<IsaacBookDetailPage>) {
+    return <>
+        <h3>Gameboards</h3>
+        <ArrayPropPresenter {...props} prop="gameboards" />
+        <details className="my-2">
+            <summary>How to structure a revision page</summary>
+            <div className="ml-4"><i>Add any gameboards relevant to the revision page above; these will appear in a list, above the main content. Links to book pages, concepts, etc. should all appear somewhere <strong>in the content</strong>, following the format of other revision pages. Related content (the metadata field) should be reserved for <strong>practice tests</strong>; these will appear in their own section on the page, underneath the main content.</i></div>
+        </details>
+        <h3>Page content</h3>
         <ContentValueOrChildrenPresenter {...props} />
     </>
 }

@@ -30,7 +30,7 @@ import {VideoPresenter} from "./presenters/VideoPresenter";
 import {GlossaryTermPresenter} from "./presenters/GlossaryTermPresenter";
 import {EmailTemplatePresenter} from "./presenters/EmailTemplatePresenter";
 import {AnvilAppPresenter} from "./presenters/AnvilAppPresenter";
-import {BookDetailPagePresenter, BookIndexPagePresenter, EventPagePresenter, PagePresenter, QuizPagePresenter, QuizSectionPresenter} from "./presenters/pagePresenters";
+import {BookDetailPagePresenter, BookIndexPagePresenter, EventPagePresenter, GenericPagePresenter, PagePresenter, QuizPagePresenter, QuizSectionPresenter, RevisionPagePresenter} from "./presenters/pagePresenters";
 import {PodPresenter} from "./presenters/PodPresenter";
 import {defaultMeta, MetaItemKey} from "./Metadata";
 import {CardDeckPresenter, CardPresenter} from "./presenters/CardPresenter";
@@ -60,6 +60,7 @@ export type ContentType =
     | "isaacEventPage"
     | "isaacBookIndexPage"
     | "isaacBookDetailPage"
+    | "isaacRevisionDetailPage"
     | "isaacTopicSummaryPage"
     | "isaacPageFragment"
     | "page"
@@ -253,6 +254,7 @@ const basePage: RegistryEntry = {
 };
 const contentPage: RegistryEntry = {
     ...basePage,
+    bodyPresenter: GenericPagePresenter,
     metadata: [...pageMeta, ...pageMetaTail, "summary"],
 };
 const isaacTopicSummaryPage: RegistryEntry = {
@@ -287,6 +289,12 @@ const isaacBookDetailPage: RegistryEntry = {
     ...basePage,
     name: "Book Detail Page",
     bodyPresenter: BookDetailPagePresenter,
+    metadata: [...pageMeta, ...pageMetaTail],
+};
+const isaacRevisionPage: RegistryEntry = {
+    ...basePage,
+    name: "Revision Page",
+    bodyPresenter: RevisionPagePresenter,
     metadata: [...pageMeta, ...pageMetaTail],
 };
 
@@ -333,6 +341,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacEventPage,
     isaacBookIndexPage,
     isaacBookDetailPage,
+    isaacRevisionDetailPage: isaacRevisionPage,
     isaacQuiz,
     isaacWildcard,
     sidebar,
