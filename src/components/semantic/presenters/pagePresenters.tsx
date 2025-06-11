@@ -5,12 +5,11 @@ import { IsaacBookDetailPage, IsaacBookIndexPage, IsaacEventPage, IsaacQuiz, Isa
 
 import { PresenterProps } from "../registry";
 import { SemanticDocProp } from "../props/SemanticDocProp";
-import { EditableSubtitleProp, EditableTitleProp } from "../props/EditableDocProp";
+import { EditableDocPropFor, EditableSubtitleProp, EditableTitleProp } from "../props/EditableDocProp";
 import { ListChildrenPresenter } from "./ListChildrenPresenter";
 import {EMPTY_DOCUMENTS} from "../../../services/emptyDocuments";
 import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresenter";
 import { ArrayPropPresenter } from "./ArrayPropPresenter";
-import { ListPresenterProp } from "../props/listProps";
 
 export function PagePresenter(props: PresenterProps) {
     return <>
@@ -66,11 +65,13 @@ export function BookDetailPagePresenter(props: PresenterProps<IsaacBookDetailPag
     </>
 }
 
+const EditableSidebarIdProp = EditableDocPropFor<IsaacBookIndexPage>("sidebar", {block: true, placeHolder: "Sidebar ID"});
+
 export function BookIndexPagePresenter(props: PresenterProps<IsaacBookIndexPage>) {
     return <>
+        <h3>Sidebar</h3>
+        <EditableSidebarIdProp {...props} />
         <h3>Page content</h3>
         <ContentValueOrChildrenPresenter {...props} />
-        <h3>Chapters</h3>
-        <ListPresenterProp {...props} prop="chapters" childTypeOverride="bookChapter" />
     </>
 }

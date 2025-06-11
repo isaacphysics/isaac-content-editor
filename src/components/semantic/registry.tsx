@@ -47,6 +47,7 @@ import {CalloutPresenter} from "./presenters/CalloutPresenter";
 import {LLMQuestionPresenter} from "./presenters/LLMQuestionPresenter";
 import { BookChapterPresenter } from "./presenters/BookChapterPresenter";
 import { BookSectionPresenter } from "./presenters/BookSectionPresenter";
+import { SidebarEntryPresenter, SidebarPresenter } from "./presenters/SidebarPresenters";
 
 export type ContentType =
     | "content"
@@ -64,6 +65,9 @@ export type ContentType =
     | "isaacTopicSummaryPage"
     | "isaacPageFragment"
     | "page"
+    | "sidebar"
+    | "sidebarEntry"
+    | "sidebarGroup"
     | "isaacQuiz"
     | "hints"
     | "figure"
@@ -314,6 +318,21 @@ const isaacWildcard: RegistryEntry = {
     metadata: [...defaultMeta, "description", "url", "published"],
 };
 
+const sidebar: RegistryEntry = {
+    name: "Sidebar",
+    bodyPresenter: SidebarPresenter,
+    metadata: [...defaultMeta],
+};
+
+const sidebarEntry: RegistryEntry = {
+    name: "Sidebar Entry",
+    bodyPresenter: SidebarEntryPresenter,
+};
+
+const sidebarGroup: RegistryEntry = {
+    name: "Sidebar Group",
+    bodyPresenter: SidebarEntryPresenter,
+};
 
 export const REGISTRY: Record<ContentType, RegistryEntry> = {
     content,
@@ -328,6 +347,9 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacBookDetailPage,
     isaacQuiz,
     isaacWildcard,
+    sidebar,
+    sidebarEntry,
+    sidebarGroup,
     content$accordion: accordion,
     content$horizontal: horizontal,
     content$clearfix: clearfix,

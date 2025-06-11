@@ -194,8 +194,22 @@ export interface IsaacQuiz extends SeguePage {
     rubric?: Content;
 }
 
+export interface SidebarEntry extends Content {
+    label?: string;
+    pageId?: string;
+    pageType?: SidebarEntryType;
+}
+
+export interface SidebarGroup extends SidebarEntry {
+    sidebarEntries?: SidebarEntry[];
+}
+
+export interface Sidebar extends Content {
+    sidebarEntries?: SidebarEntry[];
+}
+
 export interface IsaacBookIndexPage extends SeguePage {
-    chapters?: BookChapter[];
+    sidebar?: string; // the ID of the sidebar
     coverImage?: Image;
 }
 
