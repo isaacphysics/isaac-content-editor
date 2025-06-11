@@ -28,3 +28,5 @@ export const stagePrintList = [
 ];
 
 export const subjectList = ["biology","chemistry","physics","maths"]
+
+export const BOOK_DETAIL_ID_SEPARATOR = "__";
