@@ -137,8 +137,12 @@ export const MetaItems = asMetaItems({
   reservations: ["Reservations", { presenter: ReservationsMetaPresenter }],
   preResources: ["Pre-Resources", { presenter: ResourcesMetaPresenter }],
   postResources: ["Post-Resources", { presenter: ResourcesMetaPresenter }],
-  eventSurveyTitle: "Event Survey Title",
-  eventSurvey: "Event Survey",
+  eventSurveyTitle: ["Event Survey Title", { 
+    presenter: EventSurveyMetaPresenter 
+  }],
+  eventSurvey: ["Event Survey", { 
+    presenter: EventSurveyMetaPresenter 
+  }],
 });
 
 function ReservationsMetaPresenter(props: MetaItemPresenterProps<IsaacEventPage>) {
@@ -424,6 +428,37 @@ function ResourcesMetaPresenter({ doc, update, prop, name }: MetaItemPresenterPr
       >
         Add {name.substring(0, name.length)}
       </Button>
+    </>
+  );
+}
+
+function EventSurveyMetaPresenter({ doc, update }: MetaItemPresenterProps) {
+  return (
+    <>
+      <Row>
+        <Col xs={5}>Title</Col>
+        <Col xs={5}>URL</Col>
+      </Row>
+      <Row>
+        <Col xs={5}>
+          <MetaItemPresenter
+            doc={doc}
+            update={update}
+            prop="eventSurveyTitle"
+            name="Title"
+            options={{ type: "text" }}
+          />
+        </Col>
+        <Col xs={5}>
+          <MetaItemPresenter
+            doc={doc}
+            update={update}
+            prop="eventSurvey"
+            name="URL"
+            options={{ type: "text" }}
+          />
+        </Col>
+      </Row>
     </>
   );
 }
