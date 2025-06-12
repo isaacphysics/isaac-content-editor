@@ -137,12 +137,18 @@ export const MetaItems = asMetaItems({
   reservations: ["Reservations", { presenter: ReservationsMetaPresenter }],
   preResources: ["Pre-Resources", { presenter: ResourcesMetaPresenter }],
   postResources: ["Post-Resources", { presenter: ResourcesMetaPresenter }],
-  eventSurveyTitle: ["Event Survey Title", { 
-    presenter: EventSurveyMetaPresenter 
-  }],
-  eventSurvey: ["Event Survey", { 
-    presenter: EventSurveyMetaPresenter 
-  }],
+  eventSurveyTitle: [
+    "Event Survey Title",
+    {
+      presenter: EventSurveyMetaPresenter,
+    },
+  ],
+  eventSurvey: [
+    "Event Survey",
+    {
+      presenter: EventSurveyMetaPresenter,
+    },
+  ],
 });
 
 function ReservationsMetaPresenter(props: MetaItemPresenterProps<IsaacEventPage>) {
@@ -450,13 +456,7 @@ function EventSurveyMetaPresenter({ doc, update }: MetaItemPresenterProps) {
           />
         </Col>
         <Col xs={5}>
-          <MetaItemPresenter
-            doc={doc}
-            update={update}
-            prop="eventSurvey"
-            name="URL"
-            options={{ type: "text" }}
-          />
+          <MetaItemPresenter doc={doc} update={update} prop="eventSurvey" name="URL" options={{ type: "text" }} />
         </Col>
       </Row>
     </>
