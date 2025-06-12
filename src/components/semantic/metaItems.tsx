@@ -137,12 +137,6 @@ export const MetaItems = asMetaItems({
   reservations: ["Reservations", { presenter: ReservationsMetaPresenter }],
   preResources: ["Pre-Resources", { presenter: ResourcesMetaPresenter }],
   postResources: ["Post-Resources", { presenter: ResourcesMetaPresenter }],
-  eventSurveyTitle: [
-    "Event Survey Title",
-    {
-      presenter: EventSurveyMetaPresenter,
-    },
-  ],
   eventSurvey: [
     "Event Survey",
     {
