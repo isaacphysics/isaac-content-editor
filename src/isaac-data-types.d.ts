@@ -194,8 +194,22 @@ export interface IsaacQuiz extends SeguePage {
     rubric?: Content;
 }
 
+export interface SidebarEntry extends Content {
+    label?: string;
+    pageId?: string;
+    pageType?: SidebarEntryType;
+}
+
+export interface SidebarGroup extends SidebarEntry {
+    sidebarEntries?: SidebarEntry[];
+}
+
+export interface Sidebar extends Content {
+    sidebarEntries?: SidebarEntry[];
+}
+
 export interface IsaacBookIndexPage extends SeguePage {
-    chapters?: BookChapter[];
+    sidebar?: string; // the ID of the sidebar
     coverImage?: Image;
 }
 
@@ -293,15 +307,6 @@ export interface PgEventBooking extends EventBooking {
 }
 
 export interface PgEventBookings extends EventBookings {
-}
-
-export interface BookSection extends Content {
-    label?: string;
-    bookPageId?: string;
-}
-export interface BookChapter extends Content {
-    label?: string;
-    sections?: BookSection[];
 }
 
 export interface AnvilApp extends Content {

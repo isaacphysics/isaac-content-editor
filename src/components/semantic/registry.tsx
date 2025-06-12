@@ -30,7 +30,7 @@ import {VideoPresenter} from "./presenters/VideoPresenter";
 import {GlossaryTermPresenter} from "./presenters/GlossaryTermPresenter";
 import {EmailTemplatePresenter} from "./presenters/EmailTemplatePresenter";
 import {AnvilAppPresenter} from "./presenters/AnvilAppPresenter";
-import {BookDetailPagePresenter, BookIndexPagePresenter, EventPagePresenter, PagePresenter, QuizPagePresenter, QuizSectionPresenter} from "./presenters/pagePresenters";
+import {BookDetailPagePresenter, BookIndexPagePresenter, EventPagePresenter, GenericPagePresenter, PagePresenter, QuizPagePresenter, QuizSectionPresenter, RevisionPagePresenter} from "./presenters/pagePresenters";
 import {PodPresenter} from "./presenters/PodPresenter";
 import {defaultMeta, MetaItemKey} from "./Metadata";
 import {CardDeckPresenter, CardPresenter} from "./presenters/CardPresenter";
@@ -45,8 +45,7 @@ import {ListChildrenPresenter} from "./presenters/ListChildrenPresenter";
 import {InteractiveCodeSnippetPresenter} from "./presenters/InteractiveCodeSnippetPresenter";
 import {CalloutPresenter} from "./presenters/CalloutPresenter";
 import {LLMQuestionPresenter} from "./presenters/LLMQuestionPresenter";
-import { BookChapterPresenter } from "./presenters/BookChapterPresenter";
-import { BookSectionPresenter } from "./presenters/BookSectionPresenter";
+import { SidebarEntryPresenter, SidebarPresenter } from "./presenters/SidebarPresenters";
 
 export type ContentType =
     | "content"
@@ -61,9 +60,13 @@ export type ContentType =
     | "isaacEventPage"
     | "isaacBookIndexPage"
     | "isaacBookDetailPage"
+    | "isaacRevisionDetailPage"
     | "isaacTopicSummaryPage"
     | "isaacPageFragment"
     | "page"
+    | "sidebar"
+    | "sidebarEntry"
+    | "sidebarGroup"
     | "isaacQuiz"
     | "hints"
     | "figure"
@@ -75,8 +78,6 @@ export type ContentType =
     | "glossaryTerm"
     | "emailTemplate"
     | "anvilApp"
-    | "bookChapter"
-    | "bookSection"
     | "isaacQuizSection"
     | "isaacPod"
     | "isaacCard"
@@ -214,14 +215,6 @@ const anvilApp: RegistryEntry = {
     bodyPresenter: AnvilAppPresenter,
     metadata: [...defaultMeta, "appId", "appAccessKey"],
 };
-const bookChapter: RegistryEntry = {
-    name: "Book Chapter",
-    bodyPresenter: BookChapterPresenter,
-};
-const bookSection: RegistryEntry = {
-    name: "Book Section",
-    bodyPresenter: BookSectionPresenter,
-};
 const isaacPod: RegistryEntry = {
     name: "Pod",
     bodyPresenter: PodPresenter,
@@ -261,6 +254,7 @@ const basePage: RegistryEntry = {
 };
 const contentPage: RegistryEntry = {
     ...basePage,
+    bodyPresenter: GenericPagePresenter,
     metadata: [...pageMeta, ...pageMetaTail, "summary"],
 };
 const isaacTopicSummaryPage: RegistryEntry = {
@@ -297,6 +291,12 @@ const isaacBookDetailPage: RegistryEntry = {
     bodyPresenter: BookDetailPagePresenter,
     metadata: [...pageMeta, ...pageMetaTail],
 };
+const isaacRevisionPage: RegistryEntry = {
+    ...basePage,
+    name: "Revision Page",
+    bodyPresenter: RevisionPagePresenter,
+    metadata: [...pageMeta, ...pageMetaTail],
+};
 
 const isaacQuiz: RegistryEntry = {
     name: "Test",
@@ -314,6 +314,21 @@ const isaacWildcard: RegistryEntry = {
     metadata: [...defaultMeta, "description", "url", "published"],
 };
 
+const sidebar: RegistryEntry = {
+    name: "Sidebar",
+    bodyPresenter: SidebarPresenter,
+    metadata: [...defaultMeta],
+};
+
+const sidebarEntry: RegistryEntry = {
+    name: "Sidebar Entry",
+    bodyPresenter: SidebarEntryPresenter,
+};
+
+const sidebarGroup: RegistryEntry = {
+    name: "Sidebar Group",
+    bodyPresenter: SidebarEntryPresenter,
+};
 
 export const REGISTRY: Record<ContentType, RegistryEntry> = {
     content,
@@ -326,8 +341,12 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacEventPage,
     isaacBookIndexPage,
     isaacBookDetailPage,
+    isaacRevisionDetailPage: isaacRevisionPage,
     isaacQuiz,
     isaacWildcard,
+    sidebar,
+    sidebarEntry,
+    sidebarGroup,
     content$accordion: accordion,
     content$horizontal: horizontal,
     content$clearfix: clearfix,
@@ -382,8 +401,6 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     glossaryTerm,
     emailTemplate,
     anvilApp,
-    bookChapter,
-    bookSection,
     isaacQuizSection,
     isaacPod,
     isaacCard,
