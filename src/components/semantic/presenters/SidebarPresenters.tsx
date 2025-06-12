@@ -1,6 +1,6 @@
 import React from "react";
 import { SidebarEntry, Sidebar, SidebarGroup } from "../../../isaac-data-types";
-import { EditableDocPropFor, EditableTitleProp } from "../props/EditableDocProp";
+import { EditableDocPropFor, EditableIDProp, EditableSubtitleProp, EditableTitleProp } from "../props/EditableDocProp";
 import { EnumPropFor } from "../props/EnumProp";
 import { ListPresenterProp } from "../props/listProps";
 import { PresenterProps } from "../registry";
@@ -18,7 +18,18 @@ const EditableSidebarEntryPageIdProp = EditableDocPropFor<SidebarEntry>("pageId"
 const EditableSidebarEntryPageTypeProp = EnumPropFor<SidebarEntry>("pageType", SidebarEntryType)
 
 export function SidebarPresenter(props: PresenterProps<Sidebar>) {
-    return <ListPresenterProp {...props} prop="sidebarEntries" childTypeOverride="sidebarEntry" />
+    return <>
+        <h4>Sidebar</h4>
+        <div className="d-flex mb-2">
+            Sidebar ID: &nbsp;
+            <EditableIDProp {...props} placeHolder="Enter ID..." />
+        </div>
+        <div className="d-flex mb-2">
+            Mobile &quot;open sidebar&quot; button text: &nbsp;
+            <EditableSubtitleProp {...props} placeHolder="Enter button text..." />
+        </div>
+        <ListPresenterProp {...props} prop="sidebarEntries" childTypeOverride="sidebarEntry" />
+    </>
 }
 
 export function SidebarEntryPresenter(props: PresenterProps<SidebarEntry>) {
