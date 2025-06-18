@@ -100,6 +100,7 @@ export async function processCode(code: string | null) {
     Cookies.set(GITHUB_TOKEN_COOKIE, result.accessToken, {
       expires: 7,
       sameSite: "strict",
+      secure: true,
     });
 
     const dest = new URL(window.location.href);
