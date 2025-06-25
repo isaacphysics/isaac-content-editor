@@ -2,7 +2,7 @@
 import React, { MutableRefObject, useCallback, useMemo, useRef, useState } from "react";
 import {Button, ButtonGroup} from "reactstrap";
 
-import { Content } from "../../../isaac-data-types";
+import { Content, IsaacTabs } from "../../../isaac-data-types";
 import { safeLowercase } from "../../../utils/strings";
 import { useFixedRef } from "../../../utils/hooks";
 
@@ -13,6 +13,7 @@ import { EditableTextRef } from "../props/EditableText";
 import { PresenterProps } from "../registry";
 import styles from "../styles/tabs.module.css";
 import { useKeyedList, useWithIndex } from "../../../utils/keyedListHook";
+import { CheckboxDocProp } from "../props/CheckboxDocProp";
 
 export type TabsSettings = {
     emptyDescription: string;
@@ -112,7 +113,7 @@ export function TabsMain({docRef, currentChild, updateCurrentChild, doRemove, do
     </div>;
 }
 
-export function useTabs({doc, update, hideTitles}: TabsPresenterProps, settings: TabsSettings) {
+export function useTabs({doc, update}: PresenterProps<IsaacTabs>, settings: TabsSettings) {
     const [index, setIndex] = useState(0);
     const docRef = useFixedRef(doc);
 
@@ -173,10 +174,8 @@ export function useTabs({doc, update, hideTitles}: TabsPresenterProps, settings:
     return {editTitleRef, currentChild, allProps, currentChildProps};
 }
 
-type TabsPresenterProps = PresenterProps & { hideTitles?: boolean };
-
-export function TabsPresenter(props: TabsPresenterProps) {
-    const showTitles = !props.hideTitles;
+export function TabsPresenter(props: PresenterProps<IsaacTabs>) {
+    const showTitles = !props.doc.hideTitles;
 
     const {
         editTitleRef,
@@ -193,6 +192,7 @@ export function TabsPresenter(props: TabsPresenterProps) {
 
     return <div className={styles.wrapper}>
         <EditableTabsLayoutProp {...props}/>
+        <CheckboxDocProp doc={props.doc} update={props.update} prop="expandable" label="Expandable" />
         <TabsHeader {...allProps} {...props} />
         <TabsMain {...allProps} back="◀" forward="▶" contentHeader={
             showTitles && currentChild ? <div className={styles.meta}>
