@@ -345,6 +345,7 @@ export interface InteractiveCodeSnippet extends CodeSnippet {
 
 export interface IsaacTabs extends Content {
     expandable?: boolean;
+    topScrollable?: boolean;
     hideTitles?: boolean;
 }
 

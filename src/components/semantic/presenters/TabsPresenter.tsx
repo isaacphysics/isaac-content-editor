@@ -191,8 +191,11 @@ export function TabsPresenter(props: PresenterProps<IsaacTabs>) {
     });
 
     return <div className={styles.wrapper}>
-        <EditableTabsLayoutProp {...props}/>
-        <CheckboxDocProp doc={props.doc} update={props.update} prop="expandable" label="Expandable" />
+        <div className="d-flex">
+            <EditableTabsLayoutProp {...props}/>
+            <CheckboxDocProp className="ml-4 mt-2" doc={props.doc} update={props.update} prop="expandable" label="Expandable" />
+            <CheckboxDocProp className="mt-2" doc={props.doc} update={props.update} prop="topScrollable" label="Top-scrollable" />
+        </div>
         <TabsHeader {...allProps} {...props} />
         <TabsMain {...allProps} back="◀" forward="▶" contentHeader={
             showTitles && currentChild ? <div className={styles.meta}>

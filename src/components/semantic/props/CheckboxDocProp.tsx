@@ -2,6 +2,7 @@ import { Input, Label } from "reactstrap";
 import styles from "../styles/question.module.css";
 import React, { useEffect } from "react";
 import { PresenterProps } from "../registry";
+import classNames from "classnames";
 
 type CheckboxDocProps<K extends keyof D, D> =
     & PresenterProps<D>
@@ -10,6 +11,7 @@ type CheckboxDocProps<K extends keyof D, D> =
     label: string;
     checkedIfUndefined?: boolean;
     disabled?: boolean;
+    className?: string;
 };
 
 export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: boolean }>({
@@ -19,6 +21,7 @@ export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: bool
     label,
     checkedIfUndefined,
     disabled,
+    className,
 }: CheckboxDocProps<K, D>) {
     useEffect(()=> {
         if (disabled && doc[prop]) {
@@ -29,7 +32,7 @@ export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: bool
         }
     }, [checkedIfUndefined, disabled, doc, prop, update]);
 
-    return <Label className={styles.checkboxLabel} style={{color: disabled ? "gray" : "black"}}>
+    return <Label className={classNames(className, styles.checkboxLabel)} style={{color: disabled ? "gray" : "black"}}>
         <Input type="checkbox"
                disabled={disabled}
                checked={doc[prop] ?? checkedIfUndefined ?? false}
