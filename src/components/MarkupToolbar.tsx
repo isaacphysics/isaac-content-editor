@@ -9,12 +9,12 @@ import {
     makeBold,
     makeCode,
     makeItalic,
-    makeStrikethrough,
-    makeTableClass
+    makeStrikethrough
 } from "../utils/codeMirrorExtensions";
 import {ClozeQuestionContext} from "./semantic/presenters/ItemQuestionPresenter";
 import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
 import { PopupInlineQuestionInsert } from "./popups/PopupInlineQuestionInsert";
+import { PopupTableClass } from "./popups/PopupTableClass";
 
 export const MarkupToolbar = ({set, cancel, codemirror, encoding}: { set: () => void, cancel: () => void, codemirror?: RefObject<ReactCodeMirrorRef>, encoding: string | undefined }) => {
     const clozeContext = useContext(ClozeQuestionContext);
@@ -73,15 +73,11 @@ export const MarkupToolbar = ({set, cancel, codemirror, encoding}: { set: () => 
                     onClick={() => makeCode(encoding)(codemirror.current?.view)}>
                 <pre className={"d-inline"}>&lt;&gt;</pre>
             </button>
-            <button className={styles.cmPanelButton} title={"Augment table"}
-                    aria-label={"Augment the first table in the text with a class"}
-                    onClick={() => makeTableClass("testClass")(codemirror.current?.view)}>
-                <pre className={"d-inline"}>&lt;&gt;</pre>
-            </button>
             {encodingSpecific(
                 <>
                     {clozeContext.isClozeQuestion && <PopupDropZoneInsert wide={wide} codemirror={codemirror}/>}
                     {inlineContext.isInlineQuestion && <PopupInlineQuestionInsert wide={wide} codemirror={codemirror}/>}
+                    <PopupTableClass wide={wide} codemirror={codemirror}/>
                     <PopupGlossaryTermSelect wide={wide} codemirror={codemirror}/>
                 </>,
                 null,

@@ -60,28 +60,6 @@ export function encodingSpecific<T>(markdownChoice: T, htmlChoice: T, encoding: 
     }
 }
 
-export const makeTableClass = (className: string) => (view: EditorView | undefined) => {
-    if (!view) return false;
-    const docText = view.state.doc.toString();
-
-    const withAmendedClass = docText.includes('class=') ? docText.replace(
-        /<table(.*class=")([A-Z,0-9 ]*)(".*)>/i,
-        `<table$1$2 ${className}$3>`
-    ) : docText.replace(
-        /<table(.*)>/i,
-        `<table class="${className}"$1`
-    );
-
-    if (withAmendedClass !== docText) {
-        view.dispatch({
-            changes: { from: 0, to: docText.length, insert: withAmendedClass }
-        });
-        return true;
-    }
-
-    return true;
-};
-
 const emphTextWith = (lemph: string, remph?: string) => (view: EditorView | undefined) => {
     remph = remph ?? lemph;
     const lemphLength = lemph.length;
