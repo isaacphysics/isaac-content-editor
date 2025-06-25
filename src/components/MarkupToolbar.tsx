@@ -9,7 +9,8 @@ import {
     makeBold,
     makeCode,
     makeItalic,
-    makeStrikethrough
+    makeStrikethrough,
+    makeTableClass
 } from "../utils/codeMirrorExtensions";
 import {ClozeQuestionContext} from "./semantic/presenters/ItemQuestionPresenter";
 import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
@@ -70,6 +71,11 @@ export const MarkupToolbar = ({set, cancel, codemirror, encoding}: { set: () => 
             <button className={styles.cmPanelButton} title={"Code (Ctrl-Shift-C)"}
                     aria-label={"Format highlighted text as code (shortcut is Ctrl-Shift-C)"}
                     onClick={() => makeCode(encoding)(codemirror.current?.view)}>
+                <pre className={"d-inline"}>&lt;&gt;</pre>
+            </button>
+            <button className={styles.cmPanelButton} title={"Augment table"}
+                    aria-label={"Augment the first table in the text with a class"}
+                    onClick={() => makeTableClass("testClass")(codemirror.current?.view)}>
                 <pre className={"d-inline"}>&lt;&gt;</pre>
             </button>
             {encodingSpecific(
