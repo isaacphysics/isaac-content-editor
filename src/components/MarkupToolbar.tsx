@@ -16,7 +16,7 @@ import { InlineQuestionContext } from "./semantic/presenters/questionPresenters"
 import { PopupInlineQuestionInsert } from "./popups/PopupInlineQuestionInsert";
 import { PopupTableClass } from "./popups/PopupTableClass";
 
-export const MarkupToolbar = ({set, cancel, codemirror, encoding}: { set: () => void, cancel: () => void, codemirror?: RefObject<ReactCodeMirrorRef>, encoding: string | undefined }) => {
+export const MarkupToolbar = ({set, cancel, codemirror, encoding, value}: { set: () => void, cancel: () => void, codemirror?: RefObject<ReactCodeMirrorRef>, encoding: string | undefined, value?: string }) => {
     const clozeContext = useContext(ClozeQuestionContext);
     const inlineContext = useContext(InlineQuestionContext);
 
@@ -77,7 +77,7 @@ export const MarkupToolbar = ({set, cancel, codemirror, encoding}: { set: () => 
                 <>
                     {clozeContext.isClozeQuestion && <PopupDropZoneInsert wide={wide} codemirror={codemirror}/>}
                     {inlineContext.isInlineQuestion && <PopupInlineQuestionInsert wide={wide} codemirror={codemirror}/>}
-                    <PopupTableClass wide={wide} codemirror={codemirror}/>
+                    {value?.includes("<table") && <PopupTableClass wide={wide} codemirror={codemirror}/>}
                     <PopupGlossaryTermSelect wide={wide} codemirror={codemirror}/>
                 </>,
                 null,
