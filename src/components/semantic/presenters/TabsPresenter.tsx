@@ -14,6 +14,7 @@ import { PresenterProps } from "../registry";
 import styles from "../styles/tabs.module.css";
 import { useKeyedList, useWithIndex } from "../../../utils/keyedListHook";
 import { CheckboxDocProp } from "../props/CheckboxDocProp";
+import { isAda } from "../../../services/site";
 
 export type TabsSettings = {
     emptyDescription: string;
@@ -193,8 +194,7 @@ export function TabsPresenter(props: PresenterProps<IsaacTabs>) {
     return <div className={styles.wrapper}>
         <div className="d-flex">
             <EditableTabsLayoutProp {...props}/>
-            <CheckboxDocProp className="ml-4 mt-2" doc={props.doc} update={props.update} prop="expandable" label="Expandable" />
-            <CheckboxDocProp className="mt-2" doc={props.doc} update={props.update} prop="topScrollable" label="Top-scrollable" />
+            {isAda && <CheckboxDocProp className="ml-4 mt-2" doc={props.doc} update={props.update} prop="expandable" label="Expandable" />}
         </div>
         <TabsHeader {...allProps} {...props} />
         <TabsMain {...allProps} back="◀" forward="▶" contentHeader={

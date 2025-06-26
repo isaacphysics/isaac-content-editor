@@ -10,20 +10,21 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
 
     const [classes, setClasses] = useState<string>("");
     const [expandable, setExpandable] = useState<boolean>(false);
-    const [scrollable, setScrollable] = useState<boolean>(false);
+    const [topScrollable, setTopScrollable] = useState<boolean>(false);
+    const tableRegex = /<table(.*class=")(.*)(".*)>/i;
 
     const makeTableClass = (className: string) => (view: EditorView | undefined) => {
         if (!view) return false;
         const docText = view.state.doc.toString();
 
-        const withAmendedClass = docText.includes('class=') ? 
+        const withAmendedClass = tableRegex.test(docText) ? 
             docText.replace(
-                /<table(.*class=")([A-Z,0-9 ]*)(".*)>/i,
+                tableRegex,
                 `<table$1${className}$3>`
             ) : 
             docText.replace(
                 /<table(.*)>/i,
-                `<table class="${className}"$1`
+                `<table class="${className}"$1>`
             );
 
         if (withAmendedClass !== docText) {
@@ -39,10 +40,10 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
     return <>
         <button className={styles.cmPanelButton} title={"Augment table"} onClick={(event) => {
             popupRef.current?.open(event);
-            const tableClasses = codemirror.current?.view?.state.doc.toString().match(/<table(.*class=")([A-Z,0-9 ]*)(".*)>/i)?.[2];
+            const tableClasses = codemirror.current?.view?.state.doc.toString().match(tableRegex)?.[2];
             setClasses(tableClasses ?? "");
             setExpandable(tableClasses?.includes("expandable") ?? false);
-            setScrollable(tableClasses?.includes("scrollable") ?? false);
+            setTopScrollable(tableClasses?.includes("topScrollable") ?? false);
         }}>{wide ? "Augment table" : "Table"}</button>
         <Popup popUpRef={popupRef}>
             <Container className={styles.cmPanelPopup}>
@@ -59,24 +60,24 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                     />
                 </InputGroup>}
                 <InputGroup className={"pl-4"}>
-                    <Label for={"table-scrollable"}>Top-scrollable</Label>
-                    <Input type="checkbox" id="table-scrollable" checked={scrollable} onChange={e => {
-                            setScrollable(e.target.checked);
+                    <Label for={"table-topScrollable"}>Top-scrollable</Label>
+                    <Input type="checkbox" id="table-topScrollable" checked={topScrollable} onChange={e => {
+                            setTopScrollable(e.target.checked);
                             if (e.target.checked) {
-                                setClasses(prev => prev ? `${prev} scrollable` : "scrollable");
+                                setClasses(prev => prev ? `${prev} topScrollable` : "topScrollable");
                             } else {
                                 setClasses(prev => prev?.replace(/\bscrollable\b/g, "").trim());
                             }
                         }}/>
                 </InputGroup>
                 <Label for={"table-classes"}>Class:</Label>
-                <Input id={"table-classes"} placeholder={"e.g. text-centre"} value={classes} onChange={(e) => setClasses(e.target.value)}/>
+                <Input id={"table-classes"} placeholder={"e.g. text-center"} value={classes} onChange={(e) => setClasses(e.target.value)}/>
                 <hr/>
                 <PopupCloseContext.Consumer>
-                    {close => <Button disabled={!classes && !expandable && !scrollable} onClick={() => {
+                    {close => <Button disabled={!classes && !expandable && !topScrollable} onClick={() => {
                         makeTableClass(classes)(codemirror.current?.view);
                         setExpandable(false);
-                        setScrollable(false);
+                        setTopScrollable(false);
                         setClasses("");
                         close?.();
                     }}>

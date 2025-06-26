@@ -332,6 +332,7 @@ export interface CodeSnippet extends Content {
     language?: string;
     code?: string;
     disableHighlighting?: boolean;
+    expandable?: boolean;
     url?: string;
 }
 
@@ -345,7 +346,6 @@ export interface InteractiveCodeSnippet extends CodeSnippet {
 
 export interface IsaacTabs extends Content {
     expandable?: boolean;
-    topScrollable?: boolean;
     hideTitles?: boolean;
 }
 
