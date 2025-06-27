@@ -29,7 +29,8 @@ const LanguageSelector = EnumPropFor<CodeSnippet>("language", Languages);
 export function CodeSnippetPresenter(props: PresenterProps<CodeSnippet>) {
     return <>
         <LanguageSelector {...props} />
-        <CheckboxDocProp {...props} prop="disableHighlighting" label="Disable highlighting" />
+        <CheckboxDocProp {...props} className="pt-1" prop="disableHighlighting" label="Disable highlighting" />
+        <CheckboxDocProp {...props} prop="expandable" label="Expandable" />
         <EditableCode {...props} label="Code" block />
         <EditableUrl {...props} label="Url" block />
     </>;
