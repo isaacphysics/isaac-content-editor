@@ -3,18 +3,12 @@ import {siteSpecific} from "./site";
 export const LocalServer = "http://localhost:8080";
 
 export const StagingServer = siteSpecific(
-    "https://staging.isaacphysics.org",
-    "https://staging.adacomputerscience.org"
-);
-
-// TODO: Remove this and switch name of staging & live when the redesign is live
-export const RedesignServer = siteSpecific(
-    "https://redesign.isaacphysics.org",
+    "https://staging.isaacscience.org",
     "https://staging.adacomputerscience.org"
 );
 
 const LiveServer = siteSpecific(
-    "https://isaacphysics.org",
+    "https://isaacscience.org",
     "https://adacomputerscience.org",
 );
 

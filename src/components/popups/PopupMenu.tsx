@@ -42,16 +42,16 @@ export function MenuItem({
                       text
                   }: MenuItemProps) {
     const close = useContext(PopupCloseContext);
-    return <li>
-        <button onClick={() => {
-            if (onClick) {
+    if (onClick) {
+        return <li>
+            <button onClick={() => {
                 onClick();
-            } else {
-                window.open(href, "_blank");
-            }
-            close?.();
-        }}>{text}</button>
-    </li>;
+                close?.();
+            }}>{text}</button>
+        </li>;
+    } else {
+        return <li><a href={href} target="_blank">{text}</a></li>;
+    }
 }
 
 export const buildPopupMenu = (PopupInner: React.FC<{item: PopupEntry}>, displayName?: string) => {

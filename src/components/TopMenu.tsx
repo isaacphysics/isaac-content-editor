@@ -8,9 +8,9 @@ import {Entry} from "./FileBrowser";
 
 import styles from "../styles/editor.module.css";
 import {Content} from "../isaac-data-types";
-import {RedesignServer, StagingServer} from "../services/isaacApi";
+import {StagingServer} from "../services/isaacApi";
 import classNames from "classnames";
-import { BOOK_DETAIL_ID_SEPARATOR } from "../services/constants";
+import {BOOK_DETAIL_ID_SEPARATOR} from "../services/constants";
 
 function filePathToEntry(path: string | undefined, sha: string): Entry {
     const name = path?.substring(path?.lastIndexOf("/") + 1) ?? "";
@@ -35,10 +35,10 @@ function getPreviewLink(doc: Content) {
                 return `${StagingServer}/quiz/preview/${doc.id}`;
             case "isaacBookDetailPage": {
                 const pageId = doc.id.split(BOOK_DETAIL_ID_SEPARATOR).pop() || "";
-                return `${RedesignServer}/books/${doc.id.slice("book_".length, -(pageId.length + BOOK_DETAIL_ID_SEPARATOR.length))}/${pageId}`;
+                return `${StagingServer}/books/${doc.id.slice("book_".length, -(pageId.length + BOOK_DETAIL_ID_SEPARATOR.length))}/${pageId}`;
             }
             case "isaacBookIndexPage":
-                return `${RedesignServer}/books/${doc.id.slice("book_".length)}`;
+                return `${StagingServer}/books/${doc.id.slice("book_".length)}`;
         }
     }
 }
@@ -69,9 +69,9 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
         {undoable && appContext.editor.canUndo() && <button className={classNames(styles.iconButton, styles.undoButton)} onClick={appContext.editor.undo}>
                 ↺<span className="d-none d-lg-inline"> Undo</span>
             </button>}
-        {selection && !selection.isDir && previewLink && <button onClick={() => window.open(previewLink, "_blank")} className={styles.iconButton} >
+        {selection && !selection.isDir && previewLink && <a href={previewLink} target="_blank" className={styles.iconButton} >
             Staging
-        </button>}
+        </a>}
         <PopupMenu menuRef={menuRef} />
     </div>;
 }
