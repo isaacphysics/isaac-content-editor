@@ -32,7 +32,7 @@ function getPreviewLink(doc: Content) {
             case "page":
                 return `${StagingServer}/pages/${doc.id}`;
             case "isaacQuiz":
-                return `${StagingServer}/quiz/preview/${doc.id}`;
+                return `${StagingServer}/test/preview/${doc.id}`;
             case "isaacBookDetailPage": {
                 const pageId = doc.id.split(BOOK_DETAIL_ID_SEPARATOR).pop() || "";
                 return `${StagingServer}/books/${doc.id.slice("book_".length, -(pageId.length + BOOK_DETAIL_ID_SEPARATOR.length))}/${pageId}`;
