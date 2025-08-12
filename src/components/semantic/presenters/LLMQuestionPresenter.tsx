@@ -29,9 +29,12 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                 });
             }
         }
+        const updatedMarkScheme = doc.markScheme?.map((msi, i) => i === index ? {...msi, [field]: value} : msi);
+        setMissingMarks((updatedMarkScheme?.map(msi => msi.jsonField ?? "") ?? []).filter(mark => !tallyMarkUses(doc.markingFormula)[mark]));
+
         update({
             ...doc,
-            markScheme: doc.markScheme?.map((msi, i) => i === index ? {...msi, [field]: value} : msi),
+            markScheme: updatedMarkScheme,
             markedExamples: possiblyUpdatedMarkedExamples
         });
     }
@@ -44,6 +47,10 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             nextFreeJsonFieldnameSuffix++;
         }
         const defaultJsonFieldname = `${baseDefaultJsonFieldname}${nextFreeJsonFieldnameSuffix}`;
+        if (tallyMarkUses(doc.markingFormula)[defaultJsonFieldname] === 0) {
+            setMissingMarks([...missingMarks, defaultJsonFieldname]);
+        }
+
         update({
             ...doc,
             markScheme: [...doc.markScheme ?? [], {
@@ -58,8 +65,10 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
         });
     }
 
-    function deleteMark(jsonFieldname: string | undefined) {
+    function deleteMark(jsonFieldname?: string) {
         if (!jsonFieldname) { return; }
+        setMissingMarks(missingMarks.filter(mark => mark !== jsonFieldname));
+
         update({
             ...doc,
             markScheme: doc.markScheme?.filter(msi => msi.jsonField !== jsonFieldname),
