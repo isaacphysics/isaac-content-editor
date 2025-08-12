@@ -7,13 +7,14 @@ import { isDefined } from "../../../utils/types";
 import { CheckboxDocProp } from "../props/CheckboxDocProp";
 import { parseMarkingFormula } from "../../../services/llmMarkingFormula";
 import styles from "../styles/editable.module.css";
-import { evaluateMarkingFormula, evaluateMarkTotal } from "../../../utils/llmMarkingFormula";
+import { evaluateMarkingFormula, evaluateMarkTotal, tallyMarkUses } from "../../../utils/llmMarkingFormula";
 import { FormFeedback } from "reactstrap";
 
 const MaxMarksEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("maxMarks");
 
 export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuestion>) {
     const {doc, update} = props;
+    const [missingMarks, setMissingMarks] = React.useState<string[]>((doc.markScheme?.map(msi => msi.jsonField ?? "") ?? []).filter(mark => !tallyMarkUses(doc.markingFormula)[mark]));
 
     // Mark scheme operations - these changes also update marked examples
     function updateMark<T extends keyof LLMFreeTextMarkSchemeEntry>(index: number, field: T, value: LLMFreeTextMarkSchemeEntry[T]) {
@@ -131,11 +132,15 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
     }
 
     function updateMarkingFormula(value?: string) {
+        const parsedFormula = parseMarkingFormula(value);
+        const allMarks = doc.markScheme?.map(msi => msi.jsonField ?? "") ?? [];
+        setMissingMarks(allMarks.filter(mark => !tallyMarkUses(parsedFormula)[mark]));
+
         update({
             ...doc,
             markingFormulaString: value,
-            markingFormula: parseMarkingFormula(value),
-            markedExamples: doc.markedExamples?.map(me => ({...me, marksAwarded: evaluateMarkTotal(parseMarkingFormula(value), {...me.marks, "maxMarks": doc.maxMarks ?? 0})}))
+            markingFormula: parsedFormula,
+            markedExamples: doc.markedExamples?.map(me => ({...me, marksAwarded: evaluateMarkTotal(parsedFormula, {...me.marks, "maxMarks": doc.maxMarks ?? 0})}))
         })
     }
 
@@ -191,9 +196,16 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     <td>
                         <strong>Marking formula</strong>
                         <br/>
-                        {(validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
-                            <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
-                        }
+                        <div>
+                            {(validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
+                                <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
+                            }
+                        </div>
+                        <div>
+                            {doc.markingFormulaString && missingMarks.length > 0 && 
+                                <FormFeedback className={styles.feedback}> {"Missing the following mark(s): " + missingMarks.reduce((markList, currentMark) => markList + ", " + currentMark)} </FormFeedback>
+                            }
+                        </div>
                     </td>
                     <td>
                         <div className="flex-fill">
