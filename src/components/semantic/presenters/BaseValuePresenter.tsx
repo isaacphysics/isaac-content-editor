@@ -127,7 +127,7 @@ export const BaseValue = ({doc, editing, value, set, cancel}: ValueProps<string 
                 value.current = newValue;
             }}
         >
-            <MarkupToolbar set={set} cancel={cancel} codemirror={codemirror} encoding={doc.encoding} />
+            <MarkupToolbar set={set} cancel={cancel} codemirror={codemirror} encoding={doc.encoding} value={value.current}/>
         </CodeMirror>;
     }
 };

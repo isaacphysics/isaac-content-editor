@@ -5,8 +5,9 @@ import { Box } from "./SemanticItem";
 import { InsertButton, InserterProps } from "./presenters/ListChildrenPresenter";
 import styles from "./styles/semantic.module.css";
 import { generate } from "../../utils/keyedListHook";
+import { Content } from "../../isaac-data-types";
 
-const blockTypes = {
+const defaultBlockTypes = {
     "content": {type: "content", encoding: "markdown", value: ""},
     "question": {
         type: "isaacQuestion",
@@ -52,7 +53,7 @@ const blockTypes = {
     }
 };
 
-export function Inserter({insert, forceOpen, position}: InserterProps) {
+export function Inserter({insert, forceOpen, position, blockTypes = defaultBlockTypes}: InserterProps & {blockTypes?: Record<string, Content>}) {
     const [isInserting, setInserting] = useState(false);
 
     const isOpen = forceOpen || isInserting;
@@ -63,7 +64,7 @@ export function Inserter({insert, forceOpen, position}: InserterProps) {
             <div className={styles.wrapper}>
                 Please choose a block type:
                 <br />
-                {Object.entries(blockTypes).map(([name, empty]) =>
+                {blockTypes && Object.entries(blockTypes).map(([name, empty]) =>
                     <Button key={name} color="link" onClick={() => {
                         insert(position, {...empty});
                         setInserting(false);

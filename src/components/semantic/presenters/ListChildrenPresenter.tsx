@@ -63,6 +63,10 @@ const INSERTER_MAP: Partial<Record<ContentType, React.FunctionComponent<Inserter
     coordinateItem$choice: CoordinateChoiceItemInserter,
     inlineQuestionPart: InlinePartInserter,
     item$choice: ItemChoiceItemInserter,
+    sidebarEntry: (props: InserterProps) => <Inserter {...props} blockTypes={{
+        "Group": {type: "sidebarGroup", title: "", children: []},
+        "Entry": {type: "sidebarEntry", title: "", children: []},
+    }}/>,
 };
 
 interface ListChildProps {

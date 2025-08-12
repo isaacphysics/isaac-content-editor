@@ -1,5 +1,5 @@
 import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
-import {EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
+import {EditableCoordProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
 import styles from "../styles/question.module.css";
 import {Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,} from "reactstrap";
 import {
@@ -160,6 +160,7 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
     if (newType !== "isaacCoordinateQuestion") {
         delete newDoc.ordered;
         delete newDoc.numberOfCoordinates;
+        delete newDoc.numberOfDimensions;
     }
 
     update(newDoc);
@@ -296,50 +297,46 @@ export function NumericQuestionPresenter({showMeta = true, ...props}: {showMeta?
     </>;
 }
 
-export const CoordinateQuestionContext = createContext<{numberOfCoordinates?: number}>(
+export const CoordinateQuestionContext = createContext<{numberOfCoordinates?: number, numberOfDimensions?: number}>(
     {}
 );
 const EditableNumberOfCoordinates = NumberDocPropFor<IsaacCoordinateQuestion>("numberOfCoordinates", {label: "Number of coordinates", block: true});
+const EditableDimensions = NumberDocPropFor<IsaacCoordinateQuestion>("numberOfDimensions", {label: "Dimensions", block: true});
 
 export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
     const {doc, update} = props;
     const question = doc as IsaacCoordinateQuestion;
 
-    const EditableCoordinateLabelX = EditableDocPropFor<IsaacCoordinateQuestion>(
-        "placeholderXValue", {label: "placeholder X Value", block: true, format: "plain"}
-    );
-    const EditableCoordinateLabelY = EditableDocPropFor<IsaacCoordinateQuestion>(
-        "placeholderYValue", {label: "placeholder Y Value", block: true, format: "plain"}
-    );
-
     return <>
         <QuestionMetaPresenter {...props} />
         <EditableNumberOfCoordinates {...props} />
         <CheckboxDocProp {...props} prop="ordered" label="Require that order of coordinates in choice and answer are the same" />
+        <EditableDimensions {...props} />
         <div className={styles.questionLabel}>
             Coordinate labels:<br/>
             <small><em>This does not accept latex. Please use a unicode equivalent such as Ψ₁.</em></small>
             <div className="row">
                 <div className="col col-lg-5">
-                    <EditableCoordinateLabelX doc={question} update={update} />
-                </div>
-                <div className="col col-lg-5">
-                    <EditableCoordinateLabelY doc={question} update={update} />
+                    {[...Array(question.numberOfDimensions)].map((_, i) => 
+                     <div className={"mb-3"} key={i}>
+                        <EditableCoordProp {...props} dim={i} prop={"placeholderValues"} label={"Placeholder ".concat((i+1).toString())} />
+                    </div>)}
                 </div>
             </div>
-            Significant figures (affects both x and y values):
+            Significant figures (affects all values):
             <div className="row">
                 <div className="col col-lg-5">
-                    <EditableSignificantFiguresMin doc={question} update={update} />
+                    <EditableSignificantFiguresMin {...props} />
                 </div>
                 <div className="col col-lg-5">
-                    <EditableSignificantFiguresMax doc={question} update={update} />
+                    <EditableSignificantFiguresMax {...props} />
                 </div>
             </div>
         </div>
         <div className={styles.questionLabel} /> {/* For spacing */}
         <CoordinateQuestionContext.Provider value={{
             numberOfCoordinates: question.numberOfCoordinates,
+            numberOfDimensions: question.numberOfDimensions
         }}>
             <QuestionFooterPresenter {...props} />
         </CoordinateQuestionContext.Provider>
@@ -347,7 +344,7 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
 }
 
 export function CoordinateChoiceItemInserter({insert, position, lengthOfCollection}: InserterProps) {
-    const {numberOfCoordinates} = useContext(CoordinateQuestionContext);
+    const numberOfCoordinates = useContext(CoordinateQuestionContext).numberOfCoordinates;
     if (position !== lengthOfCollection) {
         return null; // Only include an insert button at the end.
     }
@@ -525,6 +522,7 @@ const getInlineQuestionPresenter = (type: INLINE_TYPES, props: PresenterProps<Is
                 <hr/>
                 <MultipleChoiceQuestionPresenter {...props} showMeta={false} />
             </>;
+        case "isaacRegexMatchQuestion":
         case "isaacStringMatchQuestion":
             return null;
     }

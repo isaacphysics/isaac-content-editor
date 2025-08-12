@@ -13,7 +13,6 @@ const emptyDocuments: Document[] = [
         type: "isaacQuestionPage",
         encoding: "markdown",
         title: "New Question Page",
-        level: 0,
         children: [
             {
                 type: "content",
@@ -67,7 +66,7 @@ const emptyDocuments: Document[] = [
         type: "isaacQuiz",
         encoding: "markdown",
         title: "New Test",
-        visibleToStudents: false,
+        hiddenFromRoles: ["STUDENT", "TUTOR"],
         published: false,
         rubric: {
             type: "content",
@@ -93,6 +92,59 @@ const emptyDocuments: Document[] = [
                 value: "Add page content here"
             },
         ],
+    } as Document,
+    {
+        type: "isaacBookIndexPage",
+        encoding: "markdown",
+        title: "New Book Index Page",
+        coverImage: {
+            src: "",
+            type: "image",
+            altText: ""
+        },
+        children: [
+            {
+                type: "content",
+                encoding: "markdown",
+                value: "Add page content here",
+            } as Content,
+        ],
+        sidebar: "",
+    } as Document,
+    {
+        type: "isaacBookDetailPage",
+        encoding: "markdown",
+        title: "New Book Detail Page",
+        children: [
+            {
+                type: "content",
+                encoding: "markdown",
+                value: "Add page content here"
+            } as Content,
+        ],
+        gameboards: [],
+        extensionGameboards: [],
+        sidebar: "",
+    } as Document,
+    {
+        type: "isaacRevisionDetailPage",
+        encoding: "markdown",
+        title: "New Revision Page",
+        children: [
+            {
+                type: "content",
+                encoding: "markdown",
+                value: "Add page content here"
+            } as Content
+        ],
+        gameboards: [],
+        sidebar: "",
+    } as Document,
+    {
+        type: "sidebar",
+        title: "",
+        subtitle: "View contents",
+        sidebarEntries: []
     } as Document,
     {
         layout: "1-col",

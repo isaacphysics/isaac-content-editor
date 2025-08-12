@@ -56,8 +56,8 @@ export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
     significantFiguresMax?: number;
     ordered?: boolean;
     numberOfCoordinates?: number;
-    placeholderXValue?: string;
-    placeholderYValue?: string;
+    numberOfDimensions?: number;
+    placeholderValues?: string[];
 }
 
 export interface IsaacConceptPage extends SeguePage {
@@ -108,7 +108,7 @@ export interface LLMFormulaNode {
 }
 
 export interface LLMFunctionNode extends LLMFormulaNode{
-    arguments: LLMFormulaNode[];
+    arguments: LLMFormulaNode[] | LLMFormulaNode;
     name: string;
     type: "LLMMarkingFunction";
 }
@@ -190,9 +190,32 @@ export interface IsaacQuickQuestion extends IsaacQuestionBase {
 }
 
 export interface IsaacQuiz extends SeguePage {
-    visibleToStudents?: boolean;
     hiddenFromRoles?: string[];
     rubric?: Content;
+}
+
+export interface SidebarEntry extends Content {
+    label?: string;
+    pageId?: string;
+    pageType?: SidebarEntryType;
+}
+
+export interface SidebarGroup extends SidebarEntry {
+    sidebarEntries?: SidebarEntry[];
+}
+
+export interface Sidebar extends Content {
+    sidebarEntries?: SidebarEntry[];
+}
+
+export interface IsaacBookIndexPage extends SeguePage {
+    sidebar?: string; // the ID of the sidebar
+    coverImage?: Image;
+}
+
+export interface IsaacBookDetailPage extends SeguePage {
+    gameboards?: string[];
+    extensionGameboards?: string[];
 }
 
 export interface IsaacQuizSection extends Content {
@@ -309,6 +332,7 @@ export interface CodeSnippet extends Content {
     language?: string;
     code?: string;
     disableHighlighting?: boolean;
+    expandable?: boolean;
     url?: string;
 }
 
@@ -320,7 +344,12 @@ export interface InteractiveCodeSnippet extends CodeSnippet {
     dataUrl?: string;
 }
 
-export interface CodeTabs extends Content {
+export interface IsaacTabs extends Content {
+    expandable?: boolean;
+    hideTitles?: boolean;
+}
+
+export interface CodeTabs extends IsaacTabs {
 }
 
 export interface Content extends ContentBase {
@@ -438,8 +467,7 @@ export interface ParsonsItem extends Item {
 }
 
 export interface CoordinateItem extends Item {
-    x?: string;
-    y?: string;
+    coordinates?: string[];
 }
 
 export interface Quantity extends Choice {
@@ -460,6 +488,8 @@ export interface RegexPattern extends Choice {
 
 export interface SeguePage extends Content {
     summary?: string;
+    permissions?: string;
+    notes?: string;
 }
 
 export interface StringChoice extends Choice {

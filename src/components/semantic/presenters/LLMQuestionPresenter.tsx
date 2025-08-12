@@ -7,7 +7,8 @@ import { isDefined } from "../../../utils/types";
 import { CheckboxDocProp } from "../props/CheckboxDocProp";
 import { parseMarkingFormula } from "../../../services/llmMarkingFormula";
 import styles from "../styles/editable.module.css";
-import { evaluateMarkTotal } from "../../../utils/llmMarkingFormula";
+import { evaluateMarkingFormula, evaluateMarkTotal } from "../../../utils/llmMarkingFormula";
+import { FormFeedback } from "reactstrap";
 
 const MaxMarksEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("maxMarks");
 
@@ -23,7 +24,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                 possiblyUpdatedMarkedExamples = doc.markedExamples?.map(me => {
                     const newMarks = {...me.marks, [value as string]: me.marks?.[prevJsonFieldValue] ?? 0};
                     delete newMarks[prevJsonFieldValue];
-                    return { ...me, marks: newMarks };
+                    return { ...me, marks: newMarks, marksAwarded: evaluateMarkTotal(doc.markingFormula, {...newMarks, "maxMarks": doc.maxMarks ?? 0}) };
                 });
             }
         }
@@ -75,8 +76,8 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             ...doc,
             markedExamples: doc.markedExamples?.map((me, i) => i === index ? {
                 ...me, 
+                marksAwarded: field === "marks" ? evaluateMarkTotal(doc.markingFormula, {...(value as Record<string, number>), "maxMarks": doc.maxMarks ?? 0}) : me.marksAwarded,
                 [field]: value, 
-                marksAwarded: evaluateMarkTotal(doc.markingFormula, {...(value as Record<string, number>), "maxMarks": doc.maxMarks ?? 0})
             } : me)
         });
     }
@@ -100,7 +101,10 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
     }
 
     function validateMarkingFormula(value?: string) {
-        value = value ?? "";
+        if (!value) {
+            return;
+        }
+
         const regexStr = /[^a-zA-Z0-9(),\s]+/;
         const badCharacters = new RegExp(regexStr);
         if (badCharacters.test(value)) {
@@ -115,12 +119,14 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             }
             return 'Some of the characters you are using are not allowed: ' + usedBadChars.join(" ");
         }
-        try { parseMarkingFormula(value); } 
-        catch (e) { 
-            if (e === "Ambiguous grammar") { 
-                return "Ambiguous marking formula"; 
-            }
-            return "Invalid marking formula";
+        try { 
+            const formula = parseMarkingFormula(value);
+            evaluateMarkingFormula(formula, {...doc.markScheme?.reduce<Record<string, number>>((acc, mark) => ({...acc, [mark.jsonField ?? ""]: 0}), {}) ?? {}, 
+                                                            "maxMarks": doc.maxMarks ?? 0
+                                                        });
+        } 
+        catch (e: any) { 
+            return `${e}`;
         }
     }
 
@@ -173,11 +179,22 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             </tbody>
             <tfoot>
                 <tr>
-                    <td><strong><pre>maxMarks</pre></strong></td>
+                    <td>
+                        <strong><pre>maxMarks</pre></strong>
+                        {doc.maxMarks === undefined && 
+                            <FormFeedback className={styles.feedback}> maxMarks is a required field </FormFeedback>
+                        }
+                    </td>
                     <td><MaxMarksEditor {...props} /></td>
                 </tr>
                 <tr>
-                    <td><strong>Marking formula</strong></td>
+                    <td>
+                        <strong>Marking formula</strong>
+                        <br/>
+                        {(validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
+                            <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
+                        }
+                    </td>
                     <td>
                         <div className="flex-fill">
                             <EditableText
