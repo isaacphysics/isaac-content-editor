@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { PresenterProps } from "../registry";
 import { IsaacLLMFreeTextQuestion, LLMFreeTextMarkedExample, LLMFreeTextMarkSchemeEntry } from "../../../isaac-data-types";
 import { NumberDocPropFor } from "../props/NumberDocPropFor";
@@ -47,7 +47,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             nextFreeJsonFieldnameSuffix++;
         }
         const defaultJsonFieldname = `${baseDefaultJsonFieldname}${nextFreeJsonFieldnameSuffix}`;
-        if (tallyMarkUses(doc.markingFormula)[defaultJsonFieldname] === 0) {
+        if (tallyMarkUses(doc.markingFormula)[defaultJsonFieldname] === 0 || !tallyMarkUses(doc.markingFormula).hasOwnProperty(defaultJsonFieldname)) {
             setMissingMarks([...missingMarks, defaultJsonFieldname]);
         }
 
@@ -110,7 +110,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
         });
     }
 
-    function validateMarkingFormula(value?: string) {
+    const validateMarkingFormula = React.useCallback((value?: string) => {
         if (!value) {
             return;
         }
@@ -135,10 +135,10 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                                                             "maxMarks": doc.maxMarks ?? 0
                                                         });
         } 
-        catch (e: any) { 
+        catch (e: unknown) { 
             return `${e}`;
         }
-    }
+    }, [doc.markScheme, doc.maxMarks]);
 
     function updateMarkingFormula(value?: string) {
         const parsedFormula = parseMarkingFormula(value);
@@ -158,6 +158,19 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
     const variableNamesMap: [string, string][] = doc.markScheme?.map(msi => msi.jsonField ? [msi.jsonField, msi.jsonField] as [string, string] : ["", ""]) ?? [["", ""]];
     const buttonStrings: [string, string][] = [...functionNamesMap, ...constantNamesMap, ...variableNamesMap, ["maxMarks", "maxMarks"]];
 
+    const markingFormulaError = useMemo(() => <> 
+        <div>
+            {(validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
+                <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
+            }
+        </div>
+        <div>
+            {doc.markingFormulaString && missingMarks.length > 0 && 
+                <FormFeedback className={styles.feedback}> {"Missing the following mark(s): " + missingMarks.reduce((markList, currentMark) => markList + ", " + currentMark)} </FormFeedback>
+            }
+        </div>
+    </>, [doc.markingFormulaString, missingMarks, validateMarkingFormula]);
+    
     return <div>
         <h2 className="h5">Mark scheme</h2>
         <table className="table table-bordered">
@@ -205,16 +218,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     <td>
                         <strong>Marking formula</strong>
                         <br/>
-                        <div>
-                            {(validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
-                                <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
-                            }
-                        </div>
-                        <div>
-                            {doc.markingFormulaString && missingMarks.length > 0 && 
-                                <FormFeedback className={styles.feedback}> {"Missing the following mark(s): " + missingMarks.reduce((markList, currentMark) => markList + ", " + currentMark)} </FormFeedback>
-                            }
-                        </div>
+                        {markingFormulaError}
                     </td>
                     <td>
                         <div className="flex-fill">
