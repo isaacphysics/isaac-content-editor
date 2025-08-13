@@ -5,7 +5,7 @@ import {linkify} from "remarkable/linkify";
 import {SITE} from "../../services/site";
 import styles from "../styles/markup.module.css";
 import {StagingServer} from "../../services/isaacApi";
-import {dropZoneRegex} from "../IsaacTypes";
+import {dndDropZoneMissingIdRegex, dndDropZoneRegex, dropZoneRegex} from "../IsaacTypes";
 import {isDefined} from "../../utils/types";
 
 const MARKDOWN_RENDERER = new Remarkable({
@@ -48,6 +48,16 @@ export const renderClozeDropZones = (markdown: string) => {
         const index = usingManualIndex ? manualIndex : nonReservedIndex++;
         while (reservedIndices.has(nonReservedIndex)) nonReservedIndex++;
         return `<span class="d-inline-block text-right ${styles.clozeDropZonePlaceholder}" style="min-width: ${minWidth}; min-height: ${minHeight}">${index}&nbsp;&nbsp;</span>`;
+    });
+}
+
+export const renderDndDropZones = (markdown: string) => {
+    return markdown.replace(dndDropZoneRegex, (_match, id, params, widthMatch, heightMatch) => {
+        const minWidth = widthMatch ? widthMatch.slice("w-".length) + "px" : "100px";
+        const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
+        return `<span class="d-inline-block text-right ${styles.clozeDropZonePlaceholder}" style="min-width: ${minWidth}; min-height: ${minHeight}">${id}&nbsp;&nbsp;</span>`;
+    }).replace(dndDropZoneMissingIdRegex, (_match) => {
+        return `<span class="d-inline-block text-right ${styles.clozeDropZonePlaceholder} text-white bg-danger px-3">Drop zone missing ID!</span>`;
     });
 }
 
