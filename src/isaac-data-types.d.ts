@@ -51,6 +51,11 @@ export interface IsaacClozeQuestion extends IsaacItemQuestion {
     detailedItemFeedback?: boolean;
 }
 
+export interface IsaacDndQuestion extends IsaacItemQuestion {
+    withReplacement?: boolean;
+    detailedItemFeedback?: boolean;
+}
+
 export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
     significantFiguresMin?: number;
     significantFiguresMax?: number;

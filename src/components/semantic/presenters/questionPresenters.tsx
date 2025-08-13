@@ -48,6 +48,7 @@ export type QUESTION_TYPES =
     | "isaacReorderQuestion"
     | "isaacParsonsQuestion"
     | "isaacClozeQuestion"
+    | "isaacDndQuestion"
     | "isaacCoordinateQuestion"
 ;
 
@@ -89,7 +90,10 @@ const QuestionTypes: Record<QUESTION_TYPES, {name: string}> = {
         name: "Parsons Question",
     },
     isaacClozeQuestion: {
-        name: "Cloze (Drag and Drop) Question",
+        name: "Cloze Question",
+    },
+    isaacDndQuestion: {
+        name: "Drag and Drop Question"
     },
     isaacCoordinateQuestion: {
         name: "Coordinate Question",

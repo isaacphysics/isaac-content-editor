@@ -11,13 +11,13 @@ import {
     makeItalic,
     makeStrikethrough
 } from "../utils/codeMirrorExtensions";
-import {ClozeQuestionContext} from "./semantic/presenters/ItemQuestionPresenter";
+import {ItemQuestionContext} from "./semantic/presenters/ItemQuestionPresenter";
 import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
 import { PopupInlineQuestionInsert } from "./popups/PopupInlineQuestionInsert";
 import { PopupTableClass } from "./popups/PopupTableClass";
 
 export const MarkupToolbar = ({set, cancel, codemirror, encoding, value}: { set: () => void, cancel: () => void, codemirror?: RefObject<ReactCodeMirrorRef>, encoding: string | undefined, value?: string }) => {
-    const clozeContext = useContext(ClozeQuestionContext);
+    const {isClozeQuestion} = useContext(ItemQuestionContext);
     const inlineContext = useContext(InlineQuestionContext);
 
     const [wide, setWide] = useState(true);
@@ -75,7 +75,7 @@ export const MarkupToolbar = ({set, cancel, codemirror, encoding, value}: { set:
             </button>
             {encodingSpecific(
                 <>
-                    {clozeContext.isClozeQuestion && <PopupDropZoneInsert wide={wide} codemirror={codemirror}/>}
+                    {isClozeQuestion && <PopupDropZoneInsert wide={wide} codemirror={codemirror}/>}
                     {inlineContext.isInlineQuestion && <PopupInlineQuestionInsert wide={wide} codemirror={codemirror}/>}
                     {value?.includes("<table") && <PopupTableClass wide={wide} codemirror={codemirror}/>}
                     <PopupGlossaryTermSelect wide={wide} codemirror={codemirror}/>

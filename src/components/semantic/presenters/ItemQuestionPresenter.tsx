@@ -4,6 +4,7 @@ import {Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row} 
 import {
     Content,
     IsaacClozeQuestion,
+    IsaacDndQuestion,
     IsaacItemQuestion,
     IsaacParsonsQuestion,
     IsaacReorderQuestion,
@@ -37,12 +38,14 @@ interface ItemsContextType {
 export const ItemsContext = createContext<ItemsContextType>(
     {items: undefined, remainingItems: undefined, withReplacement: undefined, allowSubsetMatch: undefined}
 );
-export const ClozeQuestionContext = createContext<{
-    isClozeQuestion: boolean, 
+export const ItemQuestionContext = createContext<{
+    isDndQuestion: boolean,
+    isClozeQuestion: boolean,
     dropZoneCount?: number, 
     figureMap: {[id: string]: [dropZones: PositionableDropZoneProps[], setDropZones: React.Dispatch<React.SetStateAction<PositionableDropZoneProps[]>>]}, 
     calculateDZIndexFromFigureId: (id: string) => number}
 >({
+    isDndQuestion: false,
     isClozeQuestion: false,
     figureMap: {},
     calculateDZIndexFromFigureId: (id: string) => 0,
@@ -56,19 +59,29 @@ function isClozeQuestion(doc: Content | null | undefined): doc is IsaacClozeQues
     return doc?.type === "isaacClozeQuestion";
 }
 
-export function ItemQuestionPresenter(props: PresenterProps<IsaacItemQuestion | IsaacReorderQuestion | IsaacParsonsQuestion | IsaacClozeQuestion>) {
+function isDndQuestion(doc: Content | null | undefined): doc is IsaacDndQuestion {
+    return doc?.type === "isaacDndQuestion";
+}
+
+type ItemQuestionType = IsaacItemQuestion | IsaacReorderQuestion | IsaacParsonsQuestion | IsaacClozeQuestion | IsaacDndQuestion;
+
+export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
     const {doc, update} = props;
 
     // Logic to count cloze question drop zones (if necessary) on initial presenter render and doc update
     const [dropZoneCount, setDropZoneCount] = useState<number>();
     const figureMap = useRef<{[id: string]: [dropZones: PositionableDropZoneProps[], setDropZones: React.Dispatch<React.SetStateAction<PositionableDropZoneProps[]>>]}>({});
-    const countDropZonesIn = (doc: IsaacItemQuestion | IsaacReorderQuestion | IsaacParsonsQuestion | IsaacClozeQuestion) => {
-        if (!isClozeQuestion(doc)) return;
-        const questionExposition = extractValueOrChildrenText(doc);
-        const figureZonesCount = extractDropZoneCountPerFigure(doc);
-        setDropZoneCount((questionExposition.match(dropZoneRegex)?.length ?? 0) + figureZonesCount.map(x => x[1]).reduce((a, b) => a + b, 0));
+    const countDropZonesIn = (doc: ItemQuestionType) => {
+        if (isClozeQuestion(doc)) {
+            const questionExposition = extractValueOrChildrenText(doc);
+            setDropZoneCount(questionExposition.match(dropZoneRegex)?.length ?? 0);
+        } else if (isDndQuestion(doc)) {
+            const questionExposition = extractValueOrChildrenText(doc);
+            const figureZonesCount = extractDropZoneCountPerFigure(doc);
+            setDropZoneCount((questionExposition.match(dropZoneRegex)?.length ?? 0) + figureZonesCount.map(x => x[1]).reduce((a, b) => a + b, 0));
+        }
     };
-    const updateWithDropZoneCount = (newDoc: IsaacItemQuestion | IsaacReorderQuestion | IsaacParsonsQuestion | IsaacClozeQuestion, invertible?: boolean) => {
+    const updateWithDropZoneCount = (newDoc: ItemQuestionType, invertible?: boolean) => {
         update(newDoc, invertible);
         countDropZonesIn(newDoc);
     };
@@ -77,30 +90,33 @@ export function ItemQuestionPresenter(props: PresenterProps<IsaacItemQuestion | 
     }, []);
 
     useEffect(() => {
-        const f = async () => {
-            // if the number of drop zones has changed, the indexes of figure zones may need to change.
-            const figures = Array.from(Object.entries(figureMap.current))
-            for (const figure of figures) {
-                const [id, [dropZones, setDropZones]] = figure;
-                const startIndex = extractFigureDropZoneStartIndex(doc, id);
-                console.log(id, "starting at", startIndex, dropZones);
-                setDropZones(dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
-                await new Promise(resolve => setTimeout(resolve, 50));
-                console.log("Updated figure", dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
+        if (isDndQuestion(doc)) {
+            const f = async () => {
+                // if the number of drop zones has changed, the indexes of figure zones may need to change.
+                const figures = Array.from(Object.entries(figureMap.current))
+                for (const figure of figures) {
+                    const [id, [dropZones, setDropZones]] = figure;
+                    const startIndex = extractFigureDropZoneStartIndex(doc, id);
+                    console.log(id, "starting at", startIndex, dropZones);
+                    setDropZones(dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                    console.log("Updated figure", dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
+                }
+                f();
             }
         }
-        f();
     }, [dropZoneCount]);
 
-    return <ClozeQuestionContext.Provider value={{
-        isClozeQuestion: isClozeQuestion(doc), 
+    return <ItemQuestionContext.Provider value={{
+        isDndQuestion: isDndQuestion(doc),
+        isClozeQuestion: isClozeQuestion(doc),
         dropZoneCount,
         figureMap: figureMap.current,
         calculateDZIndexFromFigureId: (id) => extractFigureDropZoneStartIndex(doc, id),
     }}>
         {isParsonsQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" /></div>}
-        {isClozeQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>}
-        {isClozeQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>}
+        {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>}
+        {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>}
         <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>
         <ContentValueOrChildrenPresenter {...props} update={updateWithDropZoneCount} topLevel />
         {isClozeQuestion(doc) && <ClozeQuestionInstructions />}
@@ -123,7 +139,7 @@ export function ItemQuestionPresenter(props: PresenterProps<IsaacItemQuestion | 
         }}>
             <QuestionFooterPresenter {...props} />
         </ItemsContext.Provider>
-    </ClozeQuestionContext.Provider>;
+    </ItemQuestionContext.Provider>;
 }
 
 export function ItemPresenter(props: PresenterProps<Item>) {
@@ -170,7 +186,7 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     const {doc, update} = props;
     const [isOpen, setOpen] = useState(false);
     const {items, remainingItems, allowSubsetMatch} = useContext(ItemsContext);
-    const {isClozeQuestion} = useContext(ClozeQuestionContext);
+    const {isClozeQuestion} = useContext(ItemQuestionContext);
 
     const item = items?.find((item) => item.id === doc.id) ?? {
         id: doc.id,
@@ -218,7 +234,7 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
 
 export function ItemChoiceItemInserter({insert, position, lengthOfCollection}: InserterProps) {
     const {items, remainingItems} = useContext(ItemsContext);
-    const {dropZoneCount, isClozeQuestion} = useContext(ClozeQuestionContext);
+    const {dropZoneCount, isClozeQuestion} = useContext(ItemQuestionContext);
 
     if (!items || !remainingItems) {
         return null; // Shouldn't happen.

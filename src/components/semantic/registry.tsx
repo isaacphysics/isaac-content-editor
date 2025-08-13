@@ -386,6 +386,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     itemChoice: choice,
     parsonsChoice: choice,
     isaacClozeQuestion: isaacItemQuestion,
+    isaacDndQuestion: isaacItemQuestion,
     coordinateItem$choice: {bodyPresenter: CoordinateItemPresenter},
     coordinateChoice: choice,
     isaacCoordinateQuestion: {...question, headerPresenter: CoordinateQuestionPresenter, footerPresenter: undefined},

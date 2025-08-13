@@ -13,7 +13,7 @@ import { useFixedRef } from "../../../utils/hooks";
 import styles from "../styles/figure.module.css";
 import {NON_STATIC_FIGURE_FLAG} from "../../../isaac/IsaacTypes";
 import {Alert} from "reactstrap";
-import { ClozeQuestionContext } from "./ItemQuestionPresenter";
+import { ItemQuestionContext } from "./ItemQuestionPresenter";
 import { FigureDropZoneModal, PositionableDropZoneProps } from "../../FigureDropZoneModal";
 
 export function FigurePresenter(props: PresenterProps<Figure>) {
@@ -28,9 +28,9 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
     const [replacedFile, setReplacedFile] = useState(false);
     const {data} = useGithubContents(appContext, getContentPathFromSrc(doc.src), isAppAsset(doc.src) ? "app" : undefined);
 
-    const clozeContext = useContext(ClozeQuestionContext);
-    const [clozeDropZoneModalOpen, setClozeModalDropZoneOpen] = useState(false);
-    const toggleClozeDropZoneModal = () => setClozeModalDropZoneOpen(o => !o);
+    const itemQuestionContext = useContext(ItemQuestionContext);
+    const [dndDropZoneModalOpen, setDndModalDropZoneOpen] = useState(false);
+    const toggleDndDropZoneModal = () => setDndModalDropZoneOpen(o => !o);
     const [dropZones, setDropZones] = useState<PositionableDropZoneProps[]>(doc.dropZones ?? []);
 
     const imageRef = useRef<HTMLImageElement>(null);
@@ -67,10 +67,10 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
 
     useEffect(() => {
         update({...doc, dropZones});
-        if (clozeContext.isClozeQuestion) {
-            clozeContext.figureMap[doc.id as string] = [dropZones, setDropZones];
+        if (itemQuestionContext.isDndQuestion) {
+            itemQuestionContext.figureMap[doc.id as string] = [dropZones, setDropZones];
         }
-    }, [clozeContext.isClozeQuestion, dropZones, setDropZones]);
+    }, [itemQuestionContext.isDndQuestion, dropZones, setDropZones]);
 
     const fileRef = useRef<HTMLInputElement>(null);
 
@@ -181,12 +181,12 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
                 </>}
             </div>
         </div>
-        {clozeContext.isClozeQuestion && <div className={styles.clozeFigureFooter}>
-            <button onClick={toggleClozeDropZoneModal} disabled={!imageRef.current?.src}>Add drop-zones to figure</button>
+        {itemQuestionContext.isDndQuestion && <div className={styles.clozeFigureFooter}>
+            <button onClick={toggleDndDropZoneModal} disabled={!imageRef.current?.src}>Add drop-zones to figure</button>
             {!!dropZones.length && <span style={{color: "grey"}}> ({dropZones.length} managed zone{dropZones.length !== 1 ? "s" : ""})</span>}
             {imageRef.current?.src && <FigureDropZoneModal 
-                open={clozeDropZoneModalOpen} toggle={toggleClozeDropZoneModal} imgSrc={imageRef.current.src} 
-                initialDropZoneIndex={clozeContext.calculateDZIndexFromFigureId(doc.id as string)}
+                open={dndDropZoneModalOpen} toggle={toggleDndDropZoneModal} imgSrc={imageRef.current.src} 
+                initialDropZoneIndex={itemQuestionContext.calculateDZIndexFromFigureId(doc.id as string)}
                 dropZones={dropZones} setDropZones={setDropZones}
             />}
         </div>}

@@ -24,6 +24,7 @@ const choicesType: Record<QUESTION_TYPES, CHOICE_TYPES | null> = {
     isaacReorderQuestion: "itemChoice",
     isaacParsonsQuestion: "parsonsChoice",
     isaacClozeQuestion: "itemChoice",
+    isaacDndQuestion: "itemChoice",
     isaacCoordinateQuestion: "coordinateChoice",
 };
 
