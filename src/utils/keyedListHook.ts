@@ -10,6 +10,18 @@ let keyBase = 0;
 const createKey = (_: unknown, index: number) => `@${index}: ${++keyBase}`;
 const UNINITIALISED = [] as string[];
 
+const modifyContentId = (newContent: ContentBase) => {
+    if (newContent.id === generate) {
+        newContent.id = generateGuid();
+        if (newContent.type === "isaacQuizSection") {
+            newContent.id = newContent.id?.substring(0, 8);
+        }
+        if (newContent.type === "item" || newContent.type === "parsonsItem") {
+            newContent.id = newContent.id?.substring(0, 4);
+        }
+    }
+}
+
 export function useKeyedList<T, D>(items: T[] | undefined, deriveNewList: () => [D, T[]], update: (newDoc: D, invertible?: boolean) => void) {
     const keyList = useRef(UNINITIALISED);
     if (keyList.current === UNINITIALISED) {
@@ -20,18 +32,21 @@ export function useKeyedList<T, D>(items: T[] | undefined, deriveNewList: () => 
     return {
         insert: useCallback((index: number, newElement: T) => {
             const newContent = newElement as ContentBase;
-            if (newContent.id === generate) {
-                newContent.id = generateGuid();
-                if (newContent.type === "isaacQuizSection") {
-                    newContent.id = newContent.id?.substring(0, 8);
-                }
-                if (newContent.type === "item" || newContent.type === "parsonsItem") {
-                    newContent.id = newContent.id?.substring(0, 4);
-                }
-            }
+            modifyContentId(newContent);
+            
             const [newDoc, newList] = deriveNewList();
             newList.splice(index, 0, newElement);
             keyList.current.splice(index, 0, createKey(newElement, index));
+            update(newDoc);
+        }, [deriveNewList, update]),
+        insertMultiple: useCallback((elements: [number, T][]) => {
+            // Calling insert() multiple times before update() can modify the doc (each render?) will overwrite previous changes. Prefer this.
+            const [newDoc, newList] = deriveNewList();
+            elements.forEach(([index, newElement]) => {
+                modifyContentId(newElement as ContentBase);
+                newList.splice(index, 0, newElement);
+                keyList.current.splice(index, 0, createKey(newElement, index));
+            });
             update(newDoc);
         }, [deriveNewList, update]),
         remove: useCallback((index: number) => {
