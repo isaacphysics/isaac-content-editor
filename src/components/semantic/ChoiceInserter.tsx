@@ -33,6 +33,7 @@ export type CHOICE_TYPES =
     | "regexPattern"
     | "itemChoice"
     | "parsonsChoice"
+    | "dndChoice"
     | "coordinateChoice"
     ;
 
@@ -48,6 +49,7 @@ const emptyChoices = [
     {...emptyChoice, type: "regexPattern", matchWholeString: false, caseInsensitive: false, multiLineRegex: true},
     {...emptyChoice, type: "itemChoice", children: []},
     {...emptyChoice, type: "parsonsChoice", children: []},
+    {...emptyChoice, type: "dndChoice", children: []},
     {...emptyChoice, type: "coordinateChoice", items: []},
 ];
 

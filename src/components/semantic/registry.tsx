@@ -36,6 +36,7 @@ import {defaultMeta, MetaItemKey} from "./Metadata";
 import {CardDeckPresenter, CardPresenter} from "./presenters/CardPresenter";
 import {MetaItems} from "./metaItems";
 import {
+    DndChoicePresenter,
     ItemChoicePresenter,
     ItemPresenter,
     ItemQuestionPresenter
@@ -86,6 +87,7 @@ export type ContentType =
     | "item"
     | "parsonsItem"
     | "item$choice"
+    | "dndItem$choice"
     | "inlineQuestionPart"
     | "isaacInlineRegion"
     | "coordinateItem$choice"
@@ -387,6 +389,8 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     parsonsChoice: choice,
     isaacClozeQuestion: isaacItemQuestion,
     isaacDndQuestion: isaacItemQuestion,
+    dndChoice: choice,
+    dndItem$choice: {bodyPresenter: DndChoicePresenter},
     coordinateItem$choice: {bodyPresenter: CoordinateItemPresenter},
     coordinateChoice: choice,
     isaacCoordinateQuestion: {...question, headerPresenter: CoordinateQuestionPresenter, footerPresenter: undefined},

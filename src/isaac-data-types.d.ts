@@ -467,12 +467,18 @@ export interface ParsonsChoice extends ItemChoice {
 export interface CoordinateChoice extends ItemChoice {
 }
 
+export interface DndChoice extends ItemChoice {
+}
 export interface ParsonsItem extends Item {
     indentation?: number;
 }
 
 export interface CoordinateItem extends Item {
     coordinates?: string[];
+}
+
+export interface DndItem extends Item {
+    dropZoneId?: string;
 }
 
 export interface Quantity extends Choice {
