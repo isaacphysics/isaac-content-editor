@@ -11,13 +11,13 @@ import {
     makeItalic,
     makeStrikethrough
 } from "../utils/codeMirrorExtensions";
-import {ItemQuestionContext} from "./semantic/presenters/ItemQuestionPresenter";
+import {DropZoneQuestionContext} from "./semantic/presenters/ItemQuestionPresenter";
 import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
 import { PopupInlineQuestionInsert } from "./popups/PopupInlineQuestionInsert";
 import { PopupTableClass } from "./popups/PopupTableClass";
 
 export const MarkupToolbar = ({set, cancel, codemirror, encoding, value}: { set: () => void, cancel: () => void, codemirror?: RefObject<ReactCodeMirrorRef>, encoding: string | undefined, value?: string }) => {
-    const {isClozeQuestion} = useContext(ItemQuestionContext);
+    const {isClozeQuestion} = useContext(DropZoneQuestionContext);
     const inlineContext = useContext(InlineQuestionContext);
 
     const [wide, setWide] = useState(true);

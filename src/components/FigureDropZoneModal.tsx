@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useRef, useState } from "react";
 import styles from "./semantic/styles/figure.module.css";
 import markupStyles from "../isaac/styles/markup.module.css";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
-import { ItemQuestionContext } from "./semantic/presenters/ItemQuestionPresenter";
+import { DropZoneQuestionContext } from "./semantic/presenters/ItemQuestionPresenter";
 import throttle from "lodash/throttle";
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
@@ -88,7 +88,7 @@ interface FigureDropZoneModalProps {
 
 export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
     const {open, toggle, imgSrc, initialDropZoneIndex, dropZones, setDropZones} = props;
-    const itemQuestionContext = useContext(ItemQuestionContext);
+    const itemQuestionContext = useContext(DropZoneQuestionContext);
     const imageRef = useRef<HTMLImageElement>(null);
 
     const [percentageLeft, setPercentageLeft] = useState<(number | "")[]>(dropZones.map(dz => dz.left));

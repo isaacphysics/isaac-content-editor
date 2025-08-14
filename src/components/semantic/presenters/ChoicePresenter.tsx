@@ -30,7 +30,7 @@ import {EditableValueProp, EditableCoordProp} from "../props/EditableDocProp";
 import {CHOICE_TYPES} from "../ChoiceInserter";
 import {PresenterProps} from "../registry";
 import {ListPresenterProp} from "../props/listProps";
-import {ItemQuestionContext, ItemsContext} from "./ItemQuestionPresenter";
+import {DropZoneQuestionContext, ItemsContext} from "./ItemQuestionPresenter";
 
 import styles from "../styles/choice.module.css";
 import {CoordinateQuestionContext, InlineQuestionContext, QuestionContext} from "./questionPresenters";
@@ -218,7 +218,7 @@ export const GraphChoicePresenter = buildValuePresenter(
 
 export const ItemChoicePresenter = (props: ValuePresenterProps<ParsonsChoice>) => {
     const {items: maybeItems, withReplacement} = useContext(ItemsContext);
-    const {isClozeQuestion, dropZoneCount} = useContext(ItemQuestionContext);
+    const {isClozeQuestion, dropZoneCount} = useContext(DropZoneQuestionContext);
     const {doc, update} = props;
 
     const [showClozeChoiceWarning, setShowClozeChoiceWarning] = useState<boolean>(false);

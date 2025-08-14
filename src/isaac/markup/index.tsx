@@ -6,7 +6,7 @@ import {utils} from "remarkable";
 import {usePortalsInHtml, useStatefulElementRef} from "./portals/utils";
 import {compose} from "redux";
 import {isDefined} from "../../utils/types";
-import { ItemQuestionContext } from "../../components/semantic/presenters/ItemQuestionPresenter";
+import { DropZoneQuestionContext } from "../../components/semantic/presenters/ItemQuestionPresenter";
 
 // This component renders the HTML given to it inside a React element.
 //
@@ -31,7 +31,7 @@ const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
 const TrustedMarkdown = ({markdown}: {markdown: string, renderParagraphs?: boolean}) => {
     const renderKatex = useRenderKatex();
 
-    const itemQuestionContext = useContext(ItemQuestionContext);
+    const itemQuestionContext = useContext(DropZoneQuestionContext);
 
     // This combines all of the above functions for markdown processing.
     const html = compose<string>(

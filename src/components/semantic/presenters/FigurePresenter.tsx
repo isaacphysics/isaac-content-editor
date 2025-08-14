@@ -13,7 +13,7 @@ import { useFixedRef } from "../../../utils/hooks";
 import styles from "../styles/figure.module.css";
 import {NON_STATIC_FIGURE_FLAG} from "../../../isaac/IsaacTypes";
 import {Alert} from "reactstrap";
-import { ItemQuestionContext } from "./ItemQuestionPresenter";
+import { DropZoneQuestionContext } from "./ItemQuestionPresenter";
 import { FigureDropZoneModal, PositionableDropZoneProps } from "../../FigureDropZoneModal";
 
 export function FigurePresenter(props: PresenterProps<Figure>) {
@@ -28,7 +28,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
     const [replacedFile, setReplacedFile] = useState(false);
     const {data} = useGithubContents(appContext, getContentPathFromSrc(doc.src), isAppAsset(doc.src) ? "app" : undefined);
 
-    const itemQuestionContext = useContext(ItemQuestionContext);
+    const itemQuestionContext = useContext(DropZoneQuestionContext);
     const [dndDropZoneModalOpen, setDndModalDropZoneOpen] = useState(false);
     const toggleDndDropZoneModal = () => setDndModalDropZoneOpen(o => !o);
     const [dropZones, setDropZones] = useState<PositionableDropZoneProps[]>(doc.dropZones ?? []);

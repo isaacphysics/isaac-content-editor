@@ -186,7 +186,7 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     const {doc, update} = props;
     const [isOpen, setOpen] = useState(false);
     const {items, remainingItems, allowSubsetMatch} = useContext(ItemsContext);
-    const {isClozeQuestion} = useContext(ItemQuestionContext);
+    const {isClozeQuestion} = useContext(DropZoneQuestionContext);
 
     const item = items?.find((item) => item.id === doc.id) ?? {
         id: doc.id,
@@ -234,7 +234,7 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
 
 export function ItemChoiceItemInserter({insert, position, lengthOfCollection}: InserterProps) {
     const {items, remainingItems} = useContext(ItemsContext);
-    const {dropZoneCount, isClozeQuestion} = useContext(ItemQuestionContext);
+    const {dropZoneCount, isClozeQuestion} = useContext(DropZoneQuestionContext);
 
     if (!items || !remainingItems) {
         return null; // Shouldn't happen.
