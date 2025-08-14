@@ -13,7 +13,7 @@ const toFixedDP = (value: number, dp: number) => {
 }
 
 export interface PositionableDropZoneProps {
-    index: number;
+    id: string;
     minWidth: string;
     minHeight: string;
     left: number;
@@ -28,7 +28,7 @@ interface DraggableDropZoneProps {
 }
 
 const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZoneProps) => {
-    const {index, minWidth, minHeight, left, top, scaleFactor} = props;
+    const {id, minWidth, minHeight, left, top, scaleFactor} = props;
     const imgPos = useRef({left: 0, right: 0, top: 0, bottom: 0});
 
     const handleDrag = useCallback(throttle((e: React.DragEvent<HTMLDivElement>) => {
@@ -37,7 +37,7 @@ const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZo
         const newY = toFixedDP(clamp(((e.pageY - imgPos.current.top) / (imgPos.current.bottom - imgPos.current.top)) * 100, 0, 100), 1);
         props.setPercentageLeft(newX);
         props.setPercentageTop(newY);
-        props.setDropZone({index, minWidth, minHeight, left: newX, top: newY});
+        props.setDropZone({id, minWidth, minHeight, left: newX, top: newY});
     }, 40), []);
 
     const dragImage = new Image();
@@ -69,7 +69,7 @@ const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZo
             minWidth: `calc(${minWidth} * ${scaleFactor.x})`, 
             minHeight: `calc(${minHeight} * ${scaleFactor.y})`
         }}>
-            {index}&nbsp;&nbsp;
+            {id}&nbsp;&nbsp;
         </span>
     </div>
 }
@@ -81,14 +81,15 @@ interface FigureDropZoneModalProps {
     initialDropZoneIndex: number;
     dropZones: PositionableDropZoneProps[];
     setDropZones: React.Dispatch<React.SetStateAction<PositionableDropZoneProps[]>>;
+    figureNum?: number;
 }
 
 // TODO: 
 // - migrate min width / height to px only or auto (this is all that's allowed anyway!)
 
 export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
-    const {open, toggle, imgSrc, initialDropZoneIndex, dropZones, setDropZones} = props;
-    const itemQuestionContext = useContext(DropZoneQuestionContext);
+    const {open, toggle, imgSrc, initialDropZoneIndex, dropZones, setDropZones, figureNum} = props;
+    const dropZoneQuestionContext = useContext(DropZoneQuestionContext);
     const imageRef = useRef<HTMLImageElement>(null);
 
     const [percentageLeft, setPercentageLeft] = useState<(number | "")[]>(dropZones.map(dz => dz.left));
@@ -96,7 +97,7 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
 
     const [imageScaleFactor, setImageScaleFactor] = useState({x: 1, y: 1});
 
-    if (!itemQuestionContext.isDndQuestion) {
+    if (!dropZoneQuestionContext.isDndQuestion) {
         window.alert("No DND question context found. Cancelling...");
         return null;
     }
@@ -114,7 +115,7 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
                     <img id="figure-image" src={imgSrc} alt="" ref={imageRef} onLoad={recalculateImageScaleFactor}/>
                     {dropZones.map((dzProps, i) => <PositionableDropZone 
                         key={i} {...dzProps} 
-                        index={dzProps.index ?? initialDropZoneIndex + i}
+                        id={dzProps.id ?? `F${figureNum ?? ""}-${initialDropZoneIndex + i}`}
                         scaleFactor={imageScaleFactor} 
                         setPercentageLeft={l => setPercentageLeft(p => p.map((v, j) => j === i ? l : v))}
                         setPercentageTop={t => setPercentageTop(p => p.map((v, j) => j === i ? t : v))}
@@ -126,7 +127,7 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
             <table className={styles.dropZoneInputs}>
                 <thead>
                     <tr>
-                        <th>Index</th>
+                        <th>ID</th>
                         <th>Min width</th>
                         <th>Min height</th>
                         <th>X (%)</th>
@@ -136,10 +137,16 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
                 </thead>
                 <tbody>
                     {dropZones.map((dzProps, i) => {
-                        const {index, minWidth, minHeight, left, top} = dzProps;
+                        const {id, minWidth, minHeight, left, top} = dzProps;
 
                         return <tr key={i}> 
-                            <td>{index ?? initialDropZoneIndex + i}</td>
+                            <td>
+                                <input type={"text"} value={id} onChange={event => {
+                                    const newDropZoneStates = [...dropZones];
+                                    newDropZoneStates[i].id = event.target.value;
+                                    setDropZones(newDropZoneStates);
+                                }}/>
+                            </td>
                             <td>
                                 <input type={"text"} value={minWidth} onChange={event => {
                                     const newDropZoneStates = [...dropZones];
@@ -202,10 +209,10 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
     
             <div className="d-flex justify-content-between mt-3">
                 <button onClick={() => {
-                    setDropZones([...dropZones, {index: initialDropZoneIndex + dropZones.length, minWidth: "100px", minHeight: "auto", left: 50, top: 50}])
+                    setDropZones([...dropZones, {id: `F${figureNum ?? ""}-${dropZones.length}`, minWidth: "100px", minHeight: "auto", left: 50, top: 50}])
                     setPercentageLeft([...percentageLeft, 50]);
                     setPercentageTop([...percentageTop, 50]);
-                    itemQuestionContext.dropZoneCount = itemQuestionContext.dropZoneCount ? itemQuestionContext.dropZoneCount + 1 : 1;
+                    dropZoneQuestionContext.dropZoneCount = dropZoneQuestionContext.dropZoneCount ? dropZoneQuestionContext.dropZoneCount + 1 : 1;
                 }}>
                     Add drop zone
                 </button>

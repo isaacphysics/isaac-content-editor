@@ -5,8 +5,13 @@ export const extractValueOrChildrenText = (doc: Content): string => {
     return (doc.value || doc.children?.map(extractValueOrChildrenText).join("\n")) ?? "";
 };
 
-export const extractDropZoneCountPerFigure = (doc: Content): [string, number][]=> {
-    return (doc.type === "figure" ? ((doc as Figure).dropZones ? [[doc.id as string, (doc as Figure).dropZones!.length]] : []) : doc.children?.map(extractDropZoneCountPerFigure).reduce((a, b) => [...a, ...b], [])) ?? [];
+export const extractDropZoneIdsPerFigure = (doc: Content): [string, string[]][]=> {
+    return (doc.type === "figure" 
+        ? ((doc as Figure).dropZones 
+            ? [[doc.id as string, (doc as Figure).dropZones?.map(dz => dz.id) ?? []]] 
+            : []) 
+        : doc.children?.map(extractDropZoneIdsPerFigure).reduce((a, b) => [...a, ...b], [])
+    ) ?? [];
 };
 
 // the index is the sum of the number of DZs before the figure

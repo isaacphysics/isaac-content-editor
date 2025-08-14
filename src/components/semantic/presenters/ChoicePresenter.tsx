@@ -279,7 +279,7 @@ export const DndChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
     const remainingItems = withReplacement ? items : items.filter(item => !doc.items?.find(i => i.id === item.id));
 
     return <>
-        <span>DndChoicePresenter</span>
+        <span>Add an entry here to attach one Item to one Drop Zone.</span>
         <ItemsContext.Provider value={{items, remainingItems, withReplacement, allowSubsetMatch: doc.allowSubsetMatch}}>
             <ListPresenterProp {...props} doc={doc} update={update} prop="items" childTypeOverride="dndItem$choice" />
         </ItemsContext.Provider>

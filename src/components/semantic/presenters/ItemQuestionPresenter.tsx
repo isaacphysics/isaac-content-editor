@@ -25,7 +25,7 @@ import {MetaItemPresenter, MetaOptions} from "../Metadata";
 import styles from "../styles/question.module.css";
 import {Box} from "../SemanticItem";
 import {ExpandableText} from "../ExpandableText";
-import {extractDropZoneCountPerFigure, extractFigureDropZoneStartIndex, extractValueOrChildrenText} from "../../../utils/content";
+import {extractDropZoneIdsPerFigure, extractFigureDropZoneStartIndex, extractValueOrChildrenText} from "../../../utils/content";
 import {dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID, NULL_DND_ITEM, NULL_DND_ITEM_ID} from "../../../isaac/IsaacTypes";
 import { PositionableDropZoneProps } from "../../FigureDropZoneModal";
 
@@ -80,11 +80,11 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
             setDropZoneCount(questionExposition.match(dropZoneRegex)?.length ?? 0);
         } else if (isDndQuestion(doc)) {
             const questionExposition = extractValueOrChildrenText(doc);
-            const figureZonesCount = extractDropZoneCountPerFigure(doc);
-            setDropZoneCount((questionExposition.match(dndDropZoneRegex)?.length ?? 0) + figureZonesCount.map(x => x[1]).reduce((a, b) => a + b, 0));
+            const figureZoneIds = extractDropZoneIdsPerFigure(doc);
+            setDropZoneCount((questionExposition.match(dndDropZoneRegex)?.length ?? 0) + figureZoneIds.map(x => x[1].length).reduce((a, b) => a + b, 0));
 
             const expositionIds = questionExposition.matchAll(dndDropZoneRegex).filter(x => x.groups?.id).map(x => (x.groups?.id as string)).toArray();
-            setDropZoneIds(new Set([...expositionIds])); // TODO: add figure zone IDs
+            setDropZoneIds(new Set([...expositionIds, ...figureZoneIds.flatMap(x => x[1])]));
         }
     };
     const updateWithDropZoneCount = (newDoc: ItemQuestionType, invertible?: boolean) => {
@@ -355,13 +355,13 @@ export function DndChoiceItemInserter({insert, insertMultiple, position, collect
         <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
             const newItem: DndItem = {type: item.type, id: item.id, dropZoneId: item.dropZoneId};
             insert(position, newItem);
-        }}>Add blank item</Button>
+        }}>Add blank entry</Button>
         <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
             insertMultiple(Array.from(missingDropZones ?? []).map((dropZoneId, index) => {
                 const newItem: DndItem = {type: item.type, id: item.id, dropZoneId};
                 return [position + index, newItem];
             }));
-        }}>Add all missing drop zones</Button>
+        }}>Add entries for all missing DZs</Button>
     </>;
 
 }

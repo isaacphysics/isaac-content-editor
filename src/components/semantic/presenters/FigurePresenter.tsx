@@ -187,7 +187,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
             {imageRef.current?.src && <FigureDropZoneModal 
                 open={dndDropZoneModalOpen} toggle={toggleDndDropZoneModal} imgSrc={imageRef.current.src} 
                 initialDropZoneIndex={itemQuestionContext.calculateDZIndexFromFigureId(doc.id as string)}
-                dropZones={dropZones} setDropZones={setDropZones}
+                dropZones={dropZones} setDropZones={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
             />}
         </div>}
     </>;

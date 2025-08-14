@@ -45,15 +45,11 @@
             border-bottom: 1px solid #999;
         }
 
-        th:first-child {
-            width: 60px;
-        }
-
         tbody > tr > td {
             padding-top: 0.5rem;
         }
 
-        td:not(:first-child) > input {
+        td > input {
             width: 70px;
             height: auto;
             margin: auto;
