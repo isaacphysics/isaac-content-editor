@@ -7,7 +7,7 @@ import { isDefined } from "../../../utils/types";
 import { CheckboxDocProp } from "../props/CheckboxDocProp";
 import { parseMarkingFormula } from "../../../services/llmMarkingFormula";
 import styles from "../styles/editable.module.css";
-import { evaluateMarkingFormula, evaluateMarkTotal } from "../../../utils/llmMarkingFormula";
+import { evaluateMarkingFormula, evaluateMarkTotal, tallyMarkUses } from "../../../utils/llmMarkingFormula";
 import { FormFeedback } from "reactstrap";
 
 const MaxMarksEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("maxMarks");
@@ -191,9 +191,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     <td>
                         <strong>Marking formula</strong>
                         <br/>
-                        {(validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
-                            <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
-                        }
+                        <MarkingFormulaError doc={doc} isFormulaValid={!!validateMarkingFormula(doc.markingFormulaString)} />
                     </td>
                     <td>
                         <div className="flex-fill">
@@ -274,4 +272,23 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             </tbody>
         </table>
     </div>;
+}
+
+function MarkingFormulaError({doc, isFormulaValid}: {doc: IsaacLLMFreeTextQuestion, isFormulaValid?: boolean}) {
+    const markTally = tallyMarkUses(doc.markingFormula);
+    const missingMarks = (doc.markScheme?.map(msi => msi.jsonField ?? "") ?? []).filter(mark => !markTally[mark]);
+    return <>
+            <div>
+                {(isFormulaValid || !doc.markingFormulaString) && 
+                    <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
+                }
+            </div>
+            <div>
+                {doc.markingFormulaString && missingMarks.length > 0 && 
+                    <FormFeedback className={styles.feedback}>
+                        {"Missing the following mark(s): " + missingMarks.reduce((markList, currentMark) => markList + ", " + currentMark)}
+                    </FormFeedback>
+                }
+            </div>
+        </>;
 }
