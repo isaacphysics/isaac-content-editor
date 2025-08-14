@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { PresenterProps } from "../registry";
 import { IsaacLLMFreeTextQuestion, LLMFreeTextMarkedExample, LLMFreeTextMarkSchemeEntry } from "../../../isaac-data-types";
 import { NumberDocPropFor } from "../props/NumberDocPropFor";
@@ -7,14 +7,13 @@ import { isDefined } from "../../../utils/types";
 import { CheckboxDocProp } from "../props/CheckboxDocProp";
 import { parseMarkingFormula } from "../../../services/llmMarkingFormula";
 import styles from "../styles/editable.module.css";
-import { evaluateMarkingFormula, evaluateMarkTotal, tallyMarkUses } from "../../../utils/llmMarkingFormula";
+import { evaluateMarkingFormula, evaluateMarkTotal } from "../../../utils/llmMarkingFormula";
 import { FormFeedback } from "reactstrap";
 
 const MaxMarksEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("maxMarks");
 
 export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuestion>) {
     const {doc, update} = props;
-    const [missingMarks, setMissingMarks] = React.useState<string[]>((doc.markScheme?.map(msi => msi.jsonField ?? "") ?? []).filter(mark => !tallyMarkUses(doc.markingFormula)[mark]));
 
     // Mark scheme operations - these changes also update marked examples
     function updateMark<T extends keyof LLMFreeTextMarkSchemeEntry>(index: number, field: T, value: LLMFreeTextMarkSchemeEntry[T]) {
@@ -29,12 +28,9 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                 });
             }
         }
-        const updatedMarkScheme = doc.markScheme?.map((msi, i) => i === index ? {...msi, [field]: value} : msi);
-        setMissingMarks((updatedMarkScheme?.map(msi => msi.jsonField ?? "") ?? []).filter(mark => !tallyMarkUses(doc.markingFormula)[mark]));
-
         update({
             ...doc,
-            markScheme: updatedMarkScheme,
+            markScheme: doc.markScheme?.map((msi, i) => i === index ? {...msi, [field]: value} : msi),
             markedExamples: possiblyUpdatedMarkedExamples
         });
     }
@@ -47,10 +43,6 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             nextFreeJsonFieldnameSuffix++;
         }
         const defaultJsonFieldname = `${baseDefaultJsonFieldname}${nextFreeJsonFieldnameSuffix}`;
-        if (tallyMarkUses(doc.markingFormula)[defaultJsonFieldname] === 0 || !tallyMarkUses(doc.markingFormula).hasOwnProperty(defaultJsonFieldname)) {
-            setMissingMarks([...missingMarks, defaultJsonFieldname]);
-        }
-
         update({
             ...doc,
             markScheme: [...doc.markScheme ?? [], {
@@ -65,10 +57,8 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
         });
     }
 
-    function deleteMark(jsonFieldname?: string) {
+    function deleteMark(jsonFieldname: string | undefined) {
         if (!jsonFieldname) { return; }
-        setMissingMarks(missingMarks.filter(mark => mark !== jsonFieldname));
-
         update({
             ...doc,
             markScheme: doc.markScheme?.filter(msi => msi.jsonField !== jsonFieldname),
@@ -110,7 +100,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
         });
     }
 
-    const validateMarkingFormula = React.useCallback((value?: string) => {
+    function validateMarkingFormula(value?: string) {
         if (!value) {
             return;
         }
@@ -135,21 +125,17 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                                                             "maxMarks": doc.maxMarks ?? 0
                                                         });
         } 
-        catch (e: unknown) { 
+        catch (e: any) { 
             return `${e}`;
         }
-    }, [doc.markScheme, doc.maxMarks]);
+    }
 
     function updateMarkingFormula(value?: string) {
-        const parsedFormula = parseMarkingFormula(value);
-        const allMarks = doc.markScheme?.map(msi => msi.jsonField ?? "") ?? [];
-        setMissingMarks(allMarks.filter(mark => !tallyMarkUses(parsedFormula)[mark]));
-
         update({
             ...doc,
             markingFormulaString: value,
-            markingFormula: parsedFormula,
-            markedExamples: doc.markedExamples?.map(me => ({...me, marksAwarded: evaluateMarkTotal(parsedFormula, {...me.marks, "maxMarks": doc.maxMarks ?? 0})}))
+            markingFormula: parseMarkingFormula(value),
+            markedExamples: doc.markedExamples?.map(me => ({...me, marksAwarded: evaluateMarkTotal(parseMarkingFormula(value), {...me.marks, "maxMarks": doc.maxMarks ?? 0})}))
         })
     }
 
@@ -158,19 +144,6 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
     const variableNamesMap: [string, string][] = doc.markScheme?.map(msi => msi.jsonField ? [msi.jsonField, msi.jsonField] as [string, string] : ["", ""]) ?? [["", ""]];
     const buttonStrings: [string, string][] = [...functionNamesMap, ...constantNamesMap, ...variableNamesMap, ["maxMarks", "maxMarks"]];
 
-    const markingFormulaError = useMemo(() => <> 
-        <div>
-            {(validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
-                <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
-            }
-        </div>
-        <div>
-            {doc.markingFormulaString && missingMarks.length > 0 && 
-                <FormFeedback className={styles.feedback}> {"Missing the following mark(s): " + missingMarks.reduce((markList, currentMark) => markList + ", " + currentMark)} </FormFeedback>
-            }
-        </div>
-    </>, [doc.markingFormulaString, missingMarks, validateMarkingFormula]);
-    
     return <div>
         <h2 className="h5">Mark scheme</h2>
         <table className="table table-bordered">
@@ -218,7 +191,9 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     <td>
                         <strong>Marking formula</strong>
                         <br/>
-                        {markingFormulaError}
+                        {(validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
+                            <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
+                        }
                     </td>
                     <td>
                         <div className="flex-fill">
