@@ -7,7 +7,7 @@ import { isDefined } from "../../../utils/types";
 import { CheckboxDocProp } from "../props/CheckboxDocProp";
 import { parseMarkingFormula } from "../../../services/llmMarkingFormula";
 import styles from "../styles/editable.module.css";
-import { evaluateMarkingFormula, evaluateMarkTotal } from "../../../utils/llmMarkingFormula";
+import { evaluateMarkingFormula, evaluateMarkTotal, tallyMarkUses } from "../../../utils/llmMarkingFormula";
 import { FormFeedback } from "reactstrap";
 
 const MaxMarksEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("maxMarks");
@@ -139,6 +139,9 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
         })
     }
 
+    const markTally = tallyMarkUses(doc.markingFormula);
+    const missingMarks = (doc.markScheme?.map(msi => msi.jsonField ?? "") ?? []).filter(mark => !markTally[mark]);
+
     const functionNamesMap: [string, string][] = [["SUM", "SUM("], ["MAX", "MAX("], ["MIN", "MIN("], [")", ")"]]; // These are the only functions we support for now
     const constantNamesMap: [string, string][] = [["0", "0"], ["1", "1"]];
     const variableNamesMap: [string, string][] = doc.markScheme?.map(msi => msi.jsonField ? [msi.jsonField, msi.jsonField] as [string, string] : ["", ""]) ?? [["", ""]];
@@ -191,9 +194,18 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     <td>
                         <strong>Marking formula</strong>
                         <br/>
-                        {(validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
-                            <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
-                        }
+                        <div>
+                            {(!!validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
+                                <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
+                            }
+                        </div>
+                        <div>
+                            {doc.markingFormulaString && missingMarks.length > 0 && 
+                                <FormFeedback className={styles.feedback}>
+                                    {"Missing the following mark(s): " + missingMarks.reduce((markList, currentMark) => markList + ", " + currentMark)}
+                                </FormFeedback>
+                            }
+                        </div>
                     </td>
                     <td>
                         <div className="flex-fill">

@@ -61,4 +61,22 @@ export function evaluateMarkTotal<T extends LLMFormulaNode>(markingFormula?: T, 
     } catch {
         return defaultMarkingFormula();
     }
-} 
+}
+
+export function tallyMarkUses<T extends LLMFormulaNode>(markingFormula?: T): Record<string, number> {
+    const tally: Record<string, number> = {};
+    function traverse(node: LLMFormulaNode) {
+        if (isLLMVariableNode(node)) {
+            if (tally[node.name]) {
+                tally[node.name]++;
+            } else {
+                tally[node.name] = 1;
+            }
+        } else if (isLLMFunctionNode(node)) {
+            const args: LLMFormulaNode[] = Array.isArray(node.arguments) ? node.arguments : [node.arguments];
+            args.forEach(traverse);
+        }
+    }
+    if (markingFormula) traverse(markingFormula);
+    return tally;
+}
