@@ -9,6 +9,7 @@ import { parseMarkingFormula } from "../../../services/llmMarkingFormula";
 import styles from "../styles/editable.module.css";
 import { evaluateMarkingFormula, evaluateMarkTotal, tallyMarkUses } from "../../../utils/llmMarkingFormula";
 import { FormFeedback } from "reactstrap";
+import { HintsPresenter } from "./questionPresenters";
 
 const MaxMarksEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("maxMarks");
 
@@ -285,5 +286,6 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                 </tr>
             </tbody>
         </table>
+        <HintsPresenter {...props} />
     </div>;
 }
