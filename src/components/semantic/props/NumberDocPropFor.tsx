@@ -20,7 +20,7 @@ export const NumberDocPropFor = <D extends Content,
                     newText = newText.trim();
                     const num = parseInt(newText, 10);
                     if (isNaN(num) || num.toString() !== newText) {
-                        return "Not a number";
+                        return ["Not a number"];
                     }
                 }
             }}

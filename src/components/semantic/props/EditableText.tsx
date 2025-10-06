@@ -19,6 +19,7 @@ import {Markup} from "../../../isaac/markup";
 import CodeMirror, {EditorView} from "@uiw/react-codemirror";
 import {MarkupToolbar} from "../../MarkupToolbar";
 import {keyBindings} from "../../../utils/codeMirrorExtensions";
+import { isDefined } from "../../../utils/types";
 
 export interface SaveOptions {
     movement?: number;
@@ -42,7 +43,7 @@ export type EditableTextProps = {
     placeHolder?: string;
     onDelete?: (options?: SaveOptions) => void;
     autoFocus?: boolean;
-    hasError?: (newText: string | undefined) => string | undefined;
+    hasError?: (newText: string | undefined) => string[] | undefined;
     label?: string;
     noSupressSaves?: boolean;
     hideWhenEmpty?: boolean
@@ -107,7 +108,7 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                                  buttonStrings = [],
                              }, ref) => {
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const [errorMessage, setErrorMessage] = useState<string>();
+    const [errorMessage, setErrorMessage] = useState<string[]>();
 
     const onSave = useWrappedRef(onSaveUnsafe);
     const onDelete = useWrappedRef(onDeleteUnsafe);
@@ -243,17 +244,19 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                                     onKeyDown={handleKey}
                                     placeholder={placeHolder}
                                     onBlur={onBlur}
-                                    invalid={!!errorMessage}
+                                    invalid={errorMessage && errorMessage.length > 0}
                                     {...inputProps}
                                 />
                             }
                         </>
                     </span>
-                    {errorMessage && <FormFeedback className={styles.feedback}>{errorMessage}</FormFeedback>}
                 </span>
                 <Button onClick={cancel}>Cancel</Button>
                 <Button color="primary" onClick={() => save()}>Set</Button>
             </Wrap>
+            {isDefined(errorMessage) && errorMessage.length > 0 && <Wrap className="pb-2">
+                {errorMessage.map(e => <FormFeedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</FormFeedback>)}
+            </Wrap>}
             <Wrap ref={wrapperRef} className={`justify-content-start ${styles.isEditingWrapper}`}>
                 {insertStringButtons}
             </Wrap>
