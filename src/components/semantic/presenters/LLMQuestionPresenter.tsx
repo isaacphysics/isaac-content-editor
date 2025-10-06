@@ -287,7 +287,9 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                                     onSave={value => updateExample(i, "marksAwarded", parseInt(value ?? "0", 10))}
                                 />}
                             </div>
-                            <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteExample(i)}>❌</button>
+                            <div>
+                                <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteExample(i)}>❌</button>
+                            </div>
                         </div>
                     </td>
                 </tr>)}

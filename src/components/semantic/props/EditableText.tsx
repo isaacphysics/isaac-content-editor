@@ -217,7 +217,7 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
     const Wrap = block ? "div" : "span";
     if (state.isEditing) {
         return <> <Wrap ref={wrapperRef} className={`${styles.isEditingWrapper} ${multiLine ? styles.multiLine : ""}`}>
-                <span className={classNames(styles.controlWrapper, format === "code" ? "w-100" : "")}>
+                <span className={classNames(styles.controlWrapper, format === "code" ? "w-100" : "", "pb-2")}>
                     <span className={styles.labelledInput}>
                         <>
                             {multiLine ? labelElement : <div>{labelElement}</div>}
@@ -251,8 +251,8 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                         </>
                     </span>
                 </span>
-                <Button onClick={cancel}>Cancel</Button>
-                <Button color="primary" onClick={() => save()}>Set</Button>
+                <Button className="mb-2" onClick={cancel}>Cancel</Button>
+                <Button className="mb-2" color="primary" onClick={() => save()}>Set</Button>
             </Wrap>
             {isDefined(errorMessage) && errorMessage.length > 0 && <Wrap className="pb-2">
                 {errorMessage.map(e => <FormFeedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</FormFeedback>)}
