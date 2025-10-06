@@ -4,7 +4,7 @@ import grammar from '../grammars/llmMarkingFormula.nearley';
 
 export function parseMarkingFormula(markingFormula?: string) {
     if (!markingFormula) {
-        return "";
+        return;
     }
     
     const parser = new Parser(Grammar.fromCompiled(grammar));
