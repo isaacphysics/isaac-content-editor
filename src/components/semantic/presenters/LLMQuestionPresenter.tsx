@@ -106,6 +106,8 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             return;
         }
 
+        const openBracketsCount = value.split('(').length - 1;
+        const closeBracketsCount = value.split(')').length - 1;
         const regexStr = /[^a-zA-Z0-9(),\s]+/;
         const badCharacters = new RegExp(regexStr);
         if (badCharacters.test(value)) {
@@ -118,7 +120,10 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     }
                 }
             }
-            return 'Some of the characters you are using are not allowed: ' + usedBadChars.join(" ");
+            errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+        }
+        if (openBracketsCount !== closeBracketsCount) {
+            errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
         }
         try { 
             const formula = parseMarkingFormula(value);
