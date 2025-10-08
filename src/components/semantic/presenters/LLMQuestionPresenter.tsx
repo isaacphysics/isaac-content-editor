@@ -106,8 +106,11 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             return;
         }
 
+        const openBracketsCount = value.split('(').length - 1;
+        const closeBracketsCount = value.split(')').length - 1;
         const regexStr = /[^a-zA-Z0-9(),\s]+/;
         const badCharacters = new RegExp(regexStr);
+        const errors: string[] = [];
         if (badCharacters.test(value)) {
             const usedBadChars: string[] = [];
             for(let i = 0; i < value.length; i++) {
@@ -118,7 +121,10 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     }
                 }
             }
-            return 'Some of the characters you are using are not allowed: ' + usedBadChars.join(" ");
+            errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+        }
+        if (openBracketsCount !== closeBracketsCount) {
+            errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
         }
         try { 
             const formula = parseMarkingFormula(value);
@@ -127,7 +133,13 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                                                         });
         } 
         catch (e: any) { 
-            return `${e}`;
+            if (errors.length === 0) errors.push(`${e}`);
+        }
+
+        if (errors.length === 0) {
+            return;
+        } else {
+            return errors;
         }
     }
 
@@ -162,7 +174,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     <td>
                         <pre><EditableText
                             text={mark.jsonField}
-                            hasError={value => !value?.match(/^[a-z][a-zA-Z0-9]+$/) ? "Invalid JSON fieldname format" : undefined}
+                            hasError={value => !value?.match(/^[a-z][a-zA-Z0-9]+$/) ? ["Invalid JSON fieldname format"] : undefined}
                             onSave={value => updateMark(i, "jsonField", value)}
                         /></pre>
                     </td>
@@ -271,11 +283,13 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                                 :
                                 <EditableText
                                     text={example.marksAwarded?.toString()}
-                                    hasError={value => doc.maxMarks && parseInt(value ?? "0", 10) > doc.maxMarks ? "Exceeds question's max marks" : undefined}
+                                    hasError={value => doc.maxMarks && parseInt(value ?? "0", 10) > doc.maxMarks ? ["Exceeds question's max marks"] : undefined}
                                     onSave={value => updateExample(i, "marksAwarded", parseInt(value ?? "0", 10))}
                                 />}
                             </div>
-                            <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteExample(i)}>❌</button>
+                            <div>
+                                <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteExample(i)}>❌</button>
+                            </div>
                         </div>
                     </td>
                 </tr>)}
