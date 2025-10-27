@@ -1,4 +1,4 @@
-import React, {useContext, useRef} from "react";
+import React, {useContext, useRef, useState} from "react";
 
 import {AppContext} from "../App";
 import {useGithubContents} from "../services/github";
@@ -8,37 +8,38 @@ import {Entry} from "./FileBrowser";
 
 import styles from "../styles/editor.module.css";
 import {Content} from "../isaac-data-types";
-import {StagingServer} from "../services/isaacApi";
+import {LiveServer, StagingServer} from "../services/isaacApi";
 import classNames from "classnames";
 import {BOOK_DETAIL_ID_SEPARATOR} from "../services/constants";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
 
 function filePathToEntry(path: string | undefined, sha: string): Entry {
     const name = path?.substring(path?.lastIndexOf("/") + 1) ?? "";
     return {type: "file", path: path as string, name, sha};
 }
 
-function getPreviewLink(doc: Content) {
+function getPreviewLink(doc: Content, server=StagingServer) {
     if (doc && doc.id) {
         switch (doc.type) {
             case "isaacConceptPage":
-                return `${StagingServer}/concepts/${doc.id}`;
+                return `${server}/concepts/${doc.id}`;
             case "isaacQuestionPage":
             case "isaacFastTrackQuestionPage":
-                return `${StagingServer}/questions/${doc.id}`;
+                return `${server}/questions/${doc.id}`;
             case "isaacTopicSummaryPage":
-                return `${StagingServer}/topics/${doc.id.slice("topic_summary_".length)}`;
+                return `${server}/topics/${doc.id.slice("topic_summary_".length)}`;
             case "isaacEventPage":
-                return `${StagingServer}/events/${doc.id}`;
+                return `${server}/events/${doc.id}`;
             case "page":
-                return `${StagingServer}/pages/${doc.id}`;
+                return `${server}/pages/${doc.id}`;
             case "isaacQuiz":
-                return `${StagingServer}/test/preview/${doc.id}`;
+                return `${server}/test/preview/${doc.id}`;
             case "isaacBookDetailPage": {
                 const pageId = doc.id.split(BOOK_DETAIL_ID_SEPARATOR).pop() || "";
-                return `${StagingServer}/books/${doc.id.slice("book_".length, -(pageId.length + BOOK_DETAIL_ID_SEPARATOR.length))}/${pageId}`;
+                return `${server}/books/${doc.id.slice("book_".length, -(pageId.length + BOOK_DETAIL_ID_SEPARATOR.length))}/${pageId}`;
             }
             case "isaacBookIndexPage":
-                return `${StagingServer}/books/${doc.id.slice("book_".length)}`;
+                return `${server}/books/${doc.id.slice("book_".length)}`;
         }
     }
 }
@@ -50,9 +51,13 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
     const selection = appContext.selection.getSelection();
     const {data} = useGithubContents(appContext, selection?.path);
 
+    const [isOpen, setOpen] = useState(false);
+
     let previewLink: string | undefined;
+    let liveLink: string | undefined;
     try {
         previewLink = getPreviewLink(appContext.editor.getCurrentDoc());
+        liveLink = getPreviewLink(appContext.editor.getCurrentDoc(), LiveServer);
     } catch {
         // No current doc so no preview
     }
@@ -72,6 +77,17 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
         {selection && !selection.isDir && previewLink && <a href={previewLink} target="_blank" className={styles.iconButton} >
             Staging
         </a>}
+        {selection && !selection.isDir && <Dropdown className="d-flex" isOpen={isOpen} toggle={() => setOpen(open => !open)}>
+            <DropdownToggle className={classNames(styles.iconButton, "px-1")}>▼</DropdownToggle>
+            <DropdownMenu>
+                <DropdownItem>
+                    <a href={liveLink} target="_blank">View on live</a>
+                </DropdownItem>
+                <DropdownItem>
+                    <a href={`${StagingServer}/admin/content_errors?path=${selection.path}`}>View content errors</a>
+                </DropdownItem>
+            </DropdownMenu>
+        </Dropdown>}
         <PopupMenu menuRef={menuRef} />
     </div>;
 }

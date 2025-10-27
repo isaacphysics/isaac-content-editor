@@ -7,7 +7,7 @@ export const StagingServer = siteSpecific(
     "https://staging.adacomputerscience.org"
 );
 
-const LiveServer = siteSpecific(
+export const LiveServer = siteSpecific(
     "https://isaacscience.org",
     "https://adacomputerscience.org",
 );
