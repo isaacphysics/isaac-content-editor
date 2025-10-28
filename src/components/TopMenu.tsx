@@ -84,7 +84,7 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
                     <a href={liveLink} target="_blank">View on live</a>
                 </DropdownItem>}
                 <DropdownItem>
-                    <a href={`${StagingServer}/admin/content_errors?path=${selection.path}`}>View content errors</a>
+                    <a href={`${StagingServer}/admin/content_errors?path=${selection.path}`} target="_blank">View content errors</a>
                 </DropdownItem>
             </DropdownMenu>
         </Dropdown>}
