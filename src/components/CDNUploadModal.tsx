@@ -131,12 +131,6 @@ export const CDNUploadModal = () => {
         if (files && files.length === 0) setSuccessfulUploads(undefined);
     }, [paths, files, dir]);
 
-    const readFile = (f: {file: File} & FileValidation): Promise<string> => new Promise(resolve => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string)
-        reader.readAsBinaryString(f.file);
-    });
-
     const uploadToCDN = async () => {
         const path = dir?.path;
         if (!files || files.length === 0 || !path) return;
@@ -152,14 +146,17 @@ export const CDNUploadModal = () => {
         const filesToUpload = [...files];
         setFiles(null);
         for (const f of filesToUpload) {
-            try {
-                const contents = await readFile(f);
-                await githubCreate(appContext, "isaac", `${dirPath}/${f.file.name}`, contents, "cdn");
-                setSuccessfulUploads(su => [...(su ?? []), path?.replace(/\/$/, "") + "/" + f.file.name]);
-                setSelectionAndUpdateDir({path: `${path}/${f.file.name}`, isDir: false});
-            } catch (e) {
-                alert(`Couldn't upload file "${f.file.name}" to CDN. Perhaps it already exists.\n\nError details: ${e}`);
+            const reader = new FileReader();
+            reader.onload = async () => {
+                try {
+                    await githubCreate(appContext, "isaac", `${dirPath}/${f.file.name}`, reader.result as string, "cdn");
+                    setSuccessfulUploads(su => [...(su ?? []), path?.replace(/\/$/, "") + "/" + f.file.name]);
+                    setSelectionAndUpdateDir({path: `${path}/${f.file.name}`, isDir: false});
+                } catch (e) {
+                    alert(`Couldn't upload file "${f.file.name}" to CDN. Perhaps it already exists.\n\nError details: ${e}`);
+                }
             }
+            reader.readAsBinaryString(f.file);
         }
     };
 
@@ -242,7 +239,6 @@ export const CDNUploadModal = () => {
                         </>
                         : <small>Please choose at least one file</small>
                     }
-                   
                     {paths && paths.length > 0 && allFilesAreValid && selection?.isDir &&
                         <Button color={"success"} className={"w-100"} onClick={uploadToCDN}>
                             Upload file(s) to CDN
