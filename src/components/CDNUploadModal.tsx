@@ -118,7 +118,6 @@ export const CDNUploadModal = () => {
             setSelection({isDir: true, path: dir});
         }
     };
-    const [uploadInProgress, setUploadInProgress] = useState(false);
 
     // By default select the `isaac` subdirectory
     useEffect(() => {
@@ -150,20 +149,17 @@ export const CDNUploadModal = () => {
         // path should always start with "isaac/" after the previous check
         const dirPath = path.split("/").slice(1).join("/");
 
-        setSuccessfulUploads(undefined);
-        setUploadInProgress(true);
-        for (const f of files) {
+        const filesToUpload = [...files];
+        setFiles(null);
+        for (const f of filesToUpload) {
             try {
                 const contents = await readFile(f);
                 await githubCreate(appContext, "isaac", `${dirPath}/${f.file.name}`, contents, "cdn");
                 setSuccessfulUploads(su => [...(su ?? []), path?.replace(/\/$/, "") + "/" + f.file.name]);
             } catch (e) {
                 alert(`Couldn't upload file "${f.file.name}" to CDN. Perhaps it already exists.\n\nError details: ${e}`);
-            } finally {
-                setFiles(f => f && f.length > 1 ? f?.slice(1, f.length) : null)
             }
         }
-        setUploadInProgress(false);
     };
 
     const [showAccessibilityNotice, setShowAccessibilityNotice] = useState<boolean>(true);
@@ -250,10 +246,6 @@ export const CDNUploadModal = () => {
                         <Button color={"success"} className={"w-100"} onClick={uploadToCDN}>
                             Upload file(s) to CDN
                         </Button>}
-                    {uploadInProgress && 
-                        <Alert className="mt-2" color="warning">
-                            Processing uploads...
-                        </Alert>}
                     {successfulUploads && <Alert className={"mt-2"} color={"success"}>
                         Successfully uploaded files:
                         <ul>
