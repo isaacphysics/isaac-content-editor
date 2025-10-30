@@ -156,6 +156,7 @@ export const CDNUploadModal = () => {
                 const contents = await readFile(f);
                 await githubCreate(appContext, "isaac", `${dirPath}/${f.file.name}`, contents, "cdn");
                 setSuccessfulUploads(su => [...(su ?? []), path?.replace(/\/$/, "") + "/" + f.file.name]);
+                setSelectionAndUpdateDir({path: `${path}/${f.file.name}`, isDir: false});
             } catch (e) {
                 alert(`Couldn't upload file "${f.file.name}" to CDN. Perhaps it already exists.\n\nError details: ${e}`);
             }
