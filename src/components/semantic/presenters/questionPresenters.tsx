@@ -319,7 +319,7 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
         <EditableButtonText {...props} />
         <div className={styles.questionLabel}>
             Coordinate labels:<br/>
-            <small><em>This does not accept latex. Please use a unicode equivalent such as Ψ₁.</em></small>
+            <small><em>Placeholders do not accept latex. Please use a unicode equivalent such as Ψ₁.</em></small>
             <div className="row">
                 <div className="col col-lg-5">
                     {[...Array(question.numberOfDimensions)].map((_, i) => 
