@@ -337,14 +337,18 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
                 </div>
             </div>
         </div>
-        <div className={styles.questionLabel} /> {/* For spacing */}
-        <CoordinateQuestionContext.Provider value={{
+    </>;
+}
+
+export function CoordinateQuestionFooterPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
+    const question = props.doc as IsaacCoordinateQuestion;
+
+    return <CoordinateQuestionContext.Provider value={{
             numberOfCoordinates: question.numberOfCoordinates,
             numberOfDimensions: question.numberOfDimensions
         }}>
             <QuestionFooterPresenter {...props} />
-        </CoordinateQuestionContext.Provider>
-    </>;
+        </CoordinateQuestionContext.Provider>;
 }
 
 export function CoordinateChoiceItemInserter({insert, position, lengthOfCollection}: InserterProps) {

@@ -1,6 +1,7 @@
 import {
     AnswerPresenter,
     CoordinateQuestionPresenter,
+    CoordinateQuestionFooterPresenter,
     GraphSketcherQuestionPresenter,
     HintsPresenter,
     InlineQuestionPartPresenter,
@@ -393,7 +394,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     dndItem$choice: {bodyPresenter: DndChoicePresenter},
     coordinateItem$choice: {bodyPresenter: CoordinateItemPresenter},
     coordinateChoice: choice,
-    isaacCoordinateQuestion: {...question, headerPresenter: CoordinateQuestionPresenter, footerPresenter: undefined},
+    isaacCoordinateQuestion: {...question, headerPresenter: CoordinateQuestionPresenter, footerPresenter: CoordinateQuestionFooterPresenter},
     item,
     parsonsItem: item,
     item$choice: {bodyPresenter: ItemChoicePresenter},
