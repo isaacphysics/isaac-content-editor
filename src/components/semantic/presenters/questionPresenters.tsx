@@ -302,6 +302,8 @@ export const CoordinateQuestionContext = createContext<{numberOfCoordinates?: nu
 );
 const EditableNumberOfCoordinates = NumberDocPropFor<IsaacCoordinateQuestion>("numberOfCoordinates", {label: "Number of coordinates", block: true});
 const EditableDimensions = NumberDocPropFor<IsaacCoordinateQuestion>("numberOfDimensions", {label: "Dimensions", block: true});
+const EditableSeparator = EditableDocPropFor<IsaacCoordinateQuestion>("separator", {label: "Separator", block: true});
+const EditableButtonText = EditableDocPropFor<IsaacCoordinateQuestion>("buttonText", {label: "\"Add coordinate\" button text override", block: true});
 
 export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
     const {doc, update} = props;
@@ -312,6 +314,9 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
         <EditableNumberOfCoordinates {...props} />
         <CheckboxDocProp {...props} prop="ordered" label="Require that order of coordinates in choice and answer are the same" />
         <EditableDimensions {...props} />
+        <CheckboxDocProp {...props} prop="useBrackets" checkedIfUndefined label="Show brackets around coordinates" />
+        <EditableSeparator {...props} />
+        <EditableButtonText {...props} />
         <div className={styles.questionLabel}>
             Coordinate labels:<br/>
             <small><em>This does not accept latex. Please use a unicode equivalent such as Ψ₁.</em></small>
@@ -320,7 +325,10 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
                     {[...Array(question.numberOfDimensions)].map((_, i) => 
                      <div className={"mb-3"} key={i}>
                         <EditableCoordProp {...props} dim={i} prop={"placeholderValues"} label={"Placeholder ".concat((i+1).toString())} />
-                    </div>)}
+                        <span className="mx-2"/>
+                        <EditableCoordProp {...props} dim={i} prop={"suffixes"} label={"Suffix ".concat((i+1).toString())} />
+                    </div>
+                    )}
                 </div>
             </div>
             Significant figures (affects all values):

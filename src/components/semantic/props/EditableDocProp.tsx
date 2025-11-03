@@ -79,9 +79,11 @@ function arrayWith<T>(array: T[], index: number, value: T): T[] {
 }
 
 export const EditableDocPropForCoords = (
-    dimension: number, prop: "coordinates" | "placeholderValues", defaultProps?: CustomTextProps) => {
+    dimension: number, prop: "coordinates" | "placeholderValues" | "suffixes", defaultProps?: CustomTextProps) => {
     const typedRender = <D extends CoordinateItem | IsaacCoordinateQuestion>({doc, update, ...rest }: EditableDocProps<D>, ref: React.ForwardedRef<EditableTextRef>) => {
-        const currentVal = (prop === "coordinates") ? (doc as CoordinateItem)["coordinates"] : (doc as IsaacCoordinateQuestion)["placeholderValues"];
+        const currentVal = (prop === "coordinates") ? (doc as CoordinateItem)["coordinates"]
+                            : (prop === "placeholderValues") ? (doc as IsaacCoordinateQuestion)["placeholderValues"]
+                                : (doc as IsaacCoordinateQuestion)["suffixes"];
         return <EditableText
                 onSave={(newText) => {
                     update({
@@ -105,7 +107,7 @@ export const EditableTitleProp = EditableDocPropFor("title", {format: "latex", b
 export const EditableSubtitleProp = EditableDocPropFor("subtitle", {block: true});
 export const EditableValueProp = EditableDocPropFor("value", {block: true});
 export const EditableAltTextProp = EditableDocPropFor<Item>("altText", {block: true, label: "Accessible alt text"});
-export const EditableCoordProp = (props: {dim: number, prop: "coordinates" | "placeholderValues"} & PresenterProps<CoordinateItem> & CustomTextProps) => {
+export const EditableCoordProp = (props: {dim: number, prop: "coordinates" | "placeholderValues" | "suffixes"} & PresenterProps<CoordinateItem> & CustomTextProps) => {
     const {dim, prop, ...restProps} = props;
     const Component = EditableDocPropForCoords(dim, prop);
     return <Component {...restProps} />;
