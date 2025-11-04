@@ -78,17 +78,22 @@ function arrayWith<T>(array: T[], index: number, value: T): T[] {
     return [...array.slice(0, index), value, ...array.slice(index + 1)];
 }
 
-export const EditableDocPropForCoords = (
-    dimension: number, prop: "coordinates" | "placeholderValues" | "suffixes", defaultProps?: CustomTextProps) => {
-    const typedRender = <D extends CoordinateItem | IsaacCoordinateQuestion>({doc, update, ...rest }: EditableDocProps<D>, ref: React.ForwardedRef<EditableTextRef>) => {
-        const currentVal = (prop === "coordinates") ? (doc as CoordinateItem)["coordinates"]
-                            : (prop === "placeholderValues") ? (doc as IsaacCoordinateQuestion)["placeholderValues"]
-                                : (doc as IsaacCoordinateQuestion)["suffixes"];
+export const EditableDimensionalDocProp = <
+    D extends Content,
+    K extends KeysWithValsOfType<D, (string | undefined)[]> = KeysWithValsOfType<D, (string | undefined)[]>
+    // we require that the prop be an array of strings as the EditableText component used to edit each only supports strings;
+    // there is no strict requirement that this be the case, but the implementation is not fully generic
+>(
+    prop: K,
+    defaultProps?: CustomTextProps
+) => {
+    const typedRender = ({doc, update, dimension, ...rest }: EditableDocProps<D> & {dimension: number}, ref: React.ForwardedRef<EditableTextRef>) => {
+        const currentVal = doc[prop] as (string | undefined)[];
         return <EditableText
                 onSave={(newText) => {
                     update({
                         ...doc,
-                        [prop]: arrayWith(currentVal ?? new Array<string>(dimension).fill(""), dimension, newText)
+                        [prop]: arrayWith(currentVal ?? new Array<string>(dimension).fill(""), dimension, newText ?? "")
                     });
                 }}
                 /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
@@ -107,8 +112,3 @@ export const EditableTitleProp = EditableDocPropFor("title", {format: "latex", b
 export const EditableSubtitleProp = EditableDocPropFor("subtitle", {block: true});
 export const EditableValueProp = EditableDocPropFor("value", {block: true});
 export const EditableAltTextProp = EditableDocPropFor<Item>("altText", {block: true, label: "Accessible alt text"});
-export const EditableCoordProp = (props: {dim: number, prop: "coordinates" | "placeholderValues" | "suffixes"} & PresenterProps<CoordinateItem> & CustomTextProps) => {
-    const {dim, prop, ...restProps} = props;
-    const Component = EditableDocPropForCoords(dim, prop);
-    return <Component {...restProps} />;
-};

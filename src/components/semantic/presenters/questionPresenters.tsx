@@ -1,5 +1,5 @@
 import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
-import {EditableCoordProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
+import {EditableDimensionalDocProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
 import styles from "../styles/question.module.css";
 import {Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,} from "reactstrap";
 import {
@@ -304,6 +304,8 @@ const EditableNumberOfCoordinates = NumberDocPropFor<IsaacCoordinateQuestion>("n
 const EditableDimensions = NumberDocPropFor<IsaacCoordinateQuestion>("numberOfDimensions", {label: "Dimensions", block: true});
 const EditableSeparator = EditableDocPropFor<IsaacCoordinateQuestion>("separator", {label: "Separator", block: true});
 const EditableButtonText = EditableDocPropFor<IsaacCoordinateQuestion>("buttonText", {label: "\"Add coordinate\" button text override", block: true});
+const EditablePlaceholderValuesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("placeholderValues");
+const EditableSuffixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("suffixes");
 
 export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
     const {doc, update} = props;
@@ -324,9 +326,10 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
                 <div className="col col-lg-5">
                     {[...Array(question.numberOfDimensions)].map((_, i) => 
                      <div className={"mb-3"} key={i}>
-                        <EditableCoordProp {...props} dim={i} prop={"placeholderValues"} label={"Placeholder ".concat((i+1).toString())} />
+                        <EditablePlaceholderValuesProp {...props} dimension={i} label={"Placeholder ".concat((i+1).toString())} />
+                        
                         <span className="mx-2"/>
-                        <EditableCoordProp {...props} dim={i} prop={"suffixes"} label={"Suffix ".concat((i+1).toString())} />
+                        <EditableSuffixesProp {...props} dimension={i} label={"Suffix ".concat((i+1).toString())} />
                     </div>
                     )}
                 </div>
