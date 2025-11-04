@@ -4,6 +4,7 @@ import markupStyles from "../isaac/styles/markup.module.css";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { DropZoneQuestionContext } from "./semantic/presenters/ItemQuestionPresenter";
 import throttle from "lodash/throttle";
+import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
@@ -90,6 +91,7 @@ interface FigureDropZoneModalProps {
 export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
     const {open, toggle, imgSrc, initialDropZoneIndex, dropZones, setDropZones, figureNum} = props;
     const dropZoneQuestionContext = useContext(DropZoneQuestionContext);
+    const inlineQuestionContext = useContext(InlineQuestionContext);
     const imageRef = useRef<HTMLImageElement>(null);
 
     const [percentageLeft, setPercentageLeft] = useState<(number | "")[]>(dropZones.map(dz => dz.left));
@@ -97,8 +99,8 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
 
     const [imageScaleFactor, setImageScaleFactor] = useState({x: 1, y: 1});
 
-    if (!dropZoneQuestionContext.isDndQuestion) {
-        window.alert("No DND question context found. Cancelling...");
+    if (!dropZoneQuestionContext.isDndQuestion && !inlineQuestionContext.isInlineQuestion) {
+        window.alert("No DND / inline question context found. Cancelling...");
         return null;
     }
     
@@ -212,7 +214,11 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
                     setDropZones([...dropZones, {id: `F${figureNum ?? ""}-${dropZones.length}`, minWidth: "100px", minHeight: "auto", left: 50, top: 50}])
                     setPercentageLeft([...percentageLeft, 50]);
                     setPercentageTop([...percentageTop, 50]);
-                    dropZoneQuestionContext.dropZoneCount = dropZoneQuestionContext.dropZoneCount ? dropZoneQuestionContext.dropZoneCount + 1 : 1;
+                    if (dropZoneQuestionContext.isDndQuestion) {
+                        dropZoneQuestionContext.dropZoneCount = dropZoneQuestionContext.dropZoneCount ? dropZoneQuestionContext.dropZoneCount + 1 : 1;
+                    } else if (inlineQuestionContext.isInlineQuestion) {
+                        inlineQuestionContext.setNumParts?.(n => n ? n + 1 : 1);
+                    }
                 }}>
                     Add drop zone
                 </button>

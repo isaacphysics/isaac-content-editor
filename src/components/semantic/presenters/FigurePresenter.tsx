@@ -15,6 +15,7 @@ import {NON_STATIC_FIGURE_FLAG} from "../../../isaac/IsaacTypes";
 import {Alert} from "reactstrap";
 import { DropZoneQuestionContext } from "./ItemQuestionPresenter";
 import { FigureDropZoneModal, PositionableDropZoneProps } from "../../FigureDropZoneModal";
+import { InlineQuestionContext } from "./questionPresenters";
 
 export function FigurePresenter(props: PresenterProps<Figure>) {
     const {doc, update} = props;
@@ -29,6 +30,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
     const {data} = useGithubContents(appContext, getContentPathFromSrc(doc.src), isAppAsset(doc.src) ? "app" : undefined);
 
     const itemQuestionContext = useContext(DropZoneQuestionContext);
+    const inlineQuestionContext = useContext(InlineQuestionContext);
     const [dndDropZoneModalOpen, setDndModalDropZoneOpen] = useState(false);
     const toggleDndDropZoneModal = () => setDndModalDropZoneOpen(o => !o);
     const [dropZones, setDropZones] = useState<PositionableDropZoneProps[]>(doc.dropZones ?? []);
@@ -69,6 +71,11 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
         update({...doc, dropZones});
         if (itemQuestionContext.isDndQuestion) {
             itemQuestionContext.figureMap[doc.id as string] = [dropZones, setDropZones];
+        } else if (inlineQuestionContext.isInlineQuestion) {
+            inlineQuestionContext.setFigureMap?.(prev => ({
+                ...prev,
+                [doc.id as string]: dropZones
+            }) );
         }
     }, [itemQuestionContext.isDndQuestion, dropZones, setDropZones]);
 
@@ -187,6 +194,15 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
             {imageRef.current?.src && <FigureDropZoneModal 
                 open={dndDropZoneModalOpen} toggle={toggleDndDropZoneModal} imgSrc={imageRef.current.src} 
                 initialDropZoneIndex={itemQuestionContext.calculateDZIndexFromFigureId(doc.id as string)}
+                dropZones={dropZones} setDropZones={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
+            />}
+        </div>}
+        {inlineQuestionContext.isInlineQuestion && <div className={styles.clozeFigureFooter}>
+            <button onClick={toggleDndDropZoneModal} disabled={!imageRef.current?.src}>Add inline entry to figure</button>
+            {!!dropZones.length && <span style={{color: "grey"}}> ({dropZones.length} managed zone{dropZones.length !== 1 ? "s" : ""})</span>}
+            {imageRef.current?.src && <FigureDropZoneModal 
+                open={dndDropZoneModalOpen} toggle={toggleDndDropZoneModal} imgSrc={imageRef.current.src} 
+                initialDropZoneIndex={inlineQuestionContext.numParts ?? 0}
                 dropZones={dropZones} setDropZones={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
             />}
         </div>}

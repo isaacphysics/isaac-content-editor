@@ -29,6 +29,7 @@ import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresent
 import { InlinePartsPresenter } from "./InlinePartsPresenter";
 import { EditableInlineTypeProp, INLINE_TYPES } from "./InlineQuestionTypePresenter";
 import { isAda } from "../../../services/site";
+import { PositionableDropZoneProps } from "../../FigureDropZoneModal";
 
 export const QuestionContext = React.createContext<Content | null>(null);
 
@@ -561,11 +562,14 @@ export const InlineQuestionContext = createContext<{
     numParts?: number,
     setNumParts?: React.Dispatch<React.SetStateAction<number>>,
     addPart?: (id: string) => void,
+    figureMap?: {[figureId: string]: PositionableDropZoneProps[]}
+    setFigureMap?: React.Dispatch<React.SetStateAction<{[figureId: string]: PositionableDropZoneProps[]}>>,
 }>({});
 
 export function InlineRegionPresenter(props: PresenterProps<IsaacInlineQuestion>) {
     const [numParts, setNumParts] = useState(0);
-    return <InlineQuestionContext.Provider value={{isInlineQuestion: true, numParts, setNumParts}}>
+    const [figureMap, setFigureMap] = useState<{[figureId: string]: PositionableDropZoneProps[]}>({});
+    return <InlineQuestionContext.Provider value={{isInlineQuestion: true, numParts, setNumParts, figureMap, setFigureMap}}>
         <h6><EditableIDProp {...props} label="Question ID"/></h6>
         <ContentValueOrChildrenPresenter {...props} />
         <InlinePartsPresenter {...props} />
