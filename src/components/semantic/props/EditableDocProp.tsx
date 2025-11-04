@@ -88,7 +88,7 @@ export const EditableDimensionalDocProp = <
     defaultProps?: CustomTextProps
 ) => {
     const typedRender = ({doc, update, dimension, ...rest }: EditableDocProps<D> & {dimension: number}, ref: React.ForwardedRef<EditableTextRef>) => {
-        const currentVal = doc[prop] as (string | undefined)[];
+        const currentVal = doc[prop] as unknown as (string | undefined)[];
         return <EditableText
                 onSave={(newText) => {
                     update({
