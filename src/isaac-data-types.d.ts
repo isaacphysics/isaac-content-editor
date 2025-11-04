@@ -58,6 +58,10 @@ export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
     numberOfCoordinates?: number;
     numberOfDimensions?: number;
     placeholderValues?: string[];
+    useBrackets?: boolean;
+    separator?: string;
+    suffixes?: string[];
+    buttonText?: string;
 }
 
 export interface IsaacConceptPage extends SeguePage {

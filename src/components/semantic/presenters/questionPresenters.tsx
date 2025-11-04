@@ -1,5 +1,5 @@
 import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
-import {EditableCoordProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
+import {EditableDimensionalDocProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
 import styles from "../styles/question.module.css";
 import {Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,} from "reactstrap";
 import {
@@ -302,6 +302,10 @@ export const CoordinateQuestionContext = createContext<{numberOfCoordinates?: nu
 );
 const EditableNumberOfCoordinates = NumberDocPropFor<IsaacCoordinateQuestion>("numberOfCoordinates", {label: "Number of coordinates", block: true});
 const EditableDimensions = NumberDocPropFor<IsaacCoordinateQuestion>("numberOfDimensions", {label: "Dimensions", block: true});
+const EditableSeparator = EditableDocPropFor<IsaacCoordinateQuestion>("separator", {label: "Separator", block: true});
+const EditableButtonText = EditableDocPropFor<IsaacCoordinateQuestion>("buttonText", {label: "\"Add coordinate\" button text override", block: true});
+const EditablePlaceholderValuesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("placeholderValues");
+const EditableSuffixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("suffixes");
 
 export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
     const {doc, update} = props;
@@ -312,15 +316,22 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
         <EditableNumberOfCoordinates {...props} />
         <CheckboxDocProp {...props} prop="ordered" label="Require that order of coordinates in choice and answer are the same" />
         <EditableDimensions {...props} />
+        <CheckboxDocProp {...props} prop="useBrackets" checkedIfUndefined label="Show brackets around coordinates" />
+        <EditableSeparator {...props} />
+        <EditableButtonText {...props} />
         <div className={styles.questionLabel}>
             Coordinate labels:<br/>
-            <small><em>This does not accept latex. Please use a unicode equivalent such as Ψ₁.</em></small>
+            <small><em>Placeholders do not accept latex. Please use a unicode equivalent such as Ψ₁.</em></small>
             <div className="row">
                 <div className="col col-lg-5">
                     {[...Array(question.numberOfDimensions)].map((_, i) => 
                      <div className={"mb-3"} key={i}>
-                        <EditableCoordProp {...props} dim={i} prop={"placeholderValues"} label={"Placeholder ".concat((i+1).toString())} />
-                    </div>)}
+                        <EditablePlaceholderValuesProp {...props} dimension={i} label={"Placeholder ".concat((i+1).toString())} />
+                        
+                        <span className="mx-2"/>
+                        <EditableSuffixesProp {...props} dimension={i} label={"Suffix ".concat((i+1).toString())} />
+                    </div>
+                    )}
                 </div>
             </div>
             Significant figures (affects all values):
