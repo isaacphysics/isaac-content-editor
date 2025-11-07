@@ -12,6 +12,7 @@ import { FormFeedback } from "reactstrap";
 import { HintsPresenter } from "./questionPresenters";
 
 const MaxMarksEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("maxMarks");
+const PassMarkEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("passMark");
 
 export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuestion>) {
     const {doc, update} = props;
@@ -202,6 +203,15 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                         }
                     </td>
                     <td><MaxMarksEditor {...props} /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong><pre>Pass mark</pre></strong>
+                        {doc.passMark === undefined && 
+                            <FormFeedback className={styles.feedback}> Using maxMarks value as pass mark </FormFeedback>
+                        }
+                    </td>
+                    <td><PassMarkEditor {...props} /></td>
                 </tr>
                 <tr>
                     <td>

@@ -475,6 +475,7 @@ export interface Question extends Content {
     answer?: ContentBase;
     hints?: ContentBase[];
     defaultFeedback?: Content;
+    passMark?: number;
 }
 
 export interface RegexPattern extends Choice {
