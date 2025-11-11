@@ -549,7 +549,7 @@ export type QuizFeedbackMode = "NONE" | "OVERALL_MARK" | "SECTION_MARKS" | "DETA
 
 export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
 
-export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "core" | "advanced" | "all";
+export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "core" | "advanced" | "post_18" | "all";
 
 export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "sqa" | "ada" | "all";
 
