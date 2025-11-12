@@ -12,6 +12,7 @@ export const stageList : Stage[] = [
     "scotland_advanced_higher",
     "core",
     "advanced",
+    "post_18",
 ];
 export const stagePrintList = [
     "University",
@@ -25,6 +26,7 @@ export const stagePrintList = [
     "Advanced Higher (Scotland)",
     "Core",
     "Advanced",
+    "Post-18",
 ];
 
 export const subjectList = ["biology","chemistry","physics","maths"]
