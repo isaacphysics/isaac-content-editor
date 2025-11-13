@@ -206,7 +206,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                 </tr>
                 <tr>
                     <td>
-                        <strong><pre>Pass mark</pre></strong>
+                        <strong>Pass mark</strong>
                         {doc.passMark === undefined && 
                             <FormFeedback className={styles.feedback}> Using maxMarks value as pass mark </FormFeedback>
                         }
