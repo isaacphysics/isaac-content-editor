@@ -1,7 +1,6 @@
 import React from "react";
 import { PresenterProps } from "../registry";
 import { IsaacLLMFreeTextQuestion, LLMFreeTextMarkedExample, LLMFreeTextMarkSchemeEntry } from "../../../isaac-data-types";
-import { NumberDocPropFor } from "../props/NumberDocPropFor";
 import { EditableText } from "../props/EditableText";
 import { isDefined } from "../../../utils/types";
 import { CheckboxDocProp } from "../props/CheckboxDocProp";
@@ -10,9 +9,6 @@ import styles from "../styles/editable.module.css";
 import { evaluateMarkingFormula, evaluateMarkTotal, tallyMarkUses } from "../../../utils/llmMarkingFormula";
 import { FormFeedback } from "reactstrap";
 import { HintsPresenter } from "./questionPresenters";
-
-const MaxMarksEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("maxMarks");
-const PassMarkEditor = NumberDocPropFor<IsaacLLMFreeTextQuestion>("passMark");
 
 export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuestion>) {
     const {doc, update} = props;
@@ -202,16 +198,37 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                             <FormFeedback className={styles.feedback}> maxMarks is a required field </FormFeedback>
                         }
                     </td>
-                    <td><MaxMarksEditor {...props} /></td>
+                    <td>
+                        <EditableText 
+                            text={doc.maxMarks?.toString()}
+                            hasError={value => Number.isNaN(Number(value)) ? ["maxMarks must be a number"] :
+                                Number(value) < 0 ? ["maxMarks cannot be negative"] :
+                                undefined}
+                            onSave={mm => mm && update({...doc, maxMarks: Number(mm)})}
+                        />
+                    </td>
                 </tr>
                 <tr>
                     <td>
                         <strong>Pass mark</strong>
-                        {doc.passMark === undefined && 
-                            <FormFeedback className={styles.feedback}> Using maxMarks value as pass mark </FormFeedback>
-                        }
+                        <div>
+                            {(doc.passMark === undefined && doc.maxMarks !== undefined) ?
+                                <FormFeedback className={styles.feedback}> Using maxMarks value as default pass mark </FormFeedback> :
+                                (doc.passMark !== undefined && doc.maxMarks !== undefined && doc.passMark > doc.maxMarks) &&
+                                <FormFeedback className={styles.feedback}> Pass mark cannot be greater than max marks </FormFeedback>
+                            }
+                        </div>
                     </td>
-                    <td><PassMarkEditor {...props} /></td>
+                    <td>
+                        <EditableText 
+                            text={doc.passMark?.toString()}
+                            hasError={value => Number.isNaN(Number(value)) ? ["Pass mark must be a number"] :
+                                Number(value) > (doc.maxMarks ?? 0) ? ["Pass mark cannot be greater than maxMarks"] :
+                                Number(value) < 0 ? ["Pass mark cannot be negative"] :
+                                undefined}
+                            onSave={pm => pm && update({...doc, passMark: Number(pm)})}
+                        />
+                    </td>
                 </tr>
                 <tr>
                     <td>
