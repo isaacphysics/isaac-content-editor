@@ -56,6 +56,12 @@ export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
     significantFiguresMax?: number;
     ordered?: boolean;
     numberOfCoordinates?: number;
+    numberOfDimensions?: number;
+    placeholderValues?: string[];
+    useBrackets?: boolean;
+    separator?: string;
+    suffixes?: string[];
+    buttonText?: string;
 }
 
 export interface IsaacConceptPage extends SeguePage {
@@ -92,7 +98,48 @@ export interface IsaacFeaturedProfile extends Content {
     homepage?: string;
 }
 
-export interface IsaacFreeTextQuestion extends IsaacQuestionBase {
+export interface IsaacFreeTextQuestion extends Question {
+}
+
+export interface LLMFreeTextMarkSchemeEntry {
+    jsonField?: string;
+    shortDescription?: string;
+    marks?: number;
+}
+
+export interface LLMFormulaNode {
+    type: "LLMMarkingFunction" | "LLMMarkingVariable" | "LLMMarkingConstant";
+}
+
+export interface LLMFunctionNode extends LLMFormulaNode{
+    arguments: LLMFormulaNode[] | LLMFormulaNode;
+    name: string;
+    type: "LLMMarkingFunction";
+}
+
+export interface LLMVariableNode extends LLMFormulaNode {
+    name: string;
+    type: "LLMMarkingVariable";
+}
+
+export interface LLMConstantNode extends LLMFormulaNode {
+    value: number;
+    type: "LLMMarkingConstant";
+}
+
+export interface LLMFreeTextMarkedExample {
+    answer?: string;
+    marks?: Record<string, number>;
+    marksAwarded?: number;
+}
+
+export interface IsaacLLMFreeTextQuestion extends IsaacQuestionBase {
+    markScheme?: LLMFreeTextMarkSchemeEntry[];
+    maxMarks?: number;
+    additionalMarkingInstructions?: string;
+    markingFormula?: LLMFormulaNode;
+    markingFormulaString?: string;
+    markedExamples?: LLMFreeTextMarkedExample[];
 }
 
 export interface IsaacGraphSketcherQuestion extends IsaacQuestionBase {
@@ -147,9 +194,32 @@ export interface IsaacQuickQuestion extends IsaacQuestionBase {
 }
 
 export interface IsaacQuiz extends SeguePage {
-    visibleToStudents?: boolean;
     hiddenFromRoles?: string[];
     rubric?: Content;
+}
+
+export interface SidebarEntry extends Content {
+    label?: string;
+    pageId?: string;
+    pageType?: SidebarEntryType;
+}
+
+export interface SidebarGroup extends SidebarEntry {
+    sidebarEntries?: SidebarEntry[];
+}
+
+export interface Sidebar extends Content {
+    sidebarEntries?: SidebarEntry[];
+}
+
+export interface IsaacBookIndexPage extends SeguePage {
+    sidebar?: string; // the ID of the sidebar
+    coverImage?: Image;
+}
+
+export interface IsaacBookDetailPage extends SeguePage {
+    gameboards?: string[];
+    extensionGameboards?: string[];
 }
 
 export interface IsaacQuizSection extends Content {
@@ -173,6 +243,9 @@ export interface IsaacInlinePart extends IsaacQuestionBase {
 }
 
 export interface IsaacSymbolicChemistryQuestion extends IsaacSymbolicQuestion {
+    isNuclear?: boolean;
+    allowPermutations?: boolean;
+    allowScalingCoefficients?: boolean;
 }
 
 export interface IsaacSymbolicLogicQuestion extends IsaacSymbolicQuestion {
@@ -263,6 +336,7 @@ export interface CodeSnippet extends Content {
     language?: string;
     code?: string;
     disableHighlighting?: boolean;
+    expandable?: boolean;
     url?: string;
 }
 
@@ -274,7 +348,12 @@ export interface InteractiveCodeSnippet extends CodeSnippet {
     dataUrl?: string;
 }
 
-export interface CodeTabs extends Content {
+export interface IsaacTabs extends Content {
+    expandable?: boolean;
+    hideTitles?: boolean;
+}
+
+export interface CodeTabs extends IsaacTabs {
 }
 
 export interface Content extends ContentBase {
@@ -385,8 +464,7 @@ export interface ParsonsItem extends Item {
 }
 
 export interface CoordinateItem extends Item {
-    x?: string;
-    y?: string;
+    coordinates?: string[];
 }
 
 export interface Quantity extends Choice {
@@ -397,6 +475,7 @@ export interface Question extends Content {
     answer?: ContentBase;
     hints?: ContentBase[];
     defaultFeedback?: Content;
+    passMark?: number;
 }
 
 export interface RegexPattern extends Choice {
@@ -407,6 +486,8 @@ export interface RegexPattern extends Choice {
 
 export interface SeguePage extends Content {
     summary?: string;
+    permissions?: string;
+    notes?: string;
 }
 
 export interface StringChoice extends Choice {
@@ -469,9 +550,9 @@ export type QuizFeedbackMode = "NONE" | "OVERALL_MARK" | "SECTION_MARKS" | "DETA
 
 export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
 
-export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "all";
+export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "core" | "advanced" | "post_18" | "all";
 
-export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "sqa" | "all";
+export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "sqa" | "ada" | "all";
 
 export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge_1" | "challenge_2" | "challenge_3";
 

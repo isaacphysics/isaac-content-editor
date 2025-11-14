@@ -5,6 +5,7 @@ import katex, { KatexOptions } from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
 import {BooleanNotation, dropZoneRegex, FigureNumberingContext, FigureNumbersById} from "../IsaacTypes";
 import renderA11yString from "../katex-a11y";
+import { isAda } from "../../services/site";
 
 type MathJaxMacro = string|[string, number];
 
@@ -257,7 +258,11 @@ export function katexify(html: string, user: null, booleanNotation : BooleanNota
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
                 let macrosToUse;
-                macrosToUse = booleanNotation?.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
+                if (isAda) {
+                    macrosToUse = booleanNotation?.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
+                } else {
+                    macrosToUse = KatexBaseMacros;
+                }
                 macrosToUse = {...macrosToUse, "\\ref": (context: {consumeArgs: (n: number) => {text: string}[][]}) => {
                         const args = context.consumeArgs(1);
                         const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");

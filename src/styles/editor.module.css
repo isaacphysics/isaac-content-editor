@@ -57,15 +57,22 @@
     border-top: 1px solid rgba(0,0,0,0.1);
 }
 
-.leftMenuPopupMenu button {
+.leftMenuPopupMenu button, .leftMenuPopupMenu a {
     border: none;
     background-color: #fff;
     width: 100%;
     text-align: left;
     padding-left: 0.5em;
+    display: inline-block;
+}
+.leftMenuPopupMenu a {
+    color: #000;
+    padding-block: 1px;
+    padding-inline-end: 6px;
+    text-decoration: none;
 }
 
-.leftMenuPopupMenu button:hover {
+.leftMenuPopupMenu button:hover, .leftMenuPopupMenu a:hover {
     background: #eee;
 }
 
@@ -232,12 +239,18 @@
 }
 
 .iconButton {
+    color: #000;
     border: 1px solid #6c757d;
     border-radius: 4px;
     background: #fff;
     margin: 5px 5px;
     padding: 0 1rem;
     min-width: 32px;
+    line-height: inherit;
+}
+a.iconButton {
+    /* buttons get extra padding from the browser! */
+    padding-top: 2px;
 }
 
 .iconButton + .iconButton {
@@ -250,7 +263,9 @@
 }
 
 .iconButton:hover {
+    color: #000;
     background: #eee;
+    text-decoration: none;
 }
 
 @keyframes flash {

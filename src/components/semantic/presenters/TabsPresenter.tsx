@@ -2,17 +2,19 @@
 import React, { MutableRefObject, useCallback, useMemo, useRef, useState } from "react";
 import {Button, ButtonGroup} from "reactstrap";
 
-import { Content } from "../../../isaac-data-types";
+import { Content, IsaacTabs } from "../../../isaac-data-types";
 import { safeLowercase } from "../../../utils/strings";
 import { useFixedRef } from "../../../utils/hooks";
 
 import { SemanticItem } from "../SemanticItem";
 import { deriveNewDoc } from "./ListChildrenPresenter";
-import { EditableIDProp, EditableTitleProp } from "../props/EditableDocProp";
+import { EditableDocPropWithStyle, EditableIDProp, EditableTitleProp } from "../props/EditableDocProp";
 import { EditableTextRef } from "../props/EditableText";
 import { PresenterProps } from "../registry";
 import styles from "../styles/tabs.module.css";
 import { useKeyedList, useWithIndex } from "../../../utils/keyedListHook";
+import { CheckboxDocProp } from "../props/CheckboxDocProp";
+import { isAda } from "../../../services/site";
 
 export type TabsSettings = {
     emptyDescription: string;
@@ -33,6 +35,13 @@ export type TabsProps = {
     index: number;
     setIndex: (newIndex: number) => void;
 } & TabsSettings;
+
+const EditableTabsLayoutProp = EditableDocPropWithStyle("layout", [
+    {value: "tabs", label: "Tabs"},
+    {value: "buttons", label: "Buttons"},
+    {value: "dropdowns", label: "Dropdowns"},
+    {value: undefined, label: "Default"}
+], "Tab display type:", {value: "tabs", label: "Tabs"}, {block: true});
 
 export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styles, suppressHeaderNames, showTitles}: TabsProps) {
     const elementNameLC = safeLowercase(elementName);
@@ -105,7 +114,7 @@ export function TabsMain({docRef, currentChild, updateCurrentChild, doRemove, do
     </div>;
 }
 
-export function useTabs({doc, update, hideTitles}: TabsPresenterProps, settings: TabsSettings) {
+export function useTabs({doc, update}: PresenterProps<IsaacTabs>, settings: TabsSettings) {
     const [index, setIndex] = useState(0);
     const docRef = useFixedRef(doc);
 
@@ -166,10 +175,8 @@ export function useTabs({doc, update, hideTitles}: TabsPresenterProps, settings:
     return {editTitleRef, currentChild, allProps, currentChildProps};
 }
 
-type TabsPresenterProps = PresenterProps & { hideTitles?: boolean };
-
-export function TabsPresenter(props: TabsPresenterProps) {
-    const showTitles = !props.hideTitles;
+export function TabsPresenter(props: PresenterProps<IsaacTabs>) {
+    const showTitles = !props.doc.hideTitles;
 
     const {
         editTitleRef,
@@ -185,7 +192,11 @@ export function TabsPresenter(props: TabsPresenterProps) {
     });
 
     return <div className={styles.wrapper}>
-        <TabsHeader {...allProps} />
+        <div className="d-flex">
+            <EditableTabsLayoutProp {...props}/>
+            {isAda && <CheckboxDocProp className="ml-4 mt-2" doc={props.doc} update={props.update} prop="expandable" label="Expandable" />}
+        </div>
+        <TabsHeader {...allProps} {...props} />
         <TabsMain {...allProps} back="◀" forward="▶" contentHeader={
             showTitles && currentChild ? <div className={styles.meta}>
                 <h3><EditableTitleProp ref={editTitleRef} {...currentChildProps}

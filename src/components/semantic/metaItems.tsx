@@ -46,6 +46,9 @@ export const MetaItems = asMetaItems({
     appId: "App ID",
     appAccessKey: "Access Key",
     attribution: ["Attribution", {deleteIfEmpty: true}],
+    permissions: ["Permissions", {deleteIfEmpty: true}],
+    notes: ["Notes", {deleteIfEmpty: true}],
+    teacherNotes: ["Teacher Notes", {type: "textarea", deleteIfEmpty: true}],
     supersededBy: ["Superseded By", {deleteIfEmpty: true}],
     level: ["Level", {type: "number", hasWarning: (value) => {
         const level = value as number; // Already parsed by virtue of type: "number"
@@ -69,7 +72,7 @@ export const MetaItems = asMetaItems({
     description: "Description",
     url: "URL",
     relatedContent: ["Related content", {presenter: RelatedContentPresenter}],
-    visibleToStudents: ["Visible to students", {presenter: VisibleToStudents}],
+    hiddenFromStudentsAndTutors: ["Hidden from students/tutors", {presenter: HiddenFromStudentsAndTutors}],
     hiddenFromTeachers: ["Hidden from teachers", {presenter: HiddenFromTeachers}],
     linkedGameboards: ["Linked gameboards", {presenter: LinkedGameboardsPresenter}],
 
@@ -155,23 +158,23 @@ function Deprecated({doc, update, ...rest}: MetaItemPresenterProps<Content>) {
 }
 
 
-function VisibleToStudents({doc, update, ...rest}: MetaItemPresenterProps<IsaacQuiz>) {
-    const onChange = (visibleToStudents: boolean) => {
+function HiddenFromStudentsAndTutors({doc, update, ...rest}: MetaItemPresenterProps<IsaacQuiz>) {
+    const onChange = (hiddenFromStudentsAndTutors: boolean) => {
         let hiddenFromRoles = doc.hiddenFromRoles;
-        if (visibleToStudents) {
-            hiddenFromRoles = []; // If students can see it, everyone can see it
+        if (!hiddenFromStudentsAndTutors) {
+            hiddenFromRoles = []; // If they can see it, everyone can!
         } else {
             // Duplicate not visible into the hidden from roles
-            hiddenFromRoles = [...new Set([...hiddenFromRoles ?? [], "STUDENT"]).keys()];
+            hiddenFromRoles = [...new Set([...hiddenFromRoles ?? [], "STUDENT", "TUTOR"]).keys()];
         }
         update({
             ...doc,
-            visibleToStudents,
             hiddenFromRoles,
         });
     };
 
-    return <Input type="checkbox" {...rest} checked={!!doc.visibleToStudents} onChange={(e) => onChange(e.target.checked)} />;
+    const currentlyHidden = doc.hiddenFromRoles?.includes("STUDENT") && doc.hiddenFromRoles?.includes("TUTOR");
+    return <Input type="checkbox" {...rest} checked={currentlyHidden} onChange={(e) => onChange(e.target.checked)} />;
 }
 
 function DateTimeInput({doc, update, prop, options, ...rest}: MetaItemPresenterProps<IsaacEventPage>) {
@@ -228,17 +231,14 @@ function DateTimeInput({doc, update, prop, options, ...rest}: MetaItemPresenterP
 
 function HiddenFromTeachers({doc, update, ...rest}: MetaItemPresenterProps<IsaacQuiz>) {
     const onChange = (hiddenFromTeachers: boolean) => {
-        let visibleToStudents = doc.visibleToStudents;
         let hiddenFromRoles = doc.hiddenFromRoles;
         if (hiddenFromTeachers) {
-            hiddenFromRoles = [...new Set([...hiddenFromRoles ?? [], "TEACHER", "STUDENT"]).keys()];
-            visibleToStudents = false; // If teachers can't see it, neither can students
+            hiddenFromRoles = [...new Set([...hiddenFromRoles ?? [], "TEACHER", "TUTOR", "STUDENT"]).keys()];
         } else {
             hiddenFromRoles = hiddenFromRoles?.filter((role) => role !== "TEACHER");
         }
         update({
             ...doc,
-            visibleToStudents,
             hiddenFromRoles,
         });
     };

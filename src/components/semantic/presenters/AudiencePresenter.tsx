@@ -2,15 +2,22 @@ import React, {Fragment, useState} from "react";
 import {Button} from "reactstrap";
 
 import {AudienceContext, Difficulty, ExamBoard, RoleRequirement, Stage} from "../../../isaac-data-types";
-import {isAda} from "../../../services/site";
+import {isAda, siteSpecific} from "../../../services/site";
 import {ExtractRecordArrayValue, isDefined} from "../../../utils/types";
 
 import {PresenterProps} from "../registry";
 import styles from "../styles/audience.module.css";
 
+function adaDifficulty(doc : AudienceContext[]): Difficulty | undefined {
+    return  isAda && doc[0].difficulty ? doc[0].difficulty[0] : undefined;
+} 
+
 function defaultAudience(): AudienceContext {
-    return isAda ? {stage: ["a_level"], examBoard: ["ocr"]} : {stage: ["a_level"]};
+    return isAda ? {stage: ["core"], examBoard: ["ada"]} : {stage: ["a_level"]};
 }
+function defaultAudienceWithDifficulty(doc: AudienceContext[]): AudienceContext{
+    return {stage: ["core"], examBoard: ["ada"], difficulty: (adaDifficulty(doc) ? [adaDifficulty(doc)] : undefined)} as AudienceContext;
+} 
 
 type AudienceKey = keyof AudienceContext;
 type AudienceValue = ExtractRecordArrayValue<Required<AudienceContext>>;
@@ -18,14 +25,17 @@ type AudienceValue = ExtractRecordArrayValue<Required<AudienceContext>>;
 const phyStages: Stage[] = ["university", "further_a", "a_level", "gcse", "year_9", "year_7_and_8"];
 const difficulties: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
 
-const csStages: Stage[] = ["a_level", "gcse", "scotland_national_5", "scotland_higher", "scotland_advanced_higher"];
-const csExamBoards: ExamBoard[] = ["aqa", "ocr", "cie", "edexcel", "eduqas", "wjec", "sqa"];
+const csStages: Stage[] = ["a_level", "gcse", "scotland_national_5", "scotland_higher", "scotland_advanced_higher", "core", "advanced", "post_18"];
+const csExamBoards: ExamBoard[] = ["aqa", "ocr", "cie", "edexcel", "eduqas", "wjec", "sqa", "ada"];
 const csStagedExamBoards: Partial<Record<Stage, ExamBoard[]>> = {
     "a_level": ["aqa", "cie", "eduqas", "ocr", "wjec"],
     "gcse": ["aqa", "edexcel", "eduqas", "ocr", "wjec"],
     "scotland_national_5": ["sqa"],
     "scotland_higher": ["sqa"],
     "scotland_advanced_higher": ["sqa"],
+    "core": ["ada"],
+    "advanced": ["ada"],
+    "post_18": ["ada"],
 };
 
 function isExamboardArray(arr: string[]): arr is ExamBoard[] {
@@ -55,7 +65,7 @@ function getPossibleFields(type?: string): Possibilities {
             case "accordion":
                 return {stage: csStages, examBoard: csExamBoards, role: roles};
             default:
-                return {stage: csStages, examBoard: csExamBoards, difficulty: difficulties};
+                return {stage: csStages, examBoard: csExamBoards};
         }
     } else { //if isPhy OR default
         switch (type) {
@@ -150,6 +160,11 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
                 {index !== undefined && index < values.length - 1 && ", "}
             </>;
         };
+
+        if (isAda && key === "difficulty") {
+            return null;
+        }
+
         return <Fragment key={key}>
             {/* Key */}
             <select value={key} onChange={(e) => {
@@ -191,7 +206,8 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
             </Fragment>}
 
             {/* Connector */}
-            {filteredItems.length > 1 && i < filteredItems.length - 1 && " AND "}
+            {(isAda && filteredItems[filteredItems.length - 1].key === "difficulty" && i === filteredItems.length - 2) ? "" :
+                filteredItems.length > 1 && i < filteredItems.length - 1 && " AND "}
         </Fragment>;
     });
     return <>
@@ -209,6 +225,7 @@ function safeJoin(list: string[], joiner: string): string {
     if (list.length === 1) {
         return list[0];
     }
+    list = list.filter((item) => (isAda && difficulties.includes(item as Difficulty)) ? false : true);
     return list.map((item) => item.replaceAll(joiner, "").includes(" ") ? `(${item})` : item).join(joiner);
 }
 
@@ -229,6 +246,11 @@ function conciseAudiences(audiences: AudienceContext[] | undefined | null, type?
     if (audiences === undefined || audiences === null) {
         return type === "accordion" ? "All" : "None set";
     }
+
+    if (adaDifficulty(audiences)) {
+        return safeJoin(audiences.map((audience) => conciseAudience(audience)), " or ") + " and " + adaDifficulty(audiences);
+    }
+
     return safeJoin(audiences.map((audience) => conciseAudience(audience)), " or ");
 }
 
@@ -250,11 +272,34 @@ function AudienceEditor({doc, update, possible}: PresenterProps<AudienceContext[
                     update(audience);
                 }}>➖</Button>}
                 {index === doc.length - 1 ? <Button outline size="sm" onClick={() => {
-                    update([...doc, defaultAudience()]);
+                    update(siteSpecific([...doc, defaultAudience()], [...doc, defaultAudienceWithDifficulty(doc)]));
                 }}>OR ➕</Button> : " OR"}
             </div>;
         })}
-        Concise: {conciseAudiences(doc)}
+    </>
+}
+
+function DifficultyEditor({doc, update, possible}: PresenterProps<AudienceContext[]> & {possible: Possibilities}) {
+    const updateDifficulty = (newDifficulty: Difficulty) => {
+        const audiences = [...doc];
+        audiences.forEach((audience) => {
+            newDifficulty ? audience.difficulty = [newDifficulty] : audience.difficulty = undefined;
+        });
+        update(audiences);
+    }
+
+    const key = doc[0].difficulty ? doc[0].difficulty[0] : "";
+    const unusedOptions = new Set([...possible.difficulty as Difficulty[], ""])
+    unusedOptions.delete(key);
+
+    return <>
+        Difficulty: {' '}
+        <select value={key} onChange={(e) => { updateDifficulty(e.target.value as Difficulty); }}>
+                <option key={key}>{key}</option>
+                {[...unusedOptions].map((possibleOption) =>
+                    <option key={possibleOption}>{possibleOption}</option>
+                )}
+        </select>
     </>
 }
 
@@ -292,6 +337,11 @@ export function AudiencePresenter({doc, update, type}: PresenterProps & {type?: 
             }}
         >
             <AudienceEditor doc={editingAudience} update={setEditingAudience} possible={getPossibleFields(type)} />
+            {isAda ? <> 
+                <DifficultyEditor doc={editingAudience} update={setEditingAudience} possible={{difficulty: difficulties}}/> 
+                <br/> 
+            </> : null}
+            Concise: {conciseAudiences(editingAudience)}
             <Button size="sm" color="primary" onClick={setChanges}>Set</Button>
             <Button size="sm" onClick={close}>Cancel</Button>
             <Button size="sm" color="danger" onClick={() => {

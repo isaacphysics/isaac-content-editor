@@ -1,6 +1,7 @@
 import {
     AnswerPresenter,
     CoordinateQuestionPresenter,
+    CoordinateQuestionFooterPresenter,
     GraphSketcherQuestionPresenter,
     HintsPresenter,
     InlineQuestionPartPresenter,
@@ -13,7 +14,8 @@ import {
     QuestionMetaPresenter,
     QuickQuestionPresenter,
     StringMatchQuestionPresenter,
-    SymbolicQuestionPresenter
+    SymbolicQuestionPresenter,
+    SymbolicChemistryQuestionPresenter
 } from "./presenters/questionPresenters";
 import {CHOICE_TYPES} from "./ChoiceInserter";
 import {TabsPresenter} from "./presenters/TabsPresenter";
@@ -29,7 +31,7 @@ import {VideoPresenter} from "./presenters/VideoPresenter";
 import {GlossaryTermPresenter} from "./presenters/GlossaryTermPresenter";
 import {EmailTemplatePresenter} from "./presenters/EmailTemplatePresenter";
 import {AnvilAppPresenter} from "./presenters/AnvilAppPresenter";
-import {EventPagePresenter, PagePresenter, QuizPagePresenter, QuizSectionPresenter} from "./presenters/pagePresenters";
+import {BookDetailPagePresenter, BookIndexPagePresenter, EventPagePresenter, GenericPagePresenter, PagePresenter, QuizPagePresenter, QuizSectionPresenter, RevisionPagePresenter} from "./presenters/pagePresenters";
 import {PodPresenter} from "./presenters/PodPresenter";
 import {defaultMeta, MetaItemKey} from "./Metadata";
 import {CardDeckPresenter, CardPresenter} from "./presenters/CardPresenter";
@@ -43,6 +45,8 @@ import styles from "./styles/semantic.module.css";
 import {ListChildrenPresenter} from "./presenters/ListChildrenPresenter";
 import {InteractiveCodeSnippetPresenter} from "./presenters/InteractiveCodeSnippetPresenter";
 import {CalloutPresenter} from "./presenters/CalloutPresenter";
+import {LLMQuestionPresenter} from "./presenters/LLMQuestionPresenter";
+import { SidebarEntryPresenter, SidebarPresenter } from "./presenters/SidebarPresenters";
 
 export type ContentType =
     | "content"
@@ -55,14 +59,21 @@ export type ContentType =
     | "isaacQuestionPage"
     | "isaacFastTrackQuestionPage"
     | "isaacEventPage"
+    | "isaacBookIndexPage"
+    | "isaacBookDetailPage"
+    | "isaacRevisionDetailPage"
     | "isaacTopicSummaryPage"
     | "isaacPageFragment"
     | "page"
+    | "sidebar"
+    | "sidebarEntry"
+    | "sidebarGroup"
     | "isaacQuiz"
     | "hints"
     | "figure"
     | "codeSnippet"
     | "interactiveCodeSnippet"
+    | "codeTabs"
     | "image"
     | "video"
     | "glossaryTerm"
@@ -150,6 +161,10 @@ const isaacSymbolicQuestion = {
     ...question,
     headerPresenter: SymbolicQuestionPresenter,
 };
+const isaacSymbolicChemistryQuestion = {
+    ...question,
+    headerPresenter: SymbolicChemistryQuestionPresenter,
+};
 const isaacStringMatchQuestion = {
     ...question,
     headerPresenter: StringMatchQuestionPresenter,
@@ -158,6 +173,11 @@ const isaacItemQuestion = {
     ...question,
     bodyPresenter: ItemQuestionPresenter,
     footerPresenter: undefined,
+};
+const isaacLLMFreeTextQuestion: RegistryEntry = {
+    ...question,
+    bodyPresenter: ContentValueOrChildrenPresenter,
+    footerPresenter: LLMQuestionPresenter,
 };
 const item = {
     bodyPresenter: ItemPresenter,
@@ -183,6 +203,10 @@ const interactiveCodeSnippet: RegistryEntry = {
     name: "Interactive Code Snippet",
     bodyPresenter: InteractiveCodeSnippetPresenter,
 };
+const codeTabs: RegistryEntry = {
+    name: "Code Tabs",
+    bodyPresenter: TabsPresenter,
+}
 const glossaryTerm: RegistryEntry = {
     name: "Glossary term",
     bodyPresenter: GlossaryTermPresenter,
@@ -217,11 +241,11 @@ const isaacInlineRegion: RegistryEntry = {
     footerPresenter: HintsPresenter,
 };
 const isaacInlineQuestionPart: RegistryEntry = {
-    name: "Inline Question Part", 
+    name: "Inline Question Part",
     bodyPresenter: InlineQuestionPartPresenter,
 };
 
-const pageMeta: MetaItemKey[] = ["audience", ...defaultMeta, "relatedContent"];
+const pageMeta: MetaItemKey[] = ["audience", ...defaultMeta, "relatedContent", "permissions", "notes", "teacherNotes"];
 const pageMetaTail: MetaItemKey[] = ["published", "deprecated"];
 const basePage: RegistryEntry = {
     ...content,
@@ -231,6 +255,7 @@ const basePage: RegistryEntry = {
 };
 const contentPage: RegistryEntry = {
     ...basePage,
+    bodyPresenter: GenericPagePresenter,
     metadata: [...pageMeta, ...pageMetaTail, "summary"],
 };
 const isaacTopicSummaryPage: RegistryEntry = {
@@ -255,11 +280,29 @@ const isaacEventPage: RegistryEntry = {
     headerPresenter: EventPagePresenter,
     metadata: [...pageMeta, ...pageMetaTail, "emailEventDetails", "emailConfirmedBookingText", "emailWaitingListBookingText", "date", "end_date", "bookingDeadline", "prepWorkDeadline", "numberOfPlaces", "eventStatus", "location", "isaacGroupToken", "reservations", "preResources", "postResources"],
 };
+const isaacBookIndexPage: RegistryEntry = {
+    ...basePage,
+    name: "Book Index Page",
+    bodyPresenter: BookIndexPagePresenter,
+    metadata: [...pageMeta, ...pageMetaTail],
+};
+const isaacBookDetailPage: RegistryEntry = {
+    ...basePage,
+    name: "Book Detail Page",
+    bodyPresenter: BookDetailPagePresenter,
+    metadata: [...pageMeta, ...pageMetaTail],
+};
+const isaacRevisionPage: RegistryEntry = {
+    ...basePage,
+    name: "Revision Page",
+    bodyPresenter: RevisionPagePresenter,
+    metadata: [...pageMeta, ...pageMetaTail],
+};
 
 const isaacQuiz: RegistryEntry = {
     name: "Test",
     bodyPresenter: QuizPagePresenter,
-    metadata: [...defaultMeta, "visibleToStudents", "hiddenFromTeachers", "published", "attribution"],
+    metadata: ["audience", ...defaultMeta, "hiddenFromStudentsAndTutors", "hiddenFromTeachers", "published", "deprecated", "attribution"],
 };
 const isaacQuizSection: RegistryEntry = {
     ...content,
@@ -269,9 +312,24 @@ const isaacQuizSection: RegistryEntry = {
 const isaacWildcard: RegistryEntry = {
     name: "Wildcard",
     headerPresenter: PagePresenter,
-    metadata: [...defaultMeta, "description", "url"],
+    metadata: [...defaultMeta, "description", "url", "published"],
 };
 
+const sidebar: RegistryEntry = {
+    name: "Sidebar",
+    bodyPresenter: SidebarPresenter,
+    metadata: [...defaultMeta],
+};
+
+const sidebarEntry: RegistryEntry = {
+    name: "Sidebar Entry",
+    bodyPresenter: SidebarEntryPresenter,
+};
+
+const sidebarGroup: RegistryEntry = {
+    name: "Sidebar Group",
+    bodyPresenter: SidebarEntryPresenter,
+};
 
 export const REGISTRY: Record<ContentType, RegistryEntry> = {
     content,
@@ -282,8 +340,14 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacQuestionPage,
     isaacFastTrackQuestionPage: isaacQuestionPage,
     isaacEventPage,
+    isaacBookIndexPage,
+    isaacBookDetailPage,
+    isaacRevisionDetailPage: isaacRevisionPage,
     isaacQuiz,
     isaacWildcard,
+    sidebar,
+    sidebarEntry,
+    sidebarGroup,
     content$accordion: accordion,
     content$horizontal: horizontal,
     content$clearfix: clearfix,
@@ -302,7 +366,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     quantity: choice,
     isaacSymbolicQuestion,
     formula: choice,
-    isaacSymbolicChemistryQuestion: isaacSymbolicQuestion,
+    isaacSymbolicChemistryQuestion,
     chemicalFormula: choice,
     isaacSymbolicLogicQuestion: isaacSymbolicQuestion,
     logicFormula: choice,
@@ -310,6 +374,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     stringChoice: choice,
     isaacFreeTextQuestion: isaacStringMatchQuestion,
     freeTextRule: choice,
+    isaacLLMFreeTextQuestion,
     isaacRegexMatchQuestion: isaacStringMatchQuestion,
     inlineQuestionPart: isaacInlineQuestionPart,
     isaacInlineRegion: isaacInlineRegion,
@@ -324,7 +389,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacClozeQuestion: isaacItemQuestion,
     coordinateItem$choice: {bodyPresenter: CoordinateItemPresenter},
     coordinateChoice: choice,
-    isaacCoordinateQuestion: {...question, headerPresenter: CoordinateQuestionPresenter, footerPresenter: undefined},
+    isaacCoordinateQuestion: {...question, headerPresenter: CoordinateQuestionPresenter, footerPresenter: CoordinateQuestionFooterPresenter},
     item,
     parsonsItem: item,
     item$choice: {bodyPresenter: ItemChoicePresenter},
@@ -332,6 +397,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     image: {...figure, name: "Image"},
     codeSnippet,
     interactiveCodeSnippet,
+    codeTabs,
     video,
     glossaryTerm,
     emailTemplate,
@@ -352,6 +418,6 @@ export function getEntryType(doc: ContentType | Content) {
     if (typeof doc === "string") {
         return REGISTRY[doc];
     }
-    const typeWithLayout = `${doc.type}$${doc.layout}` as ContentType;
+    const typeWithLayout = `${doc.type}$${doc.layout?.includes("/") ? doc.layout?.slice(0, doc.layout.indexOf("/")) : doc.layout}` as ContentType;
     return REGISTRY[typeWithLayout] || REGISTRY[doc.type as ContentType] || unknown;
 }

@@ -50,8 +50,8 @@ async function doNew(context: ContextType<typeof AppContext>, action: ActionFor<
                     body: "What type of page would you like to create?",
                     options: [
                         {
-                            caption: "Wildcard",
-                            value: "isaacWildcard"
+                            caption: "General",
+                            value: "page"
                         },
                         {
                             caption: "Question",
@@ -66,29 +66,45 @@ async function doNew(context: ContextType<typeof AppContext>, action: ActionFor<
                             value: "isaacConceptPage"
                         },
                         {
-                            caption: "Topic Summary",
-                            value: "isaacTopicSummaryPage"
-                        },
-                        {
                             caption: "Test",
                             value: "isaacQuiz"
                         },
                         {
-                            caption: "General",
-                            value: "page"
+                            caption: "Book Index",
+                            value: "isaacBookIndexPage"
+                        },
+                        {
+                            caption: "Book Detail",
+                            value: "isaacBookDetailPage"
+                        },
+                        {
+                            caption: "Revision",
+                            value: "isaacRevisionDetailPage"
+                        },
+                        {
+                            caption: "Topic Summary",
+                            value: "isaacTopicSummaryPage"
                         },
                         {
                             caption: "Event",
                             value: "isaacEventPage"
                         },
                         {
-                            caption: "Email template",
+                            caption: "Sidebar",
+                            value: "sidebar"
+                        },
+                        {
+                            caption: "News Pod",
+                            value: "isaacPod"
+                        },
+                        {
+                            caption: "Email",
                             value: "emailTemplate"
                         },
                         {
-                            caption: "News pod",
-                            value: "isaacPod"
-                        }
+                            caption: "Wildcard",
+                            value: "isaacWildcard"
+                        },
                     ],
                     callback: async (option) => {
                         if (option === null) {
@@ -193,7 +209,10 @@ async function doSaveAs(context: ContextType<typeof AppContext>, action: ActionF
 async function doSave(context:  ContextType<typeof AppContext>) {
     const selection = context.selection.getSelection();
     if (selection) {
-        await githubSave(context);
+        githubSave(context).catch(function(e) {
+            window.alert("Could not save file. Check the browser's console for more information.");
+            console.error(e);
+        });
     }
 }
 

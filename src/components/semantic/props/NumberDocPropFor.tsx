@@ -9,18 +9,18 @@ import { CustomTextProps, EditableDocProps } from "./EditableDocProp";
 export const NumberDocPropFor = <D extends Content,
     K extends KeysWithValsOfType<D, number | undefined> = KeysWithValsOfType<D, number | undefined>,
     >(prop: K, defaultProps?: CustomTextProps) => {
-    const typedRender = <D extends Content>({
-                                                doc,
-                                                update,
-                                                ...rest
-                                            }: EditableDocProps<D>, ref: React.ForwardedRef<EditableTextRef>) => {
+    const typedRender = ({
+                            doc,
+                            update,
+                            ...rest
+                        }: EditableDocProps<D>, ref: React.ForwardedRef<EditableTextRef>) => {
         return <EditableText
             hasError={(newText) => {
                 if (newText) {
                     newText = newText.trim();
                     const num = parseInt(newText, 10);
                     if (isNaN(num) || num.toString() !== newText) {
-                        return "Not a number";
+                        return ["Not a number"];
                     }
                 }
             }}
@@ -30,9 +30,7 @@ export const NumberDocPropFor = <D extends Content,
                     [prop]: newText ? parseInt(newText, 10) : undefined,
                 });
             }}
-            /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-            // @ts-ignore
-            text={doc[prop]?.toString()}
+            text={(doc[prop] as unknown as number | undefined)?.toString()}
             {...defaultProps}
             {...rest}
             ref={ref}/>

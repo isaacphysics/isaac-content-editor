@@ -37,13 +37,14 @@
     "reactstrap": "^8.10.1",
     "remarkable": "^2.0.1",
     "swr": "^2.0.3",
-    "typescript": "^4.5.5",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.8.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start --verbose",
+    "build": "craco build",
+    "test": "craco test --watchAll",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -68,7 +69,8 @@
       "@typescript-eslint/no-empty-interface": "warn",
       "@typescript-eslint/no-inferrable-types": "off",
       "@typescript-eslint/ban-ts-comment": "warn",
-      "no-case-declarations": "off"
+      "no-case-declarations": "off",
+      "react/jsx-no-target-blank": "off"
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -84,11 +86,18 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
+    "@craco/types": "^7.1.0",
     "@types/he": "^1.1.2",
     "@types/js-cookie": "^3.0.1",
     "@types/katex": "^0.11.1",
+    "@types/moo": "^0.5.9",
+    "@types/nearley": "^2.11.5",
     "@types/react-test-renderer": "^16.0.0",
     "@types/remarkable": "^2.0.1",
+    "moo": "^0.5.2",
+    "nearley": "^2.20.1",
+    "nearley-loader": "^2.0.0",
     "react-test-renderer": "^16.14.0"
   }
 }

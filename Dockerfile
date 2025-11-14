@@ -1,4 +1,4 @@
-FROM node:17 AS build
+FROM node:22 AS build
 
 WORKDIR /editor
 

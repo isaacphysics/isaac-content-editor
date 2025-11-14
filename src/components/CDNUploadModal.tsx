@@ -118,6 +118,7 @@ export const CDNUploadModal = () => {
             setSelection({isDir: true, path: dir});
         }
     };
+    const [uploadInProgress, setUploadInProgress] = useState(false);
 
     // By default select the `isaac` subdirectory
     useEffect(() => {
@@ -131,6 +132,12 @@ export const CDNUploadModal = () => {
         if (files && files.length === 0) setSuccessfulUploads(undefined);
     }, [paths, files, dir]);
 
+    const readFile = (f: {file: File} & FileValidation): Promise<string> => new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string)
+        reader.readAsBinaryString(f.file);
+    });
+
     const uploadToCDN = async () => {
         const path = dir?.path;
         if (!files || files.length === 0 || !path) return;
@@ -143,21 +150,20 @@ export const CDNUploadModal = () => {
         // path should always start with "isaac/" after the previous check
         const dirPath = path.split("/").slice(1).join("/");
 
-        const filesToUpload = [...files];
-        setFiles(null);
-        for (const f of filesToUpload) {
-            const reader = new FileReader();
-            reader.onload = async () => {
-                try {
-                    await githubCreate(appContext, "isaac", `${dirPath}/${f.file.name}`, reader.result as string, "cdn");
-                    setSuccessfulUploads(su => [...(su ?? []), path?.replace(/\/$/, "") + "/" + f.file.name]);
-                    setSelectionAndUpdateDir({path: `${path}/${f.file.name}`, isDir: false});
-                } catch (e) {
-                    alert(`Couldn't upload file "${f.file.name}" to CDN. Perhaps it already exists.\n\nError details: ${e}`);
-                }
+        setSuccessfulUploads(undefined);
+        setUploadInProgress(true);
+        for (const f of files) {
+            try {
+                const contents = await readFile(f);
+                await githubCreate(appContext, "isaac", `${dirPath}/${f.file.name}`, contents, "cdn");
+                setSuccessfulUploads(su => [...(su ?? []), path?.replace(/\/$/, "") + "/" + f.file.name]);
+            } catch (e) {
+                alert(`Couldn't upload file "${f.file.name}" to CDN. Perhaps it already exists.\n\nError details: ${e}`);
+            } finally {
+                setFiles(f => f && f.length > 1 ? f?.slice(1, f.length) : null)
             }
-            reader.readAsBinaryString(f.file);
         }
+        setUploadInProgress(false);
     };
 
     const [showAccessibilityNotice, setShowAccessibilityNotice] = useState<boolean>(true);
@@ -239,10 +245,15 @@ export const CDNUploadModal = () => {
                         </>
                         : <small>Please choose at least one file</small>
                     }
+                   
                     {paths && paths.length > 0 && allFilesAreValid && selection?.isDir &&
                         <Button color={"success"} className={"w-100"} onClick={uploadToCDN}>
                             Upload file(s) to CDN
                         </Button>}
+                    {uploadInProgress && 
+                        <Alert className="mt-2" color="warning">
+                            Processing uploads...
+                        </Alert>}
                     {successfulUploads && <Alert className={"mt-2"} color={"success"}>
                         Successfully uploaded files:
                         <ul>

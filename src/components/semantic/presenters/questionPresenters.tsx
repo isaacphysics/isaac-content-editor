@@ -1,5 +1,5 @@
-import React, {createContext, useContext, useEffect, useState} from "react";
-import {EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
+import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
+import {EditableDimensionalDocProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
 import styles from "../styles/question.module.css";
 import {Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,} from "reactstrap";
 import {
@@ -13,6 +13,7 @@ import {
     IsaacQuestionBase,
     IsaacQuickQuestion,
     IsaacStringMatchQuestion,
+    IsaacSymbolicChemistryQuestion,
     IsaacSymbolicQuestion,
     Quantity,
 } from "../../../isaac-data-types";
@@ -26,7 +27,8 @@ import {ChoicesPresenter} from "./ChoicesPresenter";
 import {InserterProps} from "./ListChildrenPresenter";
 import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresenter";
 import { InlinePartsPresenter } from "./InlinePartsPresenter";
-import { EditableInlineTypeProp } from "./InlineQuestionTypePresenter";
+import { EditableInlineTypeProp, INLINE_TYPES } from "./InlineQuestionTypePresenter";
+import { isAda } from "../../../services/site";
 
 export const QuestionContext = React.createContext<Content | null>(null);
 
@@ -38,6 +40,7 @@ export type QUESTION_TYPES =
     | "isaacSymbolicChemistryQuestion"
     | "isaacStringMatchQuestion"
     | "isaacFreeTextQuestion"
+    | "isaacLLMFreeTextQuestion"
     | "isaacSymbolicLogicQuestion"
     | "isaacGraphSketcherQuestion"
     | "isaacRegexMatchQuestion"
@@ -69,6 +72,9 @@ const QuestionTypes: Record<QUESTION_TYPES, {name: string}> = {
     },
     isaacFreeTextQuestion: {
         name: "Free Text Question",
+    },
+    isaacLLMFreeTextQuestion: {
+        name: "LLM-Marked Free Text Question",
     },
     isaacSymbolicLogicQuestion: {
         name: "Logic Question",
@@ -102,7 +108,11 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
         // Add the default value if it is missing
         newDoc.requireUnits = true;
         delete newDoc.displayUnit;
-        newDoc.disregardSignificantFigures = false;
+        if(isAda) {
+            newDoc.disregardSignificantFigures = true;
+        } else {
+            newDoc.disregardSignificantFigures = false;
+        }
         delete newDoc.showConfidence;
         delete newDoc.randomiseChoices;
     } else if (newType === "isaacQuestion" && !newDoc.hasOwnProperty("showConfidence")) {
@@ -135,6 +145,12 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
         // Remove the defaultFeedback property as it is not applicable to quick questions
         delete newDoc.defaultFeedback;
     }
+    
+    if (newType === "isaacLLMFreeTextQuestion") {
+        // Remove the choices and answer properties as they are not applicable to LLM-Marked questions
+        delete newDoc.answer;
+        delete newDoc.choices;
+    }
 
     if (!(newDoc.hasOwnProperty("significantFiguresMin") && newDoc.hasOwnProperty("significantFiguresMax"))) {
         delete newDoc.significantFiguresMin;
@@ -144,6 +160,7 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
     if (newType !== "isaacCoordinateQuestion") {
         delete newDoc.ordered;
         delete newDoc.numberOfCoordinates;
+        delete newDoc.numberOfDimensions;
     }
 
     update(newDoc);
@@ -211,11 +228,11 @@ export function HintsPresenter(props: PresenterProps<IsaacQuestionBase>) {
     return <SemanticListProp {...props} prop="hints" type="hints" />;
 }
 
-export function MultipleChoiceQuestionPresenter(props: PresenterProps) {
+export function MultipleChoiceQuestionPresenter({showMeta = true, ...props}: {showMeta?: boolean} & PresenterProps) {
     const {doc, update} = props;
     const question = doc as IsaacMultiChoiceQuestion;
     return <>
-        <QuestionMetaPresenter {...props} />
+        {showMeta && <QuestionMetaPresenter {...props} />}
         <CheckboxDocProp doc={question} update={update} prop="randomiseChoices" label="Randomise Choices" checkedIfUndefined={true} />
     </>;
 }
@@ -280,10 +297,15 @@ export function NumericQuestionPresenter({showMeta = true, ...props}: {showMeta?
     </>;
 }
 
-export const CoordinateQuestionContext = createContext<{numberOfCoordinates?: number}>(
+export const CoordinateQuestionContext = createContext<{numberOfCoordinates?: number, numberOfDimensions?: number}>(
     {}
 );
 const EditableNumberOfCoordinates = NumberDocPropFor<IsaacCoordinateQuestion>("numberOfCoordinates", {label: "Number of coordinates", block: true});
+const EditableDimensions = NumberDocPropFor<IsaacCoordinateQuestion>("numberOfDimensions", {label: "Dimensions", block: true});
+const EditableSeparator = EditableDocPropFor<IsaacCoordinateQuestion>("separator", {label: "Separator", block: true});
+const EditableButtonText = EditableDocPropFor<IsaacCoordinateQuestion>("buttonText", {label: "\"Add coordinate\" button text override", block: true});
+const EditablePlaceholderValuesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("placeholderValues");
+const EditableSuffixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("suffixes");
 
 export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
     const {doc, update} = props;
@@ -293,28 +315,51 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
         <QuestionMetaPresenter {...props} />
         <EditableNumberOfCoordinates {...props} />
         <CheckboxDocProp {...props} prop="ordered" label="Require that order of coordinates in choice and answer are the same" />
+        <EditableDimensions {...props} />
+        <CheckboxDocProp {...props} prop="useBrackets" checkedIfUndefined label="Show brackets around coordinates" />
+        <EditableSeparator {...props} />
+        <EditableButtonText {...props} />
         <div className={styles.questionLabel}>
-            Significant figures (affects both x and y values):
+            Coordinate labels:<br/>
+            <small><em>Placeholders do not accept latex. Please use a unicode equivalent such as Ψ₁.</em></small>
             <div className="row">
                 <div className="col col-lg-5">
-                    <EditableSignificantFiguresMin doc={question} update={update} />
+                    {[...Array(question.numberOfDimensions)].map((_, i) => 
+                     <div className={"mb-3"} key={i}>
+                        <EditablePlaceholderValuesProp {...props} dimension={i} label={"Placeholder ".concat((i+1).toString())} />
+                        
+                        <span className="mx-2"/>
+                        <EditableSuffixesProp {...props} dimension={i} label={"Suffix ".concat((i+1).toString())} />
+                    </div>
+                    )}
+                </div>
+            </div>
+            Significant figures (affects all values):
+            <div className="row">
+                <div className="col col-lg-5">
+                    <EditableSignificantFiguresMin {...props} />
                 </div>
                 <div className="col col-lg-5">
-                    <EditableSignificantFiguresMax doc={question} update={update} />
+                    <EditableSignificantFiguresMax {...props} />
                 </div>
             </div>
         </div>
-        <div className={styles.questionLabel} /> {/* For spacing */}
-        <CoordinateQuestionContext.Provider value={{
-            numberOfCoordinates: question.numberOfCoordinates,
-        }}>
-            <QuestionFooterPresenter {...props} />
-        </CoordinateQuestionContext.Provider>
     </>;
 }
 
+export function CoordinateQuestionFooterPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
+    const question = props.doc as IsaacCoordinateQuestion;
+
+    return <CoordinateQuestionContext.Provider value={{
+            numberOfCoordinates: question.numberOfCoordinates,
+            numberOfDimensions: question.numberOfDimensions
+        }}>
+            <QuestionFooterPresenter {...props} />
+        </CoordinateQuestionContext.Provider>;
+}
+
 export function CoordinateChoiceItemInserter({insert, position, lengthOfCollection}: InserterProps) {
-    const {numberOfCoordinates} = useContext(CoordinateQuestionContext);
+    const numberOfCoordinates = useContext(CoordinateQuestionContext).numberOfCoordinates;
     if (position !== lengthOfCollection) {
         return null; // Only include an insert button at the end.
     }
@@ -327,12 +372,20 @@ export function CoordinateChoiceItemInserter({insert, position, lengthOfCollecti
 }
 
 export function InlinePartInserter({insert, position, lengthOfCollection}: InserterProps) {
+    const inlineContext = useContext(InlineQuestionContext);
+    
+    const addPart = useCallback((idSuffix?: string) => {
+        insert(position, {type: "inlineQuestionPart", choices: [], id: idSuffix ? `inline-question:${idSuffix}` : undefined} as IsaacInlinePart);
+        inlineContext?.setNumParts?.(n => n + 1);
+    }, [insert, position, inlineContext]);
+
     if (position !== lengthOfCollection) {
         return null; // Only include an insert button at the end.
     }
-    return <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
-        insert(position, {type: "inlineQuestionPart", choices: []} as IsaacInlineQuestion);
-    }}>Add new inline question part</Button>;
+
+    inlineContext.addPart = addPart;
+
+    return <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => addPart()}>Add new inline question part</Button>;
 }
 
 export function GraphSketcherQuestionPresenter(props: PresenterProps<IsaacGraphSketcherQuestion>) {
@@ -380,7 +433,7 @@ const EditableAvailableSymbols = ({doc, update}: PresenterProps<IsaacSymbolicQue
 };
 const EditableFormulaSeed = EditableDocPropFor<IsaacSymbolicQuestion>("formulaSeed", {format: "latex", label: "Formula seed", placeHolder: "Enter initial state here"});
 
-const availableMetaSymbols = [
+const availableMetaSymbols: [string,string][] = [
     ["_trigs", "Trigs"],
     ["_1/trigs", "1/Trigs"],
     ["_inv_trigs", "Inv Trigs"],
@@ -391,11 +444,23 @@ const availableMetaSymbols = [
     ["_no_alphabet", "No Alphabet"]
 ];
 
+const availableChemistryMetaSymbols: [string,string][]  = [
+    ["_state_symbols", "State Symbols"], 
+    ["_plus", "Plus"],
+    ["_minus", "Minus"],
+    ["_fraction", "Fraction"],
+    ["_right_arrow", "Right Arrow"],
+    ["_equilibrium_arrow", "Equilibrium Arrow"],
+    ["_brackets_round", "Round Brackets"],
+    ["_brackets_square", "Square Brackets"],
+    ["_dot", "Dot"]
+];  
+
 function hasSymbol(availableSymbols: string[] | undefined, symbol: string) {
     return availableSymbols?.find(s => s === symbol);
 }
 
-function SymbolicMetaSymbols({doc, update}: PresenterProps<IsaacSymbolicQuestion>) {
+function SymbolicMetaSymbols({doc, update, metaSymbols}: PresenterProps<IsaacSymbolicQuestion> & {metaSymbols: [string, string][]}) {
     function toggle(symbol: string) {
         const availableSymbols = [...doc.availableSymbols ?? []];
         const index = availableSymbols.indexOf(symbol);
@@ -410,7 +475,7 @@ function SymbolicMetaSymbols({doc, update}: PresenterProps<IsaacSymbolicQuestion
     }
 
     return <div className={styles.symbolicMetaButtons}>
-        {availableMetaSymbols.map(([symbol, label]) =>
+        {metaSymbols.map(([symbol, label]) =>
             <Button key={symbol}
                     size="sm"
                     color={hasSymbol(doc.availableSymbols, symbol) ? "primary" : "secondary"}
@@ -421,14 +486,32 @@ function SymbolicMetaSymbols({doc, update}: PresenterProps<IsaacSymbolicQuestion
     </div>;
 }
 
-export function SymbolicQuestionPresenter(props: PresenterProps<IsaacSymbolicQuestion>) {
-    const {doc} = props;
+function SymbolicQuestionPresenterHead(props: PresenterProps<IsaacSymbolicQuestion>) {
     return <>
         <QuestionMetaPresenter {...props} />
         <div className={styles.editableFullwidth}>
             <EditableAvailableSymbols {...props} />
         </div>
-        {doc.type === "isaacSymbolicQuestion" && <SymbolicMetaSymbols {...props} />}
+    </>;
+}
+
+export function SymbolicChemistryQuestionPresenter(props: PresenterProps<IsaacSymbolicChemistryQuestion>) {
+    return <>
+        <CheckboxDocProp {...props} prop="isNuclear" label="Nuclear question" />
+        <CheckboxDocProp {...props} prop="allowPermutations" label="Allow molecule permutations" disabled={props.doc.isNuclear} />
+        <CheckboxDocProp {...props} prop="allowScalingCoefficients" label="Allow coefficient scaling" disabled={props.doc.isNuclear} />
+        <SymbolicQuestionPresenterHead {...props} />
+        {!props.doc.isNuclear && <SymbolicMetaSymbols {...props} metaSymbols={availableChemistryMetaSymbols} />}
+        <div className={styles.editableFullwidth}>
+            <EditableFormulaSeed {...props}/>
+        </div>
+    </>;
+}
+
+export function SymbolicQuestionPresenter(props: PresenterProps<IsaacSymbolicQuestion>) {
+    return <>
+        <SymbolicQuestionPresenterHead {...props} />
+        {props.doc.type === "isaacSymbolicQuestion" && <SymbolicMetaSymbols {...props} metaSymbols={availableMetaSymbols} />}
         <div className={styles.editableFullwidth}>
             <EditableFormulaSeed {...props}/>
         </div>
@@ -440,6 +523,24 @@ export function StringMatchQuestionPresenter(props: PresenterProps<IsaacStringMa
         <QuestionMetaPresenter {...props} />
         <CheckboxDocProp {...props} prop="multiLineEntry" label="Multi-line" />
     </>;
+}
+
+const getInlineQuestionPresenter = (type: INLINE_TYPES, props: PresenterProps<IsaacInlinePart>) : Exclude<React.ReactNode, undefined> => {
+    switch (type) {
+        case "isaacNumericQuestion":
+            return <>
+                <hr/>
+                <NumericQuestionPresenter {...props} showMeta={false} />
+            </>;
+        case "isaacMultiChoiceQuestion":
+            return <>
+                <hr/>
+                <MultipleChoiceQuestionPresenter {...props} showMeta={false} />
+            </>;
+        case "isaacRegexMatchQuestion":
+        case "isaacStringMatchQuestion":
+            return null;
+    }
 }
 
 export function InlineQuestionPartPresenter(props: PresenterProps<IsaacInlinePart>) {
@@ -455,20 +556,27 @@ export function InlineQuestionPartPresenter(props: PresenterProps<IsaacInlinePar
         {props.doc.id && props.doc.id.match(/^\[|\]$/) && <p className="text-danger"><i>Warning: the ID should not include the surrounding square brackets!</i></p>}
         <EditableInlineTypeProp {...props} disabled={isDisabled} />
         <em>Note: you cannot change the question type if any choices exist.</em>
-        {props.doc.type === "isaacNumericQuestion" && <>
-            <hr/>
-            <NumericQuestionPresenter {...props} showMeta={false} />
-        </>}
+        {props.doc.type && getInlineQuestionPresenter(props.doc.type as INLINE_TYPES, props)}
         {choices}
         <SemanticDocProp {...props} prop="defaultFeedback" name="Default Feedback" />
+        <AnswerPresenter {...props} />
     </>;
 }
 
+export const InlineQuestionContext = createContext<{
+    isInlineQuestion?: boolean,
+    numParts?: number,
+    setNumParts?: React.Dispatch<React.SetStateAction<number>>,
+    addPart?: (id: string) => void,
+}>({});
+
 export function InlineRegionPresenter(props: PresenterProps<IsaacInlineQuestion>) {
-    return <>
+    const [numParts, setNumParts] = useState(0);
+    return <InlineQuestionContext.Provider value={{isInlineQuestion: true, numParts, setNumParts}}>
+        <h6><EditableIDProp {...props} label="Question ID"/></h6>
         <ContentValueOrChildrenPresenter {...props} />
         <InlinePartsPresenter {...props} />
-    </>;
+    </InlineQuestionContext.Provider>;
 }
 
 export function FreeTextQuestionInstructions() {

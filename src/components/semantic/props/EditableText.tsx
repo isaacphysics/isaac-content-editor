@@ -19,6 +19,7 @@ import {Markup} from "../../../isaac/markup";
 import CodeMirror, {EditorView} from "@uiw/react-codemirror";
 import {MarkupToolbar} from "../../MarkupToolbar";
 import {keyBindings} from "../../../utils/codeMirrorExtensions";
+import { isDefined } from "../../../utils/types";
 
 export interface SaveOptions {
     movement?: number;
@@ -42,14 +43,15 @@ export type EditableTextProps = {
     placeHolder?: string;
     onDelete?: (options?: SaveOptions) => void;
     autoFocus?: boolean;
-    hasError?: (newText: string | undefined) => string | undefined;
+    hasError?: (newText: string | undefined) => string[] | undefined;
     label?: string;
     noSupressSaves?: boolean;
     hideWhenEmpty?: boolean
     block?: boolean;
     format?: EditableTextFormat;
     previewWrapperChar?: "$" | "";
-    inputProps?: Omit<InputProps, "type"|"placeHolder"|"invalid"|"autoFocus"|"value">;
+    inputProps?: Omit<InputProps, "type"|"placeHolder"|"invalid"|"autoFocus"|"value"|"className">;
+    buttonStrings?: [string, string][];
 };
 
 interface EditableTextState {
@@ -103,9 +105,10 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                                  multiLine = format === "code",
                                  previewWrapperChar = "",
                                  inputProps,
+                                 buttonStrings = [],
                              }, ref) => {
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const [errorMessage, setErrorMessage] = useState<string>();
+    const [errorMessage, setErrorMessage] = useState<string[]>();
 
     const onSave = useWrappedRef(onSaveUnsafe);
     const onDelete = useWrappedRef(onDeleteUnsafe);
@@ -207,47 +210,57 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
     const labelLC = safeLowercase(label);
     const placeHolderLC = safeLowercase(placeHolder);
 
+    const insertStringButtons = buttonStrings.map((buttonString, index) => (
+        <Button key={index} onClick={() => setCurrent((state.value ? state.value + ((state.value.at(-1) === "(" || buttonString[1] === ")") ? "" : ", ") : "") + buttonString[1])}>{buttonString[0]}</Button>
+    ));
+
     const Wrap = block ? "div" : "span";
     if (state.isEditing) {
-        return <Wrap ref={wrapperRef} className={`${styles.isEditingWrapper} ${multiLine ? styles.multiLine : ""}`}>
-            <span className={classNames(styles.controlWrapper, format === "code" ? "w-100" : "")}>
-                <span className={styles.labelledInput}>
-                    <>
-                        {multiLine ? labelElement : <div>{labelElement}</div>}
-                        {format === "code"
-                            ? <CodeMirror
-                                className={"w-100"}
-                                value={state.value ?? ""}
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
-                                autoFocus
-                                extensions={[
-                                    EditorView.lineWrapping,
-                                    keyBindings(() => {save(); return true;}, () => {cancel(); return true;}, "plaintext"),
-                                ]}
-                                onChange={(newValue) => setCurrent(newValue)}
-                            >
-                                <MarkupToolbar set={save} cancel={cancel} encoding={"plaintext"} />
-                            </CodeMirror>
-                            : <Input
-                                type={multiLine ? "textarea" : "text"}
-                                /* eslint-disable-next-line jsx-a11y/no-autofocus */
-                                autoFocus
-                                value={state.value ?? ""}
-                                onChange={e => setCurrent(e.target.value)}
-                                onKeyDown={handleKey}
-                                placeholder={placeHolder}
-                                onBlur={onBlur}
-                                invalid={!!errorMessage}
-                                {...inputProps}
-                            />
-                        }
-                    </>
+        return <> <Wrap ref={wrapperRef} className={`${styles.isEditingWrapper} ${multiLine ? styles.multiLine : ""}`}>
+                <span className={classNames(styles.controlWrapper, format === "code" ? "w-100" : "", "pb-2")}>
+                    <span className={styles.labelledInput}>
+                        <>
+                            {multiLine ? labelElement : <div>{labelElement}</div>}
+                            {format === "code"
+                                ? <CodeMirror
+                                    className={"w-100"}
+                                    value={state.value ?? ""}
+                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                                    autoFocus
+                                    extensions={[
+                                        EditorView.lineWrapping,
+                                        keyBindings(() => {save(); return true;}, () => {cancel(); return true;}, "plaintext"),
+                                    ]}
+                                    onChange={(newValue) => setCurrent(newValue)}
+                                >
+                                    <MarkupToolbar set={save} cancel={cancel} encoding={"plaintext"} />
+                                </CodeMirror>
+                                : <Input
+                                    type={multiLine ? "textarea" : "text"}
+                                    /* eslint-disable-next-line jsx-a11y/no-autofocus */
+                                    autoFocus={autoFocus ?? false}
+                                    value={state.value ?? ""}
+                                    onChange={e => setCurrent(e.target.value)}
+                                    onKeyDown={handleKey}
+                                    placeholder={placeHolder}
+                                    onBlur={onBlur}
+                                    invalid={errorMessage && errorMessage.length > 0}
+                                    {...inputProps}
+                                />
+                            }
+                        </>
+                    </span>
                 </span>
-                {errorMessage && <FormFeedback className={styles.feedback}>{errorMessage}</FormFeedback>}
-            </span>
-            <Button onClick={cancel}>Cancel</Button>
-            <Button color="primary" onClick={() => save()}>Set</Button>
-        </Wrap>
+                <Button className="mb-2" onClick={cancel}>Cancel</Button>
+                <Button className="mb-2" color="primary" onClick={() => save()}>Set</Button>
+            </Wrap>
+            {isDefined(errorMessage) && errorMessage.length > 0 && <Wrap className="pb-2">
+                {errorMessage.map(e => <FormFeedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</FormFeedback>)}
+            </Wrap>}
+            <Wrap ref={wrapperRef} className={`justify-content-start ${styles.isEditingWrapper}`}>
+                {insertStringButtons}
+            </Wrap>
+        </>
     }
     if (nonEmpty) {
         return <Wrap className={classNames(styles.notEditingWrapper, {[styles.multiLine]: multiLine})}>

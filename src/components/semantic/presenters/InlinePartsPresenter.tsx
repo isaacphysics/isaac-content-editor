@@ -7,8 +7,14 @@ import { Box } from "../SemanticItem";
 
 function Instructions() {
     return <div className="my-2">
-        Enter the question above, representing any inline question part with <code>[inline-question:id]</code>. Then, add a new inline question part below, 
-        setting the question ID to be <code>inline-question:id</code>. These will then link automatically.
+        Enter the question above, using the <code>Add inline question part</code> button to add a new question part at your cursor position in the content.
+        Alternatively, you can add an inline question part manually (see below). 
+        <details>
+            <summary>Manual instructions</summary>
+            First, represent any inline question part in the content with <code>[inline-question:id]</code>. 
+            Then, add a new inline question part below, setting the question ID to be <code>inline-question:id</code> (without the square brackets!). 
+            These will then link automatically.
+        </details>
     </div>
 }
 
