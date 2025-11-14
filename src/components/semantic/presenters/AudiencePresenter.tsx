@@ -38,6 +38,10 @@ const csStagedExamBoards: Partial<Record<Stage, ExamBoard[]>> = {
     "post_18": ["ada"],
 };
 
+function isExamboardArray(arr: string[]): arr is ExamBoard[] {
+    return arr.every(v => csExamBoards.includes(v));
+}
+
 function examBoardsForStage(audienceContext: AudienceContext): ExamBoard[] {
     const stageSpecificExamBoards = audienceContext.stage?.length === 1 && csStagedExamBoards[audienceContext.stage[0]];
     return stageSpecificExamBoards || csExamBoards;
@@ -87,17 +91,28 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
             unusedKeysAndFirstOption = unusedKeysAndFirstOption.filter(([k]) => k !== key);
 
             const filteredUnusedOptions = new Set(possible[key]);
-            // Remove used options
-            values.forEach((value) => filteredUnusedOptions.delete(value));
 
             // Restrict Exam Board options by Stage selection if set
-            if (isAda && key === "examBoard" && doc.stage && doc.stage.length === 1) {
+            if (isAda && isExamboardArray(values) && doc.stage && doc.stage.length === 1) {
                 filteredUnusedOptions.forEach((value) => {
                     if (!examBoardsForStage(doc).includes(value as ExamBoard)) {
                         filteredUnusedOptions.delete(value);
                     }
                 });
+
+                // Remove from values as well to prevent illegal combinations
+                values.forEach((value, i) => {
+                    if (!examBoardsForStage(doc).includes(value as ExamBoard)) {
+                        values.splice(i, 1);
+                    }
+                })
+
+                // Select a default value
+                if (values.length < 1) values.push(examBoardsForStage(doc)[0]);
             }
+
+            // Remove used options
+            values.forEach((value) => filteredUnusedOptions.delete(value));
 
             return {
                 key,
