@@ -1,4 +1,4 @@
-import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
+import React, {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {EditableCoordProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
 import styles from "../styles/question.module.css";
 import {Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,} from "reactstrap";
@@ -30,6 +30,8 @@ import { InlinePartsPresenter } from "./InlinePartsPresenter";
 import { EditableInlineTypeProp, INLINE_TYPES } from "./InlineQuestionTypePresenter";
 import { isAda } from "../../../services/site";
 import { PositionableDropZoneProps } from "../../FigureDropZoneModal";
+import { extractValueOrChildrenText } from "../../../utils/content";
+import { inlineQuestionRegex } from "../../../isaac/IsaacTypes";
 
 export const QuestionContext = React.createContext<Content | null>(null);
 
@@ -365,21 +367,35 @@ export function CoordinateChoiceItemInserter({insert, position, lengthOfCollecti
     }}>Add</Button>;
 }
 
-export function InlinePartInserter({insert, position, lengthOfCollection}: InserterProps) {
+export function InlinePartInserter({insert, insertMultiple, position, collection, lengthOfCollection}: InserterProps) {
     const inlineContext = useContext(InlineQuestionContext);
     
-    const addPart = useCallback((idSuffix?: string) => {
-        insert(position, {type: "inlineQuestionPart", choices: [], id: idSuffix ? `inline-question:${idSuffix}` : undefined} as IsaacInlinePart);
-        inlineContext?.setNumParts?.(n => n + 1);
-    }, [insert, position, inlineContext]);
+    const addPart = useCallback((idSuffix: string | undefined) => {
+        const id = idSuffix ? `inline-question:${idSuffix}` : undefined;
+        insert(position, {type: "inlineQuestionPart", choices: [], id: id} as IsaacInlinePart);
+    }, [insert, position]);
+
+    inlineContext.addPart = addPart;
+
+    const addMultipleParts = useCallback((ids: string[]) => {
+        // note that ids must be genuine strings, as there may only exist one undefined part
+        insertMultiple(ids.map((id, index) => [position + index, {type: "inlineQuestionPart", choices: [], id: `inline-question:${id}`} as IsaacInlinePart]));
+    }, [insertMultiple, position]);
+
+    const calculatedPartsFromContent = [
+        ...(inlineContext.textContent ? inlineContext.textContent.matchAll(inlineQuestionRegex).map(match => match.groups?.id as string) : []),
+        ...(inlineContext.figureMap ? Object.values(inlineContext.figureMap).map(pdzp => pdzp.map(dz => dz.id)).flat() : []),
+    ];
+    const unusedParts = calculatedPartsFromContent.filter(id => id && !(collection?.map(part => part.id ? part.id.slice("inline-question:".length) : undefined)?.includes(id)));
 
     if (position !== lengthOfCollection) {
         return null; // Only include an insert button at the end.
     }
 
-    inlineContext.addPart = addPart;
-
-    return <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => addPart()}>Add new inline question part</Button>;
+    return <div className={styles.inlineItemsChoiceInserter}>
+        <Button color="primary" onClick={() => addMultipleParts(unusedParts)} disabled={lengthOfCollection === calculatedPartsFromContent.length}>Detect and add missing inline regions</Button>
+        <Button color="secondary" onClick={() => addPart(undefined)} disabled={collection?.some(part => part.id === undefined)}>Add new inline question part</Button>
+    </div>;
 }
 
 export function GraphSketcherQuestionPresenter(props: PresenterProps<IsaacGraphSketcherQuestion>) {
@@ -559,17 +575,16 @@ export function InlineQuestionPartPresenter(props: PresenterProps<IsaacInlinePar
 
 export const InlineQuestionContext = createContext<{
     isInlineQuestion?: boolean,
-    numParts?: number,
-    setNumParts?: React.Dispatch<React.SetStateAction<number>>,
     addPart?: (id: string) => void,
     figureMap?: {[figureId: string]: PositionableDropZoneProps[]}
     setFigureMap?: React.Dispatch<React.SetStateAction<{[figureId: string]: PositionableDropZoneProps[]}>>,
+    textContent?: string;
 }>({});
 
 export function InlineRegionPresenter(props: PresenterProps<IsaacInlineQuestion>) {
-    const [numParts, setNumParts] = useState(0);
     const [figureMap, setFigureMap] = useState<{[figureId: string]: PositionableDropZoneProps[]}>({});
-    return <InlineQuestionContext.Provider value={{isInlineQuestion: true, numParts, setNumParts, figureMap, setFigureMap}}>
+    const textContent = extractValueOrChildrenText(props.doc);
+    return <InlineQuestionContext.Provider value={{isInlineQuestion: true, figureMap, setFigureMap, textContent}}>
         <h6><EditableIDProp {...props} label="Question ID"/></h6>
         <ContentValueOrChildrenPresenter {...props} />
         <InlinePartsPresenter {...props} />

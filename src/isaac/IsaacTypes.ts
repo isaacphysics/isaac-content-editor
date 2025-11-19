@@ -26,3 +26,5 @@ export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w
 
 export const dndDropZoneMissingIdRegex = /\[drop-zone([^:].*)?\]/g;
 export const dndDropZoneRegex = /\[drop-zone:(?<id>[a-zA-Z0-9_-]+)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?\]/g;
+
+export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<params>(\|(?<width>w-\d+?)?(?<height>h-\d+?)?| class="(?<classes>.*?)"))?\]/g;

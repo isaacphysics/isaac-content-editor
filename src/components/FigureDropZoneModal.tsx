@@ -134,7 +134,7 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
                         <th>Min height</th>
                         <th>X (%)</th>
                         <th>Y (%)</th>
-                        <th/> {/* remove button */}
+                        <th/>{/* remove button */}
                     </tr>
                 </thead>
                 <tbody>
@@ -216,8 +216,6 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
                     setPercentageTop([...percentageTop, 50]);
                     if (dropZoneQuestionContext.isDndQuestion) {
                         dropZoneQuestionContext.dropZoneCount = dropZoneQuestionContext.dropZoneCount ? dropZoneQuestionContext.dropZoneCount + 1 : 1;
-                    } else if (inlineQuestionContext.isInlineQuestion) {
-                        inlineQuestionContext.setNumParts?.(n => n ? n + 1 : 1);
                     }
                 }}>
                     Add drop zone

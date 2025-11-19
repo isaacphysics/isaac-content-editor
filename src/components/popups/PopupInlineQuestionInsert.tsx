@@ -5,6 +5,8 @@ import styles from "../../styles/editor.module.css";
 import { Popup, PopupCloseContext, PopupRef } from "./Popup";
 import { Alert, Button, Container, Input, Label } from "reactstrap";
 import { InlineQuestionContext } from "../semantic/presenters/questionPresenters";
+import { generateGuid } from "../../utils/strings";
+
 
 export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, codemirror: RefObject<ReactCodeMirrorRef> }) => {
     const popupRef = useRef<PopupRef>(null);
@@ -18,7 +20,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
     const [mode, setMode] = useState<"classes" | "dimensions">("classes");
 
     const generateAndInsertInlinePart = useCallback(() => {
-        const partId = id ? id : (inlineContext.numParts ?? 0) + 1;
+        const partId = id ? id : generateGuid().slice(0, 8);
         const inlinePartSyntax = mode === "classes" ? 
             `[inline-question:${partId}${classes ? " class=\"" + classes + "\"" : ""}]` : 
             `[inline-question:${partId}${(width || height) ? "|" : ""}${width ? `w-${width}` : ""}${height ? `h-${height}` : ""}]`;
