@@ -29,7 +29,7 @@ import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresent
 import { InlinePartsPresenter } from "./InlinePartsPresenter";
 import { EditableInlineTypeProp, INLINE_TYPES } from "./InlineQuestionTypePresenter";
 import { isAda } from "../../../services/site";
-import { PositionableDropZoneProps } from "../../FigureDropZoneModal";
+import { PositionableDropZoneProps } from "../../FigureRegionModal";
 import { extractValueOrChildrenText } from "../../../utils/content";
 import { inlineQuestionRegex } from "../../../isaac/IsaacTypes";
 

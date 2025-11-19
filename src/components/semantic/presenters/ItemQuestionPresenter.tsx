@@ -27,7 +27,7 @@ import {Box} from "../SemanticItem";
 import {ExpandableText} from "../ExpandableText";
 import {extractDropZoneIdsPerFigure, extractFigureDropZoneStartIndex, extractValueOrChildrenText} from "../../../utils/content";
 import {dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID, NULL_DND_ITEM, NULL_DND_ITEM_ID} from "../../../isaac/IsaacTypes";
-import { PositionableDropZoneProps } from "../../FigureDropZoneModal";
+import { PositionableDropZoneProps } from "../../FigureRegionModal";
 
 interface ItemsContextType {
     items: Item[] | undefined;

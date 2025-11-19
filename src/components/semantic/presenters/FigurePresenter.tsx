@@ -14,7 +14,7 @@ import styles from "../styles/figure.module.css";
 import {NON_STATIC_FIGURE_FLAG} from "../../../isaac/IsaacTypes";
 import {Alert} from "reactstrap";
 import { DropZoneQuestionContext } from "./ItemQuestionPresenter";
-import { FigureRegionModal, PositionableDropZoneProps } from "../../FigureDropZoneModal";
+import { FigureRegionModal, PositionableDropZoneProps } from "../../FigureRegionModal";
 import { InlineQuestionContext } from "./questionPresenters";
 
 export function FigurePresenter(props: PresenterProps<Figure>) {
