@@ -79,23 +79,23 @@ interface FigureDropZoneModalProps {
     open: boolean;
     toggle: () => void;
     imgSrc: string;
-    initialDropZoneIndex: number;
-    dropZones: PositionableDropZoneProps[];
-    setDropZones: React.Dispatch<React.SetStateAction<PositionableDropZoneProps[]>>;
+    initialRegionIndex: number;
+    regions: PositionableDropZoneProps[];
+    setRegions: React.Dispatch<React.SetStateAction<PositionableDropZoneProps[]>>;
     figureNum?: number;
 }
 
 // TODO: 
 // - migrate min width / height to px only or auto (this is all that's allowed anyway!)
 
-export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
-    const {open, toggle, imgSrc, initialDropZoneIndex, dropZones, setDropZones, figureNum} = props;
+export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
+    const {open, toggle, imgSrc, initialRegionIndex, regions, setRegions, figureNum} = props;
     const dropZoneQuestionContext = useContext(DropZoneQuestionContext);
     const inlineQuestionContext = useContext(InlineQuestionContext);
     const imageRef = useRef<HTMLImageElement>(null);
 
-    const [percentageLeft, setPercentageLeft] = useState<(number | "")[]>(dropZones.map(dz => dz.left));
-    const [percentageTop, setPercentageTop] = useState<(number | "")[]>(dropZones.map(dz => dz.top));
+    const [percentageLeft, setPercentageLeft] = useState<(number | "")[]>(regions.map(dz => dz.left));
+    const [percentageTop, setPercentageTop] = useState<(number | "")[]>(regions.map(dz => dz.top));
 
     const [imageScaleFactor, setImageScaleFactor] = useState({x: 1, y: 1});
 
@@ -109,24 +109,24 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
         setImageScaleFactor(newScaleFactor);
     };
 
-    return <Modal isOpen={open} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Add drop zones</ModalHeader>
-        <ModalBody className={styles.clozeDropZoneModalBody}>
+    return <Modal isOpen={open} toggle={toggle} size="xl">
+        <ModalHeader toggle={toggle}>Add figure regions</ModalHeader>
+        <ModalBody className={styles.figureRegionModalBody}>
             <div className="d-flex justify-content-center">
                 <div className="position-relative">
                     <img id="figure-image" src={imgSrc} alt="" ref={imageRef} onLoad={recalculateImageScaleFactor}/>
-                    {dropZones.map((dzProps, i) => <PositionableDropZone 
-                        key={i} {...dzProps} 
-                        id={dzProps.id ?? `F${figureNum ?? ""}-${initialDropZoneIndex + i}`}
+                    {regions.map((regionProps, i) => <PositionableDropZone 
+                        key={i} {...regionProps} 
+                        id={regionProps.id ?? `F${figureNum ?? ""}-${initialRegionIndex + i}`}
                         scaleFactor={imageScaleFactor} 
                         setPercentageLeft={l => setPercentageLeft(p => p.map((v, j) => j === i ? l : v))}
                         setPercentageTop={t => setPercentageTop(p => p.map((v, j) => j === i ? t : v))}
-                        setDropZone={dz => setDropZones(p => p.map((v, j) => j === i ? dz : v))}
+                        setDropZone={dz => setRegions(p => p.map((v, j) => j === i ? dz : v))}
                     />)}
                 </div>
             </div>
 
-            <table className={styles.dropZoneInputs}>
+            <table className={styles.figureRegionModalInputs}>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -138,39 +138,39 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {dropZones.map((dzProps, i) => {
-                        const {id, minWidth, minHeight, left, top} = dzProps;
+                    {regions.map((regionProps, i) => {
+                        const {id, minWidth, minHeight, left, top} = regionProps;
 
                         return <tr key={i}> 
                             <td>
                                 <input type={"text"} value={id} onChange={event => {
-                                    const newDropZoneStates = [...dropZones];
-                                    newDropZoneStates[i].id = event.target.value;
-                                    setDropZones(newDropZoneStates);
+                                    const newRegionStates = [...regions];
+                                    newRegionStates[i].id = event.target.value;
+                                    setRegions(newRegionStates);
                                 }}/>
                             </td>
                             <td>
                                 <input type={"text"} value={minWidth} onChange={event => {
-                                    const newDropZoneStates = [...dropZones];
-                                    newDropZoneStates[i].minWidth = event.target.value;
-                                    setDropZones(newDropZoneStates);
+                                    const newRegionStates = [...regions];
+                                    newRegionStates[i].minWidth = event.target.value;
+                                    setRegions(newRegionStates);
                                 }}/>
                             </td>
                             <td>
                                 <input type={"text"} value={minHeight} onChange={event => {
-                                    const newDropZoneStates = [...dropZones];
-                                    newDropZoneStates[i].minHeight = event.target.value;
-                                    setDropZones(newDropZoneStates);
+                                    const newRegionStates = [...regions];
+                                    newRegionStates[i].minHeight = event.target.value;
+                                    setRegions(newRegionStates);
                                 }}/>
                             </td>
                             <td>
                                 <input type={"number"} step={0.1} value={percentageLeft[i]} onChange={event => {
                                     const newValue = clamp(parseFloat(event.target.value), 0, 100);
-                                    const newDropZoneStates = [...dropZones];
+                                    const newRegionStates = [...regions];
                                     const newPercentageLeft = [...percentageLeft];
                                     newPercentageLeft[i] = event.target.value !== "" ? newValue : ""
-                                    newDropZoneStates[i].left = event.target.value !== "" ? newValue : 0;
-                                    setDropZones(newDropZoneStates);
+                                    newRegionStates[i].left = event.target.value !== "" ? newValue : 0;
+                                    setRegions(newRegionStates);
                                     setPercentageLeft(newPercentageLeft);
                                 }} onBlur={() => {
                                     if (percentageLeft[i] === "") {
@@ -181,12 +181,12 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
                             <td>
                                 <input type={"number"} step={0.1} value={percentageTop[i]} onChange={event => {
                                     const newValue = clamp(parseFloat(event.target.value), 0, 100);
-                                    const newDropZoneStates = [...dropZones];
+                                    const newRegionStates = [...regions];
                                     const newPercentageTop = [...percentageTop];
-                                    newDropZoneStates[i].top = event.target.value !== "" ? newValue : 0;
+                                    newRegionStates[i].top = event.target.value !== "" ? newValue : 0;
                                     newPercentageTop[i] = event.target.value !== "" ? newValue : "";
                                     setPercentageTop(newPercentageTop);
-                                    setDropZones(newDropZoneStates);
+                                    setRegions(newRegionStates);
                                 }} onBlur={() => {
                                     if (percentageTop[i] === "") {
                                         setPercentageTop(p => p.map((v, j) => j === i ? 0 : v));
@@ -195,7 +195,7 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
                             </td>
                             <td>
                                 <button onClick={() => {
-                                    setDropZones(dropZones.filter((_, j) => j !== i));
+                                    setRegions(regions.filter((_, j) => j !== i));
                                     setPercentageLeft(percentageLeft.filter((_, j) => j !== i));
                                     setPercentageTop(percentageTop.filter((_, j) => j !== i));
                                 }}>
@@ -211,14 +211,14 @@ export const FigureDropZoneModal = (props: FigureDropZoneModalProps) => {
     
             <div className="d-flex justify-content-between mt-3">
                 <button onClick={() => {
-                    setDropZones([...dropZones, {id: `F${figureNum ?? ""}-${dropZones.length}`, minWidth: "100px", minHeight: "auto", left: 50, top: 50}])
+                    setRegions([...regions, {id: `F${figureNum ?? ""}-${regions.length}`, minWidth: "100px", minHeight: "auto", left: 50, top: 50}])
                     setPercentageLeft([...percentageLeft, 50]);
                     setPercentageTop([...percentageTop, 50]);
                     if (dropZoneQuestionContext.isDndQuestion) {
                         dropZoneQuestionContext.dropZoneCount = dropZoneQuestionContext.dropZoneCount ? dropZoneQuestionContext.dropZoneCount + 1 : 1;
                     }
                 }}>
-                    Add drop zone
+                    Add region
                 </button>
                 <button onClick={toggle}>
                     Done

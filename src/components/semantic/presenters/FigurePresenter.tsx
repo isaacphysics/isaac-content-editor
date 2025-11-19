@@ -14,7 +14,7 @@ import styles from "../styles/figure.module.css";
 import {NON_STATIC_FIGURE_FLAG} from "../../../isaac/IsaacTypes";
 import {Alert} from "reactstrap";
 import { DropZoneQuestionContext } from "./ItemQuestionPresenter";
-import { FigureDropZoneModal, PositionableDropZoneProps } from "../../FigureDropZoneModal";
+import { FigureRegionModal, PositionableDropZoneProps } from "../../FigureDropZoneModal";
 import { InlineQuestionContext } from "./questionPresenters";
 
 export function FigurePresenter(props: PresenterProps<Figure>) {
@@ -191,19 +191,19 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
         {itemQuestionContext.isDndQuestion && <div className={styles.clozeFigureFooter}>
             <button onClick={toggleDndDropZoneModal} disabled={!imageRef.current?.src}>Add drop-zones to figure</button>
             {!!dropZones.length && <span style={{color: "grey"}}> ({dropZones.length} managed zone{dropZones.length !== 1 ? "s" : ""})</span>}
-            {imageRef.current?.src && <FigureDropZoneModal 
+            {imageRef.current?.src && <FigureRegionModal 
                 open={dndDropZoneModalOpen} toggle={toggleDndDropZoneModal} imgSrc={imageRef.current.src} 
-                initialDropZoneIndex={itemQuestionContext.calculateDZIndexFromFigureId(doc.id as string)}
-                dropZones={dropZones} setDropZones={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
+                initialRegionIndex={itemQuestionContext.calculateDZIndexFromFigureId(doc.id as string)}
+                regions={dropZones} setRegions={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
             />}
         </div>}
         {inlineQuestionContext.isInlineQuestion && <div className={styles.clozeFigureFooter}>
             <button onClick={toggleDndDropZoneModal} disabled={!imageRef.current?.src}>Add inline entry to figure</button>
             {!!dropZones.length && <span style={{color: "grey"}}> ({dropZones.length} managed zone{dropZones.length !== 1 ? "s" : ""})</span>}
-            {imageRef.current?.src && <FigureDropZoneModal 
+            {imageRef.current?.src && <FigureRegionModal 
                 open={dndDropZoneModalOpen} toggle={toggleDndDropZoneModal} imgSrc={imageRef.current.src} 
-                initialDropZoneIndex={inlineQuestionContext.numParts ?? 0}
-                dropZones={dropZones} setDropZones={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
+                initialRegionIndex={0}
+                regions={dropZones} setRegions={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
             />}
         </div>}
     </>;

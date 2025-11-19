@@ -30,13 +30,13 @@
     visibility: hidden;
 }
 
-.clozeDropZoneModalBody {
+.figureRegionModalBody {
 
     > :first-child img {
         max-width: 100%;
     }
 
-    .dropZoneInputs {
+    .figureRegionModalInputs {
         width: 100%;
         table-layout: fixed;
         margin: 1rem 0 2rem;
