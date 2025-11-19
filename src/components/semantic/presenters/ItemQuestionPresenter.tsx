@@ -252,6 +252,7 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
             </Row>
         </DropdownToggle>
         <DropdownMenu className={styles.itemChoiceDropdown}>
+            {/* TODO: show only unused dropzone ids */}
             {Array.from(dropZoneIds ?? []).map((id) => {
                 return <DropdownItem key={id} className={styles.dropdownItem} onClick={() => {
                     update({
@@ -280,7 +281,6 @@ export function DndChoicePresenter(props: PresenterProps<DndItem>) {
     const staticItems = allowSubsetMatch && item.id !== NULL_DND_ITEM_ID ? [NULL_DND_ITEM] : [];
 
     return <div className={styles.itemsChoiceRow}>
-        {/* <span>Drop zone <b>{doc.dropZoneId}</b>:</span> */}
         <DropZoneSelector {...props} />
 
         {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert color="danger">
