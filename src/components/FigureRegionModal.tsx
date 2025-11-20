@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useMemo, useRef, useState } from "react";
 import styles from "./semantic/styles/figure.module.css";
 import markupStyles from "../isaac/styles/markup.module.css";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { DropZoneQuestionContext } from "./semantic/presenters/ItemQuestionPresenter";
 import throttle from "lodash/throttle";
 import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
@@ -19,14 +19,16 @@ interface DraggableDropZoneProps {
     setPercentageLeft: (l: number) => void;
     setPercentageTop: (t: number) => void;
     setDropZone: (dz: PositionableDropZoneProps) => void;
+    isCondensed?: boolean;
 }
 
 const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZoneProps) => {
-    const {id, minWidth, width, left, top} = props;
+    const {id, minWidth, width, left, top, isCondensed} = props;
     const imgPos = useRef({left: 0, right: 0, top: 0, bottom: 0});
 
     const dropZoneQuestionContext = useContext(DropZoneQuestionContext);
     const minHeight = dropZoneQuestionContext.isClozeQuestion ? "24px" : "34px";
+    const condensedSize = "36px";
 
     const handleDrag = useMemo(() => {
         return throttle((e: React.DragEvent<HTMLDivElement>) => {
@@ -48,14 +50,24 @@ const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZo
         className="position-absolute" 
         draggable={true}
         role="tooltip"
-        style={{
-            left: `calc(${left}% - (max(${minWidth}, ${width}%) * ${left/100}))`, 
-            top: `calc(${top}% - (${minHeight} * ${top/100}))`,
-            width: `${width}%`,
-            minWidth,
-            minHeight,
-            height: minHeight, // set a height so that h-100 on children works as expected
-        }}
+        style={isCondensed 
+            ? {
+                left: `calc(${left}% - (${width}% * ${left/100}) + ((${width}% - ${condensedSize}) / 2))`, 
+                top: `calc(${top}% - (${minHeight} * ${top/100}) + ((${minHeight} - ${condensedSize}) / 2))`,
+                width: condensedSize,
+                minWidth: condensedSize,
+                height: condensedSize,
+                minHeight: condensedSize,
+            }
+            : {
+                left: `calc(${left}% - (max(${minWidth}, ${width}%) * ${left/100}))`, 
+                top: `calc(${top}% - (${minHeight} * ${top/100}))`,
+                width: `${width}%`,
+                minWidth,
+                height: minHeight, // set a height so that h-100 on children works as expected
+                minHeight,
+            }
+        }
         onDragStart={(e) => {
             const imgRect = document.getElementById("figure-image")?.getBoundingClientRect();
             if (!imgRect) return;
@@ -106,6 +118,8 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
         return () => observer.disconnect();
     }, []);
 
+    const isCondensed = containerWidth !== null && condensedModeMaxWidth !== undefined && containerWidth <= condensedModeMaxWidth;
+
     if (!dropZoneQuestionContext.isDndQuestion && !inlineQuestionContext.isInlineQuestion) {
         window.alert("No DND / inline question context found. Cancelling...");
         return null;
@@ -123,10 +137,26 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                         setPercentageLeft={l => setPercentageLeft(p => p.map((v, j) => j === i ? l : v))}
                         setPercentageTop={t => setPercentageTop(p => p.map((v, j) => j === i ? t : v))}
                         setDropZone={dz => setRegions(p => p.map((v, j) => j === i ? dz : v))}
+                        isCondensed={isCondensed}
                     />)}
                 </div>
                 <div>
                     <div>Displaying at width: <b>{containerWidth}px</b></div>
+                    <div className="d-flex align-items-center">
+                        Condensed mode max width:
+                        <Input
+                            type="number"
+                            style={{width: "80px"}}
+                            value={condensedModeMaxWidth !== undefined ? condensedModeMaxWidth : ""}
+                            placeholder="unset"
+                            className="mx-1"
+                            onChange={e => {
+                                const value = e.target.value;
+                                setCondensedModeMaxWidth(value !== "" ? Number(value) : undefined);
+                            }}
+                        />
+                        px
+                    </div>
                 </div>
             </div>
 
@@ -211,8 +241,6 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                     })}
                 </tbody>
             </table>
-
-            <span><small><i>Note: any exact pixel values here may not be accurate to your screen. They are being scaled relative to the natural resolution of the image; if the image is shrunk, any units will follow. What you see here will instead be more accurate to how it will appear on the site.</i></small></span>
     
             <div className="d-flex justify-content-between mt-3">
                 <button onClick={() => {
