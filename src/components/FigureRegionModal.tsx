@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef, useState } from "react";
+import React, { useContext, useMemo, useRef, useState } from "react";
 import styles from "./semantic/styles/figure.module.css";
 import markupStyles from "../isaac/styles/markup.module.css";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
@@ -16,30 +16,34 @@ const toFixedDP = (value: number, dp: number) => {
 export interface PositionableDropZoneProps {
     id: string;
     minWidth: string;
-    minHeight: string;
+    width?: number;
     left: number;
     top: number;
 }
 
 interface DraggableDropZoneProps {
-    scaleFactor: {x: number, y: number};
     setPercentageLeft: (l: number) => void;
     setPercentageTop: (t: number) => void;
     setDropZone: (dz: PositionableDropZoneProps) => void;
 }
 
 const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZoneProps) => {
-    const {id, minWidth, minHeight, left, top, scaleFactor} = props;
+    const {id, minWidth, width, left, top} = props;
     const imgPos = useRef({left: 0, right: 0, top: 0, bottom: 0});
 
-    const handleDrag = useCallback(throttle((e: React.DragEvent<HTMLDivElement>) => {
-        if (e.pageX === 0 && e.pageY === 0) return; // on drag end, the event fires with this; ignore it
-        const newX = toFixedDP(clamp(((e.pageX - imgPos.current.left) / (imgPos.current.right - imgPos.current.left)) * 100, 0, 100), 1);
-        const newY = toFixedDP(clamp(((e.pageY - imgPos.current.top) / (imgPos.current.bottom - imgPos.current.top)) * 100, 0, 100), 1);
-        props.setPercentageLeft(newX);
-        props.setPercentageTop(newY);
-        props.setDropZone({id, minWidth, minHeight, left: newX, top: newY});
-    }, 40), []);
+    const dropZoneQuestionContext = useContext(DropZoneQuestionContext);
+    const minHeight = dropZoneQuestionContext.isClozeQuestion ? "24px" : "34px";
+
+    const handleDrag = useMemo(() => {
+        return throttle((e: React.DragEvent<HTMLDivElement>) => {
+            if (e.pageX === 0 && e.pageY === 0) return; // on drag end, the event fires with this; ignore it
+            const newX = toFixedDP(clamp(((e.pageX - imgPos.current.left) / (imgPos.current.right - imgPos.current.left)) * 100, 0, 100), 1);
+            const newY = toFixedDP(clamp(((e.pageY - imgPos.current.top) / (imgPos.current.bottom - imgPos.current.top)) * 100, 0, 100), 1);
+            props.setPercentageLeft(newX);
+            props.setPercentageTop(newY);
+            props.setDropZone({id, minWidth, width, left: newX, top: newY});
+        }, 40); 
+    }, [id, minWidth, width]);
 
     const dragImage = new Image();
     // 1x1 transparent pixel
@@ -51,8 +55,12 @@ const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZo
         draggable={true}
         role="tooltip"
         style={{
-            left: `calc(${left}% - (${minWidth !== 'auto' ? minWidth : "100px"} * ${scaleFactor.x} * ${left/100}))`, 
-            top: `calc(${top}% - (${minHeight !== 'auto' ? minHeight : "24px"} * ${scaleFactor.y} * ${top/100}))`
+            left: `calc(${left}% - (max(${minWidth}, ${width}%) * ${left/100}))`, 
+            top: `calc(${top}% - (${minHeight} * ${top/100}))`,
+            width: `${width}%`,
+            minWidth,
+            minHeight,
+            height: minHeight, // set a height so that h-100 on children works as expected
         }}
         onDragStart={(e) => {
             const imgRect = document.getElementById("figure-image")?.getBoundingClientRect();
@@ -66,10 +74,7 @@ const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZo
             handleDrag(e);
         }}
     >
-        <span className={`d-inline-block text-right ${markupStyles.clozeDropZonePlaceholder}`} style={{
-            minWidth: `calc(${minWidth} * ${scaleFactor.x})`, 
-            minHeight: `calc(${minHeight} * ${scaleFactor.y})`
-        }}>
+        <span className={`d-inline-block text-right w-100 h-100 ${markupStyles.clozeDropZonePlaceholder}`}>
             {id}&nbsp;&nbsp;
         </span>
     </div>
@@ -85,9 +90,6 @@ interface FigureDropZoneModalProps {
     figureNum?: number;
 }
 
-// TODO: 
-// - migrate min width / height to px only or auto (this is all that's allowed anyway!)
-
 export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
     const {open, toggle, imgSrc, initialRegionIndex, regions, setRegions, figureNum} = props;
     const dropZoneQuestionContext = useContext(DropZoneQuestionContext);
@@ -97,28 +99,20 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
     const [percentageLeft, setPercentageLeft] = useState<(number | "")[]>(regions.map(dz => dz.left));
     const [percentageTop, setPercentageTop] = useState<(number | "")[]>(regions.map(dz => dz.top));
 
-    const [imageScaleFactor, setImageScaleFactor] = useState({x: 1, y: 1});
-
     if (!dropZoneQuestionContext.isDndQuestion && !inlineQuestionContext.isInlineQuestion) {
         window.alert("No DND / inline question context found. Cancelling...");
         return null;
     }
-    
-    const recalculateImageScaleFactor = () => {
-        const newScaleFactor = imageRef.current ? {x: imageRef.current.width / imageRef.current.naturalWidth, y: imageRef.current.height / imageRef.current.naturalHeight} : {x: 1, y: 1};
-        setImageScaleFactor(newScaleFactor);
-    };
 
     return <Modal isOpen={open} toggle={toggle} size="xl">
         <ModalHeader toggle={toggle}>Add figure regions</ModalHeader>
         <ModalBody className={styles.figureRegionModalBody}>
             <div className="d-flex justify-content-center">
                 <div className="position-relative">
-                    <img id="figure-image" src={imgSrc} alt="" ref={imageRef} onLoad={recalculateImageScaleFactor}/>
+                    <img id="figure-image" src={imgSrc} alt="" ref={imageRef}/>
                     {regions.map((regionProps, i) => <PositionableDropZone 
                         key={i} {...regionProps} 
                         id={regionProps.id ?? `F${figureNum ?? ""}-${initialRegionIndex + i}`}
-                        scaleFactor={imageScaleFactor} 
                         setPercentageLeft={l => setPercentageLeft(p => p.map((v, j) => j === i ? l : v))}
                         setPercentageTop={t => setPercentageTop(p => p.map((v, j) => j === i ? t : v))}
                         setDropZone={dz => setRegions(p => p.map((v, j) => j === i ? dz : v))}
@@ -130,8 +124,8 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Min width</th>
-                        <th>Min height</th>
+                        <th>Min width (px)</th>
+                        <th>Width (%)</th>
                         <th>X (%)</th>
                         <th>Y (%)</th>
                         <th/>{/* remove button */}
@@ -139,7 +133,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                 </thead>
                 <tbody>
                     {regions.map((regionProps, i) => {
-                        const {id, minWidth, minHeight, left, top} = regionProps;
+                        const {id, minWidth, width} = regionProps;
 
                         return <tr key={i}> 
                             <td>
@@ -157,9 +151,10 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                                 }}/>
                             </td>
                             <td>
-                                <input type={"text"} value={minHeight} onChange={event => {
+                                <input type={"number"} step={0.1} value={width} onChange={event => {
+                                    const newValue = clamp(parseFloat(event.target.value), 0, 100);
                                     const newRegionStates = [...regions];
-                                    newRegionStates[i].minHeight = event.target.value;
+                                    newRegionStates[i].width = event.target.value !== "" ? newValue : 0;
                                     setRegions(newRegionStates);
                                 }}/>
                             </td>
@@ -211,7 +206,13 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
     
             <div className="d-flex justify-content-between mt-3">
                 <button onClick={() => {
-                    setRegions([...regions, {id: `F${figureNum ?? ""}-${regions.length}`, minWidth: "100px", minHeight: "auto", left: 50, top: 50}])
+                    setRegions([...regions, {
+                        id: `F${figureNum ?? ""}-${regions.length}`, 
+                        minWidth: "100px", 
+                        width: 15, 
+                        left: 50, 
+                        top: 50
+                    }]);
                     setPercentageLeft([...percentageLeft, 50]);
                     setPercentageTop([...percentageTop, 50]);
                     if (dropZoneQuestionContext.isDndQuestion) {
