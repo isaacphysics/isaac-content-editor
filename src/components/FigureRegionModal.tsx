@@ -5,20 +5,13 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { DropZoneQuestionContext } from "./semantic/presenters/ItemQuestionPresenter";
 import throttle from "lodash/throttle";
 import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
+import { PositionableDropZoneProps } from "../isaac-data-types";
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
 const toFixedDP = (value: number, dp: number) => {
     const factor = Math.pow(10, dp);
     return Math.round(value * factor) / factor;
-}
-
-export interface PositionableDropZoneProps {
-    id: string;
-    minWidth: string;
-    width?: number;
-    left: number;
-    top: number;
 }
 
 interface DraggableDropZoneProps {

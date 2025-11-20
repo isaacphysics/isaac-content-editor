@@ -10,7 +10,8 @@ import {
     IsaacParsonsQuestion,
     IsaacReorderQuestion,
     Item,
-    ParsonsItem
+    ParsonsItem,
+    PositionableDropZoneProps
 } from "../../../isaac-data-types";
 
 import {EditableAltTextProp, EditableIDProp, EditableValueProp} from "../props/EditableDocProp";
@@ -27,7 +28,6 @@ import {Box} from "../SemanticItem";
 import {ExpandableText} from "../ExpandableText";
 import {extractDropZoneIdsPerFigure, extractFigureDropZoneStartIndex, extractValueOrChildrenText} from "../../../utils/content";
 import {dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID, NULL_DND_ITEM, NULL_DND_ITEM_ID} from "../../../isaac/IsaacTypes";
-import { PositionableDropZoneProps } from "../../FigureRegionModal";
 
 interface ItemsContextType {
     items: Item[] | undefined;

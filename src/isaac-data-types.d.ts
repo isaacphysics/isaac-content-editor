@@ -399,14 +399,16 @@ export interface ExternalReference {
     url?: string;
 }
 
+export interface PositionableDropZoneProps {
+    id: string;
+    minWidth: string;
+    width?: number;
+    left: number;
+    top: number;
+}
+
 export interface Figure extends Image {
-    dropZones?: {
-        id: string;
-        minWidth: string;
-        minHeight: string;
-        left: number;
-        top: number;
-    }[];
+    dropZones?: PositionableDropZoneProps[];
 }
 
 export interface Formula extends Choice {

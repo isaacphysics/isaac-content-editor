@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 
-import { Figure } from "../../../isaac-data-types";
+import { Figure, PositionableDropZoneProps } from "../../../isaac-data-types";
 import { FigureNumberingContext } from "../../../isaac/IsaacTypes";
 import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresenter";
 import { PresenterProps } from "../registry";
@@ -14,7 +14,7 @@ import styles from "../styles/figure.module.css";
 import {NON_STATIC_FIGURE_FLAG} from "../../../isaac/IsaacTypes";
 import {Alert} from "reactstrap";
 import { DropZoneQuestionContext } from "./ItemQuestionPresenter";
-import { FigureRegionModal, PositionableDropZoneProps } from "../../FigureRegionModal";
+import { FigureRegionModal } from "../../FigureRegionModal";
 import { InlineQuestionContext } from "./questionPresenters";
 
 export function FigurePresenter(props: PresenterProps<Figure>) {
