@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useRef, useState } from "react";
+import React, { useCallback, useContext, useMemo, useRef, useState } from "react";
 import styles from "./semantic/styles/figure.module.css";
 import markupStyles from "../isaac/styles/markup.module.css";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
@@ -6,6 +6,7 @@ import { DropZoneQuestionContext } from "./semantic/presenters/ItemQuestionPrese
 import throttle from "lodash/throttle";
 import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
 import { PositionableDropZoneProps } from "../isaac-data-types";
+import classNames from "classnames";
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
@@ -88,9 +89,22 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
     const dropZoneQuestionContext = useContext(DropZoneQuestionContext);
     const inlineQuestionContext = useContext(InlineQuestionContext);
     const imageRef = useRef<HTMLImageElement>(null);
+    const imageContainerRef = useRef<HTMLDivElement>(null);
 
     const [percentageLeft, setPercentageLeft] = useState<(number | "")[]>(regions.map(dz => dz.left));
     const [percentageTop, setPercentageTop] = useState<(number | "")[]>(regions.map(dz => dz.top));
+    const [containerWidth, setContainerWidth] = useState<number | null>(null);
+    const [condensedModeMaxWidth, setCondensedModeMaxWidth] = useState<number | undefined>(undefined);
+
+    const setupResizeObserver = useCallback(() => {
+        if (!imageContainerRef.current) return;
+        const observer = new ResizeObserver((entries) => {
+            const element = entries[0].target;
+            setContainerWidth(element.clientWidth);
+        });
+        observer.observe(imageContainerRef.current);
+        return () => observer.disconnect();
+    }, []);
 
     if (!dropZoneQuestionContext.isDndQuestion && !inlineQuestionContext.isInlineQuestion) {
         window.alert("No DND / inline question context found. Cancelling...");
@@ -100,9 +114,9 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
     return <Modal isOpen={open} toggle={toggle} size="xl">
         <ModalHeader toggle={toggle}>Add figure regions</ModalHeader>
         <ModalBody className={styles.figureRegionModalBody}>
-            <div className="d-flex justify-content-center">
-                <div className="position-relative">
-                    <img id="figure-image" src={imgSrc} alt="" ref={imageRef}/>
+            <div className="d-flex flex-column justify-content-center">
+                <div id="figure-image-container" className={classNames(styles.figureRegionImageContainer, "align-self-center")} ref={imageContainerRef}>
+                    <img id="figure-image" src={imgSrc} alt="" ref={imageRef} onLoad={setupResizeObserver} />
                     {regions.map((regionProps, i) => <PositionableDropZone 
                         key={i} {...regionProps} 
                         id={regionProps.id ?? `F${figureNum ?? ""}-${initialRegionIndex + i}`}
@@ -110,6 +124,9 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                         setPercentageTop={t => setPercentageTop(p => p.map((v, j) => j === i ? t : v))}
                         setDropZone={dz => setRegions(p => p.map((v, j) => j === i ? dz : v))}
                     />)}
+                </div>
+                <div>
+                    <div>Displaying at width: <b>{containerWidth}px</b></div>
                 </div>
             </div>
 
