@@ -15,6 +15,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
 
     // Mark scheme operations - these changes also update marked examples
     function updateMark<T extends keyof LLMFreeTextMarkSchemeEntry>(index: number, field: T, value: LLMFreeTextMarkSchemeEntry[T]) {
+        const updatedMarkScheme = doc.markScheme?.map((msi, i) => i === index ? {...msi, [field]: value} : msi) ?? [];
         let possiblyUpdatedMarkedExamples = doc.markedExamples;
         if (field === "jsonField") { // also update marked examples mark fieldnames
             const prevJsonFieldValue = doc.markScheme?.[index].jsonField;
@@ -22,9 +23,13 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                 possiblyUpdatedMarkedExamples = doc.markedExamples?.map(me => {
                     const newMarks = {...me.marks, [value as string]: me.marks?.[prevJsonFieldValue] ?? 0};
                     delete newMarks[prevJsonFieldValue];
-                    return { ...me, marks: newMarks, marksAwarded: evaluateMarkTotal(doc.markScheme, doc.markingFormula, {...newMarks, "maxMarks": doc.maxMarks ?? 0}) };
+                    return { ...me, marks: newMarks, marksAwarded: evaluateMarkTotal(updatedMarkScheme, doc.markingFormula, {...newMarks, "maxMarks": doc.maxMarks ?? 0}) };
                 });
             }
+        } else if (field === "marks") { // also update marked examples mark values
+            possiblyUpdatedMarkedExamples = doc.markedExamples?.map(me => {
+                return { ...me, marks: me.marks, marksAwarded: evaluateMarkTotal(updatedMarkScheme, doc.markingFormula, {...me.marks, "maxMarks": doc.maxMarks ?? 0}) };
+            });
         }
         update({
             ...doc,
