@@ -158,12 +158,13 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
     const buttonStrings: [string, string][] = [...functionNamesMap, ...constantNamesMap, ...variableNamesMap, ["maxMarks", "maxMarks"]];
 
     return <div>
-        <h2 className="h5">Mark scheme</h2>
+        <h2 className="h4">Mark scheme</h2>
         <table className="table table-bordered">
             <thead>
                 <tr>
                     <td><strong>JSON fieldname</strong></td>
                     <td><strong>Short description</strong></td>
+                    <td><strong>Marks</strong></td>
                 </tr>
             </thead>
             <tbody>
@@ -172,8 +173,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                         <pre><EditableText
                             text={mark.jsonField}
                             hasError={value => !value?.match(/^[a-z][a-zA-Z0-9]+$/) ? ["Invalid JSON fieldname format"] : undefined}
-                            onSave={value => updateMark(i, "jsonField", value)}
-                        /></pre>
+                            onSave={value => updateMark(i, "jsonField", value)} /></pre>
                     </td>
                     <td>
                         <div className="d-flex justify-content-between">
@@ -183,100 +183,99 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                             <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteMark(mark.jsonField)}>❌</button>
                         </div>
                     </td>
+                    <td>
+                        <pre><EditableText
+                            text={String(mark.marks)}
+                            hasError={value => !value?.match(/^-?[0-9]+$/) ? ["Invalid mark count"] : undefined}
+                            onSave={value => updateMark(i, "marks", Number(value))} /></pre>
+                    </td>
                 </tr>)}
                 <tr>
-                    <td colSpan={2}>
+                    <td colSpan={3}>
                         <button className="btn btn-secondary" onClick={addMark}>Add mark</button>
                     </td>
                 </tr>
             </tbody>
-            <tfoot>
-                <tr>
-                    <td>
-                        <strong><pre>maxMarks</pre></strong>
-                        {doc.maxMarks === undefined && 
-                            <FormFeedback className={styles.feedback}> maxMarks is a required field </FormFeedback>
-                        }
-                    </td>
-                    <td>
-                        <EditableText 
-                            text={doc.maxMarks?.toString()}
-                            hasError={value => Number.isNaN(Number(value)) ? ["maxMarks must be a number"] :
-                                Number(value) < 0 ? ["maxMarks cannot be negative"] :
-                                undefined}
-                            onSave={mm => mm && update({...doc, maxMarks: Number(mm)})}
-                        />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong>Pass mark</strong>
-                        <div>
-                            {(doc.passMark === undefined && doc.maxMarks !== undefined) ?
-                                <FormFeedback className={styles.feedback}> Using maxMarks value as default pass mark </FormFeedback> :
-                                (doc.passMark !== undefined && doc.maxMarks !== undefined && doc.passMark > doc.maxMarks) &&
-                                <FormFeedback className={styles.feedback}> Pass mark cannot be greater than max marks </FormFeedback>
-                            }
-                        </div>
-                    </td>
-                    <td>
-                        <EditableText 
-                            text={doc.passMark?.toString()}
-                            hasError={value => Number.isNaN(Number(value)) ? ["Pass mark must be a number"] :
-                                Number(value) > (doc.maxMarks ?? 0) ? ["Pass mark cannot be greater than maxMarks"] :
-                                Number(value) < 0 ? ["Pass mark cannot be negative"] :
-                                undefined}
-                            onSave={pm => pm && update({...doc, passMark: Number(pm)})}
-                        />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong>Marking formula</strong>
-                        <br/>
-                        <div>
-                            {(!!validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
-                                <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
-                            }
-                        </div>
-                        <div>
-                            {doc.markingFormulaString && missingMarks.length > 0 && 
-                                <FormFeedback className={styles.feedback}>
-                                    {"Missing the following mark(s): " + missingMarks.reduce((markList, currentMark) => markList + ", " + currentMark)}
-                                </FormFeedback>
-                            }
-                        </div>
-                    </td>
-                    <td>
-                        <div className="flex-fill">
-                            <EditableText
-                                multiLine={true}
-                                block={true}
-                                label="Marking formula"
-                                placeHolder="e.g. MIN(maxMarks, SUM(... all marks ...))"
-                                text={doc.markingFormulaString}
-                                hasError={value => validateMarkingFormula(value)}
-                                onSave={value => updateMarkingFormula(value)}
-                                buttonStrings={buttonStrings}
-                                inputProps={{ className: styles["llm_formula_input"] }}
-                            />
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>Additional marking instructions</strong></td>
-                    <td>
-                        <EditableText
-                            text={doc.additionalMarkingInstructions} multiLine block
-                            onSave={ams => update({...doc, additionalMarkingInstructions: ams})}
-                        />
-                    </td>
-                </tr>
-            </tfoot>
         </table>
 
-        <h2 className="h4">Marked examples</h2>
+        <h2 className="h4">Mark calculations</h2>
         <table className="table table-bordered">
+        <tfoot>
+            <tr>
+                <td>
+                    <strong><pre>maxMarks</pre></strong>
+                    {doc.maxMarks === undefined &&
+                        <FormFeedback className={styles.feedback}> maxMarks is a required field </FormFeedback>}
+                </td>
+                <td>
+                    <EditableText
+                        text={doc.maxMarks?.toString()}
+                        hasError={value => Number.isNaN(Number(value)) ? ["maxMarks must be a number"] :
+                            Number(value) < 0 ? ["maxMarks cannot be negative"] :
+                                undefined}
+                        onSave={mm => mm && update({ ...doc, maxMarks: Number(mm) })} />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Pass mark</strong>
+                    <div>
+                        {(doc.passMark === undefined && doc.maxMarks !== undefined) ?
+                            <FormFeedback className={styles.feedback}> Using maxMarks value as default pass mark </FormFeedback> :
+                            (doc.passMark !== undefined && doc.maxMarks !== undefined && doc.passMark > doc.maxMarks) &&
+                            <FormFeedback className={styles.feedback}> Pass mark cannot be greater than max marks </FormFeedback>}
+                    </div>
+                </td>
+                <td>
+                    <EditableText
+                        text={doc.passMark?.toString()}
+                        hasError={value => Number.isNaN(Number(value)) ? ["Pass mark must be a number"] :
+                            Number(value) > (doc.maxMarks ?? 0) ? ["Pass mark cannot be greater than maxMarks"] :
+                                Number(value) < 0 ? ["Pass mark cannot be negative"] :
+                                    undefined}
+                        onSave={pm => pm && update({ ...doc, passMark: Number(pm) })} />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Marking formula</strong>
+                    <br />
+                    <div>
+                        {(!!validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) &&
+                            <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>}
+                    </div>
+                    <div>
+                        {doc.markingFormulaString && missingMarks.length > 0 &&
+                            <FormFeedback className={styles.feedback}>
+                                {"Missing the following mark(s): " + missingMarks.reduce((markList, currentMark) => markList + ", " + currentMark)}
+                            </FormFeedback>}
+                    </div>
+                </td>
+                <td>
+                    <div className="flex-fill">
+                        <EditableText
+                            multiLine={true}
+                            block={true}
+                            label="Marking formula"
+                            placeHolder="e.g. MIN(maxMarks, SUM(... all marks ...))"
+                            text={doc.markingFormulaString}
+                            hasError={value => validateMarkingFormula(value)}
+                            onSave={value => updateMarkingFormula(value)}
+                            buttonStrings={buttonStrings}
+                            inputProps={{ className: styles["llm_formula_input"] }} />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Additional marking instructions</strong></td>
+                <td>
+                    <EditableText
+                        text={doc.additionalMarkingInstructions} multiLine block
+                        onSave={ams => update({ ...doc, additionalMarkingInstructions: ams })} />
+                </td>
+            </tr>
+        </tfoot>
+    </table><h2 className="h4">Marked examples</h2><table className="table table-bordered">
             <thead>
                 <tr>
                     <td className="w-50"><strong>Answer</strong></td>
@@ -294,25 +293,23 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                             {/* We assume, for now, that each point earns a single. Each one can be represented as a checkbox. */}
                             <CheckboxDocProp
                                 label={jsonFieldname}
-                                doc={Object.entries(example.marks ?? {}).reduce<Record<string, boolean>>((booleanMarks, [key, val]) => ({...booleanMarks, [key]: val === 1}), {})}
+                                doc={Object.entries(example.marks ?? {}).reduce<Record<string, boolean>>((booleanMarks, [key, val]) => ({ ...booleanMarks, [key]: val === 1 }), {})}
                                 prop={jsonFieldname}
-                                update={newMarks => updateExample(i, "marks", {...example.marks, [jsonFieldname]: newMarks[jsonFieldname] ? 1 : 0})}
-                            />
+                                update={newMarks => updateExample(i, "marks", { ...example.marks, [jsonFieldname]: newMarks[jsonFieldname] ? 1 : 0 })} />
                         </div>)}
                     </td>
                     <td>
                         <div className="d-flex justify-content-between">
                             <div className="flex-fill">
-                                {doc.markingFormula ? 
-                                <div>
-                                    {example.marksAwarded}
-                                </div> 
-                                :
-                                <EditableText
-                                    text={example.marksAwarded?.toString()}
-                                    hasError={value => doc.maxMarks && parseInt(value ?? "0", 10) > doc.maxMarks ? ["Exceeds question's max marks"] : undefined}
-                                    onSave={value => updateExample(i, "marksAwarded", parseInt(value ?? "0", 10))}
-                                />}
+                                {doc.markingFormula ?
+                                    <div>
+                                        {example.marksAwarded}
+                                    </div>
+                                    :
+                                    <EditableText
+                                        text={example.marksAwarded?.toString()}
+                                        hasError={value => doc.maxMarks && parseInt(value ?? "0", 10) > doc.maxMarks ? ["Exceeds question's max marks"] : undefined}
+                                        onSave={value => updateExample(i, "marksAwarded", parseInt(value ?? "0", 10))} />}
                             </div>
                             <div>
                                 <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteExample(i)}>❌</button>
@@ -326,7 +323,6 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     </td>
                 </tr>
             </tbody>
-        </table>
-        <HintsPresenter {...props} />
+        </table><HintsPresenter {...props} />
     </div>;
 }
