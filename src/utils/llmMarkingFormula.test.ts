@@ -1,4 +1,4 @@
-import { LLMConstantNode, LLMFormulaNode, LLMFreeTextMarkedExample, LLMFunctionNode, LLMVariableNode } from "../isaac-data-types";
+import { LLMConstantNode, LLMFormulaNode, LLMFreeTextMarkedExample, LLMFreeTextMarkSchemeEntry, LLMFunctionNode, LLMVariableNode } from "../isaac-data-types";
 import { evaluateMarkingFormula, evaluateMarkTotal } from "./llmMarkingFormula";
 
 // Type guarded shorthands for generating LLMFormulaNodes
@@ -15,6 +15,12 @@ const defaultMarkingFormula: LLMFunctionNode = {type: "LLMMarkingFunction", name
         {type: "LLMMarkingVariable", name: "z"} as LLMVariableNode
     ]} as LLMFunctionNode
 ]};
+const defaultMarkScheme: LLMFreeTextMarkSchemeEntry[] = [
+    {jsonField: "x", marks: 1},
+    {jsonField: "y", marks: 1},
+    {jsonField: "z", marks: 1},
+];
+
 // advantageDisadvantage = SUM(MAX(advantageOne, advantageTwo), MAX(disadvantageOne, disadvantageTwo))
 const advantageDisadvantageMarkingFormula: LLMFunctionNode = {type: "LLMMarkingFunction", name: "SUM", arguments: [
     {type: "LLMMarkingFunction", name: "MAX", arguments: [
@@ -26,6 +32,13 @@ const advantageDisadvantageMarkingFormula: LLMFunctionNode = {type: "LLMMarkingF
         {type: "LLMMarkingVariable", name: "disadvantageTwo"} as LLMVariableNode,
     ]} as LLMFunctionNode
 ]};
+const advantageDisadvantageMarkScheme: LLMFreeTextMarkSchemeEntry[] = [
+    {jsonField: "advantageOne", marks: 1},
+    {jsonField: "advantageTwo", marks: 1},
+    {jsonField: "disadvantageOne", marks: 1},
+    {jsonField: "disadvantageTwo", marks: 1},
+];
+
 // pointExplanation = SUM(MAX(pointOne, pointTwo), MAX(MIN(pointOne, explanationOne), MIN(pointTwo, explanationTwo)))
 const pointExplanationMarkingFormula: LLMFunctionNode = {type: "LLMMarkingFunction", name: "SUM", arguments: [
     {type: "LLMMarkingFunction", name: "MAX", arguments: [
@@ -43,6 +56,12 @@ const pointExplanationMarkingFormula: LLMFunctionNode = {type: "LLMMarkingFuncti
         ]} as LLMFunctionNode,
     ]} as LLMFunctionNode
 ]};
+const pointExplanationMarkScheme: LLMFreeTextMarkSchemeEntry[] = [
+    {jsonField: "pointOne", marks: 1},
+    {jsonField: "pointTwo", marks: 1},
+    {jsonField: "explanationOne", marks: 1},
+    {jsonField: "explanationTwo", marks: 1},
+];
 
 const answer: LLMFreeTextMarkedExample = { answer: "example answer", marks: {"x": 1, "y": 2, "z": 0, "maxMarks": 2}, marksAwarded: 2 };
 const marks = answer.marks ?? {};
@@ -96,18 +115,18 @@ describe("evaluateMarkingFormula", () => {
 
 describe("evaluateMarkTotal", () => {
     it("should return MIN(maxMarks, SUM(..all marks..) when given no marking formula", () => {
-        expect(evaluateMarkTotal(defaultMarkingFormula, answer.marks)).toBe(2);
+        expect(evaluateMarkTotal(defaultMarkScheme, defaultMarkingFormula, answer.marks)).toBe(2);
 
-        expect(evaluateMarkTotal(undefined, answer.marks)).toBe(2);
+        expect(evaluateMarkTotal(defaultMarkScheme, undefined, answer.marks)).toBe(2);
     });
     it("should return one advantage mark and one disadvantage mark when given an advantage-disadvantage marking formula", () => {
         const advantageDisadvantageMarks: Record<string, number> = {"advantageOne": 1, "advantageTwo": 1, "disadvantageOne": 1, "disadvantageTwo": 0, "maxMarks": 2};
         const twoAdvantages: Record<string, number> = {"advantageOne": 1, "advantageTwo": 1, "disadvantageOne": 0, "disadvantageTwo": 0, "maxMarks": 2};
         const twoDisadvantages: Record<string, number> = {"advantageOne": 0, "advantageTwo": 0, "disadvantageOne": 1, "disadvantageTwo": 1, "maxMarks": 2};
 
-        expect(evaluateMarkTotal(advantageDisadvantageMarkingFormula, advantageDisadvantageMarks)).toBe(2);
-        expect(evaluateMarkTotal(advantageDisadvantageMarkingFormula, twoAdvantages)).toBe(1);
-        expect(evaluateMarkTotal(advantageDisadvantageMarkingFormula, twoDisadvantages)).toBe(1);
+        expect(evaluateMarkTotal(advantageDisadvantageMarkScheme, advantageDisadvantageMarkingFormula, advantageDisadvantageMarks)).toBe(2);
+        expect(evaluateMarkTotal(advantageDisadvantageMarkScheme, advantageDisadvantageMarkingFormula, twoAdvantages)).toBe(1);
+        expect(evaluateMarkTotal(advantageDisadvantageMarkScheme, advantageDisadvantageMarkingFormula, twoDisadvantages)).toBe(1);
     });
     it("should return one point mark and one matching explanation mark when given a point-explanation marking formula", () => {
         const pointExplanationMarks: Record<string, number> = {"pointOne": 1, "pointTwo": 0, "explanationOne": 1, "explanationTwo": 0, "maxMarks": 2};
@@ -115,19 +134,19 @@ describe("evaluateMarkTotal", () => {
         const twoExplanations: Record<string, number> = {"pointOne": 0, "pointTwo": 0, "explanationOne": 0, "explanationTwo": 1, "maxMarks": 2};
         const mismatchedPointExplanation: Record<string, number> = {"pointOne": 1, "pointTwo": 0, "explanationOne": 0, "explanationTwo": 1, "maxMarks": 2};
 
-        expect(evaluateMarkTotal(pointExplanationMarkingFormula, pointExplanationMarks)).toBe(2);
-        expect(evaluateMarkTotal(pointExplanationMarkingFormula, twoPoints)).toBe(1);
-        expect(evaluateMarkTotal(pointExplanationMarkingFormula, twoExplanations)).toBe(0);
-        expect(evaluateMarkTotal(pointExplanationMarkingFormula, mismatchedPointExplanation)).toBe(1);
+        expect(evaluateMarkTotal(pointExplanationMarkScheme, pointExplanationMarkingFormula, pointExplanationMarks)).toBe(2);
+        expect(evaluateMarkTotal(pointExplanationMarkScheme, pointExplanationMarkingFormula, twoPoints)).toBe(1);
+        expect(evaluateMarkTotal(pointExplanationMarkScheme, pointExplanationMarkingFormula, twoExplanations)).toBe(0);
+        expect(evaluateMarkTotal(pointExplanationMarkScheme, pointExplanationMarkingFormula, mismatchedPointExplanation)).toBe(1);
     });
     it("should return MIN(maxMarks, SUM(..all marks..) when given a marking formula with an invalid type", () => {
-        expect(evaluateMarkTotal(defaultMarkingFormula, answer.marks)).toBe(2);
+        expect(evaluateMarkTotal(defaultMarkScheme, defaultMarkingFormula, answer.marks)).toBe(2);
 
-        expect(evaluateMarkTotal({type: "LLMInvalidNode", name: "INVALID"} as unknown as LLMFormulaNode, answer.marks)).toBe(2);
+        expect(evaluateMarkTotal(defaultMarkScheme, {type: "LLMInvalidNode", name: "INVALID"} as unknown as LLMFormulaNode, answer.marks)).toBe(2);
     });
     it("should return MIN(maxMarks, SUM(..all marks..) when given a marking formula with an invalid function", () => {
-        expect(evaluateMarkTotal(defaultMarkingFormula, answer.marks)).toBe(2);
+        expect(evaluateMarkTotal(defaultMarkScheme, defaultMarkingFormula, answer.marks)).toBe(2);
 
-        expect(evaluateMarkTotal(markingFormulaFunction("INVALID", []), answer.marks)).toBe(2);
+        expect(evaluateMarkTotal(defaultMarkScheme, markingFormulaFunction("INVALID", []), answer.marks)).toBe(2);
     });
 });
