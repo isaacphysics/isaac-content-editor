@@ -22,7 +22,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                 possiblyUpdatedMarkedExamples = doc.markedExamples?.map(me => {
                     const newMarks = {...me.marks, [value as string]: me.marks?.[prevJsonFieldValue] ?? 0};
                     delete newMarks[prevJsonFieldValue];
-                    return { ...me, marks: newMarks, marksAwarded: evaluateMarkTotal(doc.markingFormula, {...newMarks, "maxMarks": doc.maxMarks ?? 0}) };
+                    return { ...me, marks: newMarks, marksAwarded: evaluateMarkTotal(doc.markScheme, doc.markingFormula, {...newMarks, "maxMarks": doc.maxMarks ?? 0}) };
                 });
             }
         }
@@ -74,7 +74,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             ...doc,
             markedExamples: doc.markedExamples?.map((me, i) => i === index ? {
                 ...me, 
-                marksAwarded: field === "marks" ? evaluateMarkTotal(doc.markingFormula, {...(value as Record<string, number>), "maxMarks": doc.maxMarks ?? 0}) : me.marksAwarded,
+                marksAwarded: field === "marks" ? evaluateMarkTotal(doc.markScheme, doc.markingFormula, {...(value as Record<string, number>), "maxMarks": doc.maxMarks ?? 0}) : me.marksAwarded,
                 [field]: value, 
             } : me)
         });
@@ -145,7 +145,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             ...doc,
             markingFormulaString: value,
             markingFormula: parseMarkingFormula(value),
-            markedExamples: doc.markedExamples?.map(me => ({...me, marksAwarded: evaluateMarkTotal(parseMarkingFormula(value), {...me.marks, "maxMarks": doc.maxMarks ?? 0})}))
+            markedExamples: doc.markedExamples?.map(me => ({...me, marksAwarded: evaluateMarkTotal(doc.markScheme, parseMarkingFormula(value), {...me.marks, "maxMarks": doc.maxMarks ?? 0})}))
         })
     }
 
@@ -290,7 +290,6 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     </td>
                     <td>
                         {Object.keys(example.marks ?? {}).sort().map((jsonFieldname) => <div key={jsonFieldname}>
-                            {/* We assume, for now, that each point earns a single. Each one can be represented as a checkbox. */}
                             <CheckboxDocProp
                                 label={jsonFieldname}
                                 doc={Object.entries(example.marks ?? {}).reduce<Record<string, boolean>>((booleanMarks, [key, val]) => ({ ...booleanMarks, [key]: val === 1 }), {})}

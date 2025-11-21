@@ -1,4 +1,4 @@
-import { LLMConstantNode, LLMFormulaNode, LLMFunctionNode, LLMVariableNode } from "../isaac-data-types";
+import { LLMConstantNode, LLMFormulaNode, LLMFreeTextMarkSchemeEntry, LLMFunctionNode, LLMVariableNode } from "../isaac-data-types";
 
 // Type guards for LLMFormulaNode
 export function isLLMFunctionNode(node: LLMFormulaNode): node is LLMFunctionNode {
@@ -39,12 +39,12 @@ export function evaluateMarkingFormula<T extends LLMFormulaNode>(markingFormula:
     throw new Error("Unknown marking expression type: " + markingFormula.type);
 }
 
-export function evaluateMarkTotal<T extends LLMFormulaNode>(markingFormula?: T, value?: Record<string, number>) : number {
+export function evaluateMarkTotal<T extends LLMFormulaNode>(markScheme?: LLMFreeTextMarkSchemeEntry[], markingFormula?: T, value?: Record<string, number>) : number {
     function defaultMarkingFormula(): number {
         if (typeof value === 'object' && value !== null) {
             let total: number = 0;
             for (const key in value) {
-                total = total + (key !== "maxMarks" && value[key] ? value[key] : 0);
+                total = total + (key !== "maxMarks" && value[key] ? markScheme?.find(ms => ms.jsonField === key)?.marks ?? 0 : 0);
             }
 
             return Math.min(value.maxMarks ?? 0, total);
