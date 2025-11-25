@@ -192,6 +192,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
             <button onClick={toggleDndDropZoneModal} disabled={!imageRef.current?.src}>Add drop-zones to figure</button>
             {!!dropZones.length && <span style={{color: "grey"}}> ({dropZones.length} managed zone{dropZones.length !== 1 ? "s" : ""})</span>}
             {imageRef.current?.src && <FigureRegionModal 
+                doc={doc} update={update}
                 open={dndDropZoneModalOpen} toggle={toggleDndDropZoneModal} imgSrc={imageRef.current.src} 
                 initialRegionIndex={itemQuestionContext.calculateDZIndexFromFigureId(doc.id as string)}
                 regions={dropZones} setRegions={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
@@ -201,6 +202,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
             <button onClick={toggleDndDropZoneModal} disabled={!imageRef.current?.src}>Add inline entry to figure</button>
             {!!dropZones.length && <span style={{color: "grey"}}> ({dropZones.length} managed zone{dropZones.length !== 1 ? "s" : ""})</span>}
             {imageRef.current?.src && <FigureRegionModal 
+                doc={doc} update={update}
                 open={dndDropZoneModalOpen} toggle={toggleDndDropZoneModal} imgSrc={imageRef.current.src} 
                 initialRegionIndex={0}
                 regions={dropZones} setRegions={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}

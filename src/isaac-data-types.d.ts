@@ -409,6 +409,7 @@ export interface PositionableDropZoneProps {
 
 export interface Figure extends Image {
     dropZones?: PositionableDropZoneProps[];
+    condensedMaxWidth?: string;
 }
 
 export interface Formula extends Choice {

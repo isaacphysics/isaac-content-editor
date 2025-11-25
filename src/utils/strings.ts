@@ -26,3 +26,7 @@ export function ext(filename: string | undefined): string | undefined {
 export function resolveRelativePath(relativeFilename: string, baseSrcPath: string): string {
     return new URL(relativeFilename, "http://example.org/" + baseSrcPath).pathname.substring(1); // The host name is ignored
 }
+
+export function alphabetIndex(index: number): string {
+    return String.fromCharCode('A'.charCodeAt(0) + (index % 26));
+}

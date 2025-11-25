@@ -36,6 +36,7 @@
         position: relative;
         resize: horizontal;
         overflow: auto;
+        max-width: 100%;
     }
     
     > :first-child img {

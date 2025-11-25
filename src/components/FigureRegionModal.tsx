@@ -5,8 +5,11 @@ import { Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { DropZoneQuestionContext } from "./semantic/presenters/ItemQuestionPresenter";
 import throttle from "lodash/throttle";
 import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
-import { PositionableDropZoneProps } from "../isaac-data-types";
+import { Figure, PositionableDropZoneProps } from "../isaac-data-types";
 import classNames from "classnames";
+import { PresenterProps } from "./semantic/registry";
+import { alphabetIndex } from "../utils/strings";
+import { isDefined } from "../utils/types";
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
@@ -20,10 +23,11 @@ interface DraggableDropZoneProps {
     setPercentageTop: (t: number) => void;
     setDropZone: (dz: PositionableDropZoneProps) => void;
     isCondensed?: boolean;
+    index?: number;
 }
 
 const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZoneProps) => {
-    const {id, minWidth, width, left, top, isCondensed} = props;
+    const {id, minWidth, width, left, top, isCondensed, index} = props;
     const imgPos = useRef({left: 0, right: 0, top: 0, bottom: 0});
 
     const dropZoneQuestionContext = useContext(DropZoneQuestionContext);
@@ -81,12 +85,12 @@ const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZo
         }}
     >
         <span className={`d-inline-block text-right w-100 h-100 ${markupStyles.clozeDropZonePlaceholder}`}>
-            {id}&nbsp;&nbsp;
+            {!isCondensed ? id : (isDefined(index) ? alphabetIndex(index) : "?")}&nbsp;&nbsp;
         </span>
     </div>
 }
 
-interface FigureDropZoneModalProps {
+interface FigureDropZoneModalProps extends PresenterProps<Figure> {
     open: boolean;
     toggle: () => void;
     imgSrc: string;
@@ -97,7 +101,7 @@ interface FigureDropZoneModalProps {
 }
 
 export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
-    const {open, toggle, imgSrc, initialRegionIndex, regions, setRegions, figureNum} = props;
+    const {doc, update, open, toggle, imgSrc, initialRegionIndex, regions, setRegions, figureNum} = props;
     const dropZoneQuestionContext = useContext(DropZoneQuestionContext);
     const inlineQuestionContext = useContext(InlineQuestionContext);
     const imageRef = useRef<HTMLImageElement>(null);
@@ -106,7 +110,9 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
     const [percentageLeft, setPercentageLeft] = useState<(number | "")[]>(regions.map(dz => dz.left));
     const [percentageTop, setPercentageTop] = useState<(number | "")[]>(regions.map(dz => dz.top));
     const [containerWidth, setContainerWidth] = useState<number | null>(null);
-    const [condensedModeMaxWidth, setCondensedModeMaxWidth] = useState<number | undefined>(undefined);
+    const [condensedModeMaxWidth, setCondensedModeMaxWidth] = useState<number | undefined>(
+        doc.condensedMaxWidth?.endsWith("px") ? parseInt(doc.condensedMaxWidth.substring(0, doc.condensedMaxWidth.length - 2)) : undefined
+    );
 
     const setupResizeObserver = useCallback(() => {
         if (!imageContainerRef.current) return;
@@ -137,7 +143,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                         setPercentageLeft={l => setPercentageLeft(p => p.map((v, j) => j === i ? l : v))}
                         setPercentageTop={t => setPercentageTop(p => p.map((v, j) => j === i ? t : v))}
                         setDropZone={dz => setRegions(p => p.map((v, j) => j === i ? dz : v))}
-                        isCondensed={isCondensed}
+                        isCondensed={isCondensed} index={i}
                     />)}
                 </div>
                 <div>
@@ -163,6 +169,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
             <table className={styles.figureRegionModalInputs}>
                 <thead>
                     <tr>
+                        <th className="text-muted" style={{width: "60px"}}>#</th>
                         <th>ID</th>
                         <th>Min width (px)</th>
                         <th>Width (%)</th>
@@ -175,7 +182,8 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                     {regions.map((regionProps, i) => {
                         const {id, minWidth, width} = regionProps;
 
-                        return <tr key={i}> 
+                        return <tr key={i}>
+                            <td className="text-muted">{alphabetIndex(i)}</td>
                             <td>
                                 <input type={"text"} value={id} onChange={event => {
                                     const newRegionStates = [...regions];
@@ -259,7 +267,10 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                 }}>
                     Add region
                 </button>
-                <button onClick={toggle}>
+                <button onClick={() => {
+                    update({...doc, condensedMaxWidth: `${condensedModeMaxWidth}px`});
+                    toggle();
+                }}>
                     Done
                 </button>
             </div>
