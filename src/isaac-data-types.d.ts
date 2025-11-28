@@ -60,6 +60,7 @@ export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
     placeholderValues?: string[];
     useBrackets?: boolean;
     separator?: string;
+    prefixes?: string[];
     suffixes?: string[];
     buttonText?: string;
 }

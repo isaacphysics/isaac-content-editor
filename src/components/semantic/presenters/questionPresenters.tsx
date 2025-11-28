@@ -305,6 +305,7 @@ const EditableDimensions = NumberDocPropFor<IsaacCoordinateQuestion>("numberOfDi
 const EditableSeparator = EditableDocPropFor<IsaacCoordinateQuestion>("separator", {label: "Separator", block: true});
 const EditableButtonText = EditableDocPropFor<IsaacCoordinateQuestion>("buttonText", {label: "\"Add coordinate\" button text override", block: true});
 const EditablePlaceholderValuesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("placeholderValues");
+const EditablePrefixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("prefixes");
 const EditableSuffixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("suffixes");
 
 export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
@@ -326,8 +327,9 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
                 <div className="col col-lg-5">
                     {[...Array(question.numberOfDimensions)].map((_, i) => 
                      <div className={"mb-3"} key={i}>
+                        <EditablePrefixesProp {...props} dimension={i} label={"Prefix ".concat((i+1).toString())} />
+                        <span className="mx-2"/>
                         <EditablePlaceholderValuesProp {...props} dimension={i} label={"Placeholder ".concat((i+1).toString())} />
-                        
                         <span className="mx-2"/>
                         <EditableSuffixesProp {...props} dimension={i} label={"Suffix ".concat((i+1).toString())} />
                     </div>
