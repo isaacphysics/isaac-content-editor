@@ -323,21 +323,19 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
         <div className={styles.questionLabel}>
             Coordinate labels:<br/>
             <small><em>Placeholders do not accept latex. Please use a unicode equivalent such as Ψ₁.</em></small>
-            <div className="row">
-                <div className="col col-lg-5">
-                    {[...Array(question.numberOfDimensions)].map((_, i) => 
-                     <div className={"mb-3"} key={i}>
-                        <EditablePrefixesProp {...props} dimension={i} label={"Prefix ".concat((i+1).toString())} />
-                        <span className="mx-2"/>
-                        <EditablePlaceholderValuesProp {...props} dimension={i} label={"Placeholder ".concat((i+1).toString())} />
-                        <span className="mx-2"/>
-                        <EditableSuffixesProp {...props} dimension={i} label={"Suffix ".concat((i+1).toString())} />
-                    </div>
-                    )}
+            <div>
+                {[...Array(question.numberOfDimensions)].map((_, i) => 
+                    <div className={"mb-3"} key={i}>
+                    <EditablePrefixesProp {...props} dimension={i} label={"Prefix ".concat((i+1).toString())} />
+                    <span className="mx-2"/>
+                    <EditablePlaceholderValuesProp {...props} dimension={i} label={"Placeholder ".concat((i+1).toString())} />
+                    <span className="mx-2"/>
+                    <EditableSuffixesProp {...props} dimension={i} label={"Suffix ".concat((i+1).toString())} />
                 </div>
+                )}
             </div>
             Significant figures (affects all values):
-            <div className="row">
+            <div className="row mt-2">
                 <div className="col col-lg-5">
                     <EditableSignificantFiguresMin {...props} />
                 </div>
