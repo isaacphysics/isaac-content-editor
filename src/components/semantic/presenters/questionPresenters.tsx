@@ -326,12 +326,12 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
             <div>
                 {[...Array(question.numberOfDimensions)].map((_, i) => 
                     <div className={"mb-3"} key={i}>
-                    <EditablePrefixesProp {...props} dimension={i} label={"Prefix ".concat((i+1).toString())} />
-                    <span className="mx-2"/>
-                    <EditablePlaceholderValuesProp {...props} dimension={i} label={"Placeholder ".concat((i+1).toString())} />
-                    <span className="mx-2"/>
-                    <EditableSuffixesProp {...props} dimension={i} label={"Suffix ".concat((i+1).toString())} />
-                </div>
+                        <EditablePrefixesProp {...props} dimension={i} label={"Prefix ".concat((i+1).toString())} />
+                        <span className="mx-2"/>
+                        <EditablePlaceholderValuesProp {...props} dimension={i} label={"Placeholder ".concat((i+1).toString())} />
+                        <span className="mx-2"/>
+                        <EditableSuffixesProp {...props} dimension={i} label={"Suffix ".concat((i+1).toString())} />
+                    </div>
                 )}
             </div>
             Significant figures (affects all values):
