@@ -26,7 +26,7 @@ import {
 } from "./BaseValuePresenter";
 import {SemanticDocProp} from "../props/SemanticDocProp";
 import {CheckboxDocProp} from "../props/CheckboxDocProp";
-import {EditableValueProp, EditableCoordProp} from "../props/EditableDocProp";
+import {EditableDimensionalDocProp, EditableValueProp} from "../props/EditableDocProp";
 import {CHOICE_TYPES} from "../ChoiceInserter";
 import {PresenterProps} from "../registry";
 import {ListPresenterProp} from "../props/listProps";
@@ -286,11 +286,13 @@ export const DndChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
     </>;
 }
 
+const EditableCoordinatesProp = EditableDimensionalDocProp<CoordinateItem>("coordinates");
+
 export function CoordinateItemPresenter(props: PresenterProps<CoordinateItem>) {
     const numberOfDimensions = useContext(CoordinateQuestionContext).numberOfDimensions;
     return <>{[...Array(numberOfDimensions)].map((_, i) =>
         <div className={"mb-3"} key={i}>
-            <EditableCoordProp {...props} dim={i} prop={"coordinates"} label={"Dimension ".concat((i+1).toString())} />
+            <EditableCoordinatesProp {...props} dimension={i} label={"Dimension ".concat((i+1).toString())} />
         <div className={styles.questionLabel} />
     </div>)}</>
 }

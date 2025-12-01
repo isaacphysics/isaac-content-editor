@@ -25,7 +25,7 @@ type AudienceValue = ExtractRecordArrayValue<Required<AudienceContext>>;
 const phyStages: Stage[] = ["university", "further_a", "a_level", "gcse", "year_9", "year_7_and_8"];
 const difficulties: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
 
-const csStages: Stage[] = ["a_level", "gcse", "scotland_national_5", "scotland_higher", "scotland_advanced_higher", "core", "advanced"];
+const csStages: Stage[] = ["a_level", "gcse", "scotland_national_5", "scotland_higher", "scotland_advanced_higher", "core", "advanced", "post_18"];
 const csExamBoards: ExamBoard[] = ["aqa", "ocr", "cie", "edexcel", "eduqas", "wjec", "sqa", "ada"];
 const csStagedExamBoards: Partial<Record<Stage, ExamBoard[]>> = {
     "a_level": ["aqa", "cie", "eduqas", "ocr", "wjec"],
@@ -35,7 +35,12 @@ const csStagedExamBoards: Partial<Record<Stage, ExamBoard[]>> = {
     "scotland_advanced_higher": ["sqa"],
     "core": ["ada"],
     "advanced": ["ada"],
+    "post_18": ["ada"],
 };
+
+function isExamboardArray(arr: string[]): arr is ExamBoard[] {
+    return arr.every(v => csExamBoards.includes(v));
+}
 
 function examBoardsForStage(audienceContext: AudienceContext): ExamBoard[] {
     const stageSpecificExamBoards = audienceContext.stage?.length === 1 && csStagedExamBoards[audienceContext.stage[0]];
@@ -86,17 +91,28 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
             unusedKeysAndFirstOption = unusedKeysAndFirstOption.filter(([k]) => k !== key);
 
             const filteredUnusedOptions = new Set(possible[key]);
-            // Remove used options
-            values.forEach((value) => filteredUnusedOptions.delete(value));
 
             // Restrict Exam Board options by Stage selection if set
-            if (isAda && key === "examBoard" && doc.stage && doc.stage.length === 1) {
+            if (isAda && isExamboardArray(values) && doc.stage && doc.stage.length === 1) {
                 filteredUnusedOptions.forEach((value) => {
                     if (!examBoardsForStage(doc).includes(value as ExamBoard)) {
                         filteredUnusedOptions.delete(value);
                     }
                 });
+
+                // Remove from values as well to prevent illegal combinations
+                values.forEach((value, i) => {
+                    if (!examBoardsForStage(doc).includes(value as ExamBoard)) {
+                        values.splice(i, 1);
+                    }
+                })
+
+                // Select a default value
+                if (values.length < 1) values.push(examBoardsForStage(doc)[0]);
             }
+
+            // Remove used options
+            values.forEach((value) => filteredUnusedOptions.delete(value));
 
             return {
                 key,
