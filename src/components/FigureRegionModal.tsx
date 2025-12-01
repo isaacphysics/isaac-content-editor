@@ -5,7 +5,7 @@ import { Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { DropZoneQuestionContext } from "./semantic/presenters/ItemQuestionPresenter";
 import throttle from "lodash/throttle";
 import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
-import { Figure, PositionableDropZoneProps } from "../isaac-data-types";
+import { Figure, PositionableFigureRegionProps } from "../isaac-data-types";
 import classNames from "classnames";
 import { PresenterProps } from "./semantic/registry";
 import { alphabetIndex } from "../utils/strings";
@@ -21,12 +21,12 @@ const toFixedDP = (value: number, dp: number) => {
 interface DraggableDropZoneProps {
     setPercentageLeft: (l: number) => void;
     setPercentageTop: (t: number) => void;
-    setDropZone: (dz: PositionableDropZoneProps) => void;
+    setDropZone: (dz: PositionableFigureRegionProps) => void;
     isCondensed?: boolean;
     index?: number;
 }
 
-const PositionableDropZone = (props: PositionableDropZoneProps & DraggableDropZoneProps) => {
+const PositionableDropZone = (props: PositionableFigureRegionProps & DraggableDropZoneProps) => {
     const {id, minWidth, width, left, top, isCondensed, index} = props;
     const imgPos = useRef({left: 0, right: 0, top: 0, bottom: 0});
 
@@ -95,8 +95,8 @@ interface FigureDropZoneModalProps extends PresenterProps<Figure> {
     toggle: () => void;
     imgSrc: string;
     initialRegionIndex: number;
-    regions: PositionableDropZoneProps[];
-    setRegions: React.Dispatch<React.SetStateAction<PositionableDropZoneProps[]>>;
+    regions: PositionableFigureRegionProps[];
+    setRegions: React.Dispatch<React.SetStateAction<PositionableFigureRegionProps[]>>;
     figureNum?: number;
 }
 

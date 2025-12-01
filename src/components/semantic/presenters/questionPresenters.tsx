@@ -15,7 +15,7 @@ import {
     IsaacStringMatchQuestion,
     IsaacSymbolicChemistryQuestion,
     IsaacSymbolicQuestion,
-    PositionableDropZoneProps,
+    PositionableFigureRegionProps,
     Quantity,
 } from "../../../isaac-data-types";
 import {SemanticDocProp} from "../props/SemanticDocProp";
@@ -576,13 +576,13 @@ export function InlineQuestionPartPresenter(props: PresenterProps<IsaacInlinePar
 export const InlineQuestionContext = createContext<{
     isInlineQuestion?: boolean,
     addPart?: (id: string) => void,
-    figureMap?: {[figureId: string]: PositionableDropZoneProps[]}
-    setFigureMap?: React.Dispatch<React.SetStateAction<{[figureId: string]: PositionableDropZoneProps[]}>>,
+    figureMap?: {[figureId: string]: PositionableFigureRegionProps[]}
+    setFigureMap?: React.Dispatch<React.SetStateAction<{[figureId: string]: PositionableFigureRegionProps[]}>>,
     textContent?: string;
 }>({});
 
 export function InlineRegionPresenter(props: PresenterProps<IsaacInlineQuestion>) {
-    const [figureMap, setFigureMap] = useState<{[figureId: string]: PositionableDropZoneProps[]}>({});
+    const [figureMap, setFigureMap] = useState<{[figureId: string]: PositionableFigureRegionProps[]}>({});
     const textContent = extractValueOrChildrenText(props.doc);
     return <InlineQuestionContext.Provider value={{isInlineQuestion: true, figureMap, setFigureMap, textContent}}>
         <h6><EditableIDProp {...props} label="Question ID"/></h6>

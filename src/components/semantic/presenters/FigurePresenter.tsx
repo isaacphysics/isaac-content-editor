@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 
-import { Figure, PositionableDropZoneProps } from "../../../isaac-data-types";
+import { Figure, PositionableFigureRegionProps } from "../../../isaac-data-types";
 import { FigureNumberingContext } from "../../../isaac/IsaacTypes";
 import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresenter";
 import { PresenterProps } from "../registry";
@@ -33,7 +33,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
     const inlineQuestionContext = useContext(InlineQuestionContext);
     const [dndDropZoneModalOpen, setDndModalDropZoneOpen] = useState(false);
     const toggleDndDropZoneModal = () => setDndModalDropZoneOpen(o => !o);
-    const [dropZones, setDropZones] = useState<PositionableDropZoneProps[]>(doc.dropZones ?? []);
+    const [figureRegions, setFigureRegions] = useState<PositionableFigureRegionProps[]>(doc.figureRegions ?? []);
 
     const imageRef = useRef<HTMLImageElement>(null);
     useEffect(() => {
@@ -68,16 +68,16 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
     }, [data, doc.src]);
 
     useEffect(() => {
-        update({...doc, dropZones});
+        update({...doc, figureRegions});
         if (itemQuestionContext.isDndQuestion) {
-            itemQuestionContext.figureMap[doc.id as string] = [dropZones, setDropZones];
+            itemQuestionContext.figureMap[doc.id as string] = [figureRegions, setFigureRegions];
         } else if (inlineQuestionContext.isInlineQuestion) {
             inlineQuestionContext.setFigureMap?.(prev => ({
                 ...prev,
-                [doc.id as string]: dropZones
+                [doc.id as string]: figureRegions
             }) );
         }
-    }, [itemQuestionContext.isDndQuestion, dropZones, setDropZones]);
+    }, [itemQuestionContext.isDndQuestion, figureRegions, setFigureRegions]);
 
     const fileRef = useRef<HTMLInputElement>(null);
 
@@ -190,22 +190,22 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
         </div>
         {itemQuestionContext.isDndQuestion && <div className={styles.clozeFigureFooter}>
             <button onClick={toggleDndDropZoneModal} disabled={!imageRef.current?.src}>Add drop-zones to figure</button>
-            {!!dropZones.length && <span style={{color: "grey"}}> ({dropZones.length} managed zone{dropZones.length !== 1 ? "s" : ""})</span>}
+            {!!figureRegions.length && <span style={{color: "grey"}}> ({figureRegions.length} managed zone{figureRegions.length !== 1 ? "s" : ""})</span>}
             {imageRef.current?.src && <FigureRegionModal 
                 doc={doc} update={update}
                 open={dndDropZoneModalOpen} toggle={toggleDndDropZoneModal} imgSrc={imageRef.current.src} 
                 initialRegionIndex={itemQuestionContext.calculateDZIndexFromFigureId(doc.id as string)}
-                regions={dropZones} setRegions={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
+                regions={figureRegions} setRegions={setFigureRegions} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
             />}
         </div>}
         {inlineQuestionContext.isInlineQuestion && <div className={styles.clozeFigureFooter}>
             <button onClick={toggleDndDropZoneModal} disabled={!imageRef.current?.src}>Add inline entry to figure</button>
-            {!!dropZones.length && <span style={{color: "grey"}}> ({dropZones.length} managed zone{dropZones.length !== 1 ? "s" : ""})</span>}
+            {!!figureRegions.length && <span style={{color: "grey"}}> ({figureRegions.length} managed zone{figureRegions.length !== 1 ? "s" : ""})</span>}
             {imageRef.current?.src && <FigureRegionModal 
                 doc={doc} update={update}
                 open={dndDropZoneModalOpen} toggle={toggleDndDropZoneModal} imgSrc={imageRef.current.src} 
                 initialRegionIndex={0}
-                regions={dropZones} setRegions={setDropZones} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
+                regions={figureRegions} setRegions={setFigureRegions} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
             />}
         </div>}
     </>;

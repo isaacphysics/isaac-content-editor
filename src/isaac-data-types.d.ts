@@ -399,7 +399,7 @@ export interface ExternalReference {
     url?: string;
 }
 
-export interface PositionableDropZoneProps {
+export interface PositionableFigureRegionProps {
     id: string;
     minWidth: string;
     width?: number;
@@ -408,7 +408,7 @@ export interface PositionableDropZoneProps {
 }
 
 export interface Figure extends Image {
-    dropZones?: PositionableDropZoneProps[];
+    figureRegions?: PositionableFigureRegionProps[];
     condensedMaxWidth?: string;
 }
 

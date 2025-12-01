@@ -11,7 +11,7 @@ import {
     IsaacReorderQuestion,
     Item,
     ParsonsItem,
-    PositionableDropZoneProps
+    PositionableFigureRegionProps,
 } from "../../../isaac-data-types";
 
 import {EditableAltTextProp, EditableIDProp, EditableValueProp} from "../props/EditableDocProp";
@@ -26,7 +26,7 @@ import {MetaItemPresenter, MetaOptions} from "../Metadata";
 import styles from "../styles/question.module.css";
 import {Box} from "../SemanticItem";
 import {ExpandableText} from "../ExpandableText";
-import {extractDropZoneIdsPerFigure, extractFigureDropZoneStartIndex, extractValueOrChildrenText} from "../../../utils/content";
+import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../utils/content";
 import {dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID, NULL_DND_ITEM, NULL_DND_ITEM_ID} from "../../../isaac/IsaacTypes";
 
 interface ItemsContextType {
@@ -44,7 +44,7 @@ export const DropZoneQuestionContext = createContext<{
     isClozeQuestion: boolean,
     dropZoneCount?: number, // legacy option for cloze questions. TODO: remove in favour of dropZoneIds.length
     dropZoneIds?: Set<string>,
-    figureMap: {[id: string]: [dropZones: PositionableDropZoneProps[], setDropZones: React.Dispatch<React.SetStateAction<PositionableDropZoneProps[]>>]}, 
+    figureMap: {[id: string]: [dropZones: PositionableFigureRegionProps[], setDropZones: React.Dispatch<React.SetStateAction<PositionableFigureRegionProps[]>>]}, 
     calculateDZIndexFromFigureId: (id: string) => number}
 >({
     isDndQuestion: false,
@@ -73,7 +73,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
     // Logic to count cloze question drop zones (if necessary) on initial presenter render and doc update
     const [dropZoneCount, setDropZoneCount] = useState<number>();
     const [dropZoneIds, setDropZoneIds] = useState<Set<string>>(new Set());
-    const figureMap = useRef<{[id: string]: [dropZones: PositionableDropZoneProps[], setDropZones: React.Dispatch<React.SetStateAction<PositionableDropZoneProps[]>>]}>({});
+    const figureMap = useRef<{[id: string]: [dropZones: PositionableFigureRegionProps[], setDropZones: React.Dispatch<React.SetStateAction<PositionableFigureRegionProps[]>>]}>({});
     const countDropZonesIn = (doc: ItemQuestionType) => {
         if (isClozeQuestion(doc)) {
             const questionExposition = extractValueOrChildrenText(doc);
@@ -102,7 +102,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
                 const figures = Array.from(Object.entries(figureMap.current))
                 for (const figure of figures) {
                     const [id, [dropZones, setDropZones]] = figure;
-                    const startIndex = extractFigureDropZoneStartIndex(doc, id);
+                    const startIndex = extractFigureRegionStartIndex(doc, id);
                     console.log(id, "starting at", startIndex, dropZones);
                     setDropZones(dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
                     await new Promise(resolve => setTimeout(resolve, 50));
@@ -119,7 +119,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         dropZoneCount,
         dropZoneIds,
         figureMap: figureMap.current,
-        calculateDZIndexFromFigureId: (id) => extractFigureDropZoneStartIndex(doc, id),
+        calculateDZIndexFromFigureId: (id) => extractFigureRegionStartIndex(doc, id),
     }}>
         {isParsonsQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" /></div>}
         {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>}
