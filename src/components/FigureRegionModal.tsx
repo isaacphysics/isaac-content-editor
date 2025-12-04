@@ -152,6 +152,8 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                         Condensed mode max width:
                         <Input
                             type="number"
+                            min={0}
+                            max={"inf"}
                             style={{width: "80px"}}
                             value={condensedModeMaxWidth !== undefined ? condensedModeMaxWidth : ""}
                             placeholder="unset"
@@ -185,7 +187,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                         return <tr key={i}>
                             <td className="text-muted">{alphabetIndex(i)}</td>
                             <td>
-                                <input type={"text"} value={id} onChange={event => {
+                                <input type={"text"} pattern="[a-zA-Z0-9_\-]+" value={id} onChange={event => {
                                     const newRegionStates = [...regions];
                                     newRegionStates[i].id = event.target.value;
                                     setRegions(newRegionStates);

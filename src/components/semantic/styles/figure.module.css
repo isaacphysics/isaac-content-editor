@@ -43,6 +43,12 @@
         max-width: 100%;
     }
 
+    input:invalid, input:out-of-range {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
     .figureRegionModalInputs {
         width: 100%;
         table-layout: fixed;
