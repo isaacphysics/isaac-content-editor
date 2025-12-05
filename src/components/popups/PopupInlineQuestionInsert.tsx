@@ -3,8 +3,10 @@ import { RefObject, useCallback, useContext, useRef, useState } from "react";
 import React from "react";
 import styles from "../../styles/editor.module.css";
 import { Popup, PopupCloseContext, PopupRef } from "./Popup";
-import { Button, Container, Input, Label } from "reactstrap";
+import { Alert, Button, Container, Input, Label } from "reactstrap";
 import { InlineQuestionContext } from "../semantic/presenters/questionPresenters";
+import { generateGuid } from "../../utils/strings";
+
 
 export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, codemirror: RefObject<ReactCodeMirrorRef> }) => {
     const popupRef = useRef<PopupRef>(null);
@@ -13,12 +15,12 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
     const [width, setWidth] = useState<number>();
     const [height, setHeight] = useState<number>();
     const [id, setID] = useState<string>();
-    const [valid, setValid] = useState<boolean>(true);
+    const [invalid, setInvalid] = useState<false | string>(false);
     const [classes, setClasses] = useState<string>();
     const [mode, setMode] = useState<"classes" | "dimensions">("classes");
 
     const generateAndInsertInlinePart = useCallback(() => {
-        const partId = id ? id : (inlineContext.numParts ?? 0) + 1;
+        const partId = id ? id : generateGuid().slice(0, 8);
         const inlinePartSyntax = mode === "classes" ? 
             `[inline-question:${partId}${classes ? " class=\"" + classes + "\"" : ""}]` : 
             `[inline-question:${partId}${(width || height) ? "|" : ""}${width ? `w-${width}` : ""}${height ? `h-${height}` : ""}]`;
@@ -31,10 +33,19 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
     const ifValidNumericalInputThen = (f: (n: number | undefined) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const n = parseInt(e.target.value);
         if (!isNaN(n) || !e.target.value || e.target.value === "") {
-            setValid(true);
+            setInvalid(false);
             f(n);
         } else {
-            setValid(false);
+            setInvalid("Invalid dimension(s)");
+        }
+    }
+
+    const ifContainsNoSpacesThen = (f: (s: string | undefined) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.value.includes(" ")) {
+            setInvalid(false);
+            f(e.target.value);
+        } else {
+            setInvalid("ID contains spaces");
         }
     }
 
@@ -45,7 +56,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
         <Popup popUpRef={popupRef}>
             <Container className={styles.cmPanelPopup}>
                 <Label for={"inline-part-index"}>Part ID</Label>
-                <Input id={"inline-part-index"} placeholder={"Default"} onChange={(e) => setID(e.target.value)} />
+                <Input id={"inline-part-index"} placeholder={"Default"} onChange={ifContainsNoSpacesThen(setID)} />
                 <hr className="mb-1"/>
                 {mode === "classes" ? <>
                     <Label for={"inline-part-classes"}>Classes:</Label>
@@ -71,7 +82,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
                 </div>
                 <br/>
                 <PopupCloseContext.Consumer>
-                    {close => <Button disabled={!valid} onClick={() => {
+                    {close => <Button disabled={!!invalid} onClick={() => {
                         generateAndInsertInlinePart();
                         setWidth(undefined);
                         setHeight(undefined);
@@ -80,6 +91,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
                         close?.();
                     }}>Insert</Button>}
                 </PopupCloseContext.Consumer>
+                {invalid && <Alert color="danger" className="mt-2 mb-0 p-1 text-center">{invalid}</Alert>}
             </Container>
         </Popup>
     </>

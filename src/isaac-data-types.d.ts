@@ -51,6 +51,11 @@ export interface IsaacClozeQuestion extends IsaacItemQuestion {
     detailedItemFeedback?: boolean;
 }
 
+export interface IsaacDndQuestion extends IsaacItemQuestion {
+    withReplacement?: boolean;
+    detailedItemFeedback?: boolean;
+}
+
 export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
     significantFiguresMin?: number;
     significantFiguresMax?: number;
@@ -399,7 +404,17 @@ export interface ExternalReference {
     url?: string;
 }
 
+export interface PositionableFigureRegionProps {
+    id: string;
+    minWidth: string;
+    width?: number;
+    left: number;
+    top: number;
+}
+
 export interface Figure extends Image {
+    figureRegions?: PositionableFigureRegionProps[];
+    condensedMaxWidth?: string;
 }
 
 export interface Formula extends Choice {
@@ -460,12 +475,18 @@ export interface ParsonsChoice extends ItemChoice {
 export interface CoordinateChoice extends ItemChoice {
 }
 
+export interface DndChoice extends ItemChoice {
+}
 export interface ParsonsItem extends Item {
     indentation?: number;
 }
 
 export interface CoordinateItem extends Item {
     coordinates?: string[];
+}
+
+export interface DndItem extends Item {
+    dropZoneId?: string;
 }
 
 export interface Quantity extends Choice {

@@ -10,7 +10,7 @@ import {
     FreeTextRule,
     GraphChoice,
     IsaacNumericQuestion,
-    ParsonsChoice,
+    ItemChoice,
     Quantity,
     RegexPattern,
     StringChoice
@@ -30,7 +30,7 @@ import {EditableDimensionalDocProp, EditableValueProp} from "../props/EditableDo
 import {CHOICE_TYPES} from "../ChoiceInserter";
 import {PresenterProps} from "../registry";
 import {ListPresenterProp} from "../props/listProps";
-import {ClozeQuestionContext, ItemsContext} from "./ItemQuestionPresenter";
+import {DropZoneQuestionContext, ItemsContext} from "./ItemQuestionPresenter";
 
 import styles from "../styles/choice.module.css";
 import {CoordinateQuestionContext, InlineQuestionContext, QuestionContext} from "./questionPresenters";
@@ -216,15 +216,15 @@ export const GraphChoicePresenter = buildValuePresenter(
     ({graphSpec}, doc) => ({...doc, graphSpec}),
 );
 
-export const ItemChoicePresenter = (props: ValuePresenterProps<ParsonsChoice>) => {
+export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
     const {items: maybeItems, withReplacement} = useContext(ItemsContext);
-    const {isClozeQuestion, dropZoneCount} = useContext(ClozeQuestionContext);
+    const {isClozeQuestion, dropZoneCount} = useContext(DropZoneQuestionContext);
     const {doc, update} = props;
 
     const [showClozeChoiceWarning, setShowClozeChoiceWarning] = useState<boolean>(false);
 
     // An update function that augments the choice with null cloze items in empty spaces if this is a cloze question
-    const augmentedUpdate = (newDoc: ParsonsChoice, invertible?: boolean) => {
+    const augmentedUpdate = (newDoc: ItemChoice, invertible?: boolean) => {
         setShowClozeChoiceWarning(false); // This augmented update will always fix the cloze subset match warning
         return update(isClozeQuestion && dropZoneCount
             ? {
@@ -271,6 +271,21 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ParsonsChoice>) =
     </>;
 }
 
+export const DndChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
+    const {doc, update} = props;
+    const {items: maybeItems, withReplacement} = useContext(ItemsContext);
+
+    const items = maybeItems ?? [];
+    const remainingItems = withReplacement ? items : items.filter(item => !doc.items?.find(i => i.id === item.id));
+
+    return <>
+        <span>Add an entry here to attach one Item to one Drop Zone.</span>
+        <ItemsContext.Provider value={{items, remainingItems, withReplacement, allowSubsetMatch: doc.allowSubsetMatch}}>
+            <ListPresenterProp {...props} doc={doc} update={update} prop="items" childTypeOverride="dndItem$choice" />
+        </ItemsContext.Provider>
+    </>;
+}
+
 const EditableCoordinatesProp = EditableDimensionalDocProp<CoordinateItem>("coordinates");
 
 export function CoordinateItemPresenter(props: PresenterProps<CoordinateItem>) {
@@ -307,6 +322,7 @@ const CHOICE_REGISTRY: Record<CHOICE_TYPES, ValuePresenter<Choice>> = {
     regexPattern: RegexPatternPresenter,
     itemChoice: ItemChoicePresenter,
     parsonsChoice: ItemChoicePresenter,
+    dndChoice: DndChoicePresenter,
     coordinateChoice: CoordinateChoicePresenter,
 };
 

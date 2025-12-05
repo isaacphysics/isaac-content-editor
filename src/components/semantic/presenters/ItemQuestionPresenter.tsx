@@ -1,14 +1,17 @@
-import React, {createContext, useContext, useEffect, useState} from "react";
-import {Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row} from "reactstrap";
+import React, {createContext, useContext, useEffect, useRef, useState} from "react";
+import {Alert, Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row} from "reactstrap";
 
 import {
     Content,
+    DndItem,
     IsaacClozeQuestion,
+    IsaacDndQuestion,
     IsaacItemQuestion,
     IsaacParsonsQuestion,
     IsaacReorderQuestion,
     Item,
-    ParsonsItem
+    ParsonsItem,
+    PositionableFigureRegionProps,
 } from "../../../isaac-data-types";
 
 import {EditableAltTextProp, EditableIDProp, EditableValueProp} from "../props/EditableDocProp";
@@ -23,12 +26,12 @@ import {MetaItemPresenter, MetaOptions} from "../Metadata";
 import styles from "../styles/question.module.css";
 import {Box} from "../SemanticItem";
 import {ExpandableText} from "../ExpandableText";
-import {extractValueOrChildrenText} from "../../../utils/content";
-import {dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../isaac/IsaacTypes";
+import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../utils/content";
+import {dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID, NULL_DND_ITEM, NULL_DND_ITEM_ID} from "../../../isaac/IsaacTypes";
 
 interface ItemsContextType {
-    items: ParsonsItem[] | undefined;
-    remainingItems: ParsonsItem[] | undefined;
+    items: Item[] | undefined;
+    remainingItems: Item[] | undefined;
     withReplacement: boolean | undefined;
     allowSubsetMatch: boolean | undefined;
 }
@@ -36,9 +39,19 @@ interface ItemsContextType {
 export const ItemsContext = createContext<ItemsContextType>(
     {items: undefined, remainingItems: undefined, withReplacement: undefined, allowSubsetMatch: undefined}
 );
-export const ClozeQuestionContext = createContext<{isClozeQuestion: boolean, dropZoneCount?: number}>(
-    {isClozeQuestion: false}
-);
+export const DropZoneQuestionContext = createContext<{
+    isDndQuestion: boolean,
+    isClozeQuestion: boolean,
+    dropZoneCount?: number, // legacy option for cloze questions. TODO: remove in favour of dropZoneIds.length
+    dropZoneIds?: Set<string>,
+    figureMap: {[id: string]: [dropZones: PositionableFigureRegionProps[], setDropZones: React.Dispatch<React.SetStateAction<PositionableFigureRegionProps[]>>]}, 
+    calculateDZIndexFromFigureId: (id: string) => number}
+>({
+    isDndQuestion: false,
+    isClozeQuestion: false,
+    figureMap: {},
+    calculateDZIndexFromFigureId: (id: string) => 0,
+});
 
 function isParsonsQuestion(doc: Content | null | undefined): doc is IsaacParsonsQuestion {
     return doc?.type === "isaacParsonsQuestion";
@@ -48,17 +61,33 @@ function isClozeQuestion(doc: Content | null | undefined): doc is IsaacClozeQues
     return doc?.type === "isaacClozeQuestion";
 }
 
-export function ItemQuestionPresenter(props: PresenterProps<IsaacItemQuestion | IsaacReorderQuestion | IsaacParsonsQuestion | IsaacClozeQuestion>) {
+function isDndQuestion(doc: Content | null | undefined): doc is IsaacDndQuestion {
+    return doc?.type === "isaacDndQuestion";
+}
+
+type ItemQuestionType = IsaacItemQuestion | IsaacReorderQuestion | IsaacParsonsQuestion | IsaacClozeQuestion | IsaacDndQuestion;
+
+export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
     const {doc, update} = props;
 
     // Logic to count cloze question drop zones (if necessary) on initial presenter render and doc update
     const [dropZoneCount, setDropZoneCount] = useState<number>();
-    const countDropZonesIn = (doc: IsaacItemQuestion | IsaacReorderQuestion | IsaacParsonsQuestion | IsaacClozeQuestion) => {
-        if (!isClozeQuestion(doc)) return;
-        const questionExposition = extractValueOrChildrenText(doc);
-        setDropZoneCount(questionExposition.match(dropZoneRegex)?.length ?? 0);
+    const [dropZoneIds, setDropZoneIds] = useState<Set<string>>(new Set());
+    const figureMap = useRef<{[id: string]: [dropZones: PositionableFigureRegionProps[], setDropZones: React.Dispatch<React.SetStateAction<PositionableFigureRegionProps[]>>]}>({});
+    const countDropZonesIn = (doc: ItemQuestionType) => {
+        if (isClozeQuestion(doc)) {
+            const questionExposition = extractValueOrChildrenText(doc);
+            setDropZoneCount(questionExposition.match(dropZoneRegex)?.length ?? 0);
+        } else if (isDndQuestion(doc)) {
+            const questionExposition = extractValueOrChildrenText(doc);
+            const figureZoneIds = extractDropZoneIdsPerFigure(doc);
+            setDropZoneCount((questionExposition.match(dndDropZoneRegex)?.length ?? 0) + figureZoneIds.map(x => x[1].length).reduce((a, b) => a + b, 0));
+
+            const expositionIds = questionExposition.matchAll(dndDropZoneRegex).filter(x => x.groups?.id).map(x => (x.groups?.id as string)).toArray();
+            setDropZoneIds(new Set([...expositionIds, ...figureZoneIds.flatMap(x => x[1])]));
+        }
     };
-    const updateWithDropZoneCount = (newDoc: IsaacItemQuestion | IsaacReorderQuestion | IsaacParsonsQuestion | IsaacClozeQuestion, invertible?: boolean) => {
+    const updateWithDropZoneCount = (newDoc: ItemQuestionType, invertible?: boolean) => {
         update(newDoc, invertible);
         countDropZonesIn(newDoc);
     };
@@ -66,10 +95,35 @@ export function ItemQuestionPresenter(props: PresenterProps<IsaacItemQuestion | 
         countDropZonesIn(doc);
     }, []);
 
-    return <ClozeQuestionContext.Provider value={{isClozeQuestion: isClozeQuestion(doc), dropZoneCount}}>
+    useEffect(() => {
+        if (isDndQuestion(doc)) {
+            const f = async () => {
+                // if the number of drop zones has changed, the indexes of figure zones may need to change.
+                const figures = Array.from(Object.entries(figureMap.current))
+                for (const figure of figures) {
+                    const [id, [dropZones, setDropZones]] = figure;
+                    const startIndex = extractFigureRegionStartIndex(doc, id);
+                    console.log(id, "starting at", startIndex, dropZones);
+                    setDropZones(dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                    console.log("Updated figure", dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
+                }
+                f();
+            }
+        }
+    }, [dropZoneCount]);
+
+    return <DropZoneQuestionContext.Provider value={{
+        isDndQuestion: isDndQuestion(doc),
+        isClozeQuestion: isClozeQuestion(doc),
+        dropZoneCount,
+        dropZoneIds,
+        figureMap: figureMap.current,
+        calculateDZIndexFromFigureId: (id) => extractFigureRegionStartIndex(doc, id),
+    }}>
         {isParsonsQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" /></div>}
-        {isClozeQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>}
-        {isClozeQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>}
+        {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>}
+        {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>}
         <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>
         <ContentValueOrChildrenPresenter {...props} update={updateWithDropZoneCount} topLevel />
         {isClozeQuestion(doc) && <ClozeQuestionInstructions />}
@@ -87,12 +141,12 @@ export function ItemQuestionPresenter(props: PresenterProps<IsaacItemQuestion | 
         <ItemsContext.Provider value={{
             items: doc.items,
             remainingItems: undefined,
-            withReplacement: isClozeQuestion(doc) && doc.withReplacement,
+            withReplacement: (isClozeQuestion(doc) || isDndQuestion(doc)) && doc.withReplacement,
             allowSubsetMatch: undefined,
         }}>
             <QuestionFooterPresenter {...props} />
         </ItemsContext.Provider>
-    </ClozeQuestionContext.Provider>;
+    </DropZoneQuestionContext.Provider>;
 }
 
 export function ItemPresenter(props: PresenterProps<Item>) {
@@ -115,15 +169,15 @@ export function ItemPresenter(props: PresenterProps<Item>) {
 }
 
 function ItemRow({item}: {item: Item}) {
-    return item.id === NULL_CLOZE_ITEM_ID
+    return item.id === NULL_CLOZE_ITEM_ID || item.id === NULL_DND_ITEM_ID
         ? <>Any item</>
-        : <Row>
-            <Col xs={3}>
-                {item.id}
-            </Col>
-            <Col xs={9} className={styles.itemRowText}>
+        : <Row className="justify-content-center">
+            <div className={styles.itemRowText}>
                 <ExpandableText text={item.value}/>
-            </Col>
+                <span className="text-muted ml-3">
+                    ({item.id})
+                </span>
+            </div>
         </Row>;
 }
 
@@ -139,7 +193,7 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     const {doc, update} = props;
     const [isOpen, setOpen] = useState(false);
     const {items, remainingItems, allowSubsetMatch} = useContext(ItemsContext);
-    const {isClozeQuestion} = useContext(ClozeQuestionContext);
+    const {isClozeQuestion} = useContext(DropZoneQuestionContext);
 
     const item = items?.find((item) => item.id === doc.id) ?? {
         id: doc.id,
@@ -185,9 +239,80 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     }
 }
 
+const DropZoneSelector = (props: PresenterProps<DndItem>) => {
+    const {doc, update} = props;
+    const {dropZoneIds} = useContext(DropZoneQuestionContext);
+
+    const [isOpen, setOpen] = useState(false);
+
+    return <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
+        <DropdownToggle outline className={styles.dropdownButton}>
+            <Row>
+                Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
+            </Row>
+        </DropdownToggle>
+        <DropdownMenu className={styles.itemChoiceDropdown}>
+            {/* TODO: show only unused dropzone ids */}
+            {Array.from(dropZoneIds ?? []).map((id) => {
+                return <DropdownItem key={id} className={styles.dropdownItem} onClick={() => {
+                    update({
+                        ...doc,
+                        dropZoneId: id,
+                    });
+                }}>
+                    {id}
+                </DropdownItem>;
+            })}
+        </DropdownMenu>
+    </Dropdown>;
+}
+
+export function DndChoicePresenter(props: PresenterProps<DndItem>) {
+    const {doc, update} = props;
+    const [isOpen, setOpen] = useState(false);
+    const {items, remainingItems, allowSubsetMatch} = useContext(ItemsContext);
+
+    const {dropZoneIds} = useContext(DropZoneQuestionContext);
+
+    const item = items?.find((item) => item.id === doc.id) ?? {
+        id: doc.id,
+        value: "Unknown item",
+    };
+    const staticItems = allowSubsetMatch && item.id !== NULL_DND_ITEM_ID ? [NULL_DND_ITEM] : [];
+
+    return <div className={styles.itemsChoiceRow}>
+        <DropZoneSelector {...props} />
+
+        {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert color="danger">
+            {/* Shows if e.g. a dropzone ID has changed */}
+            This drop zone ID does not exist.
+        </Alert>}
+        <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
+            <DropdownToggle outline className={styles.dropdownButton}>
+                <ItemRow item={item} />
+            </DropdownToggle>
+            <DropdownMenu className={styles.itemChoiceDropdown}>
+                <DropdownItem key={item.id} className={styles.dropdownItem} active>
+                    <ItemRow item={item} />
+                </DropdownItem>
+                {remainingItems?.concat(staticItems).map((i) => {
+                    return <DropdownItem key={i.id} className={styles.dropdownItem} onClick={() => {
+                        update({
+                            ...doc,
+                            id: i.id,
+                        });
+                    }}>
+                        <ItemRow item={i} />
+                    </DropdownItem>;
+                })}
+            </DropdownMenu>
+        </Dropdown>
+    </div>;
+}
+
 export function ItemChoiceItemInserter({insert, position, lengthOfCollection}: InserterProps) {
     const {items, remainingItems} = useContext(ItemsContext);
-    const {dropZoneCount, isClozeQuestion} = useContext(ClozeQuestionContext);
+    const {dropZoneCount, isClozeQuestion} = useContext(DropZoneQuestionContext);
 
     if (!items || !remainingItems) {
         return null; // Shouldn't happen.
@@ -207,6 +332,38 @@ export function ItemChoiceItemInserter({insert, position, lengthOfCollection}: I
         }
         insert(position, newItem);
     }}>Add</Button>;
+}
+
+export function DndChoiceItemInserter({insert, insertMultiple, position, collection, lengthOfCollection}: InserterProps) {
+    const {items, remainingItems} = useContext(ItemsContext);
+    const {dropZoneCount, dropZoneIds} = useContext(DropZoneQuestionContext);
+
+    const missingDropZones = dropZoneIds?.difference(new Set(collection?.map((item: DndItem) => item.dropZoneId)));
+
+    if (!items || !remainingItems) {
+        return null; // Shouldn't happen.
+    }
+
+    if (position !== lengthOfCollection) {
+        return null; // Only include an insert button at the end.
+    }
+    const item = NULL_DND_ITEM;
+    if (!item || !dropZoneCount || lengthOfCollection >= dropZoneCount) {
+        return null; // No items remaining, or max items reached in choice (in case of cloze question)
+    }
+    return <>
+        <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
+            const newItem: DndItem = {type: item.type, id: item.id, dropZoneId: item.dropZoneId};
+            insert(position, newItem);
+        }}>Add blank entry</Button>
+        <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
+            insertMultiple(Array.from(missingDropZones ?? []).map((dropZoneId, index) => {
+                const newItem: DndItem = {type: item.type, id: item.id, dropZoneId};
+                return [position + index, newItem];
+            }));
+        }}>Add entries for all missing DZs</Button>
+    </>;
+
 }
 
 export function ClozeQuestionInstructions() {

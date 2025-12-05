@@ -29,3 +29,63 @@
     top: -1000px;
     visibility: hidden;
 }
+
+.figureRegionModalBody {
+
+    .figureRegionImageContainer {
+        position: relative;
+        resize: horizontal;
+        overflow: auto;
+        max-width: 100%;
+    }
+    
+    > :first-child img {
+        max-width: 100%;
+    }
+
+    input:invalid, input:out-of-range {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .figureRegionModalInputs {
+        width: 100%;
+        table-layout: fixed;
+        margin: 1rem 0 2rem;
+
+        thead {
+            border-bottom: 1px solid #999;
+        }
+
+        tbody > tr > td {
+            padding-top: 0.5rem;
+        }
+
+        td > input {
+            width: 70px;
+            height: auto;
+            margin: auto;
+            border: none;
+            border-bottom: 1px solid #ccc;
+        }
+
+        th:last-child, td:last-child {
+            width: 15px;
+            button {
+                border: none;
+                background: none;
+                padding: 0;
+                cursor: pointer;
+                opacity: 0.5;
+                scale: 0.8;
+                transition: all 0.2s ease-in-out;
+
+                &:hover {
+                    opacity: 1;
+                    scale: 1;
+                }
+            }
+        }
+    }
+}
