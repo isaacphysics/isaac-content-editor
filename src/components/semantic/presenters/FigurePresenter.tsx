@@ -68,7 +68,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
     }, [data, doc.src]);
 
     useEffect(() => {
-        update({...doc, figureRegions});
+        update({...doc, figureRegions: figureRegions?.length === 0 ? undefined : figureRegions});
         if (itemQuestionContext.isDndQuestion) {
             itemQuestionContext.figureMap[doc.id as string] = [figureRegions, setFigureRegions];
         } else if (inlineQuestionContext.isInlineQuestion) {
