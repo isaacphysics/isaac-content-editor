@@ -16,7 +16,7 @@ const Languages = {
     css: "CSS",
     haskell: "Haskell",
     html: "HTML",
-    pseudocode: "Isaac Pseudocode",
+    pseudocode: "Ada Pseudocode",
     java: "Java",
     javascript: "Javascript",
     phpfile: "PHP",
