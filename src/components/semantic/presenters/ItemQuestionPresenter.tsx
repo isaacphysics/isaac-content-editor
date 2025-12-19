@@ -34,10 +34,11 @@ interface ItemsContextType {
     remainingItems: Item[] | undefined;
     withReplacement: boolean | undefined;
     allowSubsetMatch: boolean | undefined;
+    isCorrect: boolean | undefined;
 }
 
 export const ItemsContext = createContext<ItemsContextType>(
-    {items: undefined, remainingItems: undefined, withReplacement: undefined, allowSubsetMatch: undefined}
+    {items: undefined, remainingItems: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined}
 );
 export const DropZoneQuestionContext = createContext<{
     isDndQuestion: boolean,
@@ -143,6 +144,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
             remainingItems: undefined,
             withReplacement: (isClozeQuestion(doc) || isDndQuestion(doc)) && doc.withReplacement,
             allowSubsetMatch: undefined,
+            isCorrect: undefined,
         }}>
             <QuestionFooterPresenter {...props} />
         </ItemsContext.Provider>
@@ -328,7 +330,7 @@ export function ItemChoiceItemInserter({insert, position, lengthOfCollection}: I
 }
 
 export function DndChoiceItemInserter({insert, insertMultiple, position, collection, lengthOfCollection}: InserterProps) {
-    const {items, remainingItems} = useContext(ItemsContext);
+    const {items, remainingItems, isCorrect} = useContext(ItemsContext);
     const {dropZoneCount, dropZoneIds} = useContext(DropZoneQuestionContext);
 
     const missingDropZones = [
@@ -346,10 +348,10 @@ export function DndChoiceItemInserter({insert, insertMultiple, position, collect
         return null; // No items remaining, or max items reached in choice (in case of cloze question)
     }
     return <>
-        <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
+        {!isCorrect && <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
             const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId: missingDropZones[0]};
             insert(position, newItem);
-        }}>Add single entry</Button>
+        }}>Add single entry</Button>}
         <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
             insertMultiple(missingDropZones.map((dropZoneId, index) => {
                 const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId};
@@ -357,7 +359,6 @@ export function DndChoiceItemInserter({insert, insertMultiple, position, collect
             }));
         }}>Add entries for all missing DZs</Button>
     </>;
-
 }
 
 export function ClozeQuestionInstructions() {
