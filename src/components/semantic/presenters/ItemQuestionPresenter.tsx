@@ -270,15 +270,11 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
 export function DndChoicePresenter(props: PresenterProps<DndItem>) {
     const {doc, update} = props;
     const [isOpen, setOpen] = useState(false);
-    const {items, remainingItems, allowSubsetMatch} = useContext(ItemsContext);
+    const {items, remainingItems} = useContext(ItemsContext);
 
     const {dropZoneIds} = useContext(DropZoneQuestionContext);
 
-    const item = items?.find((item) => item.id === doc.id) ?? {
-        id: doc.id,
-        value: "Unknown item",
-    };
-    const staticItems = allowSubsetMatch && item.id !== NULL_DND_ITEM_ID ? [NULL_DND_ITEM] : [];
+    const item = items?.find((item) => item.id === doc.id);
 
     return <div className={styles.itemsChoiceRow}>
         <DropZoneSelector {...props} />
@@ -289,18 +285,15 @@ export function DndChoicePresenter(props: PresenterProps<DndItem>) {
         </Alert>}
         <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
             <DropdownToggle outline className={styles.dropdownButton}>
-                <ItemRow item={item} />
+                {item ? <ItemRow item={item} /> : <div>Select an item...</div>}
             </DropdownToggle>
             <DropdownMenu className={styles.itemChoiceDropdown}>
-                <DropdownItem key={item.id} className={styles.dropdownItem} active>
+                { item && <DropdownItem key={item.id} className={styles.dropdownItem} active>
                     <ItemRow item={item} />
-                </DropdownItem>
-                {remainingItems?.concat(staticItems).map((i) => {
+                </DropdownItem>}
+                {(remainingItems || []).map((i) => {
                     return <DropdownItem key={i.id} className={styles.dropdownItem} onClick={() => {
-                        update({
-                            ...doc,
-                            id: i.id,
-                        });
+                        update({ ...doc, id: i.id, });
                     }}>
                         <ItemRow item={i} />
                     </DropdownItem>;
@@ -353,12 +346,12 @@ export function DndChoiceItemInserter({insert, insertMultiple, position, collect
     }
     return <>
         <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
-            const newItem: DndItem = {type: item.type, id: item.id, dropZoneId: item.dropZoneId};
+            const newItem: DndItem = {type: item.type, dropZoneId: item.dropZoneId};
             insert(position, newItem);
         }}>Add blank entry</Button>
         <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
             insertMultiple(Array.from(missingDropZones ?? []).map((dropZoneId, index) => {
-                const newItem: DndItem = {type: item.type, id: item.id, dropZoneId};
+                const newItem: DndItem = {type: item.type, dropZoneId};
                 return [position + index, newItem];
             }));
         }}>Add entries for all missing DZs</Button>
