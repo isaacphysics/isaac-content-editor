@@ -21,6 +21,7 @@ export const NULL_DND_ITEM: DndItem = {
     id: NULL_DND_ITEM_ID,
     dropZoneId: "NULL_DROP_ZONE"
 }
+export const DND_ITEM_TYPE = "dndItem";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
 
