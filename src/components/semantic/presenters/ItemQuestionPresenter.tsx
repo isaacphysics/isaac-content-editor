@@ -287,7 +287,7 @@ export function DndChoicePresenter(props: PresenterProps<DndItem>) {
         </Alert>}
         <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
             <DropdownToggle outline className={styles.dropdownButton}>
-                {item ? <ItemRow item={item} /> : <div>Select an item...</div>}
+                {item ? <ItemRow item={item} /> : <div>⚠️ Select an item...</div>}
             </DropdownToggle>
             <DropdownMenu className={styles.itemChoiceDropdown}>
                 { item && <DropdownItem key={item.id} className={styles.dropdownItem} active>
