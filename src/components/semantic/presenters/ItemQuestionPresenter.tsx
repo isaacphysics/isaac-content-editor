@@ -27,17 +27,18 @@ import styles from "../styles/question.module.css";
 import {Box} from "../SemanticItem";
 import {ExpandableText} from "../ExpandableText";
 import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../utils/content";
-import {dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID, NULL_DND_ITEM, NULL_DND_ITEM_ID} from "../../../isaac/IsaacTypes";
+import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../isaac/IsaacTypes";
 
 interface ItemsContextType {
     items: Item[] | undefined;
     remainingItems: Item[] | undefined;
     withReplacement: boolean | undefined;
     allowSubsetMatch: boolean | undefined;
+    isCorrect: boolean | undefined;
 }
 
 export const ItemsContext = createContext<ItemsContextType>(
-    {items: undefined, remainingItems: undefined, withReplacement: undefined, allowSubsetMatch: undefined}
+    {items: undefined, remainingItems: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined}
 );
 export const DropZoneQuestionContext = createContext<{
     isDndQuestion: boolean,
@@ -143,6 +144,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
             remainingItems: undefined,
             withReplacement: (isClozeQuestion(doc) || isDndQuestion(doc)) && doc.withReplacement,
             allowSubsetMatch: undefined,
+            isCorrect: undefined,
         }}>
             <QuestionFooterPresenter {...props} />
         </ItemsContext.Provider>
@@ -169,7 +171,7 @@ export function ItemPresenter(props: PresenterProps<Item>) {
 }
 
 function ItemRow({item}: {item: Item}) {
-    return item.id === NULL_CLOZE_ITEM_ID || item.id === NULL_DND_ITEM_ID
+    return item.id === NULL_CLOZE_ITEM_ID
         ? <>Any item</>
         : <Row className="justify-content-center">
             <div className={styles.itemRowText}>
@@ -270,15 +272,11 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
 export function DndChoicePresenter(props: PresenterProps<DndItem>) {
     const {doc, update} = props;
     const [isOpen, setOpen] = useState(false);
-    const {items, remainingItems, allowSubsetMatch} = useContext(ItemsContext);
+    const {items, remainingItems} = useContext(ItemsContext);
 
     const {dropZoneIds} = useContext(DropZoneQuestionContext);
 
-    const item = items?.find((item) => item.id === doc.id) ?? {
-        id: doc.id,
-        value: "Unknown item",
-    };
-    const staticItems = allowSubsetMatch && item.id !== NULL_DND_ITEM_ID ? [NULL_DND_ITEM] : [];
+    const item = items?.find((item) => item.id === doc.id);
 
     return <div className={styles.itemsChoiceRow}>
         <DropZoneSelector {...props} />
@@ -289,18 +287,15 @@ export function DndChoicePresenter(props: PresenterProps<DndItem>) {
         </Alert>}
         <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
             <DropdownToggle outline className={styles.dropdownButton}>
-                <ItemRow item={item} />
+                {item ? <ItemRow item={item} /> : <div>⚠️ Select an item...</div>}
             </DropdownToggle>
             <DropdownMenu className={styles.itemChoiceDropdown}>
-                <DropdownItem key={item.id} className={styles.dropdownItem} active>
+                { item && <DropdownItem key={item.id} className={styles.dropdownItem} active>
                     <ItemRow item={item} />
-                </DropdownItem>
-                {remainingItems?.concat(staticItems).map((i) => {
+                </DropdownItem>}
+                {(remainingItems || []).map((i) => {
                     return <DropdownItem key={i.id} className={styles.dropdownItem} onClick={() => {
-                        update({
-                            ...doc,
-                            id: i.id,
-                        });
+                        update({ ...doc, id: i.id, });
                     }}>
                         <ItemRow item={i} />
                     </DropdownItem>;
@@ -335,11 +330,13 @@ export function ItemChoiceItemInserter({insert, position, lengthOfCollection}: I
 }
 
 export function DndChoiceItemInserter({insert, insertMultiple, position, collection, lengthOfCollection}: InserterProps) {
-    const {items, remainingItems} = useContext(ItemsContext);
+    const {items, remainingItems, isCorrect} = useContext(ItemsContext);
     const {dropZoneCount, dropZoneIds} = useContext(DropZoneQuestionContext);
 
-    const missingDropZones = dropZoneIds?.difference(new Set(collection?.map((item: DndItem) => item.dropZoneId)));
-
+    const missingDropZones = [
+        ...(dropZoneIds || new Set()).difference(new Set(collection?.map((item: DndItem) => item.dropZoneId)))
+    ];
+    
     if (!items || !remainingItems) {
         return null; // Shouldn't happen.
     }
@@ -347,23 +344,21 @@ export function DndChoiceItemInserter({insert, insertMultiple, position, collect
     if (position !== lengthOfCollection) {
         return null; // Only include an insert button at the end.
     }
-    const item = NULL_DND_ITEM;
-    if (!item || !dropZoneCount || lengthOfCollection >= dropZoneCount) {
+    if (!dropZoneCount || lengthOfCollection >= dropZoneCount) {
         return null; // No items remaining, or max items reached in choice (in case of cloze question)
     }
     return <>
-        <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
-            const newItem: DndItem = {type: item.type, id: item.id, dropZoneId: item.dropZoneId};
+        {!isCorrect && <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
+            const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId: missingDropZones[0]};
             insert(position, newItem);
-        }}>Add blank entry</Button>
+        }}>Add single entry</Button>}
         <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
-            insertMultiple(Array.from(missingDropZones ?? []).map((dropZoneId, index) => {
-                const newItem: DndItem = {type: item.type, id: item.id, dropZoneId};
+            insertMultiple(missingDropZones.map((dropZoneId, index) => {
+                const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId};
                 return [position + index, newItem];
             }));
         }}>Add entries for all missing DZs</Button>
     </>;
-
 }
 
 export function ClozeQuestionInstructions() {

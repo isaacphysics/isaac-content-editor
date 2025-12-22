@@ -265,7 +265,7 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
             If a choice does not have the same number of items as drop zones, <b>it will not be checked against the
             users answer</b>.
         </Alert>}
-        <ItemsContext.Provider value={{items, remainingItems, withReplacement, allowSubsetMatch: doc.allowSubsetMatch}}>
+        <ItemsContext.Provider value={{items, remainingItems, withReplacement, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={augmentedUpdate} prop="items" childTypeOverride="item$choice" />
         </ItemsContext.Provider>
     </>;
@@ -280,7 +280,7 @@ export const DndChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
 
     return <>
         <span>Add an entry here to attach one Item to one Drop Zone.</span>
-        <ItemsContext.Provider value={{items, remainingItems, withReplacement, allowSubsetMatch: doc.allowSubsetMatch}}>
+        <ItemsContext.Provider value={{items, remainingItems, withReplacement, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={update} prop="items" childTypeOverride="dndItem$choice" />
         </ItemsContext.Provider>
     </>;
