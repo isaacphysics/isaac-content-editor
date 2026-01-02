@@ -70,8 +70,7 @@ export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
     buttonText?: string;
 }
 
-export interface IsaacConceptPage extends SeguePage {
-}
+export type IsaacConceptPage = SeguePage
 
 export interface IsaacEventPage extends Content {
     date?: number;
@@ -95,8 +94,7 @@ export interface IsaacEventPage extends Content {
     endDate?: number;
 }
 
-export interface IsaacFastTrackQuestionPage extends IsaacQuestionPage {
-}
+export type IsaacFastTrackQuestionPage = IsaacQuestionPage
 
 export interface IsaacFeaturedProfile extends Content {
     emailAddress?: string;
@@ -104,8 +102,7 @@ export interface IsaacFeaturedProfile extends Content {
     homepage?: string;
 }
 
-export interface IsaacFreeTextQuestion extends Question {
-}
+export type IsaacFreeTextQuestion = Question
 
 export interface LLMFreeTextMarkSchemeEntry {
     jsonField?: string;
@@ -159,8 +156,7 @@ export interface IsaacItemQuestion extends IsaacQuestionBase {
     randomiseItems?: boolean;
 }
 
-export interface IsaacMultiChoiceQuestion extends IsaacQuestionBase {
-}
+export type IsaacMultiChoiceQuestion = IsaacQuestionBase
 
 export interface IsaacNumericQuestion extends IsaacQuestionBase {
     requireUnits?: boolean;
@@ -179,15 +175,14 @@ export interface IsaacParsonsQuestion extends IsaacItemQuestion {
     disableIndentation?: boolean;
 }
 
-export interface IsaacReorderQuestion extends IsaacItemQuestion { }
+export type IsaacReorderQuestion = IsaacItemQuestion
 
 export interface IsaacPod extends Content {
     image?: Image;
     url?: string;
 }
 
-export interface IsaacQuestionBase extends ChoiceQuestion {
-}
+export type IsaacQuestionBase = ChoiceQuestion
 
 export interface IsaacQuestionPage extends SeguePage {
     difficulty?: number;
@@ -228,8 +223,7 @@ export interface IsaacBookDetailPage extends SeguePage {
     extensionGameboards?: string[];
 }
 
-export interface IsaacQuizSection extends Content {
-}
+export type IsaacQuizSection = Content
 
 export interface IsaacRegexMatchQuestion extends IsaacQuestionBase {
     multiLineEntry?: boolean;
@@ -245,8 +239,7 @@ export interface IsaacInlineQuestion extends IsaacQuestionBase {
     inlineQuestions?: IsaacStringMatchQuestion[];
 }
 
-export interface IsaacInlinePart extends IsaacQuestionBase {
-}
+export type IsaacInlinePart = IsaacQuestionBase
 
 export interface IsaacSymbolicChemistryQuestion extends IsaacSymbolicQuestion {
     isNuclear?: boolean;
@@ -254,8 +247,7 @@ export interface IsaacSymbolicChemistryQuestion extends IsaacSymbolicQuestion {
     allowScalingCoefficients?: boolean;
 }
 
-export interface IsaacSymbolicLogicQuestion extends IsaacSymbolicQuestion {
-}
+export type IsaacSymbolicLogicQuestion = IsaacSymbolicQuestion
 
 export interface IsaacSymbolicQuestion extends IsaacQuestionBase {
     formulaSeed?: string;
@@ -313,11 +305,9 @@ export interface EventBooking {
 export interface EventBookings {
 }
 
-export interface PgEventBooking extends EventBooking {
-}
+export type PgEventBooking = EventBooking
 
-export interface PgEventBookings extends EventBookings {
-}
+export type PgEventBookings = EventBookings
 
 export interface AnvilApp extends Content {
     appId?: string;
@@ -359,8 +349,7 @@ export interface IsaacTabs extends Content {
     hideTitles?: boolean;
 }
 
-export interface CodeTabs extends IsaacTabs {
-}
+export type CodeTabs = IsaacTabs
 
 export interface Content extends ContentBase {
     title?: string;
@@ -469,14 +458,11 @@ export interface Notification extends Content {
     expiry?: Date;
 }
 
-export interface ParsonsChoice extends ItemChoice {
-}
+export type ParsonsChoice = ItemChoice
 
-export interface CoordinateChoice extends ItemChoice {
-}
+export type CoordinateChoice = ItemChoice
 
-export interface DndChoice extends ItemChoice {
-}
+export type DndChoice = ItemChoice
 export interface ParsonsItem extends Item {
     indentation?: number;
 }
@@ -516,8 +502,7 @@ export interface StringChoice extends Choice {
     caseInsensitive?: boolean;
 }
 
-export interface Video extends Media {
-}
+export type Video = Media
 
 export interface AudienceContext {
     stage?: Stage[];

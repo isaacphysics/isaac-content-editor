@@ -53,7 +53,7 @@ export const MetaItems = asMetaItems({
     level: ["Level", {type: "number", hasWarning: (value) => {
         const level = value as number; // Already parsed by virtue of type: "number"
         if (isNaN(level) || level < 1 || level > 6) {
-            return "Level must be a number between 1 and 6."
+            return "Level must be a number between 1 and 6.";
         }
     }}],
     summary: "Summary",
@@ -116,7 +116,7 @@ export const MetaItems = asMetaItems({
 
 
 function ReservationsMetaPresenter(props: MetaItemPresenterProps<IsaacEventPage>) {
-    const limitId = `${props.id}-limit`
+    const limitId = `${props.id}-limit`;
     return <Row className={styles.row}>
         <Col xs={1}>
             <Label for={props.id}>Enabled</Label>
@@ -254,7 +254,7 @@ function LocationMetaPresenter({doc, update, prop, id}: MetaItemPresenterProps) 
         update({
             ...docRef.current,
             [prop]: location,
-        })
+        });
     }, [docRef, prop, update]);
     const locationProps = {doc: location as Content, update: locationUpdate};
 
@@ -266,7 +266,7 @@ function LocationMetaPresenter({doc, update, prop, id}: MetaItemPresenterProps) 
                 ...docRef.current[prop as keyof Content] as Location,
                 address,
             },
-        })
+        });
     }, [docRef, prop, update]);
     const addressProps = {doc: address as Content, update: addressUpdate};
 
@@ -323,13 +323,13 @@ function ResourcesMetaPresenter({doc, update, prop, name}: MetaItemPresenterProp
             return <Row key={keyList[index]}>
                 <Col xs={5}>
                     <MetaItemPresenter doc={resource}
-                                       update={updateResource}
-                                       prop="title" name="Title"/>
+                        update={updateResource}
+                        prop="title" name="Title"/>
                 </Col>
                 <Col xs={5}>
                     <MetaItemPresenter doc={resource}
-                                       update={updateResource}
-                                       prop="url" name="URL"/>
+                        update={updateResource}
+                        prop="url" name="URL"/>
                 </Col>
                 <Col xs={2}>
                     <Button color="link" size="sm" onClick={() => shiftBy(index, -1)} disabled={index <= 0}>▲</Button>

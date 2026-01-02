@@ -33,7 +33,7 @@ const FILE_COMPONENTS = {
     "jpg|jpeg|gif|png": ImageViewer,
     "svg": SVGViewer,
     "pdf": PDFViewer,
-}
+};
 
 function useParamsToSelection(params: Readonly<Params>): Selection {
     return useMemo<Selection>(() => {
@@ -66,7 +66,7 @@ function useCollapsableDragElement(appContext: CollapsableArg): [(col: number) =
         });
 
         // Clear collapsed on drag interaction so that we can collapse another column in the future
-        gutterDiv.addEventListener("dragend", function() {setCollapsed(undefined);})
+        gutterDiv.addEventListener("dragend", function() {setCollapsed(undefined);});
 
         // Lazy start preview panel
         if (columnIndex === 2) {
@@ -254,7 +254,7 @@ export function EditorScreen() {
                             }
                         }
                     }
-                })
+                });
             });
             unblockRef.current = unblock;
             return unblock;

@@ -92,11 +92,11 @@ export const Box: FunctionComponent<BoxProps> = ({name, onClick,  onDelete, shif
                 ▼
             </button>}
             {onDelete && <button className={`btn-sm ${styles.iconButton} ${styles.boxDelete}`}
-                                 onMouseOver={() => setDeleteHovered(true)}
-                                 onMouseOut={() => setDeleteHovered(false)}
-                                 onFocus={() => setDeleteHovered(true)}
-                                 onBlur={() => setDeleteHovered(false)}
-                                 onClick={onDelete}>
+                onMouseOver={() => setDeleteHovered(true)}
+                onMouseOut={() => setDeleteHovered(false)}
+                onFocus={() => setDeleteHovered(true)}
+                onBlur={() => setDeleteHovered(false)}
+                onClick={onDelete}>
                 ❌
             </button>}
         </div>

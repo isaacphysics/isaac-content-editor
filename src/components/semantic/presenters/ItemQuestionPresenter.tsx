@@ -99,7 +99,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         if (isDndQuestion(doc)) {
             const f = async () => {
                 // if the number of drop zones has changed, the indexes of figure zones may need to change.
-                const figures = Array.from(Object.entries(figureMap.current))
+                const figures = Array.from(Object.entries(figureMap.current));
                 for (const figure of figures) {
                     const [id, [dropZones, setDropZones]] = figure;
                     const startIndex = extractFigureRegionStartIndex(doc, id);
@@ -109,7 +109,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
                     console.log("Updated figure", dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
                 }
                 f();
-            }
+            };
         }
     }, [dropZoneCount]);
 
@@ -202,7 +202,7 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     const staticItems = isClozeQuestion && allowSubsetMatch && item.id !== NULL_CLOZE_ITEM_ID ? [NULL_CLOZE_ITEM] : [];
 
     const dropdown = <Dropdown toggle={() => setOpen(toggle => !toggle)}
-                               isOpen={isOpen}>
+        isOpen={isOpen}>
         <DropdownToggle outline className={styles.dropdownButton}>
             <ItemRow item={item} />
         </DropdownToggle>
@@ -225,11 +225,11 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
 
     if (doc.type === "parsonsItem") {
         return <div className={styles.parsonsItem}
-                    style={{borderLeftWidth: `calc(1px + ${(doc.indentation ?? 0) * 1.5}em)`}}>
+            style={{borderLeftWidth: `calc(1px + ${(doc.indentation ?? 0) * 1.5}em)`}}>
             {dropdown}
             <span className={styles.parsonsIndentPresenter}>
                 <MetaItemPresenter {...props} prop="indentation" name="Indent"
-                                   options={indentationOptions} />
+                    options={indentationOptions} />
             </span>
         </div>;
     } else {
@@ -265,7 +265,7 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
             })}
         </DropdownMenu>
     </Dropdown>;
-}
+};
 
 export function DndChoicePresenter(props: PresenterProps<DndItem>) {
     const {doc, update} = props;

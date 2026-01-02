@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+ 
 import React, {
     forwardRef,
     useCallback,
@@ -28,13 +28,13 @@ export interface SaveOptions {
 
 export type EditableTextFormat = "latex" | "code" | "plain";
 
-export const escapedNewLineToLineBreakTag = (string: string) => string.split('\n').map((item: string, index: number) => (index === 0) ? item : [<br key={index}/>, item])
+export const escapedNewLineToLineBreakTag = (string: string) => string.split('\n').map((item: string, index: number) => (index === 0) ? item : [<br key={index}/>, item]);
 
 const textFormatMap: {[K in EditableTextFormat]: (text: string, multiline?: boolean) => React.ReactNode} = {
     latex: text => <Markup encoding="latex">{text}</Markup>,
     code: (text, ml) => <pre>{ml ? escapedNewLineToLineBreakTag(text) : text}</pre>,
     plain: (text, ml) => ml ? escapedNewLineToLineBreakTag(text) : text,
-}
+};
 
 export type EditableTextProps = {
     text?: string;
@@ -91,22 +91,22 @@ function showErrorIfNotShown(current: EditableTextState) {
 }
 
 export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
-                                 text,
-                                 onSave: onSaveUnsafe,
-                                 placeHolder,
-                                 onDelete: onDeleteUnsafe,
-                                 autoFocus,
-                                 hasError: hasErrorUnsafe,
-                                 label,
-                                 noSupressSaves,
-                                 hideWhenEmpty,
-                                 block,
-                                 format = "plain",
-                                 multiLine = format === "code",
-                                 previewWrapperChar = "",
-                                 inputProps,
-                                 buttonStrings = [],
-                             }, ref) => {
+    text,
+    onSave: onSaveUnsafe,
+    placeHolder,
+    onDelete: onDeleteUnsafe,
+    autoFocus,
+    hasError: hasErrorUnsafe,
+    label,
+    noSupressSaves,
+    hideWhenEmpty,
+    block,
+    format = "plain",
+    multiLine = format === "code",
+    previewWrapperChar = "",
+    inputProps,
+    buttonStrings = [],
+}, ref) => {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const [errorMessage, setErrorMessage] = useState<string[]>();
 
@@ -217,50 +217,50 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
     const Wrap = block ? "div" : "span";
     if (state.isEditing) {
         return <> <Wrap ref={wrapperRef} className={`${styles.isEditingWrapper} ${multiLine ? styles.multiLine : ""}`}>
-                <span className={classNames(styles.controlWrapper, format === "code" ? "w-100" : "", "pb-2")}>
-                    <span className={styles.labelledInput}>
-                        <>
-                            {multiLine ? labelElement : <div>{labelElement}</div>}
-                            {format === "code"
-                                ? <CodeMirror
-                                    className={"w-100"}
-                                    value={state.value ?? ""}
-                                    // eslint-disable-next-line jsx-a11y/no-autofocus
-                                    autoFocus
-                                    extensions={[
-                                        EditorView.lineWrapping,
-                                        keyBindings(() => {save(); return true;}, () => {cancel(); return true;}, "plaintext"),
-                                    ]}
-                                    onChange={(newValue) => setCurrent(newValue)}
-                                >
-                                    <MarkupToolbar set={save} cancel={cancel} encoding={"plaintext"} />
-                                </CodeMirror>
-                                : <Input
-                                    type={multiLine ? "textarea" : "text"}
-                                    /* eslint-disable-next-line jsx-a11y/no-autofocus */
-                                    autoFocus={autoFocus ?? false}
-                                    value={state.value ?? ""}
-                                    onChange={e => setCurrent(e.target.value)}
-                                    onKeyDown={handleKey}
-                                    placeholder={placeHolder}
-                                    onBlur={onBlur}
-                                    invalid={errorMessage && errorMessage.length > 0}
-                                    {...inputProps}
-                                />
-                            }
-                        </>
-                    </span>
+            <span className={classNames(styles.controlWrapper, format === "code" ? "w-100" : "", "pb-2")}>
+                <span className={styles.labelledInput}>
+                    <>
+                        {multiLine ? labelElement : <div>{labelElement}</div>}
+                        {format === "code"
+                            ? <CodeMirror
+                                className={"w-100"}
+                                value={state.value ?? ""}
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
+                                extensions={[
+                                    EditorView.lineWrapping,
+                                    keyBindings(() => {save(); return true;}, () => {cancel(); return true;}, "plaintext"),
+                                ]}
+                                onChange={(newValue) => setCurrent(newValue)}
+                            >
+                                <MarkupToolbar set={save} cancel={cancel} encoding={"plaintext"} />
+                            </CodeMirror>
+                            : <Input
+                                type={multiLine ? "textarea" : "text"}
+                                /* eslint-disable-next-line jsx-a11y/no-autofocus */
+                                autoFocus={autoFocus ?? false}
+                                value={state.value ?? ""}
+                                onChange={e => setCurrent(e.target.value)}
+                                onKeyDown={handleKey}
+                                placeholder={placeHolder}
+                                onBlur={onBlur}
+                                invalid={errorMessage && errorMessage.length > 0}
+                                {...inputProps}
+                            />
+                        }
+                    </>
                 </span>
-                <Button className="mb-2" onClick={cancel}>Cancel</Button>
-                <Button className="mb-2" color="primary" onClick={() => save()}>Set</Button>
-            </Wrap>
-            {isDefined(errorMessage) && errorMessage.length > 0 && <Wrap className="pb-2">
-                {errorMessage.map(e => <FormFeedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</FormFeedback>)}
-            </Wrap>}
-            <Wrap ref={wrapperRef} className={`justify-content-start ${styles.isEditingWrapper}`}>
-                {insertStringButtons}
-            </Wrap>
-        </>
+            </span>
+            <Button className="mb-2" onClick={cancel}>Cancel</Button>
+            <Button className="mb-2" color="primary" onClick={() => save()}>Set</Button>
+        </Wrap>
+        {isDefined(errorMessage) && errorMessage.length > 0 && <Wrap className="pb-2">
+            {errorMessage.map(e => <FormFeedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</FormFeedback>)}
+        </Wrap>}
+        <Wrap ref={wrapperRef} className={`justify-content-start ${styles.isEditingWrapper}`}>
+            {insertStringButtons}
+        </Wrap>
+        </>;
     }
     if (nonEmpty) {
         return <Wrap className={classNames(styles.notEditingWrapper, {[styles.multiLine]: multiLine})}>

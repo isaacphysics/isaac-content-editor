@@ -12,4 +12,4 @@ export const buildPageError = (file: string | undefined) => function PageError({
         </div>
         <pre>{error.stack}</pre>
     </Container>;
-}
+};

@@ -8,7 +8,7 @@ import React, {
     useState
 } from "react";
 import styles from "../../styles/editor.module.css";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+ 
 // @ts-ignore
 import Portal from "reactstrap/src/Portal";
 

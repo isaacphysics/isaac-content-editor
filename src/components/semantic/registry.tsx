@@ -130,23 +130,23 @@ const choice: RegistryEntry = {
 const accordion: RegistryEntry = {
     name: "Accordion",
     bodyPresenter: AccordionPresenter,
-}
+};
 const horizontal: RegistryEntry = {
     name: "Side-by-side layout",
     className: styles.horizontal,
     bodyPresenter: ListChildrenPresenter,
-}
+};
 const clearfix: RegistryEntry = {
     name: "Clearfix",
     bodyPresenter: () => <div className={"text-center pb-3"}>
         <hr/>
         <i>This block is used to clear floating elements</i>
     </div>,
-}
+};
 const tabs: RegistryEntry = {
     name: "Tabs",
     bodyPresenter: TabsPresenter,
-}
+};
 const hints: RegistryEntry = {
     name: "Hints",
     bodyPresenter: (props) => <TabsPresenter {...props} />,
@@ -208,7 +208,7 @@ const interactiveCodeSnippet: RegistryEntry = {
 const codeTabs: RegistryEntry = {
     name: "Code Tabs",
     bodyPresenter: TabsPresenter,
-}
+};
 const glossaryTerm: RegistryEntry = {
     name: "Glossary term",
     bodyPresenter: GlossaryTermPresenter,
@@ -271,7 +271,7 @@ const isaacQuestionPage: RegistryEntry = {
 const isaacFastTrackQuestionPage: RegistryEntry = {
     ...isaacQuestionPage,
     metadata: [...isaacQuestionPage.metadata ?? [], "level"]
-}
+};
 const isaacConceptPage: RegistryEntry = {
     ...isaacQuestionPage,
     metadata: [...isaacQuestionPage.metadata ?? [], "summary"]

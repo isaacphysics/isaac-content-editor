@@ -32,7 +32,7 @@ export const decodeBase64 = (input: string | undefined): string | undefined => {
         }
         return String.fromCodePoint(result);
     });
-}
+};
 
 
 export const encodeBase64 = (input: string): string => {
@@ -40,7 +40,7 @@ export const encodeBase64 = (input: string): string => {
         const code = match.length === 2 ?
             // Surrogate pairs, yuck!
             0x10000 + (match.charCodeAt(0) - 0xD800) * 0x400 + (match.charCodeAt(1) - 0xDC00)
-        :   match.charCodeAt(0);
+            :   match.charCodeAt(0);
 
         if (code < 0x80) {
             return String.fromCharCode(code);
@@ -54,4 +54,4 @@ export const encodeBase64 = (input: string): string => {
         return String.fromCharCode(0b11110_000 | (code >>> 18), 0b10_000000 | ((code >>> 12) & 63), 0b10_000000 | ((code >>> 6) & 63), 0b10_000000 | (code & 63));
     });
     return btoa(utf8);
-}
+};

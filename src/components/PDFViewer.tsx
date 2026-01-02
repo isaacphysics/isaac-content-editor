@@ -49,7 +49,7 @@ export function PDFViewer() {
     if (invalid) {
         return <div className={styles.centered}>
             <Alert color="warning">This content does not appear to be a PDF.</Alert>
-        </div>
+        </div>;
     }
 
     function onDocumentLoadSuccess({ numPages }: {numPages: number}) {

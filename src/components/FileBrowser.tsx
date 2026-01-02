@@ -57,7 +57,7 @@ export const FileItem: FunctionComponent<FileItemProps> = (props) => {
         if (innerClick) {
             innerClick(isSelected);
         }
-    }
+    };
     return <ListGroupItem
         action
         id={pathToId(path)}
@@ -92,7 +92,7 @@ export function FilesList({open, error, data, menuRef, refreshParent}: {open: bo
                         };
                         return <FileItem key={entry.name} entry={entry} onContextMenu={fileOnContextMenu}>
                             {entry.name}
-                        </FileItem>
+                        </FileItem>;
                     default:
                         return null;
                 }
@@ -133,7 +133,7 @@ export function Files({entry, menuRef}: FilesProps) {
 
     return <>
         {entry && <FileItem className={open ? styles.fileBrowserOpenFolder : styles.fileBrowserClosedFolder}
-                     entry={entry} onClick={onClick} onContextMenu={onContextMenu(entry)}
+            entry={entry} onClick={onClick} onContextMenu={onContextMenu(entry)}
         >
             {entry.name}
         </FileItem>}

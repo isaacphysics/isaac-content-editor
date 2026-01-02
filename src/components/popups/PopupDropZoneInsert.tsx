@@ -29,7 +29,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
             setValid(false);
         }
 
-    }
+    };
 
     return <>
         <button className={styles.cmPanelButton} title={"Insert cloze drop-zone"} onClick={(event) => {
@@ -65,5 +65,5 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
                 </PopupCloseContext.Consumer>
             </Container>
         </Popup>
-    </>
-}
+    </>;
+};

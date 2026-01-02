@@ -54,11 +54,11 @@ jest.mock("./presenters/TabsPresenter", () => {
 
 jest.mock("reactstrap/src/Portal", () => { 
     return;
-})
+});
 
 jest.mock("react-pdf/dist/esm/entry.webpack5", () => {
     return;
-})
+});
 
 
 function getFiles(dir: string): string[] {
@@ -111,7 +111,7 @@ function testFile(file: string) {
 let errorLog: unknown[] = [];
 describe("can render existing docs without errors", () => {
     // Capture any errors thrown when rendering
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+     
     // @ts-ignore
     SemanticItem.prototype.componentDidCatch = (error, errorInfo) => {
         errorLog.push([error, errorInfo.componentStack]);
@@ -129,8 +129,8 @@ describe("can render existing docs without errors", () => {
         expect(errorLog.length).toBeGreaterThan(0);
     });
 
-    describe.skip("Can render Computer Science content correctly", () => { testFiles("../ada-content/content") });
-    describe.skip("Can render Physics content correctly", () => { testFiles("../rutherford-content/content") });
+    describe.skip("Can render Computer Science content correctly", () => { testFiles("../ada-content/content"); });
+    describe.skip("Can render Physics content correctly", () => { testFiles("../rutherford-content/content"); });
 
     it.skip("Checks specific files with errors found previously", () => {
         testFile("../rutherford-content/content/questions/chemistry/foundations/atomic_structure/elements_reversal.json");

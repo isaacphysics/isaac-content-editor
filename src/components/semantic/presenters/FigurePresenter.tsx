@@ -56,7 +56,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
             if (getImageFileType(doc.src) === "svg" && getSVGView(doc.src)) {
                 // SVG images may have "views", which can't be included in inline base 64 data, so we will use the
                 // GitHub URL as the source instead
-                dataUrl = githubURLFromGithubData(data, getSVGView(doc.src))
+                dataUrl = githubURLFromGithubData(data, getSVGView(doc.src));
             }
             else {
                 dataUrl = inlineBase64URLFromGithubData(data);
@@ -88,13 +88,13 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
 
     function getContentPathFromSrc(src?: string) {
         if (doc.src !== undefined && doc.src !== "") {
-            return isAppAsset(src) ? doc.src : `${basePath}/${doc.src}`
+            return isAppAsset(src) ? doc.src : `${basePath}/${doc.src}`;
         }
-        return false
+        return false;
     }
 
     function isAppAsset(path?: string) {
-        return path && path.startsWith('/assets')
+        return path && path.startsWith('/assets');
     }
 
     function githubURLFromGithubData(data: {download_url: string}, svgView?: string | null) {
@@ -107,18 +107,18 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
 
         // remove SVG view, if present
         if(src.includes('#')) {
-            src = src.substring(0, src.lastIndexOf('#'))
+            src = src.substring(0, src.lastIndexOf('#'));
         }
 
-        return src.substring(src.lastIndexOf(".") + 1)
+        return src.substring(src.lastIndexOf(".") + 1);
     }
 
     function getSVGView(src?: string) {
         if (src && src.includes('#')) {
-            src = src.toLowerCase()
-            return src.substring(src.lastIndexOf("#") + 1)
+            src = src.toLowerCase();
+            return src.substring(src.lastIndexOf("#") + 1);
         }
-        return null
+        return null;
     }
 
     function selectFile(file: File) {

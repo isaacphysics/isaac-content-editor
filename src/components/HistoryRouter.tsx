@@ -8,10 +8,10 @@ interface CustomRouterProps {
 }
 
 export const HistoryRouter: FunctionComponent<CustomRouterProps> = ({
-                          basename,
-                          children,
-                          history,
-                      }) => {
+    basename,
+    children,
+    history,
+}) => {
     const [state, setState] = useState({
         action: history.action,
         location: history.location,

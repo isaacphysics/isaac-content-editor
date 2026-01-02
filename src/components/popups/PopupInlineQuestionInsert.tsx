@@ -38,7 +38,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
         } else {
             setInvalid("Invalid dimension(s)");
         }
-    }
+    };
 
     const ifContainsNoSpacesThen = (f: (s: string | undefined) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.value.includes(" ")) {
@@ -47,7 +47,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
         } else {
             setInvalid("ID contains spaces");
         }
-    }
+    };
 
     return <>
         <button className={styles.cmPanelButton} title={"Insert inline question part"} onClick={(event) => {
@@ -76,7 +76,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
                         color="link"
                         className="p-0 ml-1 mb-1 text-muted"
                         onClick={() => setMode(mode === "classes" ? "dimensions" : "classes")}
-                        >
+                    >
                         Switch to {mode === "classes" ? "dimensions" : "classes"}
                     </Button>
                 </div>
@@ -94,5 +94,5 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
                 {invalid && <Alert color="danger" className="mt-2 mb-0 p-1 text-center">{invalid}</Alert>}
             </Container>
         </Popup>
-    </>
-}
+    </>;
+};

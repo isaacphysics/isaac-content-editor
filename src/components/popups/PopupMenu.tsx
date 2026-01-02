@@ -25,22 +25,22 @@ export interface PopupMenuRef {
 
 type MenuItemProps =
     | {
-    onClick: () => void;
-    href?: never;
-    text: string;
+        onClick: () => void;
+        href?: never;
+        text: string;
     }
     | {
-    onClick?: never;
-    href: string;
-    text: string;
+        onClick?: never;
+        href: string;
+        text: string;
     }
 ;
 
 export function MenuItem({
-                      onClick,
-                      href,
-                      text
-                  }: MenuItemProps) {
+    onClick,
+    href,
+    text
+}: MenuItemProps) {
     const close = useContext(PopupCloseContext);
     if (onClick) {
         return <li>
@@ -70,7 +70,7 @@ export const buildPopupMenu = (PopupInner: React.FC<{item: PopupEntry}>, display
                 <PopupInner item={item}/>
             </ul>
         </Popup>;
-    }
+    };
     PopupMenu.displayName = displayName ?? PopupInner.displayName;
     return PopupMenu;
 };

@@ -69,10 +69,10 @@ export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {sub
     return <div className={styles.wrapper}>
         {doc.tags?.map(tag => <Button key={tag} outline onClick={() => removeTag(tag)}>{tag} ➖</Button>)}
         <Input value={searchString}
-               onChange={(e) => setSearchString(e.target.value.toLowerCase())}
-               placeholder={`Type to add ${subjectsOnly ? "subjects" : "tags"}...`}
-               innerRef={inputRef}
-               onKeyPress={onKeyPress}
+            onChange={(e) => setSearchString(e.target.value.toLowerCase())}
+            placeholder={`Type to add ${subjectsOnly ? "subjects" : "tags"}...`}
+            innerRef={inputRef}
+            onKeyPress={onKeyPress}
         />
         {searchString !== "" && <div>
             <Button onClick={() => setShowTagList(!showTagList)}>

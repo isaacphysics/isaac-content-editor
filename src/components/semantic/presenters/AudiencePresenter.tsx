@@ -105,7 +105,7 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
                     if (!examBoardsForStage(doc).includes(value as ExamBoard)) {
                         values.splice(i, 1);
                     }
-                })
+                });
 
                 // Select a default value
                 if (values.length < 1) values.push(examBoardsForStage(doc)[0]);
@@ -131,7 +131,7 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
                 delete newDoc[key];
             } else {
                 // We know the values correspond to the right key, but tsc doesn't.
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                 
                 // @ts-ignore
                 newDoc[key] = newValues;
             }
@@ -192,7 +192,7 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
                 {unusedOptions.length > 0 && <Button outline size="sm" className="border-0 p-0 ml-1" onClick={() => {
                     updateValues([...values, unusedOptions[0]]);
                 }}>➕</Button>}
-                {key === "examBoard" && <Button outline size="sm" className="ml-1" onClick={() => {updateValues(examBoardsForStage(doc))}}>
+                {key === "examBoard" && <Button outline size="sm" className="ml-1" onClick={() => {updateValues(examBoardsForStage(doc));}}>
                     ALL
                 </Button>}
                 {values.length > 1 && "]"}
@@ -200,7 +200,7 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
 
             {key === "examBoard" && allExamBoardsForStagePresent(doc) && <Fragment>
                 {" IN [ALL]"}
-                <Button outline size="sm" className="ml-1" onClick={() => {const [_first, ...rest] = values; updateValues(rest)}}>
+                <Button outline size="sm" className="ml-1" onClick={() => {const [_first, ...rest] = values; updateValues(rest);}}>
                     NOT ALL
                 </Button>
             </Fragment>}
@@ -259,12 +259,12 @@ function AudienceEditor({doc, update, possible}: PresenterProps<AudienceContext[
         {doc.map((audience, index) => {
             return <div key={index} className={styles.editorRow}>
                 (<AudienceContextPresenter doc={audience}
-                                           update={(newAudience: AudienceContext) => {
-                                               const audience = [...doc];
-                                               audience[index] = newAudience;
-                                               update(audience);
-                                           }}
-                                           possible={possible}
+                    update={(newAudience: AudienceContext) => {
+                        const audience = [...doc];
+                        audience[index] = newAudience;
+                        update(audience);
+                    }}
+                    possible={possible}
                 />)
                 {doc.length > 1 && <Button outline size="sm" className="border-0 p-0 ml-1" onClick={() => {
                     const audience = [...doc];
@@ -276,7 +276,7 @@ function AudienceEditor({doc, update, possible}: PresenterProps<AudienceContext[
                 }}>OR ➕</Button> : " OR"}
             </div>;
         })}
-    </>
+    </>;
 }
 
 function DifficultyEditor({doc, update, possible}: PresenterProps<AudienceContext[]> & {possible: Possibilities}) {
@@ -286,21 +286,21 @@ function DifficultyEditor({doc, update, possible}: PresenterProps<AudienceContex
             newDifficulty ? audience.difficulty = [newDifficulty] : audience.difficulty = undefined;
         });
         update(audiences);
-    }
+    };
 
     const key = doc[0].difficulty ? doc[0].difficulty[0] : "";
-    const unusedOptions = new Set([...possible.difficulty as Difficulty[], ""])
+    const unusedOptions = new Set([...possible.difficulty as Difficulty[], ""]);
     unusedOptions.delete(key);
 
     return <>
         Difficulty: {' '}
         <select value={key} onChange={(e) => { updateDifficulty(e.target.value as Difficulty); }}>
-                <option key={key}>{key}</option>
-                {[...unusedOptions].map((possibleOption) =>
-                    <option key={possibleOption}>{possibleOption}</option>
-                )}
+            <option key={key}>{key}</option>
+            {[...unusedOptions].map((possibleOption) =>
+                <option key={possibleOption}>{possibleOption}</option>
+            )}
         </select>
-    </>
+    </>;
 }
 
 export function AudiencePresenter({doc, update, type}: PresenterProps & {type?: string}) {
