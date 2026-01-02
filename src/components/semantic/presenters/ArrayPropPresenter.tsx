@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { Alert, Input, Button } from "reactstrap";
 import { ContentBase, Content } from "../../../isaac-data-types";
 import { PresenterProps } from "../registry";
