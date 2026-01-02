@@ -44,7 +44,7 @@ export function Preview() {
     let doc: Content|null = null;
     try {
         doc = appContext.editor.getCurrentDoc();
-    } catch (e) {
+    } catch (_e) {
         // No doc currently
     }
 

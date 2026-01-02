@@ -1,5 +1,5 @@
 /* eslint-disable no-irregular-whitespace */  // For convenient construction of non-breaking spaces in custom strings
-import React, { MutableRefObject, useCallback, useMemo, useRef, useState } from "react";
+import React, { MutableRefObject, ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import {Button, ButtonGroup} from "reactstrap";
 
 import { Content, IsaacTabs } from "../../../isaac-data-types";
@@ -81,11 +81,11 @@ export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styl
 type TabsMainProps = TabsProps & {
     back: string;
     forward: string;
-    contentHeader?: JSX.Element;
-    extraButtons?: JSX.Element;
+    contentHeader?: ReactNode;
+    extraButtons?: ReactNode;
 };
 
-export function TabsMain({docRef, currentChild, updateCurrentChild, doRemove, doShift, keyList, index, emptyDescription, elementName, styles, suppressHeaderNames, showTitles, back, forward, contentHeader, extraButtons}: TabsMainProps) {
+export function TabsMain({docRef, currentChild, updateCurrentChild, doRemove, doShift, keyList, index, emptyDescription, elementName, styles, suppressHeaderNames, back, forward, contentHeader, extraButtons}: TabsMainProps) {
     const elementNameLC = safeLowercase(elementName);
 
     return <div className={styles.main}>

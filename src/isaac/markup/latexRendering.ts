@@ -1,5 +1,4 @@
 import {useContext} from "react";
-import {useSelector} from "react-redux";
 import he from "he";
 import katex, { KatexOptions } from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
@@ -326,9 +325,6 @@ export function katexify(html: string, user: null, booleanNotation : BooleanNota
     }
     output += html.substring(index, html.length);
     return output;
-}
-
-class AppState {
 }
 
 // A hook wrapper around katexify that gets its required parameters from the current redux state and existing figure numbering context

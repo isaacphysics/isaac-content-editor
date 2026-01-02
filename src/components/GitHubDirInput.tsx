@@ -81,7 +81,7 @@ export const GitHubDirInput = ({repo, className, dir, setDir, invalid}: GitHubDi
             return !options.find(o => "value" in o ? [o.value, getBasePath(o.value)].includes(pathToSearch) : o.options.find(_o => [_o.value, getBasePath(_o.value)].includes(pathToSearch)));
         }}
         styles={{
-            control: (base, state) => ({
+            control: (base) => ({
                 ...base,
                 // state.isFocused can display different borderColor if you need it
                 borderColor: !invalid ? '#ddd' : 'red',

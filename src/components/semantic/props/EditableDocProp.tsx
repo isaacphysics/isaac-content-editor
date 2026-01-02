@@ -1,4 +1,4 @@
-import {Content, CoordinateItem, IsaacCoordinateQuestion, Item} from "../../../isaac-data-types";
+import {Content, Item} from "../../../isaac-data-types";
 import { EditableText, EditableTextProps, EditableTextRef } from "./EditableText";
 import React, { forwardRef } from "react";
 import { KeysWithValsOfType } from "../../../utils/types";

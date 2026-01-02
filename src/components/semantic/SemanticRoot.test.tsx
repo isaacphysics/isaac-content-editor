@@ -71,7 +71,7 @@ function getFiles(dir: string): string[] {
 }
 
 function renderDoc(doc: Content) {
-    const dom = TestRenderer.create(<SemanticRoot doc={doc} update={(newDoc) => {
+    const dom = TestRenderer.create(<SemanticRoot doc={doc} update={() => {
         fail("update called");
     }}/>);
 

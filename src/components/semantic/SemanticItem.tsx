@@ -34,7 +34,7 @@
  * created that bubbles up the update to that child. In this way, Presenter has a uniform interface.
  */
 
-import React, {FunctionComponent, MouseEvent, useRef, useState} from "react";
+import React, {FunctionComponent, MouseEvent, ReactNode, useRef, useState} from "react";
 import {Alert} from "reactstrap";
 
 import {Content} from "../../isaac-data-types";

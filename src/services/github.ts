@@ -403,7 +403,7 @@ export async function githubUpload(context: ContextType<typeof AppContext>, base
     let existingFigures;
     try {
         existingFigures = await fetcher(contentsPath(figurePath, context.github.branch));
-    } catch (e) {
+    } catch (_) {
         existingFigures = [];
     }
 

@@ -211,7 +211,7 @@ function DateTimeInput({doc, update, prop, options, ...rest}: MetaItemPresenterP
                 setDateOutput(dateFilter(new Date(d)));
                 update({...doc, [dateProp]: d});
             }
-        } catch (err) {
+        } catch (_err) {
             // We can ignore a failed parsing - probably intermediate state
         }
         if (options?.deleteIfEmpty && (!e.target.value || e.target.value.length === 0)) {

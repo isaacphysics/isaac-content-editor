@@ -228,7 +228,7 @@ export function EditorScreen() {
     }, [setCurrentDoc, setDirty, loadNewDoc, params.branch, user, swrConfig.cache, navigate, previewOpen, previewMode, cdnOpen, selection, dirty, setSelection, currentContent, isAlreadyPublished, setLastChange, lastChange]);
     const contextRef = useFixedRef(appContext);
 
-    const unblockRef = useRef<() => void>();
+    const unblockRef = useRef<() => void>(null);
     useEffect(() => {
         if (dirty) {
             const unblock = browserHistory.block((transition) => {
@@ -295,7 +295,7 @@ export function EditorScreen() {
 
     // Finds the correct editor/viewer component given the current file type
     const FileEditor = useMemo(() => {
-        return (selection?.path && Object.entries(FILE_COMPONENTS).find(([pattern, Component]) => {
+        return (selection?.path && Object.entries(FILE_COMPONENTS).find(([pattern]) => {
             const regex = new RegExp(`^.*\\.(${pattern})$`, "i");
             if (regex.test(selection.path ?? "")) {
                 return true;

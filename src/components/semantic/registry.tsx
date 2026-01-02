@@ -340,7 +340,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacPageFragment: contentPage,
     isaacConceptPage,
     isaacQuestionPage,
-    isaacFastTrackQuestionPage: isaacQuestionPage,
+    isaacFastTrackQuestionPage,
     isaacEventPage,
     isaacBookIndexPage,
     isaacBookDetailPage,

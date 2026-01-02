@@ -39,7 +39,7 @@ const csStagedExamBoards: Partial<Record<Stage, ExamBoard[]>> = {
 };
 
 function isExamboardArray(arr: string[]): arr is ExamBoard[] {
-    return arr.every(v => csExamBoards.includes(v));
+    return arr.every(v => (csExamBoards as string[]).includes(v));
 }
 
 function examBoardsForStage(audienceContext: AudienceContext): ExamBoard[] {
@@ -283,7 +283,11 @@ function DifficultyEditor({doc, update, possible}: PresenterProps<AudienceContex
     const updateDifficulty = (newDifficulty: Difficulty) => {
         const audiences = [...doc];
         audiences.forEach((audience) => {
-            newDifficulty ? audience.difficulty = [newDifficulty] : audience.difficulty = undefined;
+            if (newDifficulty) {
+                audience.difficulty = [newDifficulty];
+            } else {
+                audience.difficulty = undefined;
+            }
         });
         update(audiences);
     };
@@ -318,7 +322,7 @@ export function AudiencePresenter({doc, update, type}: PresenterProps & {type?: 
     if (!editingAudience) {
         return <div key="view" className={`${styles.wrapper} ${styles.view}`}>
             {conciseAudiences(doc.audience, type)}
-            <Button size="sm" onClick={(e) => {
+            <Button size="sm" onClick={() => {
                 setEditingAudience(doc.audience ?? [defaultAudience()]);
             }}>
                 Edit

@@ -36,13 +36,15 @@ export default [
             "react-hooks/exhaustive-deps": "error",
             "@typescript-eslint/no-unused-vars": ["error", {
                 "argsIgnorePattern": "^_",
-                "varsIgnorePattern": "^_"
+                "varsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_",
             }],
             "@typescript-eslint/ban-ts-comment": "off",
             "@typescript-eslint/explicit-function-return-type": "off",
             "@typescript-eslint/no-empty-interface": "error",
             "@typescript-eslint/explicit-module-boundary-types": "off",
             "@typescript-eslint/no-floating-promises": "error",
+            "@typescript-eslint/no-explicit-any": "warn",
             "react/jsx-no-target-blank": "off", // https://github.com/isaacphysics/isaac-react-app/pull/1134#discussion_r1774839755
         },
         languageOptions: {

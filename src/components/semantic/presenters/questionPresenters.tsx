@@ -208,8 +208,8 @@ export function QuestionMetaPresenter(props: PresenterProps) {
     </div>;
 }
 
-export function AnswerPresenter({doc, ...rest}: PresenterProps) {
-    return <SemanticDocProp doc={doc as IsaacQuickQuestion} {...rest} prop="answer" name="Answer" />;
+export function AnswerPresenter(props: PresenterProps<IsaacQuickQuestion>) {
+    return <SemanticDocProp {...props} prop={"answer"} name="Answer" />;
 }
 
 export function QuickQuestionPresenter(props: PresenterProps) {
@@ -316,7 +316,7 @@ const EditablePrefixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>
 const EditableSuffixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("suffixes");
 
 export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
-    const {doc, update} = props;
+    const {doc} = props;
     const question = doc as IsaacCoordinateQuestion;
 
     return <>

@@ -50,7 +50,7 @@ export const DropZoneQuestionContext = createContext<{
     isDndQuestion: false,
     isClozeQuestion: false,
     figureMap: {},
-    calculateDZIndexFromFigureId: (id: string) => 0,
+    calculateDZIndexFromFigureId: (_id: string) => 0,
 });
 
 function isParsonsQuestion(doc: Content | null | undefined): doc is IsaacParsonsQuestion {
@@ -108,8 +108,8 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
                     await new Promise(resolve => setTimeout(resolve, 50));
                     console.log("Updated figure", dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
                 }
-                f();
             };
+            void f();
         }
     }, [dropZoneCount]);
 
