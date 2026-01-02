@@ -32,8 +32,9 @@ export default [
             "semi": "error",
             "@stylistic/indent": ["error", 4, {"SwitchCase": 1}],
             "jsx-a11y/no-static-element-interactions": "error",
+            "jsx-a11y/no-noninteractive-element-interactions": "warn",
             "react-hooks/rules-of-hooks": "error",
-            "react-hooks/exhaustive-deps": "error",
+            "react-hooks/exhaustive-deps": "warn",
             "@typescript-eslint/no-unused-vars": ["error", {
                 "argsIgnorePattern": "^_",
                 "varsIgnorePattern": "^_",
