@@ -1,12 +1,12 @@
 import React, {ContextType, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {SWRConfig, useSWRConfig} from "swr";
 import {Params, useNavigate, useParams} from "react-router-dom";
-import {useLocation} from "react-router";
+import {useBlocker, useLocation} from "react-router";
 import {Modal, Spinner} from "reactstrap";
 import {ErrorBoundary} from "react-error-boundary";
 import {Selection} from "../components/FileBrowser";
 import {LeftMenu} from "../components/LeftMenu";
-import {AppContext, browserHistory} from "../App";
+import {AppContext} from "../App";
 import {defaultGithubContext, fetcher} from "../services/github";
 import {SemanticEditor} from "../components/SemanticEditor";
 import {Content} from "../isaac-data-types";
@@ -228,38 +228,36 @@ export function EditorScreen() {
     }, [setCurrentDoc, setDirty, loadNewDoc, params.branch, user, swrConfig.cache, navigate, previewOpen, previewMode, cdnOpen, selection, dirty, setSelection, currentContent, isAlreadyPublished, setLastChange, lastChange]);
     const contextRef = useFixedRef(appContext);
 
-    const unblockRef = useRef<() => void>(null);
+    const blocker = useBlocker(
+        useCallback(() => dirty, [dirty]),
+    );
     useEffect(() => {
-        if (dirty) {
-            const unblock = browserHistory.block((transition) => {
-                menuRef.current?.open({
-                    title: "Changes not saved",
-                    body: `Do you really want to close ${selection?.path ?? "this file"}?`,
-                    options: [
-                        {caption: "Discard changes and leave", value: "discard"},
-                        {caption: "Save changes and leave", value: "save"},
-                    ],
-                    callback: async (option) => {
-                        if (option === null) {
-                            console.error("File creation cancelled.");
-                        } else {
-                            switch (option.value) {
-                                case "save":
-                                    await contextRef.current.dispatch({type: "save"});
-                                    // eslint-ignore-nextline no-fallthrough
-                                case "discard":
-                                    setDirty(false);
-                                    unblock();
-                                    transition.retry();
-                            }
+        if (blocker.state === "blocked") {
+            menuRef.current?.open({
+                title: "Changes not saved",
+                body: `Do you really want to close ${selection?.path ?? "this file"}?`,
+                options: [
+                    {caption: "Discard changes and leave", value: "discard"},
+                    {caption: "Save changes and leave", value: "save"},
+                ],
+                callback: async (option) => {
+                    if (option === null) {
+                        console.error("File creation cancelled.");
+                        blocker.reset?.();
+                    } else {
+                        switch (option.value) {
+                            case "save":
+                                await contextRef.current.dispatch({type: "save"});
+                                // eslint-ignore-nextline no-fallthrough
+                            case "discard":
+                                setDirty(false);
+                                blocker.proceed?.();
                         }
                     }
-                });
+                }
             });
-            unblockRef.current = unblock;
-            return unblock;
-        }
-    }, [dirty]);
+        };
+    }, [blocker]);
 
     const keydown = useCallback((event: KeyboardEvent) => {
         if ((event.metaKey || event.ctrlKey) && event.key === "s") {

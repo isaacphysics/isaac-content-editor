@@ -1,14 +1,12 @@
 import React, {createContext, MutableRefObject, useEffect} from "react";
-import {createBrowserHistory} from "history";
 import {Navigate, Route, Routes} from "react-router-dom";
-import {NavigateFunction, useLocation, useParams} from "react-router";
+import {BrowserRouter, createBrowserRouter, createRoutesFromElements, NavigateFunction, RouterProvider, useLocation, useParams} from "react-router";
 
 import {defaultSelectedContext} from "./components/FileBrowser";
 import {defaultEditorState} from "./components/SemanticEditor";
 import {Closer, isLoggedIn, LoadingScreen, LoginPrompt, Logout} from "./services/auth";
 import {defaultGithubContext, githubComparisonPath, processCode} from "./services/github";
 import {EditorScreen} from "./screens/EditorScreen";
-import {HistoryRouter} from './components/HistoryRouter';
 import {defaultDispatch} from "./services/commands";
 import {MenuModalRef} from "./screens/MenuModal";
 import {defaultPreview} from "./components/Preview";
@@ -28,8 +26,6 @@ export const AppContext = createContext({
     cdn: defaultCdn,
 });
 
-export const browserHistory = createBrowserHistory();
-
 function RedirectOldOrDefault() {
     const location = useLocation();
     const to = (location.pathname === "/") && (location.hash.slice(0, 3) === "#!/")
@@ -46,6 +42,20 @@ function GitHubComparisonRedirect() {
     </div>;
 }
 
+const router = (loggedIn: boolean) => createBrowserRouter(createRoutesFromElements(
+    <>
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/login_finished" element={<Closer />} />
+        {!loggedIn && <Route path="*" element={<LoginPrompt />} />}
+        {loggedIn && <>
+            <Route path="edit/:branch/*" element={<EditorScreen />} />
+            <Route path="edit/:branch" element={<EditorScreen />} />
+            <Route path="compare/:old/:new" element={<GitHubComparisonRedirect />} />
+            <Route path="*" element={<RedirectOldOrDefault />} />
+        </>}
+    </>
+));
+
 function App() {
     const loggedIn = isLoggedIn();
 
@@ -56,19 +66,7 @@ function App() {
         processCode(code);
     }, [code]);
 
-    return code ? <LoadingScreen/> : <HistoryRouter history={browserHistory}>
-        <Routes>
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/login_finished" element={<Closer />} />
-            {!loggedIn && <Route path="*" element={<LoginPrompt />} />}
-            {loggedIn && <>
-                <Route path="edit/:branch/*" element={<EditorScreen />} />
-                <Route path="edit/:branch" element={<EditorScreen />} />
-                <Route path="compare/:old/:new" element={<GitHubComparisonRedirect />} />
-                <Route path="*" element={<RedirectOldOrDefault />} />
-            </>}
-        </Routes>
-    </HistoryRouter>;
+    return code ? <LoadingScreen/> : <RouterProvider router={router(loggedIn)} />;
 }
 
 export default App;
