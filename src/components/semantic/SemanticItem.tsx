@@ -34,12 +34,12 @@
  * created that bubbles up the update to that child. In this way, Presenter has a uniform interface.
  */
 
-import React, {FunctionComponent, MouseEvent, ReactNode, useRef, useState} from "react";
+import React, {FunctionComponent, MouseEvent, useRef, useState} from "react";
 import {Alert} from "reactstrap";
 
 import {Content} from "../../isaac-data-types";
 
-import {ValuePresenterRef, ValueRef, ValueWrapper} from "./presenters/BaseValuePresenter";
+import {ValuePresenterRef, ValueWrapper, ValueWrapperProps} from "./presenters/BaseValuePresenter";
 import {ContentType, getEntryType} from "./registry";
 import {JSONEditor} from "./JSONEditor";
 
@@ -68,12 +68,10 @@ export interface SemanticItemProps<D extends Content = Content> {
     typeOverride?: ContentType;
 }
 
-interface BoxProps {
+interface BoxProps extends ValueWrapperProps {
     name?: string | undefined;
     onClick?: () => void;
     onDelete?: () => void;
-    className?: string;
-    valueRef?: ValueRef;
     shift?: Shift;
     metadata?: Metadata;
 }

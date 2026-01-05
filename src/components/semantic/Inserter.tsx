@@ -65,7 +65,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                 Please choose a block type:
                 <br />
                 {blockTypes && Object.entries(blockTypes).map(([name, empty]) =>
-                    <Button key={name} color="link" onClick={() => {
+                    <Button key={name} color="link" className="text-decoration-none" onClick={() => {
                         insert(position, {...empty});
                         setInserting(false);
                     }}>{name}</Button>
