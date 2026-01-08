@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Button } from "reactstrap";
+import { Button, Dropdown, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
 
 import { Box } from "./SemanticItem";
 import { InsertButton, InserterProps } from "./presenters/ListChildrenPresenter";
@@ -35,6 +35,10 @@ const defaultBlockTypes = {
     "code tabs": {type: "codeTabs", encoding: "markdown", children: []},
     "accordion": {type: "content", layout: "accordion", encoding: "markdown", children: []},
     "side-by-side layout": {type: "content", layout: "horizontal", encoding: "markdown", children: []},
+    "external app embed": [
+        {name: "desmos", type: "desmosEmbedding", encoding: "markdown", value: ""}, 
+        {name: "geogebra", type: "geogebraEmbedding", encoding: "markdown", value: ""}
+    ],
     "clearfix": {type: "content", layout: "clearfix", encoding: "markdown", value: ""},
     "callout": {type: "content", layout: "callout", encoding: "markdown", value: "", subtitle: "regular"},
     "inline region": {type: "isaacInlineRegion", encoding: "markdown", id: generate, children: [], inlineQuestions: []},
@@ -53,7 +57,7 @@ const defaultBlockTypes = {
     }
 };
 
-export function Inserter({insert, forceOpen, position, blockTypes = defaultBlockTypes}: InserterProps & {blockTypes?: Record<string, Content>}) {
+export function Inserter({insert, forceOpen, position, blockTypes = defaultBlockTypes}: InserterProps & {blockTypes?: Record<string, Content | (Content & {name?: string})[]>} ) {
     const [isInserting, setInserting] = useState(false);
 
     const isOpen = forceOpen || isInserting;
@@ -64,12 +68,38 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
             <div className={styles.wrapper}>
                 Please choose a block type:
                 <br />
-                {blockTypes && Object.entries(blockTypes).map(([name, empty]) =>
-                    <Button key={name} color="link" onClick={() => {
-                        insert(position, {...empty});
-                        setInserting(false);
-                    }}>{name}</Button>
-                )}
+                {blockTypes && Object.entries(blockTypes).map(([name, empty]) => {
+                    {/* TODO remove pr-0 and text-left after BS5 upgrade :) */}
+                    if (Array.isArray(empty)) {
+                        return <UncontrolledDropdown key={name} tag={"span"} className={styles.inserterDropdown}>
+                            <DropdownToggle caret tag="span">
+                                <Button className="pr-0 pe-0" color="link" caret> 
+                                    {name}
+                                </Button>
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <div className={styles.inserterDropdownMenu}>
+                                    {empty.map((option, index) => {
+                                        const {name, ...rest} = option;
+                                        <Button key={name} color="link" className="w-100 text-left text-start px-4" onClick={() => {
+                                            insert(position, {...rest});
+                                            setInserting(false);
+                                        }}>
+                                            {option.name || `${name} option ${index + 1}`}
+                                        </Button>
+                                    })}
+                                </div>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>;
+                    } else {
+                        return <Button key={name} color="link" onClick={() => {
+                            insert(position, {...empty});
+                            setInserting(false);
+                        }}>
+                        {name}
+                    </Button>
+                    }
+                })}
             </div>
         </Box>
         :
