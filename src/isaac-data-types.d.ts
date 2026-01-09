@@ -524,7 +524,9 @@ export interface DesmosEmbedding extends Media {
 }
 
 export interface GeogebraEmbedding extends Media {
-    appId?: string;
+    materialId?: string;
+    appType?: string;
+    allowNewInputs?: boolean;
 }
 
 export interface AudienceContext {
