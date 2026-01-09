@@ -25,22 +25,14 @@ export function GeogebraEmbeddingPresenter(props: PresenterProps<GeogebraEmbeddi
     const {doc, update} = props;
     return <>
         <div className={classNames(styles.figureWrapper, "d-flex flex-column")}>
-            {!props.doc.materialId && !props.doc.appType && <div className="d-flex">
                 <EditableMaterialId {...props} label="Material ID" />
-                <span className="px-2">or</span>
-                <div className="d-flex"><span className="pe-2 pr-2">set blank app type:</span><EditableAppType {...props} /></div>
-            </div>}
-
-            {props.doc.materialId && !props.doc.appType && <div>
-                <EditableMaterialId {...props} label="Material ID" />
-            </div>}
-
-            {!props.doc.materialId && props.doc.appType && <div className="d-flex align-items-center">
-                <EditableAppType {...props} />
-                <button className="btn btn-link p-0 mt-0" onClick={() => {
-                    update({...doc, appType: undefined});
-                }}>✖️</button>
-            </div>}
+                <div className="d-flex">
+                    <span className="pe-2 pr-2">set app type:</span>
+                    <EditableAppType {...props} />
+                        <button className="btn btn-link p-0 mt-0" onClick={() => {
+                        update({...doc, appType: undefined});
+                    }}>✖️</button>
+                </div>
 
             <div className="d-flex flex-column">
                 <CheckboxDocProp {...props} prop="allowNewInputs" label="Allow user to enter new equations" />
