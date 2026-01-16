@@ -8,7 +8,6 @@ import React, {
     useState
 } from "react";
 import styles from "../../styles/editor.module.css";
- 
 // @ts-ignore
 import Portal from "reactstrap/src/Portal";
 

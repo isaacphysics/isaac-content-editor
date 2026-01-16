@@ -131,7 +131,6 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
                 delete newDoc[key];
             } else {
                 // We know the values correspond to the right key, but tsc doesn't.
-                 
                 // @ts-ignore
                 newDoc[key] = newValues;
             }

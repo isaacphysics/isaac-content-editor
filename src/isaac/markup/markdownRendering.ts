@@ -1,4 +1,3 @@
- 
 // @ts-ignore typescript doesn't seem to think utils is in the place it is
 import {Remarkable, utils} from "remarkable";
 import {linkify} from "remarkable/linkify";
