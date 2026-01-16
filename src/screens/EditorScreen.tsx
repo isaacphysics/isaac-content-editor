@@ -100,7 +100,7 @@ export function EditorScreen() {
     const [cdnOpen, setCdnOpen] = useState(false);
 
     const selection = useParamsToSelection(params);
-    const setSelection = useCallback((selection: Selection) => {
+    const setSelection = useCallback(async (selection: Selection) => {
         let url = `/edit/${params.branch}`;
         if (selection) {
             url += `/${selection.path}`;
@@ -112,14 +112,14 @@ export function EditorScreen() {
             if (selection?.forceRefresh) {
                 window.location.href = url;
             } else {
-                navigate(url);
+                await navigate(url);
             }
         }
     }, [params.branch, navigate, location.pathname]);
 
     const [user, setUser] = useState(defaultGithubContext.user);
     useEffect(() => {
-        fetcher("user").then(setUser);
+        void fetcher("user").then(setUser);
     }, []);
 
     const [dirty, setDirty] = useState(false);

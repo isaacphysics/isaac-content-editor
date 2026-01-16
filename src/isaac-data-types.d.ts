@@ -302,13 +302,6 @@ export interface EventBooking {
     updateDate?: Date;
 }
 
-export interface EventBookings {
-}
-
-export type PgEventBooking = EventBooking
-
-export type PgEventBookings = EventBookings
-
 export interface AnvilApp extends Content {
     appId?: string;
     appAccessKey?: string;

@@ -1,6 +1,6 @@
 import React, {createContext, MutableRefObject, useEffect} from "react";
-import {Navigate, Route, Routes} from "react-router-dom";
-import {BrowserRouter, createBrowserRouter, createRoutesFromElements, NavigateFunction, RouterProvider, useLocation, useParams} from "react-router";
+import {Navigate, Route} from "react-router-dom";
+import {createBrowserRouter, createRoutesFromElements, NavigateFunction, RouterProvider, useLocation, useParams} from "react-router";
 
 import {defaultSelectedContext} from "./components/FileBrowser";
 import {defaultEditorState} from "./components/SemanticEditor";
@@ -63,7 +63,7 @@ function App() {
     const code = params.get("code");
 
     useEffect(() => {
-        processCode(code);
+        void processCode(code);
     }, [code]);
 
     return code ? <LoadingScreen/> : <RouterProvider router={router(loggedIn)} />;

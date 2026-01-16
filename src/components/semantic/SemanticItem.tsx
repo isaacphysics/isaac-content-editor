@@ -171,7 +171,7 @@ export class SemanticItem extends React.Component<SemanticItemProps, { hasError:
                     <small>{this.state.error}</small>
                 </Alert>
                 <JSONEditor {...this.props} update={(newContent) => {
-                    this.props.update(newContent);
+                    update(newContent);
                 }} close={() => {
                     this.setState({hasError: false});
                 }}/>

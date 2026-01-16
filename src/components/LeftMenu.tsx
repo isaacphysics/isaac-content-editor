@@ -48,9 +48,9 @@ export function LeftMenu() {
 
     return <div className={styles.leftMenuWrapper}>
         <header className={styles.leftMenuHeader}>
-            <button className={styles.iconButton} onClick={() => {
+            <button className={styles.iconButton} onClick={async () => {
                 if (window.confirm("Are you sure you want to logout?")) {
-                    navigate("/logout");
+                    await navigate("/logout");
                 }
             }}>
                 Logout

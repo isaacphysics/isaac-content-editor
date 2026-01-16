@@ -120,10 +120,9 @@ export const FormulaPresenterInner = buildValuePresenter(
 );
 
 const FormulaPresenter = (props: ValuePresenterProps<Formula>) => {
-    const {valueRef, ...rest} = props;
     return <>
         <FormulaPresenterInner {...props}/>
-        <CheckboxDocProp {...rest} prop="requiresExactMatch" label="Require exact match"/>
+        <CheckboxDocProp {...props} prop="requiresExactMatch" label="Require exact match"/>
     </>;
 };
 

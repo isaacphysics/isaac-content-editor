@@ -336,20 +336,20 @@ const handleObject = (tree, a11yStrings, atomType) => {
                         regionStrings.push(`one ${denominatorMap[denominatorString]}`);
                     } else {
                         regionStrings.push("start fraction");
-                        leftDelim && buildString(leftDelim, "open", regionStrings);
+                        if (leftDelim) buildString(leftDelim, "open", regionStrings);
                         buildA11yStrings(tree.numer, regionStrings, atomType);
                         regionStrings.push("divided by");
                         buildA11yStrings(tree.denom, regionStrings, atomType);
-                        rightDelim && buildString(rightDelim, "close", regionStrings);
+                        if (rightDelim) buildString(rightDelim, "close", regionStrings);
                         regionStrings.push("end fraction");
                     }
                 } else {
                     regionStrings.push("start binomial");
-                    leftDelim && buildString(leftDelim, "open", regionStrings);
+                    if (leftDelim) buildString(leftDelim, "open", regionStrings);
                     buildA11yStrings(tree.numer, regionStrings, atomType);
                     regionStrings.push("over");
                     buildA11yStrings(tree.denom, regionStrings, atomType);
-                    rightDelim && buildString(rightDelim, "close", regionStrings);
+                    if (rightDelim) buildString(rightDelim, "close", regionStrings);
                     regionStrings.push("end binomial");
                 }
             });
