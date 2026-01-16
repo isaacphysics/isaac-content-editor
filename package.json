@@ -42,9 +42,9 @@
   },
   "scripts": {
     "start": "craco start --verbose",
-    "build": "eslint -c eslint.config.mjs src/ && craco build",
-    "test": "craco test --watchAll",
     "lint": "eslint -c eslint.config.mjs src/",
+    "build": "yarn run lint && craco build",
+    "test": "craco test --watchAll",
     "eject": "react-scripts eject"
   },
   "browserslist": [
