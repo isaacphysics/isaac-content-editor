@@ -53,7 +53,6 @@ function LabeledInput<V extends Record<string, string | undefined>>({value, prop
     return <Label className={className}>
         {label}
         <Input type={type ?? "text"}
-            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             defaultValue={value.current?.[prop]}
             onChange={(e) => {

@@ -15,7 +15,6 @@
  * when read by a screenreader.
  */
 
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import katex from "katex";
 import {dropZoneRegex} from "./IsaacTypes";
 
@@ -191,7 +190,7 @@ const arrowMap = {
     "\\xLeftrightarrow": "arrow left and right",
     "\\xmapsto": "maps to",
     "\\xrightleftarrows": "arrow left and right",
-}
+};
 
 
 const buildString = (str, type, a11yStrings) => {
@@ -218,8 +217,8 @@ const buildString = (str, type, a11yStrings) => {
     // If the text to add is a number and the last string is a number, then
     // combine them into a single number. Do similar if this text is inside a
     // 'start text' region.
-    let numRegex = /^\d+$/;
-    let startTextRegex = /^start ((bold|italic) )?text$/;
+    const numRegex = /^\d+$/;
+    const startTextRegex = /^start ((bold|italic) )?text$/;
     if (
         (a11yStrings.length > 0 && numRegex.test(ret) && numRegex.test(a11yStrings[a11yStrings.length - 1])) ||
         (a11yStrings.length > 1 && type === "normal" && startTextRegex.test(a11yStrings[a11yStrings.length - 2]))
@@ -477,7 +476,7 @@ const handleObject = (tree, a11yStrings, atomType) => {
 
         case "supsub": {
             const {base, sub, sup} = tree;
-            let opType = (base && base.type === "op") ? base.name : null;
+            const opType = (base && base.type === "op") ? base.name : null;
             let isSimpleSubscriptVariable = false;
 
             // case e.g. "q_{1}q_{2}" to be read as "q one q two":
