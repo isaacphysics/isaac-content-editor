@@ -1,10 +1,11 @@
-name: Build Content Editor
+name: Build
 
 on: 
   push
 
 jobs:
   build:
+    name: Build Content Editor
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
