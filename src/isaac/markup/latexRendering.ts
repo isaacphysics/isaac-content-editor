@@ -172,7 +172,6 @@ interface Search {
 
 function startMatch(match: RegExpMatchArray): Search {
     const key: string = match[0];
-     
     // @ts-ignore
     const delim = matchers[key];
     if (delim != null) {                              // a start delimiter

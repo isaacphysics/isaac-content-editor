@@ -114,7 +114,6 @@ export const BaseValue = ({doc, editing, value, set, cancel}: ValueProps<string 
         return <CodeMirror
             ref={codemirror}
             value={value.current}
-            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus={true}
             extensions={[
                 ...encoding,
@@ -147,7 +146,7 @@ export interface ValueWrapperProps extends React.HTMLAttributes<HTMLDivElement> 
 
 export const ValueWrapper: FunctionComponent<ValueWrapperProps> = (props) => {
     const {children, valueRef, ...rest} = props;
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     return <div {...rest} role="cell" onClick={valueRef && ((e) => {
         // Only catch clicks that are outside any other element
         // FIXME: This misses clicks in the header, and also takes clicks in odd places like padding and empty spaces of an item.

@@ -1,4 +1,3 @@
- 
 import React, {
     forwardRef,
     useCallback,
@@ -225,7 +224,6 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                             ? <CodeMirror
                                 className={"w-100"}
                                 value={state.value ?? ""}
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
                                 autoFocus
                                 extensions={[
                                     EditorView.lineWrapping,
@@ -237,7 +235,6 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                             </CodeMirror>
                             : <Input
                                 type={multiLine ? "textarea" : "text"}
-                                /* eslint-disable-next-line jsx-a11y/no-autofocus */
                                 autoFocus={autoFocus ?? false}
                                 value={state.value ?? ""}
                                 onChange={e => setCurrent(e.target.value)}

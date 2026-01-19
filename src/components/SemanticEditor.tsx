@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo} from 'react';
+import React, {useContext, useEffect} from 'react';
 import { Alert, Spinner } from "reactstrap";
 
 import { AppContext } from "../App";
