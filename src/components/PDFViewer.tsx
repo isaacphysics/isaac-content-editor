@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Alert, Button, ButtonGroup, Container, Input, Spinner} from "reactstrap";
-import { Document, Page } from "react-pdf/dist/esm/entry.webpack5";
+import { Document, Page } from "react-pdf";
 
 import { AppContext } from "../App";
 import { useGithubContents } from "../services/github";
@@ -49,7 +49,7 @@ export function PDFViewer() {
     if (invalid) {
         return <div className={styles.centered}>
             <Alert color="warning">This content does not appear to be a PDF.</Alert>
-        </div>
+        </div>;
     }
 
     function onDocumentLoadSuccess({ numPages }: {numPages: number}) {

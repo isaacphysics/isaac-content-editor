@@ -72,9 +72,9 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
                 💾<span className="d-none d-lg-inline"> Save</span>
             </button>}
         {undoable && appContext.editor.canUndo() && <button className={classNames(styles.iconButton, styles.undoButton)} onClick={appContext.editor.undo}>
-                ↺<span className="d-none d-lg-inline"> Undo</span>
-            </button>}
-        {selection && !selection.isDir && previewLink && <a href={previewLink} target="_blank" className={styles.iconButton} >
+            ↺<span className="d-none d-lg-inline"> Undo</span>
+        </button>}
+        {previewable && selection && !selection.isDir && previewLink && <a href={previewLink} target="_blank" className={styles.iconButton} >
             Staging
         </a>}
         {selection && !selection.isDir && <Dropdown className="d-flex" isOpen={isOpen} toggle={() => setOpen(open => !open)}>

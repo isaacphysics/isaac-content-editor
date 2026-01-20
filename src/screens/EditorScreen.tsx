@@ -1,12 +1,12 @@
 import React, {ContextType, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {SWRConfig, useSWRConfig} from "swr";
 import {Params, useNavigate, useParams} from "react-router-dom";
-import {useLocation} from "react-router";
+import {useBlocker, useLocation} from "react-router";
 import {Modal, Spinner} from "reactstrap";
 import {ErrorBoundary} from "react-error-boundary";
 import {Selection} from "../components/FileBrowser";
 import {LeftMenu} from "../components/LeftMenu";
-import {AppContext, browserHistory} from "../App";
+import {AppContext} from "../App";
 import {defaultGithubContext, fetcher} from "../services/github";
 import {SemanticEditor} from "../components/SemanticEditor";
 import {Content} from "../isaac-data-types";
@@ -33,7 +33,7 @@ const FILE_COMPONENTS = {
     "jpg|jpeg|gif|png": ImageViewer,
     "svg": SVGViewer,
     "pdf": PDFViewer,
-}
+};
 
 function useParamsToSelection(params: Readonly<Params>): Selection {
     return useMemo<Selection>(() => {
@@ -66,7 +66,7 @@ function useCollapsableDragElement(appContext: CollapsableArg): [(col: number) =
         });
 
         // Clear collapsed on drag interaction so that we can collapse another column in the future
-        gutterDiv.addEventListener("dragend", function() {setCollapsed(undefined);})
+        gutterDiv.addEventListener("dragend", function() {setCollapsed(undefined);});
 
         // Lazy start preview panel
         if (columnIndex === 2) {
@@ -100,7 +100,7 @@ export function EditorScreen() {
     const [cdnOpen, setCdnOpen] = useState(false);
 
     const selection = useParamsToSelection(params);
-    const setSelection = useCallback((selection: Selection) => {
+    const setSelection = useCallback(async (selection: Selection) => {
         let url = `/edit/${params.branch}`;
         if (selection) {
             url += `/${selection.path}`;
@@ -112,14 +112,14 @@ export function EditorScreen() {
             if (selection?.forceRefresh) {
                 window.location.href = url;
             } else {
-                navigate(url);
+                await navigate(url);
             }
         }
     }, [params.branch, navigate, location.pathname]);
 
     const [user, setUser] = useState(defaultGithubContext.user);
     useEffect(() => {
-        fetcher("user").then(setUser);
+        void fetcher("user").then(setUser);
     }, []);
 
     const [dirty, setDirty] = useState(false);
@@ -228,38 +228,36 @@ export function EditorScreen() {
     }, [setCurrentDoc, setDirty, loadNewDoc, params.branch, user, swrConfig.cache, navigate, previewOpen, previewMode, cdnOpen, selection, dirty, setSelection, currentContent, isAlreadyPublished, setLastChange, lastChange]);
     const contextRef = useFixedRef(appContext);
 
-    const unblockRef = useRef<() => void>();
+    const blocker = useBlocker(
+        useCallback(() => dirty, [dirty]),
+    );
     useEffect(() => {
-        if (dirty) {
-            const unblock = browserHistory.block((transition) => {
-                menuRef.current?.open({
-                    title: "Changes not saved",
-                    body: `Do you really want to close ${selection?.path ?? "this file"}?`,
-                    options: [
-                        {caption: "Discard changes and leave", value: "discard"},
-                        {caption: "Save changes and leave", value: "save"},
-                    ],
-                    callback: async (option) => {
-                        if (option === null) {
-                            console.error("File creation cancelled.");
-                        } else {
-                            switch (option.value) {
-                                case "save":
-                                    await contextRef.current.dispatch({type: "save"});
-                                    // eslint-ignore-nextline no-fallthrough
-                                case "discard":
-                                    setDirty(false);
-                                    unblock();
-                                    transition.retry();
-                            }
+        if (blocker.state === "blocked") {
+            menuRef.current?.open({
+                title: "Changes not saved",
+                body: `Do you really want to close ${selection?.path ?? "this file"}?`,
+                options: [
+                    {caption: "Discard changes and leave", value: "discard"},
+                    {caption: "Save changes and leave", value: "save"},
+                ],
+                callback: async (option) => {
+                    if (option === null) {
+                        console.error("File creation cancelled.");
+                        blocker.reset?.();
+                    } else {
+                        switch (option.value) {
+                            case "save":
+                                await contextRef.current.dispatch({type: "save"});
+                                // eslint-ignore-nextline no-fallthrough
+                            case "discard":
+                                setDirty(false);
+                                blocker.proceed?.();
                         }
                     }
-                })
+                }
             });
-            unblockRef.current = unblock;
-            return unblock;
-        }
-    }, [dirty]);
+        };
+    }, [blocker]);
 
     const keydown = useCallback((event: KeyboardEvent) => {
         if ((event.metaKey || event.ctrlKey) && event.key === "s") {
@@ -295,7 +293,7 @@ export function EditorScreen() {
 
     // Finds the correct editor/viewer component given the current file type
     const FileEditor = useMemo(() => {
-        return (selection?.path && Object.entries(FILE_COMPONENTS).find(([pattern, Component]) => {
+        return (selection?.path && Object.entries(FILE_COMPONENTS).find(([pattern]) => {
             const regex = new RegExp(`^.*\\.(${pattern})$`, "i");
             if (regex.test(selection.path ?? "")) {
                 return true;

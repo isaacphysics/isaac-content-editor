@@ -39,7 +39,7 @@ import {Alert} from "reactstrap";
 
 import {Content} from "../../isaac-data-types";
 
-import {ValuePresenterRef, ValueRef, ValueWrapper} from "./presenters/BaseValuePresenter";
+import {ValuePresenterRef, ValueWrapper, ValueWrapperProps} from "./presenters/BaseValuePresenter";
 import {ContentType, getEntryType} from "./registry";
 import {JSONEditor} from "./JSONEditor";
 
@@ -68,12 +68,10 @@ export interface SemanticItemProps<D extends Content = Content> {
     typeOverride?: ContentType;
 }
 
-interface BoxProps {
+interface BoxProps extends ValueWrapperProps {
     name?: string | undefined;
     onClick?: () => void;
     onDelete?: () => void;
-    className?: string;
-    valueRef?: ValueRef;
     shift?: Shift;
     metadata?: Metadata;
 }
@@ -92,11 +90,11 @@ export const Box: FunctionComponent<BoxProps> = ({name, onClick,  onDelete, shif
                 ▼
             </button>}
             {onDelete && <button className={`btn-sm ${styles.iconButton} ${styles.boxDelete}`}
-                                 onMouseOver={() => setDeleteHovered(true)}
-                                 onMouseOut={() => setDeleteHovered(false)}
-                                 onFocus={() => setDeleteHovered(true)}
-                                 onBlur={() => setDeleteHovered(false)}
-                                 onClick={onDelete}>
+                onMouseOver={() => setDeleteHovered(true)}
+                onMouseOut={() => setDeleteHovered(false)}
+                onFocus={() => setDeleteHovered(true)}
+                onBlur={() => setDeleteHovered(false)}
+                onClick={onDelete}>
                 ❌
             </button>}
         </div>
@@ -173,7 +171,7 @@ export class SemanticItem extends React.Component<SemanticItemProps, { hasError:
                     <small>{this.state.error}</small>
                 </Alert>
                 <JSONEditor {...this.props} update={(newContent) => {
-                    this.props.update(newContent);
+                    update(newContent);
                 }} close={() => {
                     this.setState({hasError: false});
                 }}/>

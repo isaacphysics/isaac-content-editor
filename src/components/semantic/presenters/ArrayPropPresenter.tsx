@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { Alert, Input, Button } from "reactstrap";
 import { ContentBase, Content } from "../../../isaac-data-types";
 import { PresenterProps } from "../registry";
@@ -36,7 +36,7 @@ export const ArrayPropValueConstraintContext = React.createContext<{
 export function ArrayPropPresenter<T extends ContentBase>({doc, update, prop, getChildId=((c) => `${c}`), allowDuplicates=false, calculateButtonProps=(() => ({}))}: PresenterProps<T> & { prop: keyof T, getChildId?: (c: (typeof doc[typeof prop] & any[])[number]) => string, allowDuplicates?: boolean, calculateButtonProps?: (c: (typeof doc[typeof prop] & any[])[number]) => Record<string, unknown>}) {
     const [searchString, setSearchString] = useState("");
     return <ArrayPropValueConstraintContext.Provider value={{searchString, setSearchString, content: [], mapContentToId: (c) => `${c}`}}>
-        <ArrayPropPresenterInner doc={doc} update={update} prop={prop} getChildId={getChildId} allowDuplicates={allowDuplicates} />
+        <ArrayPropPresenterInner doc={doc} update={update} prop={prop} getChildId={getChildId} allowDuplicates={allowDuplicates} calculateButtonProps={calculateButtonProps}/>
     </ArrayPropValueConstraintContext.Provider>;
 }
 
@@ -45,13 +45,13 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
 
     if (doc[prop] !== undefined && !Array.isArray(doc[prop])) {
         return <Alert color={"warning"}>
-            The property <code>{prop}</code> is not an array, but is expected to be.
+            The property <code>{prop.toString()}</code> is not an array, but is expected to be.
         </Alert>;
     }
 
     if (!context) {
         return <Alert color={"warning"}>
-            The <code>{prop}</code> presenter is missing a context provider. Try wrapping it in an <code>ArrayPropValueConstraintContext</code>.
+            The <code>{prop.toString()}</code> presenter is missing a context provider. Try wrapping it in an <code>ArrayPropValueConstraintContext</code>.
         </Alert>;
     }
     

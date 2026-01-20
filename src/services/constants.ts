@@ -1,4 +1,4 @@
-import { Stage } from "../isaac-data-types"
+import { Stage } from "../isaac-data-types";
 
 export const stageList : Stage[] = [
     "university",
@@ -29,6 +29,6 @@ export const stagePrintList = [
     "Post-18",
 ];
 
-export const subjectList = ["biology","chemistry","physics","maths"]
+export const subjectList = ["biology","chemistry","physics","maths"];
 
 export const BOOK_DETAIL_ID_SEPARATOR = "__";

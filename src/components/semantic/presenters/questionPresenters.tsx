@@ -124,17 +124,17 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
         delete newDoc.randomiseChoices;
     } else if (newType === "isaacQuestion" && !newDoc.hasOwnProperty("showConfidence")) {
         newDoc.showConfidence = false;
-        delete newDoc.requireUnits
-        delete newDoc.disregardSignificantFigures
+        delete newDoc.requireUnits;
+        delete newDoc.disregardSignificantFigures;
         delete newDoc.displayUnit;
-        delete newDoc.randomiseChoices
+        delete newDoc.randomiseChoices;
     } else if (newType === "isaacMultiChoiceQuestion" && !newDoc.hasOwnProperty("randomiseChoices")) {
         // Add the default value if it is missing
         newDoc.randomiseChoices = true;
-        delete newDoc.requireUnits
-        delete newDoc.disregardSignificantFigures
+        delete newDoc.requireUnits;
+        delete newDoc.disregardSignificantFigures;
         delete newDoc.displayUnit;
-        delete newDoc.showConfidence
+        delete newDoc.showConfidence;
     } else {
         // Remove the requireUnits property as it is no longer applicable to this type of question
         delete newDoc.requireUnits;
@@ -174,7 +174,7 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
 }
 
 export function QuestionTypeSelector({doc, update, questionTypes = QuestionTypes, disabled = false}
-    : PresenterProps & {questionTypes?: Partial<Record<QUESTION_TYPES, { name: string; }>>, disabled?: boolean}) {
+: PresenterProps & {questionTypes?: Partial<Record<QUESTION_TYPES, { name: string; }>>, disabled?: boolean}) {
     const [isOpen, setOpen] = useState(false);
 
     const questionType = questionTypes[doc.type as QUESTION_TYPES];
@@ -208,8 +208,8 @@ export function QuestionMetaPresenter(props: PresenterProps) {
     </div>;
 }
 
-export function AnswerPresenter({doc, ...rest}: PresenterProps) {
-    return <SemanticDocProp doc={doc as IsaacQuickQuestion} {...rest} prop="answer" name="Answer" />;
+export function AnswerPresenter(props: PresenterProps<IsaacQuickQuestion>) {
+    return <SemanticDocProp {...props} prop={"answer"} name="Answer" />;
 }
 
 export function QuickQuestionPresenter(props: PresenterProps) {
@@ -258,7 +258,7 @@ const EditableAvailableUnits = ({doc, update}: PresenterProps<IsaacNumericQuesti
         placeHolder="Enter list of units here (|-separated)"
         label="Available units"
         block
-        />;
+    />;
 };
 const EditableDisplayUnit = EditableDocPropFor<IsaacNumericQuestion>("displayUnit",  {label: "Display unit", block: true, format: "latex", previewWrapperChar: "$"});
 
@@ -292,14 +292,14 @@ export function NumericQuestionPresenter({showMeta = true, ...props}: {showMeta?
                         if (choice.type === "quantity") {
                             delete (choice as Quantity).units;
                         }
-                    })
+                    });
                 }
                 update(newQuestion);
             }} prop="requireUnits" label="Require choice of units" />
         </div>
         {question.requireUnits ?
             <EditableAvailableUnits doc={question} update={update} />
-        :   <EditableDisplayUnit doc={question} update={update} />}
+            :   <EditableDisplayUnit doc={question} update={update} />}
         <div className={styles.questionLabel} /> {/* For spacing */}
     </>;
 }
@@ -316,7 +316,7 @@ const EditablePrefixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>
 const EditableSuffixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("suffixes");
 
 export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
-    const {doc, update} = props;
+    const {doc} = props;
     const question = doc as IsaacCoordinateQuestion;
 
     return <>
@@ -358,11 +358,11 @@ export function CoordinateQuestionFooterPresenter(props: PresenterProps<IsaacCoo
     const question = props.doc as IsaacCoordinateQuestion;
 
     return <CoordinateQuestionContext.Provider value={{
-            numberOfCoordinates: question.numberOfCoordinates,
-            numberOfDimensions: question.numberOfDimensions
-        }}>
-            <QuestionFooterPresenter {...props} />
-        </CoordinateQuestionContext.Provider>;
+        numberOfCoordinates: question.numberOfCoordinates,
+        numberOfDimensions: question.numberOfDimensions
+    }}>
+        <QuestionFooterPresenter {...props} />
+    </CoordinateQuestionContext.Provider>;
 }
 
 export function CoordinateChoiceItemInserter({insert, position, lengthOfCollection}: InserterProps) {
@@ -498,9 +498,9 @@ function SymbolicMetaSymbols({doc, update, metaSymbols}: PresenterProps<IsaacSym
     return <div className={styles.symbolicMetaButtons}>
         {metaSymbols.map(([symbol, label]) =>
             <Button key={symbol}
-                    size="sm"
-                    color={hasSymbol(doc.availableSymbols, symbol) ? "primary" : "secondary"}
-                    onClick={() => toggle(symbol)}>
+                size="sm"
+                color={hasSymbol(doc.availableSymbols, symbol) ? "primary" : "secondary"}
+                onClick={() => toggle(symbol)}>
                 {label}
             </Button>
         )}
@@ -562,7 +562,7 @@ const getInlineQuestionPresenter = (type: INLINE_TYPES, props: PresenterProps<Is
         case "isaacStringMatchQuestion":
             return null;
     }
-}
+};
 
 export function InlineQuestionPartPresenter(props: PresenterProps<IsaacInlinePart>) {
     const [isDisabled, setIsDisabled] = useState(false);
@@ -611,34 +611,34 @@ export function FreeTextQuestionInstructions() {
         <table className={styles.striped}>
             <thead><tr><th>Symbol</th><th>Description</th><th>Rule</th><th>✓️ Match</th><th>✗ Failed Match</th></tr></thead>
             <tbody>
-            <tr>
-                <td className={styles.center}><code>|</code></td>
-                <td>Separate an OR list of word choices</td>
-                <td className={styles.nowrap}><code>JavaScript|[Java&nbsp;Script]|JS</code></td>
-                {/* eslint-disable-next-line react/no-unescaped-entities */}
-                <td>"JavaScript", "Java Script", "JS"</td>
-                {/* eslint-disable-next-line react/no-unescaped-entities */}
-                <td>"Java"</td>
-            </tr>
-            {/* eslint-disable-next-line react/no-unescaped-entities */}
-            <tr>
-                <td className={styles.center}><code>.</code></td>
-                <td>Match only one character</td>
-                <td className={styles.center}><code>.a.b.</code></td>
-                {/* eslint-disable-next-line react/no-unescaped-entities */}
-                <td>"XaXbX"</td>
-                {/* eslint-disable-next-line react/no-unescaped-entities */}
-                <td>"ab", "Xab", "aXb", "abX", "XYZaXYZbXYZ", "XbXaX"</td>
-            </tr>
-            <tr>
-                <td className={styles.center}><code>*</code></td>
-                <td>Match zero or more characters</td>
-                <td className={styles.center}><code>*a*b*</code></td>
-                {/* eslint-disable-next-line react/no-unescaped-entities */}
-                <td>"ab", "Xab", "aXb", "abX", "XYZaXYZbXYZ"</td>
-                {/* eslint-disable-next-line react/no-unescaped-entities */}
-                <td>"ba", "XbXaX"</td>
-            </tr>
+                <tr>
+                    <td className={styles.center}><code>|</code></td>
+                    <td>Separate an OR list of word choices</td>
+                    <td className={styles.nowrap}><code>JavaScript|[Java&nbsp;Script]|JS</code></td>
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
+                    <td>"JavaScript", "Java Script", "JS"</td>
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
+                    <td>"Java"</td>
+                </tr>
+                { }
+                <tr>
+                    <td className={styles.center}><code>.</code></td>
+                    <td>Match only one character</td>
+                    <td className={styles.center}><code>.a.b.</code></td>
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
+                    <td>"XaXbX"</td>
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
+                    <td>"ab", "Xab", "aXb", "abX", "XYZaXYZbXYZ", "XbXaX"</td>
+                </tr>
+                <tr>
+                    <td className={styles.center}><code>*</code></td>
+                    <td>Match zero or more characters</td>
+                    <td className={styles.center}><code>*a*b*</code></td>
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
+                    <td>"ab", "Xab", "aXb", "abX", "XYZaXYZbXYZ"</td>
+                    {/* eslint-disable-next-line react/no-unescaped-entities */}
+                    <td>"ba", "XbXaX"</td>
+                </tr>
             </tbody>
         </table>
     </div>;

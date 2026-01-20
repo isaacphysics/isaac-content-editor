@@ -95,7 +95,7 @@ function ListChild({child, docRef, index, shiftBy, updateChild, remove, typeOver
                 const otherHeight = otherElement.scrollHeight;
                 const calcGap = elementToMove.offsetTop < otherElement.offsetTop ?
                     otherElement.offsetTop - (elementToMove.offsetTop + elementToMove.scrollHeight)
-                :   elementToMove.offsetTop - (otherElement.offsetTop + otherElement.scrollHeight);
+                    :   elementToMove.offsetTop - (otherElement.offsetTop + otherElement.scrollHeight);
                 const shift = (otherHeight + calcGap) * amount;
                 // Since the browser maintains scroll position in its own way, doing the scroll
                 // before React has repainted leads to weird shifts when going downwards, so we'll
@@ -149,11 +149,11 @@ export function ListChildrenPresenter({doc, update, childTypeOverride}: Presente
     doc.children?.forEach((child, index) => {
         addInserter(index, false, doc.children, doc.children?.length ?? 0);
         result.push(<ListChild key={keyList[index]}
-                               child={child as Content}
-                               docRef={docRef}
-                               index={index}
-                               typeOverride={childTypeOverride}
-                               {...rest}
+            child={child as Content}
+            docRef={docRef}
+            index={index}
+            typeOverride={childTypeOverride}
+            {...rest}
         />);
     });
     addInserter(doc.children?.length || 0, doc.children?.length === 0, doc.children, doc.children?.length || 0);

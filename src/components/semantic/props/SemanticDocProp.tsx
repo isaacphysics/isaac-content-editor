@@ -5,10 +5,10 @@ import { Content, ContentBase } from "../../../isaac-data-types";
 import { SemanticItem, SemanticItemProps } from "../SemanticItem";
 import { useFixedRef } from "../../../utils/hooks";
 
-type SemanticDocProps<K extends string, D extends Content> = D extends {[k in K]?: ContentBase} ?
-    SemanticItemProps<D> & { prop: K }
-    : never
-;
+// type requires that:
+// - K is a key of D
+// - D[K] is optional and, if present, of type ContentBase
+type SemanticDocProps<K extends string & keyof D, D extends Content> = SemanticItemProps<D> & { prop: K } & {[key in K]?: ContentBase};
 
 const emptyContent = {
     type: "content",
@@ -16,7 +16,7 @@ const emptyContent = {
     encoding: "markdown",
 };
 
-export const SemanticDocProp = <K extends string, D extends Content>({doc, update, prop, ...rest}: SemanticDocProps<K, D>) => {
+export const SemanticDocProp = <K extends string & keyof D, D extends Content>({doc, update, prop, ...rest}: SemanticDocProps<K, D>) => {
     const subDoc = doc[prop] as Content ?? emptyContent;
     const docRef = useFixedRef(doc);
     const childUpdate = useCallback((newContent: Content, invertible?: boolean) => {

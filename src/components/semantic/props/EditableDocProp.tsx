@@ -1,4 +1,4 @@
-import {Content, CoordinateItem, IsaacCoordinateQuestion, Item} from "../../../isaac-data-types";
+import {Content, Item} from "../../../isaac-data-types";
 import { EditableText, EditableTextProps, EditableTextRef } from "./EditableText";
 import React, { forwardRef } from "react";
 import { KeysWithValsOfType } from "../../../utils/types";
@@ -28,7 +28,7 @@ export const EditableDocPropFor = <
             text={doc[prop] as unknown as string | undefined}
             {...defaultProps}
             {...rest}
-            ref={ref} />
+            ref={ref} />;
     };
     return forwardRef(typedRender);
 };
@@ -90,19 +90,19 @@ export const EditableDimensionalDocProp = <
     const typedRender = ({doc, update, dimension, ...rest }: EditableDocProps<D> & {dimension: number}, ref: React.ForwardedRef<EditableTextRef>) => {
         const currentVal = doc[prop] as unknown as (string | undefined)[];
         return <EditableText
-                onSave={(newText) => {
-                    update({
-                        ...doc,
-                        [prop]: arrayWith(currentVal ?? new Array<string>(dimension).fill(""), dimension, newText ?? "")
-                    });
-                }}
-                /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-                // @ts-ignore
-                text={doc[prop] ? (doc[prop][dimension] ?? "") : ""}
-                {...defaultProps}
-                {...rest}
-                ref={ref}
-            />
+            onSave={(newText) => {
+                update({
+                    ...doc,
+                    [prop]: arrayWith(currentVal ?? new Array<string>(dimension).fill(""), dimension, newText ?? "")
+                });
+            }}
+             
+            // @ts-ignore
+            text={doc[prop] ? (doc[prop][dimension] ?? "") : ""}
+            {...defaultProps}
+            {...rest}
+            ref={ref}
+        />;
     };
     return forwardRef(typedRender);
 };

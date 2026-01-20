@@ -1,5 +1,5 @@
 /* eslint-disable no-irregular-whitespace */  // For convenient construction of non-breaking spaces in custom strings
-import React, { MutableRefObject, useCallback, useMemo, useRef, useState } from "react";
+import React, { MutableRefObject, ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import {Button, ButtonGroup} from "reactstrap";
 
 import { Content, IsaacTabs } from "../../../isaac-data-types";
@@ -50,27 +50,27 @@ export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styl
             <div className={styles.buttonsSpacer}/>
             {docRef.current.children?.map((child: Content, i) => {
                 return <Button key={child.id || `__index__${i}`}
-                               outline
-                               color={index === i ? "primary" : undefined}
-                               className={styles.button}
-                               onMouseDown={(e) => {
-                                   e.preventDefault();
-                               }}
-                               onClick={() => setIndex(i)}>
-                    {!suppressHeaderNames && `${elementName} `}{i + 1}{showTitles && child.title && `: ${child.title}`}
-                </Button>;
-            })}
-            <Button key="__add"
                     outline
-                    color="info"
+                    color={index === i ? "primary" : undefined}
                     className={styles.button}
                     onMouseDown={(e) => {
                         e.preventDefault();
                     }}
-                    onClick={() => {
-                        doInsert({type: "content", children: []} as Content);
-                        setIndex(docRef.current.children?.length ?? 0);
-                    }}>
+                    onClick={() => setIndex(i)}>
+                    {!suppressHeaderNames && `${elementName} `}{i + 1}{showTitles && child.title && `: ${child.title}`}
+                </Button>;
+            })}
+            <Button key="__add"
+                outline
+                color="info"
+                className={styles.button}
+                onMouseDown={(e) => {
+                    e.preventDefault();
+                }}
+                onClick={() => {
+                    doInsert({type: "content", children: []} as Content);
+                    setIndex(docRef.current.children?.length ?? 0);
+                }}>
                 Add{!suppressHeaderNames && ` ${elementNameLC}`}
             </Button>
             <div className={styles.buttonsFill}/>
@@ -81,11 +81,11 @@ export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styl
 type TabsMainProps = TabsProps & {
     back: string;
     forward: string;
-    contentHeader?: JSX.Element;
-    extraButtons?: JSX.Element;
+    contentHeader?: ReactNode;
+    extraButtons?: ReactNode;
 };
 
-export function TabsMain({docRef, currentChild, updateCurrentChild, doRemove, doShift, keyList, index, emptyDescription, elementName, styles, suppressHeaderNames, showTitles, back, forward, contentHeader, extraButtons}: TabsMainProps) {
+export function TabsMain({docRef, currentChild, updateCurrentChild, doRemove, doShift, keyList, index, emptyDescription, elementName, styles, suppressHeaderNames, back, forward, contentHeader, extraButtons}: TabsMainProps) {
     const elementNameLC = safeLowercase(elementName);
 
     return <div className={styles.main}>
@@ -200,7 +200,7 @@ export function TabsPresenter(props: PresenterProps<IsaacTabs>) {
         <TabsMain {...allProps} back="◀" forward="▶" contentHeader={
             showTitles && currentChild ? <div className={styles.meta}>
                 <h3><EditableTitleProp ref={editTitleRef} {...currentChildProps}
-                                       placeHolder="Tab title" hideWhenEmpty /></h3>
+                    placeHolder="Tab title" hideWhenEmpty /></h3>
             </div> : undefined
         } extraButtons={<>
             {showTitles && currentChild && !currentChild.title && <Button size="sm" onClick={() => editTitleRef.current?.startEdit()}>Set tab title</Button>}

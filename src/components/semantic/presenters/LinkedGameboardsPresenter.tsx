@@ -35,20 +35,20 @@ export function LinkedGameboardsPresenter({doc, update}: PresenterProps<IsaacTop
     return <div className={styles.wrapper}>
         {doc.linkedGameboards?.map(id => <Button key={id} outline onClick={() => removeGameboard(id)}>{id} ➖</Button>)}
         <Input value={gameboardId}
-               onChange={(e) => setGameboardId(e.target.value)}
-               placeholder="Type to add related content..."
+            onChange={(e) => setGameboardId(e.target.value)}
+            placeholder="Type to add related content..."
         />
         {gameboardId !== "" && <div>
             <Button outline
-                    color={error ? "danger" : (gameboard && gameboard.questions) ? "success" : "primary"}
-                    className={styles.gameboardButton}
-                    onClick={() => addGameboard(gameboardId)}>
+                color={error ? "danger" : (gameboard && gameboard.questions) ? "success" : "primary"}
+                className={styles.gameboardButton}
+                onClick={() => addGameboard(gameboardId)}>
                 Id: {gameboardId}  ➕<br />
                 Tags: {
                     error ? "gameboard not found"
-                          : !gameboard ? "Loading..."
-                          : gameboard.tags.length === 0 ? "No Tags!"
-                          : gameboard.tags.join(", ")
+                        : !gameboard ? "Loading..."
+                            : gameboard.tags.length === 0 ? "No Tags!"
+                                : gameboard.tags.join(", ")
                 }
             </Button>
         </div>}

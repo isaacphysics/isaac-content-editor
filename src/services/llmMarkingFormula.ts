@@ -10,7 +10,7 @@ export function parseMarkingFormula(markingFormula?: string) {
     const parser = new Parser(Grammar.fromCompiled(grammar));
     try {
         parser.feed(markingFormula);
-    } catch (e) {
+    } catch (_) {
         throw new Error('Invalid marking formula');
     }
     if (parser.results.length > 1) {
