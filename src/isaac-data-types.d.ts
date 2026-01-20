@@ -497,6 +497,16 @@ export interface StringChoice extends Choice {
 
 export type Video = Media
 
+export interface DesmosEmbedding extends Media {
+    calculatorId?: string;
+}
+
+export interface GeogebraEmbedding extends Media {
+    materialId?: string;
+    appType?: string;
+    allowNewInputs?: boolean;
+}
+
 export interface AudienceContext {
     stage?: Stage[];
     examBoard?: ExamBoard[];

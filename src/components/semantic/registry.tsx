@@ -48,6 +48,8 @@ import {InteractiveCodeSnippetPresenter} from "./presenters/InteractiveCodeSnipp
 import {CalloutPresenter} from "./presenters/CalloutPresenter";
 import {LLMQuestionPresenter} from "./presenters/LLMQuestionPresenter";
 import { SidebarEntryPresenter, SidebarPresenter } from "./presenters/SidebarPresenters";
+import { DesmosEmbeddingPresenter } from "./presenters/DesmosEmbeddingPresenter";
+import { GeogebraEmbeddingPresenter } from "./presenters/GeogebraEmbeddingPresenter";
 
 export type ContentType =
     | "content"
@@ -77,6 +79,8 @@ export type ContentType =
     | "codeTabs"
     | "image"
     | "video"
+    | "desmosEmbedding"
+    | "geogebraEmbedding"
     | "glossaryTerm"
     | "emailTemplate"
     | "anvilApp"
@@ -195,6 +199,16 @@ const figure: RegistryEntry = {
 const video: RegistryEntry = {
     name: "Video",
     bodyPresenter: VideoPresenter,
+    metadata: mediaMeta,
+};
+const desmosEmbedding: RegistryEntry = {
+    name: "Desmos Embedding",
+    bodyPresenter: DesmosEmbeddingPresenter,
+    metadata: mediaMeta,
+};
+const geogebraEmbedding: RegistryEntry = {
+    name: "Geogebra Embedding",
+    bodyPresenter: GeogebraEmbeddingPresenter,
     metadata: mediaMeta,
 };
 const codeSnippet: RegistryEntry = {
@@ -404,6 +418,8 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     interactiveCodeSnippet,
     codeTabs,
     video,
+    desmosEmbedding,
+    geogebraEmbedding,
     glossaryTerm,
     emailTemplate,
     anvilApp,
