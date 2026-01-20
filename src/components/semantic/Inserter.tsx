@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Button, Dropdown, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
+import { Button, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
 
 import { Box } from "./SemanticItem";
 import { InsertButton, InserterProps } from "./presenters/ListChildrenPresenter";
@@ -86,7 +86,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                                             setInserting(false);
                                         }}>
                                             {option.name}
-                                        </Button>
+                                        </Button>;
                                     })}
                                 </div>
                             </DropdownMenu>
@@ -96,8 +96,8 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                             insert(position, {...empty});
                             setInserting(false);
                         }}>
-                        {name}
-                    </Button>
+                            {name}
+                        </Button>;
                     }
                 })}
             </div>

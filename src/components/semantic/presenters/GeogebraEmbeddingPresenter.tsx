@@ -17,7 +17,7 @@ const AppTypes = {
     graphing: "Graphing",
     geometry: "Geometry",
     "3d": "3D",
-}
+};
 
 const EditableAppType = EnumPropFor<GeogebraEmbedding>("appType", AppTypes);
 
@@ -25,14 +25,14 @@ export function GeogebraEmbeddingPresenter(props: PresenterProps<GeogebraEmbeddi
     const {doc, update} = props;
     return <>
         <div className={classNames(styles.figureWrapper, "d-flex flex-column")}>
-                <EditableMaterialId {...props} label="Material ID" />
-                <div className="d-flex align-items-center">
-                    <span className="pe-2 pr-2">Set app type:</span>
-                    <EditableAppType {...props} />
-                        <button className="btn btn-link p-0 mt-0" onClick={() => {
-                        update({...doc, appType: undefined});
-                    }}>✖️</button>
-                </div>
+            <EditableMaterialId {...props} label="Material ID" />
+            <div className="d-flex align-items-center">
+                <span className="pe-2 pr-2">Set app type:</span>
+                <EditableAppType {...props} />
+                <button className="btn btn-link p-0 mt-0" onClick={() => {
+                    update({...doc, appType: undefined});
+                }}>✖️</button>
+            </div>
 
             <div className="d-flex flex-column">
                 <CheckboxDocProp {...props} prop="allowNewInputs" label="Allow user to enter new equations" />
