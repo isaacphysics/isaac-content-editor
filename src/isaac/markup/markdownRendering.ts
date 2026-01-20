@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore typescript doesn't seem to think utils is in the place it is
 import {Remarkable, utils} from "remarkable";
 import {linkify} from "remarkable/linkify";
@@ -49,7 +48,7 @@ export const renderClozeDropZones = (markdown: string) => {
         while (reservedIndices.has(nonReservedIndex)) nonReservedIndex++;
         return `<span class="d-inline-block text-right ${styles.clozeDropZonePlaceholder}" style="min-width: ${minWidth}; min-height: ${minHeight}">${index}&nbsp;&nbsp;</span>`;
     });
-}
+};
 
 export const renderDndDropZones = (markdown: string) => {
     return markdown.replace(dndDropZoneRegex, (_match, id, params, widthMatch, heightMatch) => {
@@ -59,7 +58,7 @@ export const renderDndDropZones = (markdown: string) => {
     }).replace(dndDropZoneMissingIdRegex, (_match) => {
         return `<span class="d-inline-block text-right ${styles.clozeDropZonePlaceholder} text-white bg-danger px-3">Drop zone missing ID!</span>`;
     });
-}
+};
 
 // Renders a placeholder for block glossary terms
 export const renderGlossaryBlocks = (markdown: string) => {
@@ -69,18 +68,18 @@ export const renderGlossaryBlocks = (markdown: string) => {
     return markdown.replace(glossaryBlockRegexp, (_match, id) => {
         return `<b class="text-muted">[block glossary term: ${id}]</b>`;
     });
-}
+};
 
 // Renders a placeholder for inline glossary terms
 export const renderInlineGlossaryTerms = (markdown: string) => {
     // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra] and
     // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined.
     const glossaryInlineRegexp = /\[glossary-inline(?<titled>-titled):(?<id>[a-z-|_]+?)\s*(?:"(?<text>[A-Za-z0-9-()/,'\\. ]+)")?\]/g;
-    return markdown.replace(glossaryInlineRegexp, (_match, titled, id, text, offset) => {
+    return markdown.replace(glossaryInlineRegexp, (_match, titled, id, text) => {
         
         return `<code class="text-muted">[${titled ? "titled" : ""} inline glossary term: ${text ?? id}]</code>`;
     });
-}
+};
 
 // RegEx replacements to match Latex inspired Isaac Physics functionality
 export const regexProcessMarkdown = (markdown: string) => {
@@ -97,4 +96,4 @@ export const regexProcessMarkdown = (markdown: string) => {
         markdown = markdown.replace(rule, replacement)
     );
     return markdown;
-}
+};

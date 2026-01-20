@@ -44,8 +44,8 @@ export function ChoicesPresenter(props: PresenterProps<IsaacQuestionBase>) {
     }
     return <Box name="Choices">
         <ListPresenterProp {...props}
-                           prop="choices"
-                           childTypeOverride={choiceType}
+            prop="choices"
+            childTypeOverride={choiceType}
         />
         <Instructions doc={doc} />
     </Box>;

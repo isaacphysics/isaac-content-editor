@@ -58,7 +58,7 @@ export function SVGViewer() {
     if (invalid) {
         return <div className={styles.centered}>
             <Alert color="warning">This content does not appear to be SVG.</Alert>
-        </div>
+        </div>;
     }
 
     return <div className={styles.editorWrapper}>

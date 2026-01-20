@@ -32,4 +32,4 @@ export const extractFigureRegionStartIndex = (doc: IsaacClozeQuestion, figureId:
     }
 
     return 0;
-}
+};

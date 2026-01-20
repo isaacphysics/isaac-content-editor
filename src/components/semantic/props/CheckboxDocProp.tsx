@@ -7,12 +7,12 @@ import classNames from "classnames";
 type CheckboxDocProps<K extends keyof D, D> =
     & PresenterProps<D>
     & {
-    prop: K;
-    label: string;
-    checkedIfUndefined?: boolean;
-    disabled?: boolean;
-    className?: string;
-};
+        prop: K;
+        label: string;
+        checkedIfUndefined?: boolean;
+        disabled?: boolean;
+        className?: string;
+    };
 
 export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: boolean }>({
     doc,
@@ -34,14 +34,14 @@ export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: bool
 
     return <Label className={classNames(className, styles.checkboxLabel)} style={{color: disabled ? "gray" : "black"}}>
         <Input type="checkbox"
-               disabled={disabled}
-               checked={doc[prop] ?? checkedIfUndefined ?? false}
-               onChange={(e) => {
-                   update({
-                       ...doc,
-                       [prop]: e.target.checked,
-                   });
-               }}
+            disabled={disabled}
+            checked={doc[prop] ?? checkedIfUndefined ?? false}
+            onChange={(e) => {
+                update({
+                    ...doc,
+                    [prop]: e.target.checked,
+                });
+            }}
         />
         {label}
     </Label>;

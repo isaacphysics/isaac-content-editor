@@ -26,7 +26,7 @@ function updateSelection(set: (modifier: (current: string[]) => string[]) => voi
             const result = [...existing];
             result.splice(existing.indexOf(old), 1, newValue);
             return result;
-        })
+        });
     };
 }
 
@@ -42,7 +42,7 @@ function deleteSelection(set: (modifier: (current: string[]) => string[]) => voi
     return () => {
         set((existing) => {
             return existing.filter(entry => entry !== old);
-        })
+        });
     };
 }
 

@@ -86,16 +86,16 @@ export function MetaItemPresenter({doc, update, id, prop, name, options}: MetaIt
 
     return <>
         <Input type={options?.type ?? "text"}
-               value={options?.type !== "checkbox" ? value : undefined}
-               checked={options?.type === "checkbox" ? value as unknown as boolean : undefined}
-               onChange={options?.type !== "checkbox" ? valueOnChange : checkedOnChange}
-               invalid={!!warning}
-               // eslint-disable-next-line react/no-children-prop
-               children={options?.options && Object.entries(options?.options).map(([key, label]) =>
-                   <option key={key} value={key}>{label}</option>
-               )}
-               placeholder={name}
-               id={id}
+            value={options?.type !== "checkbox" ? value : undefined}
+            checked={options?.type === "checkbox" ? value as unknown as boolean : undefined}
+            onChange={options?.type !== "checkbox" ? valueOnChange : checkedOnChange}
+            invalid={!!warning}
+            // eslint-disable-next-line react/no-children-prop
+            children={options?.options && Object.entries(options?.options).map(([key, label]) =>
+                <option key={key} value={key}>{label}</option>
+            )}
+            placeholder={name}
+            id={id}
         />
         {warning && <FormText>{warning}</FormText>}
     </>;

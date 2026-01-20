@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo} from 'react';
+import React, {useContext, useEffect} from 'react';
 import { Alert, Spinner } from "reactstrap";
 
 import { AppContext } from "../App";
@@ -64,7 +64,7 @@ export function SemanticEditor() {
             appContext.editor.loadNewDoc(decodedContent);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appContext.editor.loadNewDoc, data]);
+    }, [data]);
 
     if (error) {
         return <div className={styles.centered}>

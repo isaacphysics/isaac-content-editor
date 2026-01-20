@@ -20,7 +20,7 @@ const modifyContentId = (newContent: ContentBase) => {
             newContent.id = newContent.id?.substring(0, 4);
         }
     }
-}
+};
 
 export function useKeyedList<T, D>(items: T[] | undefined, deriveNewList: () => [D, T[]], update: (newDoc: D, invertible?: boolean) => void) {
     const keyList = useRef(UNINITIALISED);

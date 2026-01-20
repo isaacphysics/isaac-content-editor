@@ -15,15 +15,15 @@ function Instructions() {
             Then, add a new inline question part below, setting the question ID to be <code>inline-question:id</code> (without the square brackets!). 
             These will then link automatically.
         </details>
-    </div>
+    </div>;
 }
 
 export function InlinePartsPresenter(props: PresenterProps<IsaacInlineQuestion>) {
     return <Box name="Inline Parts">
         <Instructions />
         <ListPresenterProp {...props}
-                           prop="inlineQuestions"
-                           childTypeOverride="inlineQuestionPart"
+            prop="inlineQuestions"
+            childTypeOverride="inlineQuestionPart"
         />
     </Box>;
 }

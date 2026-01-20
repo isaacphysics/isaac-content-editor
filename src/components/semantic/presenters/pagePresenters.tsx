@@ -38,7 +38,7 @@ export function QuizSectionPresenter(props: PresenterProps<IsaacQuizSection>) {
 }
 
 export function EventPagePresenter(props: PresenterProps<IsaacEventPage>) {
-    const {doc} = props
+    const {doc} = props;
     return <>
         <PagePresenter {...props} />
         {doc.location && <>
@@ -61,7 +61,7 @@ export function GenericPagePresenter(props: PresenterProps<SeguePage>) {
             <EditableSidebarIdProp {...props} />
         </div>
         <ContentValueOrChildrenPresenter {...props} />
-    </>
+    </>;
 }
 
 export function BookDetailPagePresenter(props: PresenterProps<IsaacBookDetailPage>) {
@@ -72,7 +72,7 @@ export function BookDetailPagePresenter(props: PresenterProps<IsaacBookDetailPag
         <ContentValueOrChildrenPresenter {...props} />
         <h3>Extension gameboards</h3>
         <ArrayPropPresenter {...props} prop="extensionGameboards" />
-    </>
+    </>;
 }
 
 const EditableSidebarIdProp = EditableDocPropFor<IsaacBookIndexPage>("sidebar", {block: true, placeHolder: "Sidebar ID"});
@@ -86,7 +86,7 @@ export function BookIndexPagePresenter(props: PresenterProps<IsaacBookIndexPage>
         </div>
         <hr/>
         <ContentValueOrChildrenPresenter {...props} />
-    </>
+    </>;
 }
 
 export function RevisionPagePresenter(props: PresenterProps<IsaacBookDetailPage>) {
@@ -99,5 +99,5 @@ export function RevisionPagePresenter(props: PresenterProps<IsaacBookDetailPage>
         </details>
         <h3>Page content</h3>
         <ContentValueOrChildrenPresenter {...props} />
-    </>
+    </>;
 }

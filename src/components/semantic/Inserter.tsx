@@ -92,7 +92,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                             </DropdownMenu>
                         </UncontrolledDropdown>;
                     } else {
-                        return <Button key={name} color="link" onClick={() => {
+                        return <Button key={name} color="link" className="text-decoration-none" onClick={() => {
                             insert(position, {...empty});
                             setInserting(false);
                         }}>

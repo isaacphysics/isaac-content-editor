@@ -1,0 +1,17 @@
+name: Build
+
+on: 
+  push
+
+jobs:
+  build:
+    name: Build Content Editor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          yarn
+          yarn build

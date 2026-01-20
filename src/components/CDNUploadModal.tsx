@@ -28,7 +28,7 @@ export const defaultCdn = {
 };
 
 const renameCDNFile = async (context: ContextType<typeof AppContext>, item: PopupEntry, setSelection?: (selection: Selection) => void) => {
-    let newName = window.prompt("Please type a new name for the file. If no extension is provided, \".json\" will be assumed", item.name);
+    const newName = window.prompt("Please type a new name for the file. If no extension is provided, \".json\" will be assumed", item.name);
     if (newName) {
         // Don't both renaming a file to it's previous name
         if (item.path.replace(dirname(item.path) + "/", "") === newName) {
@@ -134,7 +134,7 @@ export const CDNUploadModal = () => {
 
     const readFile = (f: {file: File} & FileValidation): Promise<string> => new Promise(resolve => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string)
+        reader.onload = () => resolve(reader.result as string);
         reader.readAsBinaryString(f.file);
     });
 
@@ -160,7 +160,7 @@ export const CDNUploadModal = () => {
             } catch (e) {
                 alert(`Couldn't upload file "${f.file.name}" to CDN. Perhaps it already exists.\n\nError details: ${e}`);
             } finally {
-                setFiles(f => f && f.length > 1 ? f?.slice(1, f.length) : null)
+                setFiles(f => f && f.length > 1 ? f?.slice(1, f.length) : null);
             }
         }
         setUploadInProgress(false);
@@ -197,7 +197,7 @@ export const CDNUploadModal = () => {
                 <Col xs={6} className={"border-right"}>
                     <p>Type the directory name...</p>
                     <GitHubDirInput className={"mb-2"} repo={"cdn"} dir={dir?.path} setDir={setDirAndUpdateSelection}
-                                    invalid={!dir?.isValid && isDefined(dir)}/>
+                        invalid={!dir?.isValid && isDefined(dir)}/>
                     {dir?.error && <small className={"text-danger"}>{dir.error}</small>}
                     <hr/>
                     <p>Or choose it from the file browser:</p>

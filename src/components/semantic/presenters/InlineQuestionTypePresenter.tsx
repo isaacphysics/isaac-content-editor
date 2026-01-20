@@ -20,10 +20,10 @@ export const EditableInlineTypeProp = (props : PresenterProps<Content> & {disabl
     };
 
     if (doc.type === "inlineQuestionPart") {
-        const newDoc = {...doc, type: "isaacStringMatchQuestion"}
+        const newDoc = {...doc, type: "isaacStringMatchQuestion"};
         update(newDoc);
         return QuestionTypeSelector({doc: newDoc, update, questionTypes: inlineQuestionTypes, disabled});
     }
 
     return QuestionTypeSelector({doc, update, questionTypes: inlineQuestionTypes, disabled});
-}
+};
