@@ -304,6 +304,7 @@ export const CoordinateChoicePresenter = (props: ValuePresenterProps<CoordinateC
     }, [numberOfCoordinates]);
 
     return <>
+        {<CheckboxDocProp {...props} doc={props.doc} update={props.update} prop="allowSubsetMatch" label="Enable subset matching" />}
         <ListPresenterProp {...props} prop="items" childTypeOverride="coordinateItem$choice" />
     </>;
 };
