@@ -84,13 +84,13 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
                     options={glossaryTermOptions}
                     placeholder={"Type to search terms"} />
                 <hr/>
-                <InputGroup className={"pl-4"}>
+                <InputGroup className={"ps-4"}>
                     <Label for={"glossary-term-full-or-inline"}>Inline glossary term?</Label>
                     <Input type={"checkbox"} id="glossary-term-full-or-inline" onChange={e => setIsInlineTerm(e.target.checked)} checked={isInlineTerm}/>
                 </InputGroup>
                 {isInlineTerm ?
                     <>
-                        <InputGroup className={"pl-4"}>
+                        <InputGroup className={"ps-4"}>
                             <Label for={"glossary-term-titled-or-not"}>Titled glossary term?</Label>
                             <Input type={"checkbox"} id="glossary-term-titled-or-not" onChange={e => setIsTitledTerm(e.target.checked)} checked={isTitledTerm}/>
                         </InputGroup>

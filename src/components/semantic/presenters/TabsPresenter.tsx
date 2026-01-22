@@ -194,7 +194,7 @@ export function TabsPresenter(props: PresenterProps<IsaacTabs>) {
     return <div className={styles.wrapper}>
         <div className="d-flex">
             <EditableTabsLayoutProp {...props}/>
-            {isAda && <CheckboxDocProp className="ml-4 mt-2" doc={props.doc} update={props.update} prop="expandable" label="Expandable" />}
+            {isAda && <CheckboxDocProp className="ms-4 mt-2" doc={props.doc} update={props.update} prop="expandable" label="Expandable" />}
         </div>
         <TabsHeader {...allProps} {...props} />
         <TabsMain {...allProps} back="◀" forward="▶" contentHeader={

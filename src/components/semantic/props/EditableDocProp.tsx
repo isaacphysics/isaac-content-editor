@@ -48,7 +48,7 @@ export const EditableDocPropWithStyle = <
         const docProp = doc[prop] as unknown as string | undefined;
         const id = generateGuid();
         return <div className="d-flex align-items-center mb-3">
-            <Label for={id} className="m-0 mr-2">{label || "Select style:"}</Label>
+            <Label for={id} className="m-0 me-2">{label || "Select style:"}</Label>
             <Select inputId={id}
                 isClearable
                 onChange={option => {

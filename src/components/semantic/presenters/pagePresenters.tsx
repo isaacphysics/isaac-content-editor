@@ -95,7 +95,7 @@ export function RevisionPagePresenter(props: PresenterProps<IsaacBookDetailPage>
         <ArrayPropPresenter {...props} prop="gameboards" />
         <details className="my-2">
             <summary>How to structure a revision page</summary>
-            <div className="ml-4"><i>Add any gameboards relevant to the revision page above; these will appear in a list, above the main content. Links to book pages, concepts, etc. should all appear somewhere <strong>in the content</strong>, following the format of other revision pages. Related content (the metadata field) should be reserved for <strong>practice tests</strong>; these will appear in their own section on the page, underneath the main content.</i></div>
+            <div className="ms-4"><i>Add any gameboards relevant to the revision page above; these will appear in a list, above the main content. Links to book pages, concepts, etc. should all appear somewhere <strong>in the content</strong>, following the format of other revision pages. Related content (the metadata field) should be reserved for <strong>practice tests</strong>; these will appear in their own section on the page, underneath the main content.</i></div>
         </details>
         <h3>Page content</h3>
         <ContentValueOrChildrenPresenter {...props} />

@@ -180,7 +180,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                             <div className="flex-fill">
                                 <EditableText text={mark.shortDescription} multiLine block onSave={value => updateMark(i, "shortDescription", value)} />
                             </div>
-                            <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteMark(mark.jsonField)}>❌</button>
+                            <button className="btn btn-sm mb-2 ms-2" onClick={() => deleteMark(mark.jsonField)}>❌</button>
                         </div>
                     </td>
                 </tr>)}
@@ -315,7 +315,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                                     />}
                             </div>
                             <div>
-                                <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteExample(i)}>❌</button>
+                                <button className="btn btn-sm mb-2 ms-2" onClick={() => deleteExample(i)}>❌</button>
                             </div>
                         </div>
                     </td>

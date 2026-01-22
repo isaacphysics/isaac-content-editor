@@ -27,7 +27,7 @@ export function GeogebraEmbeddingPresenter(props: PresenterProps<GeogebraEmbeddi
         <div className={classNames(styles.figureWrapper, "d-flex flex-column")}>
             <EditableMaterialId {...props} label="Material ID" />
             <div className="d-flex align-items-center">
-                <span className="pe-2 pr-2">Set app type:</span>
+                <span className="pe-2 pe-2">Set app type:</span>
                 <EditableAppType {...props} />
                 <button className="btn btn-link p-0 mt-0" onClick={() => {
                     update({...doc, appType: undefined});

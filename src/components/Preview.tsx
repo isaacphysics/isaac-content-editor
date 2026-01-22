@@ -59,7 +59,7 @@ export function Preview() {
 
     return <div className={styles.previewWrapper}>
         <div className="m-2">
-            Preview for: <span className="font-weight-bold">{doc?.title ?? "undefined"}</span>
+            Preview for: <span className="fw-bold">{doc?.title ?? "undefined"}</span>
         </div>
         <iframe ref={iframeRef} className={`${styles.previewIframe} ${!ready ? styles.displayNone : ""}`} title="Isaac Preview" src={previewServer} />
         {!ready && <div className={styles.centered}><Spinner size="lg" /></div>}

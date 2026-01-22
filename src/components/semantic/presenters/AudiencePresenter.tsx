@@ -149,7 +149,7 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
                         <option key={possibleOption}>{possibleOption}</option>
                     )}
                 </select>
-                {multiple && <Button outline size="sm" className="border-0 p-0 ml-1" onClick={() => {
+                {multiple && <Button outline size="sm" className="border-0 p-0 ms-1" onClick={() => {
                     // ESLint is very confused by the following line...
                     // eslint-disable-next-line react/prop-types
                     updateValues((values as string[]).filter(v => v !== value) as AudienceValue[]);
@@ -188,10 +188,10 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
                     : <> IN [{values.map((value, index) => <AudienceValue key={index} index={index}/>)}</>
                 }
 
-                {unusedOptions.length > 0 && <Button outline size="sm" className="border-0 p-0 ml-1" onClick={() => {
+                {unusedOptions.length > 0 && <Button outline size="sm" className="border-0 p-0 ms-1" onClick={() => {
                     updateValues([...values, unusedOptions[0]]);
                 }}>➕</Button>}
-                {key === "examBoard" && <Button outline size="sm" className="ml-1" onClick={() => {updateValues(examBoardsForStage(doc));}}>
+                {key === "examBoard" && <Button outline size="sm" className="ms-1" onClick={() => {updateValues(examBoardsForStage(doc));}}>
                     ALL
                 </Button>}
                 {values.length > 1 && "]"}
@@ -199,7 +199,7 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
 
             {key === "examBoard" && allExamBoardsForStagePresent(doc) && <Fragment>
                 {" IN [ALL]"}
-                <Button outline size="sm" className="ml-1" onClick={() => {const [_first, ...rest] = values; updateValues(rest);}}>
+                <Button outline size="sm" className="ms-1" onClick={() => {const [_first, ...rest] = values; updateValues(rest);}}>
                     NOT ALL
                 </Button>
             </Fragment>}
@@ -265,7 +265,7 @@ function AudienceEditor({doc, update, possible}: PresenterProps<AudienceContext[
                     }}
                     possible={possible}
                 />)
-                {doc.length > 1 && <Button outline size="sm" className="border-0 p-0 ml-1" onClick={() => {
+                {doc.length > 1 && <Button outline size="sm" className="border-0 p-0 ms-1" onClick={() => {
                     const audience = [...doc];
                     audience.splice(index, 1);
                     update(audience);

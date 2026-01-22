@@ -92,11 +92,11 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
                     {docProp.map((id, index) => <Draggable key={getChildId(id as typeof docProp[number])} draggableId={getChildId(id as typeof docProp[number])} index={index}>
                         {provided => <div
                             ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
-                            style={provided.draggableProps.style} className="btn btn-outline-secondary mr-3"
+                            style={provided.draggableProps.style} className="btn btn-outline-secondary me-3"
                         >
                             𓃑
-                            <span className="ml-2">{getChildId(id as typeof docProp[number])}</span>
-                            <button className="bg-transparent border-0 m-0 pr-0" onClick={() => removeRelatedContent(getChildId(id as typeof docProp[number]))}>➖</button>
+                            <span className="ms-2">{getChildId(id as typeof docProp[number])}</span>
+                            <button className="bg-transparent border-0 m-0 pe-0" onClick={() => removeRelatedContent(getChildId(id as typeof docProp[number]))}>➖</button>
                         </div>}
                     </Draggable>)}
                     {provided.placeholder}

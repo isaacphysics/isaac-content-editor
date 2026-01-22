@@ -47,7 +47,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
         }}>{wide ? "Augment table" : "Table"}</button>
         <Popup popUpRef={popupRef}>
             <Container className={styles.cmPanelPopup}>
-                {isAda && <InputGroup className={"pl-4"}>
+                {isAda && <InputGroup className={"ps-4"}>
                     <Label for={"table-expandable"}>Expandable</Label>
                     <Input type="checkbox" id="table-expandable" checked={expandable} onChange={e => { 
                         setExpandable(e.target.checked);
@@ -59,7 +59,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                     }} 
                     />
                 </InputGroup>}
-                <InputGroup className={"pl-4"}>
+                <InputGroup className={"ps-4"}>
                     <Label for={"table-topScrollable"}>Top-scrollable</Label>
                     <Input type="checkbox" id="table-topScrollable" checked={topScrollable} onChange={e => {
                         setTopScrollable(e.target.checked);

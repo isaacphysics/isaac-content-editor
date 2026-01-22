@@ -286,7 +286,7 @@ export function katexify(html: string, user: null, booleanNotation : BooleanNota
                 // If katex-a11y fails, generate MathML using KaTeX for accessibility
                 if (screenReaderText) {
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',
-                        `<span class="katex"><span class="sr-only">${screenReaderText}</span>`);
+                        `<span class="katex"><span class="visually-hidden">${screenReaderText}</span>`);
                 } else {
                     const katexMathML = katex.renderToString(latexMunged.replace(dropZoneRegex, "clickable drop zone"), {...katexOptions, output: "mathml"})
                         .replace(`class="katex"`, `class="katex-mathml"`);

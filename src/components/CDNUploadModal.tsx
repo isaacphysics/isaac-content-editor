@@ -174,10 +174,10 @@ export const CDNUploadModal = () => {
     return <Modal isOpen={open} toggle={toggle} size={"xl"} keyboard={false} backdrop={"static"}>
         <div className={"modal-header w-100 d-block"}>
             <Row className={"justify-content-end"}>
-                <Col xs={9} className={"pt-2 pl-4"}>
+                <Col xs={9} className={"pt-2 ps-4"}>
                     <h5 className={"modal-title"}>Upload to CDN</h5>
                 </Col>
-                <Col xs={3} className={"pr-4"}>
+                <Col xs={3} className={"pe-4"}>
                     <Button color={"secondary"} className={"w-100"} onClick={toggle}>
                         Close
                     </Button>
@@ -186,7 +186,7 @@ export const CDNUploadModal = () => {
         </div>
         <ModalBody>
             {showAccessibilityNotice && <Alert color={"warning"}>
-                <div className={"w-100"}>Accessibility notice<Button color={"none"} className={"float-right mt-n2"} onClick={() => setShowAccessibilityNotice(false)}>✗</Button></div>
+                <div className={"w-100"}>Accessibility notice<Button color={"none"} className={"float-end mt-n2"} onClick={() => setShowAccessibilityNotice(false)}>✗</Button></div>
                 <hr/>
                 <small>
                     We are legally required to make all documents on the site accessible, and PDFs especially are unlikely to meet our obligations.
@@ -194,7 +194,7 @@ export const CDNUploadModal = () => {
                 </small>
             </Alert>}
             <Row>
-                <Col xs={6} className={"border-right"}>
+                <Col xs={6} className={"border-end"}>
                     <p>Type the directory name...</p>
                     <GitHubDirInput className={"mb-2"} repo={"cdn"} dir={dir?.path} setDir={setDirAndUpdateSelection}
                         invalid={!dir?.isValid && isDefined(dir)}/>

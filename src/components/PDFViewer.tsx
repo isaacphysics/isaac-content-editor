@@ -77,7 +77,7 @@ export function PDFViewer() {
                         onChange={e => setPendingPageNumber(parseInt(e.target.value) || pageNumber)}
                         onKeyDown={e => e.key === "Enter" && updatePageNumber()}
                     />
-                    <Button onClick={updatePageNumber} className={"d-inline-block ml-2"}>Go</Button>
+                    <Button onClick={updatePageNumber} className={"d-inline-block ms-2"}>Go</Button>
                 </>
                 : <button onClick={() => {setEditingPageNum(true); setPendingPageNumber(pageNumber);}}>{pageNumber}/{numPages}</button>
             }</h5>

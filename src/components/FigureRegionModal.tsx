@@ -84,7 +84,7 @@ const PositionableDropZone = (props: PositionableFigureRegionProps & DraggableDr
             handleDrag(e);
         }}
     >
-        <span className={`d-inline-block text-right w-100 h-100 ${markupStyles.clozeDropZonePlaceholder}`}>
+        <span className={`d-inline-block text-end w-100 h-100 ${markupStyles.clozeDropZonePlaceholder}`}>
             {!isCondensed ? id : (isDefined(index) ? alphabetIndex(index) : "?")}&nbsp;&nbsp;
         </span>
     </div>;

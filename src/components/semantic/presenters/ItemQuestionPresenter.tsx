@@ -174,7 +174,7 @@ function ItemRow({item}: {item: Item}) {
         : <Row className="justify-content-center">
             <div className={styles.itemRowText}>
                 <ExpandableText text={item.value}/>
-                <span className="text-muted ml-3">
+                <span className="text-muted ms-3">
                     ({item.id})
                 </span>
             </div>

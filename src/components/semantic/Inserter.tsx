@@ -69,11 +69,11 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                 Please choose a block type:
                 <br />
                 {blockTypes && Object.entries(blockTypes).map(([name, empty]) => {
-                    {/* TODO remove pr-0 and text-left after BS5 upgrade :) */}
+                    {/* TODO remove pe-0 and text-start after BS5 upgrade :) */}
                     if (Array.isArray(empty)) {
                         return <UncontrolledDropdown key={name} tag={"span"} className={styles.inserterDropdown}>
                             <DropdownToggle caret tag="span">
-                                <Button className="pr-0 pe-0" color="link" caret> 
+                                <Button className="pe-0 pe-0" color="link" caret> 
                                     {name}
                                 </Button>
                             </DropdownToggle>
@@ -81,7 +81,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                                 <div className={styles.inserterDropdownMenu}>
                                     {empty.map((option) => {
                                         const {name: embedName, ...rest} = option;
-                                        return <Button key={embedName} color="link" className="w-100 text-left text-start px-4" onClick={() => {
+                                        return <Button key={embedName} color="link" className="w-100 text-start text-start px-4" onClick={() => {
                                             insert(position, {...rest});
                                             setInserting(false);
                                         }}>
