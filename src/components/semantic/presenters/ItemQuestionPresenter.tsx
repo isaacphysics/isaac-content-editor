@@ -32,13 +32,14 @@ import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CL
 interface ItemsContextType {
     items: Item[] | undefined;
     remainingItems: Item[] | undefined;
+    remainingDropZones: string[] | undefined;
     withReplacement: boolean | undefined;
     allowSubsetMatch: boolean | undefined;
     isCorrect: boolean | undefined;
 }
 
 export const ItemsContext = createContext<ItemsContextType>(
-    {items: undefined, remainingItems: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined}
+    {items: undefined, remainingItems: undefined, remainingDropZones: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined}
 );
 export const DropZoneQuestionContext = createContext<{
     isDndQuestion: boolean,
@@ -142,6 +143,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         <ItemsContext.Provider value={{
             items: doc.items,
             remainingItems: undefined,
+            remainingDropZones: undefined,
             withReplacement: (isClozeQuestion(doc) || isDndQuestion(doc)) && doc.withReplacement,
             allowSubsetMatch: undefined,
             isCorrect: undefined,
@@ -244,6 +246,8 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
 const DropZoneSelector = (props: PresenterProps<DndItem>) => {
     const {doc, update} = props;
     const {dropZoneIds} = useContext(DropZoneQuestionContext);
+    const {remainingDropZones: maybeRemainingDropZones} = useContext(ItemsContext);
+    const remainingDropZones = maybeRemainingDropZones ?? [];
 
     const [isOpen, setOpen] = useState(false);
 
@@ -253,8 +257,10 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
                 Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
             </DropdownToggle>
             <DropdownMenu className={styles.itemChoiceDropdown}>
-                {/* TODO: show only unused dropzone ids */}
-                {Array.from(dropZoneIds ?? []).map((id) => {
+                <DropdownItem key={doc.dropZoneId} className={styles.dropdownItem}>
+                    {doc.dropZoneId}
+                </DropdownItem>
+                {Array.from(remainingDropZones ?? []).map((id) => {
                     return <DropdownItem key={id} className={styles.dropdownItem} onClick={() => {
                         update({
                             ...doc,
