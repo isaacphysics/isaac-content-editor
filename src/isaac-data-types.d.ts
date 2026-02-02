@@ -455,7 +455,9 @@ export type ParsonsChoice = ItemChoice
 
 export type CoordinateChoice = ItemChoice
 
-export type DndChoice = ItemChoice
+export interface DndChoice extends Choice {
+    items?: DndItem[];
+}
 export interface ParsonsItem extends Item {
     indentation?: number;
 }

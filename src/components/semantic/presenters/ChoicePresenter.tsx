@@ -6,6 +6,7 @@ import {
     ChemicalFormula,
     Choice,
     CoordinateChoice, CoordinateItem,
+    DndChoice,
     Formula,
     FreeTextRule,
     GraphChoice,
@@ -269,7 +270,7 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
     </>;
 };
 
-export const DndChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
+export const DndChoicePresenter = (props: ValuePresenterProps<DndChoice>) => {
     const {doc, update} = props;
     const {items: maybeItems, withReplacement} = useContext(ItemsContext);
     const {dropZoneIds: maybeDropZoneIds} = useContext(DropZoneQuestionContext);
@@ -278,11 +279,11 @@ export const DndChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
     const remainingItems = withReplacement ? items : items.filter(item => !doc.items?.find(i => i.id === item.id));
 
     const dropZoneIds = Array.from(maybeDropZoneIds || []);
-    const remainingDropZones = dropZoneIds.filter(id => !doc.items?.find(item => (item as any).dropZoneId === id));
+    const remainingDropZones = dropZoneIds.filter(id => !doc.items?.find(item => item.dropZoneId === id));
 
     return <>
         <span>Add an entry here to attach one Item to one Drop Zone.</span>
-        <ItemsContext.Provider value={{items, remainingItems, remainingDropZones, withReplacement, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
+        <ItemsContext.Provider value={{items, remainingItems, remainingDropZones, withReplacement, allowSubsetMatch: undefined, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={update} prop="items" childTypeOverride="dndItem$choice" />
         </ItemsContext.Provider>
     </>;
