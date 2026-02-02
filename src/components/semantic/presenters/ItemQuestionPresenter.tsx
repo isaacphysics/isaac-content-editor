@@ -248,27 +248,27 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
     const [isOpen, setOpen] = useState(false);
 
     return <>
-    <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
-        <DropdownToggle outline className={styles.dropdownButton}>
-            Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
-        </DropdownToggle>
-        <DropdownMenu className={styles.itemChoiceDropdown}>
-            {/* TODO: show only unused dropzone ids */}
-            {Array.from(dropZoneIds ?? []).map((id) => {
-                return <DropdownItem key={id} className={styles.dropdownItem} onClick={() => {
-                    update({
-                        ...doc,
-                        dropZoneId: id,
-                    });
-                }}>
-                    {id}
-                </DropdownItem>;
-            })}
-        </DropdownMenu>
-    </Dropdown>
-    {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert color="danger">
-        {/* Shows if e.g. a dropzone ID has changed */}
-        This drop zone ID does not exist.
+        <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
+            <DropdownToggle outline className={styles.dropdownButton}>
+                Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
+            </DropdownToggle>
+            <DropdownMenu className={styles.itemChoiceDropdown}>
+                {/* TODO: show only unused dropzone ids */}
+                {Array.from(dropZoneIds ?? []).map((id) => {
+                    return <DropdownItem key={id} className={styles.dropdownItem} onClick={() => {
+                        update({
+                            ...doc,
+                            dropZoneId: id,
+                        });
+                    }}>
+                        {id}
+                    </DropdownItem>;
+                })}
+            </DropdownMenu>
+        </Dropdown>
+        {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert color="danger">
+            {/* Shows if e.g. a dropzone ID has changed */}
+            This drop zone ID does not exist.
         </Alert>}
     </>;
 };
