@@ -38,11 +38,11 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
                 return keep;
             }
         ).map(
-                gt => {
-                    let label = gt.value ?? gt.id as string;
-                    if (isPhy) label += " [id: " + gt.id as string + "]";
-                    return ({value: gt.id as string, label: label});
-                }
+            gt => {
+                let label = gt.value ?? gt.id as string;
+                if (isPhy) label += " [id: " + gt.id as string + "]";
+                return ({value: gt.id as string, label: label});
+            }
         ) ?? [], [glossaryTerms, filterStage, filterSubject]);
 
     const [glossaryTermText, setGlossaryTermText] = useState<string>();
@@ -67,30 +67,30 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
                 {isPhy && <>
                     <Label for={"glossary-subject-select"}>Select subject:</Label>
                     <Select inputId="glossary-subject-select"
-                            isClearable
-                            onChange={e => setFilterSubject(e ? e.value : undefined)}
-                            options={subjectListOptions}
-                            placeholder={"Type to search subjects"} />
+                        isClearable
+                        onChange={e => setFilterSubject(e ? e.value : undefined)}
+                        options={subjectListOptions}
+                        placeholder={"Type to search subjects"} />
                     <Label for={"glossary-stage-select"}>Select stage:</Label>
                     <Select inputId="glossary-stage-select"
-                            isClearable
-                            onChange={e => setFilterStage(e ? e.value : undefined)}
-                            options={stageListOptions}
-                            placeholder={"Type to search stages"} />
+                        isClearable
+                        onChange={e => setFilterStage(e ? e.value : undefined)}
+                        options={stageListOptions}
+                        placeholder={"Type to search stages"} />
                 </>}
                 <Label for={"glossary-term-id-select"}>Select glossary term:</Label>
                 <Select inputId="glossary-term-id-select"
-                        onChange={e => setGlossaryTerm(e ? {value: e.value, label: e.label} : undefined)}
-                        options={glossaryTermOptions}
-                        placeholder={"Type to search terms"} />
+                    onChange={e => setGlossaryTerm(e ? {value: e.value, label: e.label} : undefined)}
+                    options={glossaryTermOptions}
+                    placeholder={"Type to search terms"} />
                 <hr/>
-                <InputGroup className={"pl-4"}>
+                <InputGroup className={"ps-4"}>
                     <Label for={"glossary-term-full-or-inline"}>Inline glossary term?</Label>
                     <Input type={"checkbox"} id="glossary-term-full-or-inline" onChange={e => setIsInlineTerm(e.target.checked)} checked={isInlineTerm}/>
                 </InputGroup>
                 {isInlineTerm ?
                     <>
-                        <InputGroup className={"pl-4"}>
+                        <InputGroup className={"ps-4"}>
                             <Label for={"glossary-term-titled-or-not"}>Titled glossary term?</Label>
                             <Input type={"checkbox"} id="glossary-term-titled-or-not" onChange={e => setIsTitledTerm(e.target.checked)} checked={isTitledTerm}/>
                         </InputGroup>
@@ -116,5 +116,5 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
                 </PopupCloseContext.Consumer>
             </Container>
         </Popup>
-    </>
-}
+    </>;
+};

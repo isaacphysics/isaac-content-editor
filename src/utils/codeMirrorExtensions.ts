@@ -16,17 +16,17 @@ import {
 import styles from "../styles/editor.module.css";
 
 function countWords(doc: Text) {
-    let count = 0
-    const iter = doc.iter()
+    let count = 0;
+    const iter = doc.iter();
     while (!iter.next().done) {
-        let inWord = false
+        let inWord = false;
         for (let i = 0; i < iter.value.length; i++) {
-            const word = /\w/.test(iter.value[i])
-            if (word && !inWord) count++
-            inWord = word
+            const word = /\w/.test(iter.value[i]);
+            if (word && !inWord) count++;
+            inWord = word;
         }
     }
-    return `Word count: ${count}`
+    return `Word count: ${count}`;
 }
 
 function wordCountPanel(view: EditorView): Panel {
@@ -39,7 +39,7 @@ function wordCountPanel(view: EditorView): Panel {
             if (update.docChanged)
                 dom.textContent = countWords(update.state.doc);
         }
-    }
+    };
 }
 
 export function wordCounter() {
@@ -85,7 +85,7 @@ const emphTextWith = (lemph: string, remph?: string) => (view: EditorView | unde
         };
     }));
     return true;
-}
+};
 
 export const makeBold = (encoding: "markdown" | "html") => encodingSpecific(emphTextWith("**"), emphTextWith("<b>", "</b>"), encoding);
 export const makeItalic = (encoding: "markdown" | "html") => encodingSpecific(emphTextWith("*"), emphTextWith("<i>", "</i>"), encoding);
@@ -111,7 +111,7 @@ export const keyBindings = (setChanges: Command, cancelChanges: Command, encodin
 
 const spellcheckLine = Decoration.line({attributes: {spellcheck: "true"}});
 function spellcheckVisibleLines(view: EditorView) {
-    const builder = new RangeSetBuilder<Decoration>()
+    const builder = new RangeSetBuilder<Decoration>();
     for (const {from, to} of view.visibleRanges) {
         for (let pos = from; pos <= to;) {
             const line = view.state.doc.lineAt(pos);
@@ -123,7 +123,7 @@ function spellcheckVisibleLines(view: EditorView) {
 }
 export const spellchecker = () => ViewPlugin.fromClass(
     class {
-        decorations: DecorationSet
+        decorations: DecorationSet;
         constructor(view: EditorView) {
             this.decorations = spellcheckVisibleLines(view);
         }

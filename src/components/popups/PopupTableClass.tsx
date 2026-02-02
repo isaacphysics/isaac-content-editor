@@ -47,28 +47,28 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
         }}>{wide ? "Augment table" : "Table"}</button>
         <Popup popUpRef={popupRef}>
             <Container className={styles.cmPanelPopup}>
-                {isAda && <InputGroup className={"pl-4"}>
+                {isAda && <InputGroup className={"ps-4"}>
                     <Label for={"table-expandable"}>Expandable</Label>
                     <Input type="checkbox" id="table-expandable" checked={expandable} onChange={e => { 
-                            setExpandable(e.target.checked);
-                            if (e.target.checked) {
-                                setClasses(prev => prev ? `${prev} expandable` : "expandable");
-                            } else {
-                                setClasses(prev => prev?.replace(/\bexpandable\b/g, "").trim());
-                            }
-                        }} 
+                        setExpandable(e.target.checked);
+                        if (e.target.checked) {
+                            setClasses(prev => prev ? `${prev} expandable` : "expandable");
+                        } else {
+                            setClasses(prev => prev?.replace(/\bexpandable\b/g, "").trim());
+                        }
+                    }} 
                     />
                 </InputGroup>}
-                <InputGroup className={"pl-4"}>
+                <InputGroup className={"ps-4"}>
                     <Label for={"table-topScrollable"}>Top-scrollable</Label>
                     <Input type="checkbox" id="table-topScrollable" checked={topScrollable} onChange={e => {
-                            setTopScrollable(e.target.checked);
-                            if (e.target.checked) {
-                                setClasses(prev => prev ? `${prev} topScrollable` : "topScrollable");
-                            } else {
-                                setClasses(prev => prev?.replace(/\bscrollable\b/g, "").trim());
-                            }
-                        }}/>
+                        setTopScrollable(e.target.checked);
+                        if (e.target.checked) {
+                            setClasses(prev => prev ? `${prev} topScrollable` : "topScrollable");
+                        } else {
+                            setClasses(prev => prev?.replace(/\bscrollable\b/g, "").trim());
+                        }
+                    }}/>
                 </InputGroup>
                 <Label for={"table-classes"}>Class:</Label>
                 <Input id={"table-classes"} placeholder={"e.g. text-center"} value={classes} onChange={(e) => setClasses(e.target.value)}/>
@@ -87,4 +87,4 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
             </Container>
         </Popup>
     </>;
-}
+};

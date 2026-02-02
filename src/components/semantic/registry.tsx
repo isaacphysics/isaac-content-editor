@@ -48,6 +48,8 @@ import {InteractiveCodeSnippetPresenter} from "./presenters/InteractiveCodeSnipp
 import {CalloutPresenter} from "./presenters/CalloutPresenter";
 import {LLMQuestionPresenter} from "./presenters/LLMQuestionPresenter";
 import { SidebarEntryPresenter, SidebarPresenter } from "./presenters/SidebarPresenters";
+import { DesmosEmbeddingPresenter } from "./presenters/DesmosEmbeddingPresenter";
+import { GeogebraEmbeddingPresenter } from "./presenters/GeogebraEmbeddingPresenter";
 
 export type ContentType =
     | "content"
@@ -77,6 +79,8 @@ export type ContentType =
     | "codeTabs"
     | "image"
     | "video"
+    | "desmosEmbedding"
+    | "geogebraEmbedding"
     | "glossaryTerm"
     | "emailTemplate"
     | "anvilApp"
@@ -130,23 +134,23 @@ const choice: RegistryEntry = {
 const accordion: RegistryEntry = {
     name: "Accordion",
     bodyPresenter: AccordionPresenter,
-}
+};
 const horizontal: RegistryEntry = {
     name: "Side-by-side layout",
     className: styles.horizontal,
     bodyPresenter: ListChildrenPresenter,
-}
+};
 const clearfix: RegistryEntry = {
     name: "Clearfix",
     bodyPresenter: () => <div className={"text-center pb-3"}>
         <hr/>
         <i>This block is used to clear floating elements</i>
     </div>,
-}
+};
 const tabs: RegistryEntry = {
     name: "Tabs",
     bodyPresenter: TabsPresenter,
-}
+};
 const hints: RegistryEntry = {
     name: "Hints",
     bodyPresenter: (props) => <TabsPresenter {...props} />,
@@ -197,6 +201,16 @@ const video: RegistryEntry = {
     bodyPresenter: VideoPresenter,
     metadata: mediaMeta,
 };
+const desmosEmbedding: RegistryEntry = {
+    name: "Desmos Embedding",
+    bodyPresenter: DesmosEmbeddingPresenter,
+    metadata: mediaMeta,
+};
+const geogebraEmbedding: RegistryEntry = {
+    name: "Geogebra Embedding",
+    bodyPresenter: GeogebraEmbeddingPresenter,
+    metadata: mediaMeta,
+};
 const codeSnippet: RegistryEntry = {
     name: "Code Snippet",
     bodyPresenter: CodeSnippetPresenter,
@@ -208,7 +222,7 @@ const interactiveCodeSnippet: RegistryEntry = {
 const codeTabs: RegistryEntry = {
     name: "Code Tabs",
     bodyPresenter: TabsPresenter,
-}
+};
 const glossaryTerm: RegistryEntry = {
     name: "Glossary term",
     bodyPresenter: GlossaryTermPresenter,
@@ -271,7 +285,7 @@ const isaacQuestionPage: RegistryEntry = {
 const isaacFastTrackQuestionPage: RegistryEntry = {
     ...isaacQuestionPage,
     metadata: [...isaacQuestionPage.metadata ?? [], "level"]
-}
+};
 const isaacConceptPage: RegistryEntry = {
     ...isaacQuestionPage,
     metadata: [...isaacQuestionPage.metadata ?? [], "summary"]
@@ -340,7 +354,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacPageFragment: contentPage,
     isaacConceptPage,
     isaacQuestionPage,
-    isaacFastTrackQuestionPage: isaacQuestionPage,
+    isaacFastTrackQuestionPage,
     isaacEventPage,
     isaacBookIndexPage,
     isaacBookDetailPage,
@@ -404,6 +418,8 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     interactiveCodeSnippet,
     codeTabs,
     video,
+    desmosEmbedding,
+    geogebraEmbedding,
     glossaryTerm,
     emailTemplate,
     anvilApp,

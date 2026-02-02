@@ -47,7 +47,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
         // TODO: use constants.ts once merged
         const remainingStages = ["university", "further_a", "a_level", "gcse", "year_9", "year_7_and_8"].filter(
             stage => !doc.stages?.includes(stage)
-        )
+        );
         update({
             ...doc,
             stages: [...doc.stages ?? [], ...remainingStages],
@@ -70,10 +70,10 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     return <div className={styles.wrapper}>
         {doc.stages?.map(stage => <Button key={stage} outline onClick={() => removeStage(stage)}>{stage} ➖</Button>)}
         <Input value={searchString}
-               onChange={(e) => setSearchString(e.target.value.toLowerCase())}
-               placeholder="Type to add stages..."
-               innerRef={inputRef}
-               onKeyPress={onKeyPress}
+            onChange={(e) => setSearchString(e.target.value.toLowerCase())}
+            placeholder="Type to add stages..."
+            innerRef={inputRef}
+            onKeyPress={onKeyPress}
         />
         {searchString !== "" && <div>
             <Button onClick={() => setShowStageList(!showStageList)}>

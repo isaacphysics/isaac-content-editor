@@ -126,8 +126,8 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
         try { 
             const formula = parseMarkingFormula(value);
             evaluateMarkingFormula(formula, {...doc.markScheme?.reduce<Record<string, number>>((acc, mark) => ({...acc, [mark.jsonField ?? ""]: 0}), {}) ?? {}, 
-                                                            "maxMarks": doc.maxMarks ?? 0
-                                                        });
+                "maxMarks": doc.maxMarks ?? 0
+            });
         } 
         catch (e: any) { 
             if (errors.length === 0) errors.push(`${e}`);
@@ -146,7 +146,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
             markingFormulaString: value,
             markingFormula: parseMarkingFormula(value),
             markedExamples: doc.markedExamples?.map(me => ({...me, marksAwarded: evaluateMarkTotal(parseMarkingFormula(value), {...me.marks, "maxMarks": doc.maxMarks ?? 0})}))
-        })
+        });
     }
 
     const markTally = tallyMarkUses(doc.markingFormula);
@@ -180,7 +180,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                             <div className="flex-fill">
                                 <EditableText text={mark.shortDescription} multiLine block onSave={value => updateMark(i, "shortDescription", value)} />
                             </div>
-                            <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteMark(mark.jsonField)}>❌</button>
+                            <button className="btn btn-sm mb-2 ms-2" onClick={() => deleteMark(mark.jsonField)}>❌</button>
                         </div>
                     </td>
                 </tr>)}
@@ -203,7 +203,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                             text={doc.maxMarks?.toString()}
                             hasError={value => Number.isNaN(Number(value)) ? ["maxMarks must be a number"] :
                                 Number(value) < 0 ? ["maxMarks cannot be negative"] :
-                                undefined}
+                                    undefined}
                             onSave={mm => mm && update({...doc, maxMarks: Number(mm)})}
                         />
                     </td>
@@ -224,8 +224,8 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                             text={doc.passMark?.toString()}
                             hasError={value => Number.isNaN(Number(value)) ? ["Pass mark must be a number"] :
                                 Number(value) > (doc.maxMarks ?? 0) ? ["Pass mark cannot be greater than maxMarks"] :
-                                Number(value) < 0 ? ["Pass mark cannot be negative"] :
-                                undefined}
+                                    Number(value) < 0 ? ["Pass mark cannot be negative"] :
+                                        undefined}
                             onSave={pm => pm && update({...doc, passMark: Number(pm)})}
                         />
                     </td>
@@ -304,18 +304,18 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                         <div className="d-flex justify-content-between">
                             <div className="flex-fill">
                                 {doc.markingFormula ? 
-                                <div>
-                                    {example.marksAwarded}
-                                </div> 
-                                :
-                                <EditableText
-                                    text={example.marksAwarded?.toString()}
-                                    hasError={value => doc.maxMarks && parseInt(value ?? "0", 10) > doc.maxMarks ? ["Exceeds question's max marks"] : undefined}
-                                    onSave={value => updateExample(i, "marksAwarded", parseInt(value ?? "0", 10))}
-                                />}
+                                    <div>
+                                        {example.marksAwarded}
+                                    </div> 
+                                    :
+                                    <EditableText
+                                        text={example.marksAwarded?.toString()}
+                                        hasError={value => doc.maxMarks && parseInt(value ?? "0", 10) > doc.maxMarks ? ["Exceeds question's max marks"] : undefined}
+                                        onSave={value => updateExample(i, "marksAwarded", parseInt(value ?? "0", 10))}
+                                    />}
                             </div>
                             <div>
-                                <button className="btn btn-sm mb-2 ml-2" onClick={() => deleteExample(i)}>❌</button>
+                                <button className="btn btn-sm mb-2 ms-2" onClick={() => deleteExample(i)}>❌</button>
                             </div>
                         </div>
                     </td>

@@ -16,7 +16,7 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 const toFixedDP = (value: number, dp: number) => {
     const factor = Math.pow(10, dp);
     return Math.round(value * factor) / factor;
-}
+};
 
 interface DraggableDropZoneProps {
     setPercentageLeft: (l: number) => void;
@@ -84,11 +84,11 @@ const PositionableDropZone = (props: PositionableFigureRegionProps & DraggableDr
             handleDrag(e);
         }}
     >
-        <span className={`d-inline-block text-right w-100 h-100 ${markupStyles.clozeDropZonePlaceholder}`}>
+        <span className={`d-inline-block text-end w-100 h-100 ${markupStyles.clozeDropZonePlaceholder}`}>
             {!isCondensed ? id : (isDefined(index) ? alphabetIndex(index) : "?")}&nbsp;&nbsp;
         </span>
-    </div>
-}
+    </div>;
+};
 
 interface FigureDropZoneModalProps extends PresenterProps<Figure> {
     open: boolean;
@@ -213,7 +213,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                                     const newValue = clamp(parseFloat(event.target.value), 0, 100);
                                     const newRegionStates = [...regions];
                                     const newPercentageLeft = [...percentageLeft];
-                                    newPercentageLeft[i] = event.target.value !== "" ? newValue : ""
+                                    newPercentageLeft[i] = event.target.value !== "" ? newValue : "";
                                     newRegionStates[i].left = event.target.value !== "" ? newValue : 0;
                                     setRegions(newRegionStates);
                                     setPercentageLeft(newPercentageLeft);
@@ -247,7 +247,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                                     ❌
                                 </button>
                             </td>
-                        </tr>
+                        </tr>;
                     })}
                 </tbody>
             </table>

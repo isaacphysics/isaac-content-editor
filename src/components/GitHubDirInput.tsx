@@ -78,10 +78,10 @@ export const GitHubDirInput = ({repo, className, dir, setDir, invalid}: GitHubDi
             if (path === "") return false;
             if (path.match(/^[a-zA-Z0-9_\-/]+$/) === null) return false;
             const pathToSearch = path.replace(/\/$/, "");
-            return !options.find(o => "value" in o ? [o.value, getBasePath(o.value)].includes(pathToSearch) : o.options.find(_o => [_o.value, getBasePath(_o.value)].includes(pathToSearch)))
+            return !options.find(o => "value" in o ? [o.value, getBasePath(o.value)].includes(pathToSearch) : o.options.find(_o => [_o.value, getBasePath(_o.value)].includes(pathToSearch)));
         }}
         styles={{
-            control: (base, state) => ({
+            control: (base) => ({
                 ...base,
                 // state.isFocused can display different borderColor if you need it
                 borderColor: !invalid ? '#ddd' : 'red',
@@ -96,4 +96,4 @@ export const GitHubDirInput = ({repo, className, dir, setDir, invalid}: GitHubDi
         createOptionPosition={"first"}
         formatCreateLabel={formatCreateLabel}
     />;
-}
+};

@@ -15,7 +15,7 @@ export enum SidebarEntryType {
 const EditableLabelProp = EditableDocPropFor<SidebarEntry>("label", {block: true, placeHolder: "Entry label"});
 const EditableSidebarEntryPageIdProp = EditableDocPropFor<SidebarEntry>("pageId", {block: true, placeHolder: "Page ID"});
 // const EditableSidebarEntryPageTypeProp = EditableDocPropFor<SidebarEntry>("pageType", {block: true, placeHolder: "Page type"});
-const EditableSidebarEntryPageTypeProp = EnumPropFor<SidebarEntry>("pageType", SidebarEntryType)
+const EditableSidebarEntryPageTypeProp = EnumPropFor<SidebarEntry>("pageType", SidebarEntryType);
 
 export function SidebarPresenter(props: PresenterProps<Sidebar>) {
     return <>
@@ -29,7 +29,7 @@ export function SidebarPresenter(props: PresenterProps<Sidebar>) {
             <EditableSubtitleProp {...props} placeHolder="Enter button text..." />
         </div>
         <ListPresenterProp {...props} prop="sidebarEntries" childTypeOverride="sidebarEntry" />
-    </>
+    </>;
 }
 
 export function SidebarEntryPresenter(props: PresenterProps<SidebarEntry>) {

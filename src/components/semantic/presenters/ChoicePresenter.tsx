@@ -53,16 +53,15 @@ function LabeledInput<V extends Record<string, string | undefined>>({value, prop
     return <Label className={className}>
         {label}
         <Input type={type ?? "text"}
-               // eslint-disable-next-line jsx-a11y/no-autofocus
-               autoFocus
-               defaultValue={value.current?.[prop]}
-               onChange={(e) => {
-                   if (value.current !== undefined) {
-                       value.current[prop] = e.target.value as V[keyof V];
-                       setWarning(warningFunction ? warningFunction(e.target.value) : "");
-                   }
-               }}
-               invalid={!!warning}
+            autoFocus
+            defaultValue={value.current?.[prop]}
+            onChange={(e) => {
+                if (value.current !== undefined) {
+                    value.current[prop] = e.target.value as V[keyof V];
+                    setWarning(warningFunction ? warningFunction(e.target.value) : "");
+                }
+            }}
+            invalid={!!warning}
         />
         {warning && <div className="text-danger">{warning}</div>}
     </Label>;
@@ -98,8 +97,8 @@ const hasFiveOrMoreDigits = () => {
         const regex = /\d{5,}/;
         const matches = inputText.match(regex);
         return matches && matches.length > 0 ? "5+ digit numbers are not supported by the symbolic editor: " + matches : "";
-    }
-}
+    };
+};
 
 export const FormulaPresenterInner = buildValuePresenter(
     function FormulaValue({editing, doc, value}) {
@@ -107,7 +106,7 @@ export const FormulaPresenterInner = buildValuePresenter(
             if (doc.value === undefined || doc.value === "") {
                 return <div><em>Enter value and python expression here</em></div>;
             } else {
-                return <div><Markup trusted-markup-encoding="html">{doc.value}</Markup><code className="text-dark">PYTHON: {doc.pythonExpression}</code></div>
+                return <div><Markup trusted-markup-encoding="html">{doc.value}</Markup><code className="text-dark">PYTHON: {doc.pythonExpression}</code></div>;
             }
         } else {
             return <>
@@ -121,10 +120,9 @@ export const FormulaPresenterInner = buildValuePresenter(
 );
 
 const FormulaPresenter = (props: ValuePresenterProps<Formula>) => {
-    const {valueRef, ...rest} = props;
     return <>
         <FormulaPresenterInner {...props}/>
-        <CheckboxDocProp {...rest} prop="requiresExactMatch" label="Require exact match"/>
+        <CheckboxDocProp {...props} prop="requiresExactMatch" label="Require exact match"/>
     </>;
 };
 
@@ -180,10 +178,10 @@ export const RegexPatternPresenter = (props: ValuePresenterProps<RegexPattern>) 
         let regex = props.doc.value ?? "";
         if (props.doc.matchWholeString) {
             // Add caret and dollar sign if the whole string should be matched
-            regex = "^" + regex + "$"
+            regex = "^" + regex + "$";
         }
-        const flags = "g" + (props.doc.multiLineRegex ? "m" : "") + (props.doc.caseInsensitive ? "i" : "")
-        window.open(`https://regex101.com/?regex=${encodeURIComponent(regex)}&flags=${flags}&delimiter=@&flavor=java`)
+        const flags = "g" + (props.doc.multiLineRegex ? "m" : "") + (props.doc.caseInsensitive ? "i" : "");
+        window.open(`https://regex101.com/?regex=${encodeURIComponent(regex)}&flags=${flags}&delimiter=@&flavor=java`);
     }
 
     return <>
@@ -235,7 +233,7 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
                 )
             }
             : newDoc
-            , invertible);
+        , invertible);
     };
     // Ensure that the null cloze items are added to the doc initially for a new choice (again only if this is a cloze question)
     useEffect(() => {
@@ -263,13 +261,13 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
             drop zones, and should contain &quot;Any item&quot; placeholders in slots that should be ignored (if using
             wildcard matching).<br/>
             If a choice does not have the same number of items as drop zones, <b>it will not be checked against the
-            users answer</b>.
+                users answer</b>.
         </Alert>}
         <ItemsContext.Provider value={{items, remainingItems, withReplacement, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={augmentedUpdate} prop="items" childTypeOverride="item$choice" />
         </ItemsContext.Provider>
     </>;
-}
+};
 
 export const DndChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
     const {doc, update} = props;
@@ -284,7 +282,7 @@ export const DndChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
             <ListPresenterProp {...props} doc={doc} update={update} prop="items" childTypeOverride="dndItem$choice" />
         </ItemsContext.Provider>
     </>;
-}
+};
 
 const EditableCoordinatesProp = EditableDimensionalDocProp<CoordinateItem>("coordinates");
 
@@ -293,8 +291,8 @@ export function CoordinateItemPresenter(props: PresenterProps<CoordinateItem>) {
     return <>{[...Array(numberOfDimensions)].map((_, i) =>
         <div className={"mb-3"} key={i}>
             <EditableCoordinatesProp {...props} dimension={i} label={"Dimension ".concat((i+1).toString())} />
-        <div className={styles.questionLabel} />
-    </div>)}</>
+            <div className={styles.questionLabel} />
+        </div>)}</>;
 }
 
 export const CoordinateChoicePresenter = (props: ValuePresenterProps<CoordinateChoice>) => {
@@ -308,7 +306,7 @@ export const CoordinateChoicePresenter = (props: ValuePresenterProps<CoordinateC
     return <>
         <ListPresenterProp {...props} prop="items" childTypeOverride="coordinateItem$choice" />
     </>;
-}
+};
 
 const CHOICE_REGISTRY: Record<CHOICE_TYPES, ValuePresenter<Choice>> = {
     choice: BaseValuePresenter,

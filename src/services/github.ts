@@ -25,7 +25,7 @@ const GITHUB_BASE_REPO_PATHS: {[repo in GitHubRepository] : string} = {
     content: `repos/$OWNER/${GITHUB_REPO_KEYS["content"]}/contents/`,
     app: `repos/$OWNER/${GITHUB_REPO_KEYS["app"]}/contents/public/`,
     cdn: `repos/$OWNER/${GITHUB_REPO_KEYS["cdn"]}/contents/`
-}
+};
 
 // GitHub cache key is used, set to now(), to ensure that users see the true repo state on refreshing a page, even if
 // the content is in the browser cache (as it will be for 60s by default).
@@ -367,7 +367,7 @@ export async function githubSave(context: ContextType<typeof AppContext>) {
 
     let userMessage = window.prompt("Enter your commit message:");
     while (userMessage === "") {
-        userMessage = window.prompt("Could not save file with no commit message.\nEnter your commit message:")
+        userMessage = window.prompt("Could not save file with no commit message.\nEnter your commit message:");
     }
     const {sha} = context.github.cache.get(contentsPath(path, context.github.branch))?.data ?? {};
     if (!sha || !userMessage) return;
@@ -380,7 +380,7 @@ export async function githubSave(context: ContextType<typeof AppContext>) {
         branch: context.github.branch,
         content: encodedContent,
         sha: sha,
-    }
+    };
 
     const result = await fetcher(contentsPath(path), {
         method: "PUT",
@@ -403,7 +403,7 @@ export async function githubUpload(context: ContextType<typeof AppContext>, base
     let existingFigures;
     try {
         existingFigures = await fetcher(contentsPath(figurePath, context.github.branch));
-    } catch (e) {
+    } catch (_) {
         existingFigures = [];
     }
 

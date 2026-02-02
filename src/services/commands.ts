@@ -41,7 +41,7 @@ async function doNew(context: ContextType<typeof AppContext>, action: ActionFor<
                 alert("Couldn't create file. Perhaps it already exists.");
                 console.error("Couldn't create file. Perhaps it already exists.", e);
             }
-        }
+        };
 
         if (name.endsWith(".json")) {
             await new Promise<void>((resolve) => {

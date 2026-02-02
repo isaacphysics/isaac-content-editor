@@ -43,34 +43,34 @@ export const MarkupToolbar = ({set, cancel, codemirror, encoding, value}: { set:
 
     return <div ref={toolbarRef} className={"d-flex w-100 bg-light border-bottom p-1 " + styles.cmMenuBar}>
         <button className={styles.cmPanelButton} title={"Set (Mod-Shift-Enter)"}
-                aria-label={"Save changes to this markup block (shortcut is Mod-Shift-Enter)"}
-                onClick={set}>
+            aria-label={"Save changes to this markup block (shortcut is Mod-Shift-Enter)"}
+            onClick={set}>
             💾{wide && " Set"}
         </button>
         <button className={styles.cmPanelButton} title={"Cancel (Esc)"}
-                aria-label={"Cancel changes to this markup block (shortcut is Esc)"}
-                onClick={cancel}>
+            aria-label={"Cancel changes to this markup block (shortcut is Esc)"}
+            onClick={cancel}>
             ❌{wide && " Cancel"}
         </button>
         {isMarkupEncoding(encoding) && codemirror && <>
             <button className={"ml-auto " + styles.cmPanelButton} title={"Bold (Ctrl-B)"}
-                    aria-label={"Make highlighted text bold (shortcut is Ctrl-B)"}
-                    onClick={() => makeBold(encoding)(codemirror.current?.view)}>
+                aria-label={"Make highlighted text bold (shortcut is Ctrl-B)"}
+                onClick={() => makeBold(encoding)(codemirror.current?.view)}>
                 <b>B</b>
             </button>
             <button className={styles.cmPanelButton} title={"Italic (Ctrl-Shift-I)"}
-                    aria-label={"Make highlighted text italic (shortcut is Ctrl-Shift-I)"}
-                    onClick={() => makeItalic(encoding)(codemirror.current?.view)}>
+                aria-label={"Make highlighted text italic (shortcut is Ctrl-Shift-I)"}
+                onClick={() => makeItalic(encoding)(codemirror.current?.view)}>
                 <i>I</i>
             </button>
             <button className={styles.cmPanelButton} title={"Strikethrough (Ctrl-Shift-S)"}
-                    aria-label={"Strike-through highlighted text (shortcut is Ctrl-Shift-S)"}
-                    onClick={() => makeStrikethrough(encoding)(codemirror.current?.view)}>
+                aria-label={"Strike-through highlighted text (shortcut is Ctrl-Shift-S)"}
+                onClick={() => makeStrikethrough(encoding)(codemirror.current?.view)}>
                 <s className={"d-inline"}>S</s>
             </button>
             <button className={styles.cmPanelButton} title={"Code (Ctrl-Shift-C)"}
-                    aria-label={"Format highlighted text as code (shortcut is Ctrl-Shift-C)"}
-                    onClick={() => makeCode(encoding)(codemirror.current?.view)}>
+                aria-label={"Format highlighted text as code (shortcut is Ctrl-Shift-C)"}
+                onClick={() => makeCode(encoding)(codemirror.current?.view)}>
                 <pre className={"d-inline"}>&lt;&gt;</pre>
             </button>
             {encodingSpecific(
@@ -85,4 +85,4 @@ export const MarkupToolbar = ({set, cancel, codemirror, encoding, value}: { set:
             )}
         </>}
     </div>;
-}
+};

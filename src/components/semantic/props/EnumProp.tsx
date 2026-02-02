@@ -12,7 +12,7 @@ export interface DropdownOptionsProps {
 export const EnumPropFor = <
     D extends Content,
     K extends KeysWithValsOfType<D, string | undefined> = KeysWithValsOfType<D, string | undefined>,
-    >(prop: K, options: {[key in string]: string | undefined}) => {
+>(prop: K, options: {[key in string]: string | undefined}) => {
     return function EnumProp({doc, update, dropdownOptions}: PresenterProps<D> & {dropdownOptions?: DropdownOptionsProps}) {
         const [isOpen, setOpen] = useState(false);
         const current = options[doc[prop] as unknown as keyof typeof options];
@@ -40,6 +40,6 @@ export const EnumPropFor = <
                     </DropdownItem>;
                 })}
             </DropdownMenu>
-        </Dropdown>
+        </Dropdown>;
     };
 };

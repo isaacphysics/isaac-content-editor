@@ -29,7 +29,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
             setValid(false);
         }
 
-    }
+    };
 
     return <>
         <button className={styles.cmPanelButton} title={"Insert cloze drop-zone"} onClick={(event) => {
@@ -46,7 +46,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
                 <Label for={"drop-zone-index"}>Index override:</Label>
                 <Input id={"drop-zone-index"} placeholder={"None"} onChange={ifValidNumericalInputThen(setIndex)} />
                 <hr/>
-                <InputGroup className={"pl-4"}>
+                <InputGroup className={"ps-4"}>
                     <Label for={"drop-zone-in-latex"}>Inside LaTeX?:</Label>
                     <Input type={"checkbox"} id={"drop-zone-in-latex"} onChange={() => setInLatex(b => !b)} checked={inLatex} />
                 </InputGroup>
@@ -65,5 +65,5 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
                 </PopupCloseContext.Consumer>
             </Container>
         </Popup>
-    </>
-}
+    </>;
+};

@@ -4,7 +4,7 @@ import { Label } from "reactstrap";
 import { GlossaryTerm } from "../../../isaac-data-types";
 
 import { PresenterProps } from "../registry";
-import styles from "../styles/glossaryTerm.module.css"
+import styles from "../styles/glossaryTerm.module.css";
 import { SemanticDocProp } from "../props/SemanticDocProp";
 import { EditableIDProp, EditableValueProp } from "../props/EditableDocProp";
 import { TagsPresenter } from "./TagsPresenter";

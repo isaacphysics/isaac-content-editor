@@ -2,9 +2,9 @@ import { LLMConstantNode, LLMFormulaNode, LLMFreeTextMarkedExample, LLMFunctionN
 import { evaluateMarkingFormula, evaluateMarkTotal } from "./llmMarkingFormula";
 
 // Type guarded shorthands for generating LLMFormulaNodes
-const markingFormulaConstant: (value: number) => LLMConstantNode = (value) => { return {type: "LLMMarkingConstant", value} };
-const markingFormulaVariable: (name: string) => LLMVariableNode = (name) => { return {type: "LLMMarkingVariable", name} };
-const markingFormulaFunction: (name: string, args: LLMFormulaNode[]) => LLMFunctionNode = (name, args) => { return {type: "LLMMarkingFunction", name, arguments: args} };
+const markingFormulaConstant: (value: number) => LLMConstantNode = (value) => { return {type: "LLMMarkingConstant", value}; };
+const markingFormulaVariable: (name: string) => LLMVariableNode = (name) => { return {type: "LLMMarkingVariable", name}; };
+const markingFormulaFunction: (name: string, args: LLMFormulaNode[]) => LLMFunctionNode = (name, args) => { return {type: "LLMMarkingFunction", name, arguments: args}; };
 
 // default = MIN(maxMarks, SUM(x, y, z))
 const defaultMarkingFormula: LLMFunctionNode = {type: "LLMMarkingFunction", name: "MIN", arguments: [
@@ -80,17 +80,17 @@ describe("evaluateMarkingFormula", () => {
     });
     it("should return an error when given a marking formula with an invalid type", () => {
         function invalidTypedMarkingFormula() {
-            evaluateMarkingFormula({type: "LLMInvalidNode", name: "INVALID"} as unknown as LLMFormulaNode, marks)
+            evaluateMarkingFormula({type: "LLMInvalidNode", name: "INVALID"} as unknown as LLMFormulaNode, marks);
         }
 
-        expect(invalidTypedMarkingFormula).toThrow("Unknown marking expression type: LLMInvalidNode")
+        expect(invalidTypedMarkingFormula).toThrow("Unknown marking expression type: LLMInvalidNode");
     });
     it("should return an error when given a marking formula with an invalid function", () => {
         function invalidNamedMarkingFormula() {
-            evaluateMarkingFormula(markingFormulaFunction("INVALID", []), marks)
+            evaluateMarkingFormula(markingFormulaFunction("INVALID", []), marks);
         }
 
-        expect(invalidNamedMarkingFormula).toThrow("Unknown marking function: INVALID")
+        expect(invalidNamedMarkingFormula).toThrow("Unknown marking function: INVALID");
     });
 });
 

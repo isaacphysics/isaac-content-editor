@@ -8,12 +8,12 @@ import { CustomTextProps, EditableDocProps } from "./EditableDocProp";
 
 export const NumberDocPropFor = <D extends Content,
     K extends KeysWithValsOfType<D, number | undefined> = KeysWithValsOfType<D, number | undefined>,
-    >(prop: K, defaultProps?: CustomTextProps) => {
+>(prop: K, defaultProps?: CustomTextProps) => {
     const typedRender = ({
-                            doc,
-                            update,
-                            ...rest
-                        }: EditableDocProps<D>, ref: React.ForwardedRef<EditableTextRef>) => {
+        doc,
+        update,
+        ...rest
+    }: EditableDocProps<D>, ref: React.ForwardedRef<EditableTextRef>) => {
         return <EditableText
             hasError={(newText) => {
                 if (newText) {
@@ -33,7 +33,7 @@ export const NumberDocPropFor = <D extends Content,
             text={(doc[prop] as unknown as number | undefined)?.toString()}
             {...defaultProps}
             {...rest}
-            ref={ref}/>
+            ref={ref}/>;
     };
     return forwardRef(typedRender);
 };
