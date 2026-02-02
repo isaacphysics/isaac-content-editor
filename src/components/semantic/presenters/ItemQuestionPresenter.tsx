@@ -332,31 +332,28 @@ export function ItemChoiceItemInserter({insert, position, lengthOfCollection}: I
     }}>Add</Button>;
 }
 
-export function DndChoiceItemInserter({insert, insertMultiple, position, collection, lengthOfCollection}: InserterProps) {
-    const {items, remainingItems, isCorrect} = useContext(ItemsContext);
-    const {dropZoneCount, dropZoneIds} = useContext(DropZoneQuestionContext);
+export function DndChoiceItemInserter({insert, insertMultiple, position, collection}: InserterProps) {
+    const {items, remainingItems, isCorrect, remainingDropZones: maybeRemainingDropZones} = useContext(ItemsContext);
+    const remainingDropZones = Array.from(maybeRemainingDropZones ?? []);
 
-    const missingDropZones = [
-        ...(dropZoneIds || new Set()).difference(new Set(collection?.map((item: DndItem) => item.dropZoneId)))
-    ];
-    
     if (!items || !remainingItems) {
         return null; // Shouldn't happen.
     }
 
-    if (position !== lengthOfCollection) {
+    if (position !== (collection && collection.length || 0 )) {
         return null; // Only include an insert button at the end.
     }
-    if (!dropZoneCount || lengthOfCollection >= dropZoneCount) {
-        return null; // No items remaining, or max items reached in choice (in case of cloze question)
+    if (remainingDropZones.length === 0) {
+        return null; // No drop zones remaining
     }
+
     return <>
         {!isCorrect && <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
-            const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId: missingDropZones[0]};
+            const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId: remainingDropZones[0]};
             insert(position, newItem);
         }}>Add single entry</Button>}
         <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
-            insertMultiple(missingDropZones.map((dropZoneId, index) => {
+            insertMultiple(remainingDropZones.map((dropZoneId, index) => {
                 const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId};
                 return [position + index, newItem];
             }));
