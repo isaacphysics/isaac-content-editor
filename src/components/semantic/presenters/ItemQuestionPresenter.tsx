@@ -127,6 +127,8 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>}
         {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>}
         <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>
+        {isDndQuestion(doc) && <DndQuestionInstructions />}
+
         <ContentValueOrChildrenPresenter {...props} update={updateWithDropZoneCount} topLevel />
         {isClozeQuestion(doc) && <ClozeQuestionInstructions />}
         <Box name="Items">
@@ -365,6 +367,20 @@ export function ClozeQuestionInstructions() {
     return <>
         <h3>Defining drop zones</h3>
         <p>To place drop zones within question text, either use the helper button provided, or write <code>[drop-zone]</code> (with the square brackets) - this will then get replaced with a drop zone UI element when the question is rendered. If you want to place drop zones within LaTeX, escape it with the <code>\text</code> environment (but see disclaimer)</p>
+        <p>For the drop zones to work correctly, the question exposition must be <b>markdown encoded</b>. This should happen by default.</p>
+        <p><small>Disclaimer: drop zones will work in LaTeX for simple use cases, but for very complex and/or nested equations may not work as intended - in summary drop zones in LaTeX are not explicitly supported by us, but it can work for <em>most</em> use cases</small></p>
+    </>;
+}
+
+
+export function DndQuestionInstructions() {
+    return <>
+        <h3>Defining drop zones</h3>
+        <p>To place drop zones
+            <ul>
+                <li>within question text, write <code>[drop-zone:A1]</code> (where A1 will be the drop zone id) - this will then get replaced with a drop zone UI element when the question is rendered. If you want to place drop zones within LaTeX, escape it with the <code>\text</code> environment (but see disclaimer).</li>
+                <li>within figures, add a figure, and then use the &quot;Add drop zones to figure&quot; button to add or edit drop zones. </li>
+            </ul></p>
         <p>For the drop zones to work correctly, the question exposition must be <b>markdown encoded</b>. This should happen by default.</p>
         <p><small>Disclaimer: drop zones will work in LaTeX for simple use cases, but for very complex and/or nested equations may not work as intended - in summary drop zones in LaTeX are not explicitly supported by us, but it can work for <em>most</em> use cases</small></p>
     </>;
