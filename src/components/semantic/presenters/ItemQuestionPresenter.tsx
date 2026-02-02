@@ -247,7 +247,8 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
 
     const [isOpen, setOpen] = useState(false);
 
-    return <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
+    return <>
+    <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
         <DropdownToggle outline className={styles.dropdownButton}>
             Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
         </DropdownToggle>
@@ -264,7 +265,12 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
                 </DropdownItem>;
             })}
         </DropdownMenu>
-    </Dropdown>;
+    </Dropdown>
+    {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert color="danger">
+        {/* Shows if e.g. a dropzone ID has changed */}
+        This drop zone ID does not exist.
+        </Alert>}
+    </>;
 };
 
 export function DndChoicePresenter(props: PresenterProps<DndItem>) {
@@ -272,17 +278,10 @@ export function DndChoicePresenter(props: PresenterProps<DndItem>) {
     const [isOpen, setOpen] = useState(false);
     const {items, remainingItems} = useContext(ItemsContext);
 
-    const {dropZoneIds} = useContext(DropZoneQuestionContext);
-
     const item = items?.find((item) => item.id === doc.id);
 
     return <div className={styles.itemsChoiceRow}>
         <DropZoneSelector {...props} />
-
-        {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert color="danger">
-            {/* Shows if e.g. a dropzone ID has changed */}
-            This drop zone ID does not exist.
-        </Alert>}
         <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
             <DropdownToggle outline className={styles.dropdownButton}>
                 {item ? <ItemRow item={item} /> : <div>⚠️ Select an item...</div>}
