@@ -249,9 +249,7 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
 
     return <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
         <DropdownToggle outline className={styles.dropdownButton}>
-            <Row>
-                Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
-            </Row>
+            Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
         </DropdownToggle>
         <DropdownMenu className={styles.itemChoiceDropdown}>
             {/* TODO: show only unused dropzone ids */}
