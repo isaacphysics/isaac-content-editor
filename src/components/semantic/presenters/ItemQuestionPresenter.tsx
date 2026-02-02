@@ -378,7 +378,7 @@ export function DndQuestionInstructions() {
         <h3>Defining drop zones</h3>
         <p>To place drop zones
             <ul>
-                <li>within question text, write <code>[drop-zone:A1]</code> (where A1 will be the drop zone id) - this will then get replaced with a drop zone UI element when the question is rendered. If you want to place drop zones within LaTeX, escape it with the <code>\text</code> environment (but see disclaimer).</li>
+                <li>within question text, write <code>[drop-zone:A1]</code> (where A1 will be the drop zone id, and must be unique) - this will then get replaced with a drop zone UI element when the question is rendered. If you want to place drop zones within LaTeX, escape it with the <code>\text</code> environment (but see disclaimer).</li>
                 <li>within figures, add a figure, and then use the &quot;Add drop zones to figure&quot; button to add or edit drop zones. </li>
             </ul></p>
         <p>For the drop zones to work correctly, the question exposition must be <b>markdown encoded</b>. This should happen by default.</p>
