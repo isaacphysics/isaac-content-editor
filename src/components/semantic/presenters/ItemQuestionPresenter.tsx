@@ -97,24 +97,6 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         countDropZonesIn(doc);
     }, []);
 
-    useEffect(() => {
-        if (isDndQuestion(doc)) {
-            const f = async () => {
-                // if the number of drop zones has changed, the indexes of figure zones may need to change.
-                const figures = Array.from(Object.entries(figureMap.current));
-                for (const figure of figures) {
-                    const [id, [dropZones, setDropZones]] = figure;
-                    const startIndex = extractFigureRegionStartIndex(doc, id);
-                    console.log(id, "starting at", startIndex, dropZones);
-                    setDropZones(dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
-                    await new Promise(resolve => setTimeout(resolve, 50));
-                    console.log("Updated figure", dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
-                }
-            };
-            void f();
-        }
-    }, [dropZoneCount]);
-
     return <DropZoneQuestionContext.Provider value={{
         isDndQuestion: isDndQuestion(doc),
         isClozeQuestion: isClozeQuestion(doc),
