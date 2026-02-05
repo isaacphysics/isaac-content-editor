@@ -29,7 +29,7 @@ export const AppContext = createContext({
 function RedirectOldOrDefault() {
     const location = useLocation();
     const to = (location.pathname === "/") && (location.hash.slice(0, 3) === "#!/")
-        ? location.hash.slice(3)
+        ? location.hash.slice(2) // leave the slash intact
         : `/edit/${encodeURIComponent(defaultGithubContext.branch)}`;
     return <Navigate to={to} />;
 }
