@@ -6,6 +6,7 @@ import {
     ChemicalFormula,
     Choice,
     CoordinateChoice, CoordinateItem,
+    DndChoice,
     Formula,
     FreeTextRule,
     GraphChoice,
@@ -263,24 +264,31 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
             If a choice does not have the same number of items as drop zones, <b>it will not be checked against the
                 users answer</b>.
         </Alert>}
-        <ItemsContext.Provider value={{items, remainingItems, withReplacement, allowSubsetMatch: doc.allowSubsetMatch}}>
+        <ItemsContext.Provider value={{items, remainingItems, remainingDropZones: undefined, withReplacement, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={augmentedUpdate} prop="items" childTypeOverride="item$choice" />
         </ItemsContext.Provider>
     </>;
 };
 
-export const DndChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
+export const DndChoicePresenter = (props: ValuePresenterProps<DndChoice>) => {
     const {doc, update} = props;
     const {items: maybeItems, withReplacement} = useContext(ItemsContext);
+    const {dropZoneIds: maybeDropZoneIds} = useContext(DropZoneQuestionContext);
 
     const items = maybeItems ?? [];
     const remainingItems = withReplacement ? items : items.filter(item => !doc.items?.find(i => i.id === item.id));
 
+    const dropZoneIds = Array.from(maybeDropZoneIds || []);
+    const remainingDropZones = dropZoneIds.filter(id => !doc.items?.find(item => item.dropZoneId === id));
+
     return <>
         <span>Add an entry here to attach one Item to one Drop Zone.</span>
-        <ItemsContext.Provider value={{items, remainingItems, withReplacement, allowSubsetMatch: doc.allowSubsetMatch}}>
+        <ItemsContext.Provider value={{items, remainingItems, remainingDropZones, withReplacement, allowSubsetMatch: undefined, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={update} prop="items" childTypeOverride="dndItem$choice" />
         </ItemsContext.Provider>
+        {dropZoneIds.length === 0 && <Alert color={"warning"} className="mt-3">
+            Add some drop zones to the question before adding choices.
+        </Alert>}
     </>;
 };
 

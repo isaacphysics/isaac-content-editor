@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import {DndItem, Item} from "../isaac-data-types";
+import { Item } from "../isaac-data-types";
 
 export interface BooleanNotation {
     ENG?: boolean;
@@ -15,12 +15,8 @@ export const NULL_CLOZE_ITEM: Item = {
     type: "item",
     id: NULL_CLOZE_ITEM_ID
 };
-export const NULL_DND_ITEM_ID = "NULL_DND_ITEM" as const;
-export const NULL_DND_ITEM: DndItem = {
-    type: "dndItem",
-    id: NULL_DND_ITEM_ID,
-    dropZoneId: "NULL_DROP_ZONE"
-};
+
+export const DND_ITEM_TYPE = "dndItem";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
 

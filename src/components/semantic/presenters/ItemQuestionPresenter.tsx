@@ -27,17 +27,19 @@ import styles from "../styles/question.module.css";
 import {Box} from "../SemanticItem";
 import {ExpandableText} from "../ExpandableText";
 import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../utils/content";
-import {dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID, NULL_DND_ITEM, NULL_DND_ITEM_ID} from "../../../isaac/IsaacTypes";
+import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../isaac/IsaacTypes";
 
 interface ItemsContextType {
     items: Item[] | undefined;
     remainingItems: Item[] | undefined;
+    remainingDropZones: string[] | undefined;
     withReplacement: boolean | undefined;
     allowSubsetMatch: boolean | undefined;
+    isCorrect: boolean | undefined;
 }
 
 export const ItemsContext = createContext<ItemsContextType>(
-    {items: undefined, remainingItems: undefined, withReplacement: undefined, allowSubsetMatch: undefined}
+    {items: undefined, remainingItems: undefined, remainingDropZones: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined}
 );
 export const DropZoneQuestionContext = createContext<{
     isDndQuestion: boolean,
@@ -95,24 +97,6 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         countDropZonesIn(doc);
     }, []);
 
-    useEffect(() => {
-        if (isDndQuestion(doc)) {
-            const f = async () => {
-                // if the number of drop zones has changed, the indexes of figure zones may need to change.
-                const figures = Array.from(Object.entries(figureMap.current));
-                for (const figure of figures) {
-                    const [id, [dropZones, setDropZones]] = figure;
-                    const startIndex = extractFigureRegionStartIndex(doc, id);
-                    console.log(id, "starting at", startIndex, dropZones);
-                    setDropZones(dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
-                    await new Promise(resolve => setTimeout(resolve, 50));
-                    console.log("Updated figure", dropZones.map((dz, i) => ({...dz, index: startIndex + i})));
-                }
-            };
-            void f();
-        }
-    }, [dropZoneCount]);
-
     return <DropZoneQuestionContext.Provider value={{
         isDndQuestion: isDndQuestion(doc),
         isClozeQuestion: isClozeQuestion(doc),
@@ -125,6 +109,8 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>}
         {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>}
         <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>
+        {isDndQuestion(doc) && <DndQuestionInstructions />}
+
         <ContentValueOrChildrenPresenter {...props} update={updateWithDropZoneCount} topLevel />
         {isClozeQuestion(doc) && <ClozeQuestionInstructions />}
         <Box name="Items">
@@ -141,8 +127,10 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         <ItemsContext.Provider value={{
             items: doc.items,
             remainingItems: undefined,
+            remainingDropZones: undefined,
             withReplacement: (isClozeQuestion(doc) || isDndQuestion(doc)) && doc.withReplacement,
             allowSubsetMatch: undefined,
+            isCorrect: undefined,
         }}>
             <QuestionFooterPresenter {...props} />
         </ItemsContext.Provider>
@@ -169,7 +157,7 @@ export function ItemPresenter(props: PresenterProps<Item>) {
 }
 
 function ItemRow({item}: {item: Item}) {
-    return item.id === NULL_CLOZE_ITEM_ID || item.id === NULL_DND_ITEM_ID
+    return item.id === NULL_CLOZE_ITEM_ID
         ? <>Any item</>
         : <Row className="justify-content-center">
             <div className={styles.itemRowText}>
@@ -242,65 +230,59 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
 const DropZoneSelector = (props: PresenterProps<DndItem>) => {
     const {doc, update} = props;
     const {dropZoneIds} = useContext(DropZoneQuestionContext);
+    const {remainingDropZones: maybeRemainingDropZones} = useContext(ItemsContext);
+    const remainingDropZones = maybeRemainingDropZones ?? [];
 
     const [isOpen, setOpen] = useState(false);
 
-    return <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
-        <DropdownToggle outline className={styles.dropdownButton}>
-            <Row>
+    return <>
+        <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
+            <DropdownToggle outline className={styles.dropdownButton}>
                 Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
-            </Row>
-        </DropdownToggle>
-        <DropdownMenu className={styles.itemChoiceDropdown}>
-            {/* TODO: show only unused dropzone ids */}
-            {Array.from(dropZoneIds ?? []).map((id) => {
-                return <DropdownItem key={id} className={styles.dropdownItem} onClick={() => {
-                    update({
-                        ...doc,
-                        dropZoneId: id,
-                    });
-                }}>
-                    {id}
-                </DropdownItem>;
-            })}
-        </DropdownMenu>
-    </Dropdown>;
+            </DropdownToggle>
+            <DropdownMenu className={styles.itemChoiceDropdown}>
+                <DropdownItem key={doc.dropZoneId} className={styles.dropdownItem}>
+                    {doc.dropZoneId}
+                </DropdownItem>
+                {Array.from(remainingDropZones ?? []).map((id) => {
+                    return <DropdownItem key={id} className={styles.dropdownItem} onClick={() => {
+                        update({
+                            ...doc,
+                            dropZoneId: id,
+                        });
+                    }}>
+                        {id}
+                    </DropdownItem>;
+                })}
+            </DropdownMenu>
+        </Dropdown>
+        {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert color="danger">
+            {/* Shows if e.g. a dropzone ID has changed */}
+            This drop zone ID does not exist.
+        </Alert>}
+    </>;
 };
 
 export function DndChoicePresenter(props: PresenterProps<DndItem>) {
     const {doc, update} = props;
     const [isOpen, setOpen] = useState(false);
-    const {items, remainingItems, allowSubsetMatch} = useContext(ItemsContext);
+    const {items, remainingItems} = useContext(ItemsContext);
 
-    const {dropZoneIds} = useContext(DropZoneQuestionContext);
-
-    const item = items?.find((item) => item.id === doc.id) ?? {
-        id: doc.id,
-        value: "Unknown item",
-    };
-    const staticItems = allowSubsetMatch && item.id !== NULL_DND_ITEM_ID ? [NULL_DND_ITEM] : [];
+    const item = items?.find((item) => item.id === doc.id);
 
     return <div className={styles.itemsChoiceRow}>
         <DropZoneSelector {...props} />
-
-        {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert color="danger">
-            {/* Shows if e.g. a dropzone ID has changed */}
-            This drop zone ID does not exist.
-        </Alert>}
         <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
             <DropdownToggle outline className={styles.dropdownButton}>
-                <ItemRow item={item} />
+                {item ? <ItemRow item={item} /> : <div>⚠️ Select an item...</div>}
             </DropdownToggle>
             <DropdownMenu className={styles.itemChoiceDropdown}>
-                <DropdownItem key={item.id} className={styles.dropdownItem} active>
+                { item && <DropdownItem key={item.id} className={styles.dropdownItem} active>
                     <ItemRow item={item} />
-                </DropdownItem>
-                {remainingItems?.concat(staticItems).map((i) => {
+                </DropdownItem>}
+                {(remainingItems || []).map((i) => {
                     return <DropdownItem key={i.id} className={styles.dropdownItem} onClick={() => {
-                        update({
-                            ...doc,
-                            id: i.id,
-                        });
+                        update({ ...doc, id: i.id, });
                     }}>
                         <ItemRow item={i} />
                     </DropdownItem>;
@@ -334,42 +316,53 @@ export function ItemChoiceItemInserter({insert, position, lengthOfCollection}: I
     }}>Add</Button>;
 }
 
-export function DndChoiceItemInserter({insert, insertMultiple, position, collection, lengthOfCollection}: InserterProps) {
-    const {items, remainingItems} = useContext(ItemsContext);
-    const {dropZoneCount, dropZoneIds} = useContext(DropZoneQuestionContext);
-
-    const missingDropZones = dropZoneIds?.difference(new Set(collection?.map((item: DndItem) => item.dropZoneId)));
+export function DndChoiceItemInserter({insert, insertMultiple, position, collection}: InserterProps) {
+    const {items, remainingItems, isCorrect, remainingDropZones: maybeRemainingDropZones} = useContext(ItemsContext);
+    const remainingDropZones = Array.from(maybeRemainingDropZones ?? []);
 
     if (!items || !remainingItems) {
         return null; // Shouldn't happen.
     }
 
-    if (position !== lengthOfCollection) {
+    if (position !== (collection && collection.length || 0 )) {
         return null; // Only include an insert button at the end.
     }
-    const item = NULL_DND_ITEM;
-    if (!item || !dropZoneCount || lengthOfCollection >= dropZoneCount) {
-        return null; // No items remaining, or max items reached in choice (in case of cloze question)
+    if (remainingDropZones.length === 0) {
+        return null; // No drop zones remaining
     }
+
     return <>
-        <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
-            const newItem: DndItem = {type: item.type, id: item.id, dropZoneId: item.dropZoneId};
+        {!isCorrect && <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
+            const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId: remainingDropZones[0]};
             insert(position, newItem);
-        }}>Add blank entry</Button>
+        }}>Add single entry</Button>}
         <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
-            insertMultiple(Array.from(missingDropZones ?? []).map((dropZoneId, index) => {
-                const newItem: DndItem = {type: item.type, id: item.id, dropZoneId};
+            insertMultiple(remainingDropZones.map((dropZoneId, index) => {
+                const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId};
                 return [position + index, newItem];
             }));
         }}>Add entries for all missing DZs</Button>
     </>;
-
 }
 
 export function ClozeQuestionInstructions() {
     return <>
         <h3>Defining drop zones</h3>
         <p>To place drop zones within question text, either use the helper button provided, or write <code>[drop-zone]</code> (with the square brackets) - this will then get replaced with a drop zone UI element when the question is rendered. If you want to place drop zones within LaTeX, escape it with the <code>\text</code> environment (but see disclaimer)</p>
+        <p>For the drop zones to work correctly, the question exposition must be <b>markdown encoded</b>. This should happen by default.</p>
+        <p><small>Disclaimer: drop zones will work in LaTeX for simple use cases, but for very complex and/or nested equations may not work as intended - in summary drop zones in LaTeX are not explicitly supported by us, but it can work for <em>most</em> use cases</small></p>
+    </>;
+}
+
+
+export function DndQuestionInstructions() {
+    return <>
+        <h3>Defining drop zones</h3>
+        <p>To place drop zones
+            <ul>
+                <li>within question text, write <code>[drop-zone:A1]</code> (where A1 will be the drop zone id, and must be unique) - this will then get replaced with a drop zone UI element when the question is rendered. If you want to place drop zones within LaTeX, escape it with the <code>\text</code> environment (but see disclaimer).</li>
+                <li>within figures, add a figure, and then use the &quot;Add drop zones to figure&quot; button to add or edit drop zones. </li>
+            </ul></p>
         <p>For the drop zones to work correctly, the question exposition must be <b>markdown encoded</b>. This should happen by default.</p>
         <p><small>Disclaimer: drop zones will work in LaTeX for simple use cases, but for very complex and/or nested equations may not work as intended - in summary drop zones in LaTeX are not explicitly supported by us, but it can work for <em>most</em> use cases</small></p>
     </>;
