@@ -286,6 +286,9 @@ export const DndChoicePresenter = (props: ValuePresenterProps<DndChoice>) => {
         <ItemsContext.Provider value={{items, remainingItems, remainingDropZones, withReplacement, allowSubsetMatch: undefined, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={update} prop="items" childTypeOverride="dndItem$choice" />
         </ItemsContext.Provider>
+        {dropZoneIds.length === 0 && <Alert color={"warning"} className="mt-3">
+            Add some drop zones to the question before adding choices.
+        </Alert>}
     </>;
 };
 
