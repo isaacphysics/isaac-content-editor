@@ -30,7 +30,7 @@ function RedirectOldOrDefault() {
     const location = useLocation();
     const to = (location.pathname === "/") && (location.hash.slice(0, 3) === "#!/")
         ? location.hash.slice(3)
-        : `edit/${encodeURIComponent(defaultGithubContext.branch)}`;
+        : `/edit/${encodeURIComponent(defaultGithubContext.branch)}`;
     return <Navigate to={to} />;
 }
 
