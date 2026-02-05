@@ -12,7 +12,7 @@ import { isDefined } from "../utils/types";
 
 export const GITHUB_TOKEN_COOKIE = "github-token";
 const GITHUB_API_URL = "https://api.github.com/";
-const TEXT_FILE_EXTENSIONS = ["json", "txt"];
+const TEXT_FILE_EXTENSIONS = ["json", "txt", "svg", "md"];
 
 const GITHUB_REPO_KEYS = {
     content: "$REPO",
