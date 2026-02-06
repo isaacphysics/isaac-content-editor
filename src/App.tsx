@@ -48,9 +48,9 @@ const router = (loggedIn: boolean) => createBrowserRouter(createRoutesFromElemen
         <Route path="/login_finished" element={<Closer />} />
         {!loggedIn && <Route path="*" element={<LoginPrompt />} />}
         {loggedIn && <>
-            <Route path="edit/:branch/*" element={<EditorScreen />} />
-            <Route path="edit/:branch" element={<EditorScreen />} />
-            <Route path="compare/:old/:new" element={<GitHubComparisonRedirect />} />
+            <Route path="/edit/:branch/*" element={<EditorScreen />} />
+            <Route path="/edit/:branch" element={<EditorScreen />} />
+            <Route path="/compare/:old/:new" element={<GitHubComparisonRedirect />} />
             <Route path="*" element={<RedirectOldOrDefault />} />
         </>}
     </>
