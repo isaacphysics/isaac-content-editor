@@ -245,6 +245,7 @@ export interface IsaacSymbolicChemistryQuestion extends IsaacSymbolicQuestion {
     isNuclear?: boolean;
     allowPermutations?: boolean;
     allowScalingCoefficients?: boolean;
+    showInequalitySeed?: boolean;
 }
 
 export type IsaacSymbolicLogicQuestion = IsaacSymbolicQuestion

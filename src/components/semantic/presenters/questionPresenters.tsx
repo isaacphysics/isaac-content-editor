@@ -523,6 +523,8 @@ export function SymbolicChemistryQuestionPresenter(props: PresenterProps<IsaacSy
         <CheckboxDocProp {...props} prop="allowScalingCoefficients" label="Allow coefficient scaling" disabled={props.doc.isNuclear} />
         <SymbolicQuestionPresenterHead {...props} />
         {!props.doc.isNuclear && <SymbolicMetaSymbols {...props} metaSymbols={availableChemistryMetaSymbols} />}
+        <hr />
+        <CheckboxDocProp {...props} prop="showInequalitySeed" label="Show seed in inequality before opening the editor" />
         <div className={styles.editableFullwidth}>
             <EditableFormulaSeed {...props}/>
         </div>
