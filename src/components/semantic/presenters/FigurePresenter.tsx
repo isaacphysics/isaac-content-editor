@@ -17,8 +17,8 @@ import { DropZoneQuestionContext } from "./ItemQuestionPresenter";
 import { FigureRegionModal } from "../../FigureRegionModal";
 import { InlineQuestionContext } from "./questionPresenters";
 
-export function FigurePresenter(props: PresenterProps<Figure>) {
-    const {doc, update} = props;
+export function FigurePresenter(props: PresenterProps<Figure> & {setEncodedFigure?: (key: string, data: string) => void}) {
+    const {doc, update, setEncodedFigure} = props;
     const docRef = useFixedRef(doc);
 
     const figureNumbering = useContext(FigureNumberingContext);
@@ -62,6 +62,9 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
                 dataUrl = inlineBase64URLFromGithubData(data);
             }
             if (imageRef.current) {
+                if (setEncodedFigure && doc.src != null) {
+                    setEncodedFigure(doc.src, dataUrl);
+                }
                 imageRef.current.src = dataUrl;
             }
         }

@@ -1,11 +1,12 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {ReactElement, useContext, useEffect, useRef, useState} from "react";
 import {Spinner} from "reactstrap";
 
 import {AppContext} from "../App";
-import {Content} from "../isaac-data-types";
+import {Content, Figure} from "../isaac-data-types";
 import {getConfig} from "../services/config";
 
 import styles from "../styles/editor.module.css";
+import { FigurePresenter } from "./semantic/presenters/FigurePresenter";
 
 export type PreviewMode = "modal" | "panel";
 
@@ -26,6 +27,7 @@ export function Preview() {
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     const [ready, setReady] = useState(false);
+    const [encodedFigureRegistry, setEncodedFigureRegistry] = useState<Record<string, string>>({});
 
     useEffect(() => {
         function messageHandler(event: MessageEvent) {
@@ -53,11 +55,15 @@ export function Preview() {
     useEffect(() => {
         if (ready) {
             const previewURL = new URL(previewServer);
-            iframeRef.current?.contentWindow?.postMessage({doc}, previewURL.origin);
+            iframeRef.current?.contentWindow?.postMessage({doc: doc && replaceFigures(doc, encodedFigureRegistry)}, previewURL.origin);
         }
-    }, [doc, ready, previewServer]);
+    }, [doc, ready, previewServer, encodedFigureRegistry]);
 
     return <div className={styles.previewWrapper}>
+        {doc && <div style={{display: "none"}}>
+            {loadAllFigures(doc, setEncodedFigureRegistry)}
+        </div>}
+        
         <div className="m-2">
             Preview for: <span className="fw-bold">{doc?.title ?? "undefined"}</span>
         </div>
@@ -65,3 +71,38 @@ export function Preview() {
         {!ready && <div className={styles.centered}><Spinner size="lg" /></div>}
     </div>;
 }
+
+type RegistrySetter = React.Dispatch<React.SetStateAction<Record<string, string>>>
+const loadAllFigures = (doc: Content, setEncodedFigureRegistry: RegistrySetter): ReactElement[] => {
+    const results: ReactElement[] = [];
+    
+    if ('children' in doc && Array.isArray(doc.children)) {
+        results.push(...doc.children.flatMap(d => loadAllFigures(d, setEncodedFigureRegistry)));
+    }
+    
+    if (isFigure(doc) && doc.src) {
+        results.push(<FigurePresenter key={doc.src} doc={doc} update={() => {}} setEncodedFigure={(k, data) => {
+            setEncodedFigureRegistry(prev => ({ ...prev, [k]: data }));
+        }}/>);
+    }
+    
+    return results;
+};
+
+const replaceFigures = (doc: Content, encodedFigureRegistry: Record<string, string>): Content => {
+    const newDoc = {...doc};
+    
+    if ('children' in doc && Array.isArray(doc.children)) {
+        newDoc.children = doc.children.map(d => replaceFigures(d, encodedFigureRegistry));
+    }
+
+    if (isFigure(doc) && isFigure(newDoc) && doc.src) {
+        newDoc.src = encodedFigureRegistry[doc.src];
+    }
+
+    return newDoc;
+};
+
+const isFigure = (doc: Content): doc is Figure => {
+    return doc.type === 'figure';
+};
