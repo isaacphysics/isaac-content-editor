@@ -32,15 +32,21 @@ export function Preview() {
         // No doc currently
     }
 
-    return <PreviewRenderer key={doc?.id ?? doc?.title ?? "unknown"} doc={doc} previewServer={previewServer} />;
+    const inlineableMedia = useMemo(() => findInlineableMedia(doc), [doc]);
+
+    // the key updates (resetting the component) if the doc changes or if any inlineable media updates (in either case, hook count can change).
+    const key = useMemo(() => `${doc?.id ?? "unknown"}-${inlineableMedia.map(m => m.src).join("-")}`, [doc, inlineableMedia]);
+
+    return <PreviewRenderer key={key} doc={doc} inlineableMedia={inlineableMedia} previewServer={previewServer} />;
 }
 
 interface PreviewRendererProps {
     doc: Content | null;
+    inlineableMedia: Media[];
     previewServer: string;
 }
 
-const PreviewRenderer = ({doc, previewServer}: PreviewRendererProps) => {
+const PreviewRenderer = ({doc, inlineableMedia, previewServer}: PreviewRendererProps) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     const [ready, setReady] = useState(false);
@@ -59,7 +65,6 @@ const PreviewRenderer = ({doc, previewServer}: PreviewRendererProps) => {
         return done;
     }, []);
 
-    const inlineableMedia = useMemo(() => findInlineableMedia(doc), [doc]);
 
     const mediaSrcToDataMap = inlineableMedia.reduce((prev, media) => ({
         ...prev, 
