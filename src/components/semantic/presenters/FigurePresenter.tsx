@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 
-import { Figure, PositionableFigureRegionProps } from "../../../isaac-data-types";
+import { Figure, Media, PositionableFigureRegionProps } from "../../../isaac-data-types";
 import { FigureNumberingContext } from "../../../isaac/IsaacTypes";
 import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresenter";
 import { PresenterProps } from "../registry";
@@ -17,8 +17,83 @@ import { DropZoneQuestionContext } from "./ItemQuestionPresenter";
 import { FigureRegionModal } from "../../FigureRegionModal";
 import { InlineQuestionContext } from "./questionPresenters";
 
-export function FigurePresenter(props: PresenterProps<Figure> & {setEncodedFigure?: (key: string, data: string) => void}) {
-    const {doc, update, setEncodedFigure} = props;
+function githubURLFromGithubData(data: {download_url: string}, svgView?: string | null) {
+    // If there is an SVG view, include at the end of the URL
+    return svgView ? `${data.download_url}#${svgView}` : data.download_url;
+}
+
+function getImageFileType(src?: string) {
+    src = src?.toLowerCase() ?? "";
+
+    // remove SVG view, if present
+    if(src.includes('#')) {
+        src = src.substring(0, src.lastIndexOf('#'));
+    }
+
+    return src.substring(src.lastIndexOf(".") + 1);
+}
+
+function getSVGView(src?: string) {
+    if (src && src.includes('#')) {
+        src = src.toLowerCase();
+        return src.substring(src.lastIndexOf("#") + 1);
+    }
+    return null;
+}
+
+function getContentPathFromSrc(doc: Media, basePath?: string) {
+    if (doc.src !== undefined && doc.src !== "") {
+        return isAppAsset(doc.src) ? doc.src : `${basePath}/${doc.src}`;
+    }
+    return false;
+}
+
+function isAppAsset(path?: string) {
+    return path && path.startsWith('/assets');
+}
+
+export const getImageDataFromGithub = ({doc, data}: {doc: Media, data?: any}): string | undefined => {
+    function inlineBase64URLFromGithubData(data: { content: string; }) {
+        let type = "image";
+        switch (getImageFileType(doc.src)) {
+            case "png": type = "image/png"; break;
+            case "gif": type = "image/gif"; break;
+            case "svg": type = "image/svg+xml"; break;
+            case "jpg": type = "image/jpeg"; break;
+            case "jpeg": type = "image/jpeg"; break;
+        }
+
+        const b64 = data.content;
+        return "data:" + type + ";base64," +  b64;
+    }
+
+    if (data && data.content) {
+        let dataUrl;
+        if (getImageFileType(doc.src) === "svg" && getSVGView(doc.src)) {
+            // SVG images may have "views", which can't be included in inline base 64 data, so we will use the
+            // GitHub URL as the source instead
+            dataUrl = githubURLFromGithubData(data, getSVGView(doc.src));
+        }
+        else {
+            dataUrl = inlineBase64URLFromGithubData(data);
+        }
+
+        return dataUrl;
+    }
+
+    return undefined;
+};
+
+export const useGetContentMediaSrcDataFromGithub = (doc: Media) => {
+    const appContext = useContext(AppContext);
+    const basePath = dirname(appContext.selection.getSelection()?.path) as string;
+    const contentPath = getContentPathFromSrc(doc, basePath) || undefined;
+    const {data} = useGithubContents(appContext, contentPath, isAppAsset(doc.src) ? "app" : undefined);
+    return data;
+};
+
+export function FigurePresenter(props: PresenterProps<Figure>) {
+    const {doc, update} = props;
     const docRef = useFixedRef(doc);
 
     const figureNumbering = useContext(FigureNumberingContext);
@@ -26,8 +101,8 @@ export function FigurePresenter(props: PresenterProps<Figure> & {setEncodedFigur
 
     const appContext = useContext(AppContext);
     const basePath = dirname(appContext.selection.getSelection()?.path) as string;
+    
     const [replacedFile, setReplacedFile] = useState(false);
-    const {data} = useGithubContents(appContext, getContentPathFromSrc(doc.src), isAppAsset(doc.src) ? "app" : undefined);
 
     const itemQuestionContext = useContext(DropZoneQuestionContext);
     const inlineQuestionContext = useContext(InlineQuestionContext);
@@ -36,39 +111,15 @@ export function FigurePresenter(props: PresenterProps<Figure> & {setEncodedFigur
     const [figureRegions, setFigureRegions] = useState<PositionableFigureRegionProps[]>(doc.figureRegions ?? []);
 
     const imageRef = useRef<HTMLImageElement>(null);
+
+    const imageDataFromGithub = useGetContentMediaSrcDataFromGithub(doc);
+
     useEffect(() => {
-        function inlineBase64URLFromGithubData(data: { content: string; }) {
-            let type = "image";
-            switch (getImageFileType(doc.src)) {
-                case "png": type = "image/png"; break;
-                case "gif": type = "image/gif"; break;
-                case "svg": type = "image/svg+xml"; break;
-                case "jpg": type = "image/jpeg"; break;
-                case "jpeg": type = "image/jpeg"; break;
-            }
-
-            const b64 = data.content;
-            return "data:" + type + ";base64," +  b64;
+        const dataUrl = getImageDataFromGithub({doc, data: imageDataFromGithub});
+        if (imageRef.current && dataUrl) {
+            imageRef.current.src = dataUrl;
         }
-
-        if (data && data.content) {
-            let dataUrl;
-            if (getImageFileType(doc.src) === "svg" && getSVGView(doc.src)) {
-                // SVG images may have "views", which can't be included in inline base 64 data, so we will use the
-                // GitHub URL as the source instead
-                dataUrl = githubURLFromGithubData(data, getSVGView(doc.src));
-            }
-            else {
-                dataUrl = inlineBase64URLFromGithubData(data);
-            }
-            if (imageRef.current) {
-                if (setEncodedFigure && doc.src != null) {
-                    setEncodedFigure(doc.src, dataUrl);
-                }
-                imageRef.current.src = dataUrl;
-            }
-        }
-    }, [data, doc.src]);
+    }, [imageDataFromGithub, doc]);
 
     useEffect(() => {
         if (figureRegions?.length) {
@@ -88,41 +139,6 @@ export function FigurePresenter(props: PresenterProps<Figure> & {setEncodedFigur
     }, [itemQuestionContext.isDndQuestion, figureRegions, setFigureRegions]);
 
     const fileRef = useRef<HTMLInputElement>(null);
-
-    function getContentPathFromSrc(src?: string) {
-        if (doc.src !== undefined && doc.src !== "") {
-            return isAppAsset(src) ? doc.src : `${basePath}/${doc.src}`;
-        }
-        return false;
-    }
-
-    function isAppAsset(path?: string) {
-        return path && path.startsWith('/assets');
-    }
-
-    function githubURLFromGithubData(data: {download_url: string}, svgView?: string | null) {
-        // If there is an SVG view, include at the end of the URL
-        return svgView ? `${data.download_url}#${svgView}` : data.download_url;
-    }
-
-    function getImageFileType(src?: string) {
-        src = src?.toLowerCase() ?? "";
-
-        // remove SVG view, if present
-        if(src.includes('#')) {
-            src = src.substring(0, src.lastIndexOf('#'));
-        }
-
-        return src.substring(src.lastIndexOf(".") + 1);
-    }
-
-    function getSVGView(src?: string) {
-        if (src && src.includes('#')) {
-            src = src.toLowerCase();
-            return src.substring(src.lastIndexOf("#") + 1);
-        }
-        return null;
-    }
 
     function selectFile(file: File) {
         const reader = new FileReader();

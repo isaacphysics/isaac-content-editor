@@ -1,12 +1,12 @@
-import React, {ReactElement, useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
 import {Spinner} from "reactstrap";
 
 import {AppContext} from "../App";
-import {Content, Figure} from "../isaac-data-types";
+import {Content, Media} from "../isaac-data-types";
 import {getConfig} from "../services/config";
 
 import styles from "../styles/editor.module.css";
-import { FigurePresenter } from "./semantic/presenters/FigurePresenter";
+import { getImageDataFromGithub, useGetContentMediaSrcDataFromGithub } from "./semantic/presenters/FigurePresenter";
 
 export type PreviewMode = "modal" | "panel";
 
@@ -23,11 +23,33 @@ export const defaultPreview = {
 
 export function Preview() {
     const appContext = useContext(AppContext);
+    const {previewServer} = getConfig();
 
+    let doc: Content|null = null;
+    try {
+        doc = appContext.editor.getCurrentDoc();
+    } catch (_e) {
+        // No doc currently
+    }
+
+    const inlineableMedia = useMemo(() => findInlineableMedia(doc), [doc]);
+
+    // the key updates (resetting the component) if the doc changes or if any inlineable media updates (in either case, hook count can change).
+    const key = useMemo(() => `${doc?.id ?? "unknown"}-${inlineableMedia.map(m => m.src).join("-")}`, [doc, inlineableMedia]);
+
+    return <PreviewRenderer key={key} doc={doc} inlineableMedia={inlineableMedia} previewServer={previewServer} />;
+}
+
+interface PreviewRendererProps {
+    doc: Content | null;
+    inlineableMedia: Media[];
+    previewServer: string;
+}
+
+const PreviewRenderer = ({doc, inlineableMedia, previewServer}: PreviewRendererProps) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     const [ready, setReady] = useState(false);
-    const [encodedFigureRegistry, setEncodedFigureRegistry] = useState<Record<string, string>>({});
 
     useEffect(() => {
         function messageHandler(event: MessageEvent) {
@@ -43,66 +65,72 @@ export function Preview() {
         return done;
     }, []);
 
-    let doc: Content|null = null;
-    try {
-        doc = appContext.editor.getCurrentDoc();
-    } catch (_e) {
-        // No doc currently
-    }
 
-    const {previewServer} = getConfig();
+    const mediaSrcToDataMap = inlineableMedia.reduce((prev, media) => ({
+        ...prev, 
+        // while this calls the useLoadMedia hook multiple times, it always calls it in the same order, the same number of times – so is fine.
+        // see frontend portals for a similar pattern.
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        [media.src as string]: useLoadMedia(media) ?? ""
+    }), {} as Record<string, string>);
+
+    const mediaCorrectedDoc = useMemo(() => replaceMedia(doc as Content, mediaSrcToDataMap), [doc, mediaSrcToDataMap]);
 
     useEffect(() => {
         if (ready) {
             const previewURL = new URL(previewServer);
-            iframeRef.current?.contentWindow?.postMessage({doc: doc && replaceFigures(doc, encodedFigureRegistry)}, previewURL.origin);
+            iframeRef.current?.contentWindow?.postMessage({doc: mediaCorrectedDoc}, previewURL.origin);
         }
-    }, [doc, ready, previewServer, encodedFigureRegistry]);
+    }, [mediaCorrectedDoc, ready, previewServer]);
 
-    return <div className={styles.previewWrapper}>
-        {doc && <div style={{display: "none"}}>
-            {loadAllFigures(doc, setEncodedFigureRegistry)}
-        </div>}
-        
+    return <div className={styles.previewWrapper}>    
         <div className="m-2">
-            Preview for: <span className="fw-bold">{doc?.title ?? "undefined"}</span>
+            Preview for: <span className="fw-bold">{mediaCorrectedDoc?.title ?? "undefined"}</span>
         </div>
         <iframe ref={iframeRef} className={`${styles.previewIframe} ${!ready ? styles.displayNone : ""}`} title="Isaac Preview" src={previewServer} />
         {!ready && <div className={styles.centered}><Spinner size="lg" /></div>}
     </div>;
-}
+};
 
-type RegistrySetter = React.Dispatch<React.SetStateAction<Record<string, string>>>
-const loadAllFigures = (doc: Content, setEncodedFigureRegistry: RegistrySetter): ReactElement[] => {
-    const results: ReactElement[] = [];
-    
+const findInlineableMedia = (doc: Content | null): Media[] => {
+    const results: Media[] = [];
+
+    if (!doc) {
+        return results;
+    }
+
     if ('children' in doc && Array.isArray(doc.children)) {
-        results.push(...doc.children.flatMap(d => loadAllFigures(d, setEncodedFigureRegistry)));
+        results.push(...doc.children.flatMap(findInlineableMedia));
     }
     
-    if (isFigure(doc) && doc.src) {
-        results.push(<FigurePresenter key={doc.src} doc={doc} update={() => {}} setEncodedFigure={(k, data) => {
-            setEncodedFigureRegistry(prev => ({ ...prev, [k]: data }));
-        }}/>);
+    if (isInlineableMedia(doc) && doc.src) {
+        results.push(doc);
     }
     
     return results;
 };
 
-const replaceFigures = (doc: Content, encodedFigureRegistry: Record<string, string>): Content => {
+const replaceMedia = (doc: Content, mediaSrcToDataMap: Record<string, string>): Content => {
     const newDoc = {...doc};
-    
+
     if ('children' in doc && Array.isArray(doc.children)) {
-        newDoc.children = doc.children.map(d => replaceFigures(d, encodedFigureRegistry));
+        newDoc.children = doc.children.map(d => replaceMedia(d, mediaSrcToDataMap));
     }
 
-    if (isFigure(doc) && isFigure(newDoc) && doc.src) {
-        newDoc.src = encodedFigureRegistry[doc.src];
+    if (isInlineableMedia(doc) && isInlineableMedia(newDoc) && doc.src && mediaSrcToDataMap[doc.src as string]) {
+        newDoc.src = mediaSrcToDataMap[doc.src as string];
     }
 
     return newDoc;
 };
 
-const isFigure = (doc: Content): doc is Figure => {
-    return doc.type === 'figure';
+const useLoadMedia = (doc: Media) => {
+    const figureDataFromGithub = useGetContentMediaSrcDataFromGithub(doc);
+    if (!figureDataFromGithub) return undefined;
+    const src = getImageDataFromGithub({doc, data: figureDataFromGithub});
+    return src;
+};
+
+const isInlineableMedia = (doc: Content): doc is Media => {
+    return doc.type === 'image' || doc.type === 'figure';
 };
