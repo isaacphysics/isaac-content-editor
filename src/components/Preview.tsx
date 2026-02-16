@@ -34,10 +34,7 @@ export function Preview() {
 
     const inlineableMedia = useMemo(() => findInlineableMedia(doc), [doc]);
 
-    // the key updates (resetting the component) if the doc changes or if any inlineable media updates (in either case, hook count can change).
-    const key = useMemo(() => `${doc?.id ?? "unknown"}-${inlineableMedia.map(m => m.src).join("-")}`, [doc, inlineableMedia]);
-
-    return <PreviewRenderer key={key} doc={doc} inlineableMedia={inlineableMedia} previewServer={previewServer} />;
+    return <PreviewRenderer doc={doc} inlineableMedia={inlineableMedia} previewServer={previewServer} />;
 }
 
 interface PreviewRendererProps {
@@ -46,6 +43,7 @@ interface PreviewRendererProps {
     previewServer: string;
 }
 
+type MediaMap = Record<string, string>;
 const PreviewRenderer = ({doc, inlineableMedia, previewServer}: PreviewRendererProps) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -66,15 +64,8 @@ const PreviewRenderer = ({doc, inlineableMedia, previewServer}: PreviewRendererP
     }, []);
 
 
-    const mediaSrcToDataMap = inlineableMedia.reduce((prev, media) => ({
-        ...prev, 
-        // while this calls the useLoadMedia hook multiple times, it always calls it in the same order, the same number of times – so is fine.
-        // see frontend portals for a similar pattern.
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        [media.src as string]: useLoadMedia(media) ?? ""
-    }), {} as Record<string, string>);
-
-    const mediaCorrectedDoc = useMemo(() => replaceMedia(doc as Content, mediaSrcToDataMap), [doc, mediaSrcToDataMap]);
+    const [mediaSrcToDataMap, setMediaSrcToDataMap] = useState<MediaMap>({});
+    const mediaCorrectedDoc = useMemo(() => doc ? replaceMedia(doc, mediaSrcToDataMap) : doc, [doc, mediaSrcToDataMap]);
 
     useEffect(() => {
         if (ready) {
@@ -83,13 +74,25 @@ const PreviewRenderer = ({doc, inlineableMedia, previewServer}: PreviewRendererP
         }
     }, [mediaCorrectedDoc, ready, previewServer]);
 
-    return <div className={styles.previewWrapper}>    
+    return <div className={styles.previewWrapper}>
+        {inlineableMedia.map((media) => media.src && <MediaRenderer key={media.src} media={media} setter={setMediaSrcToDataMap}/>)}    
         <div className="m-2">
-            Preview for: <span className="fw-bold">{mediaCorrectedDoc?.title ?? "undefined"}</span>
+            Preview for: <span className="fw-bold">{doc?.title ?? "undefined"}</span>
         </div>
         <iframe ref={iframeRef} className={`${styles.previewIframe} ${!ready ? styles.displayNone : ""}`} title="Isaac Preview" src={previewServer} />
         {!ready && <div className={styles.centered}><Spinner size="lg" /></div>}
     </div>;
+};
+
+const MediaRenderer = ({media, setter}: {media: Media, setter: (fn: (map: MediaMap) => MediaMap) => void}) => {
+    const result = useLoadMedia(media);
+    useEffect(() => {
+        if (media.src !== undefined && result) {
+            setter(map => ({...map, [media.src!]: result}));
+        }
+    }, [result, media.src, setter]);
+    
+    return null;
 };
 
 const findInlineableMedia = (doc: Content | null): Media[] => {
