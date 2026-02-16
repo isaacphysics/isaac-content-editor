@@ -34,7 +34,7 @@ export function Preview() {
 
     const inlineableMedia = useMemo(() => findInlineableMedia(doc), [doc]);
 
-    return <PreviewRenderer doc={doc} inlineableMedia={inlineableMedia} previewServer={previewServer} />;
+    return <PreviewRenderer key={doc?.id} doc={doc} inlineableMedia={inlineableMedia} previewServer={previewServer} />;
 }
 
 interface PreviewRendererProps {
