@@ -43,7 +43,7 @@ interface PreviewRendererProps {
     previewServer: string;
 }
 
-type MediaMap = Record<string, string>;
+type MediaSrcToDataMap = Record<string, string>;
 const PreviewRenderer = ({doc, inlineableMedia, previewServer}: PreviewRendererProps) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -64,7 +64,7 @@ const PreviewRenderer = ({doc, inlineableMedia, previewServer}: PreviewRendererP
     }, []);
 
 
-    const [mediaSrcToDataMap, setMediaSrcToDataMap] = useState<MediaMap>({});
+    const [mediaSrcToDataMap, setMediaSrcToDataMap] = useState<MediaSrcToDataMap>({});
     const mediaCorrectedDoc = useMemo(() => doc ? replaceMedia(doc, mediaSrcToDataMap) : doc, [doc, mediaSrcToDataMap]);
 
     useEffect(() => {
@@ -75,7 +75,7 @@ const PreviewRenderer = ({doc, inlineableMedia, previewServer}: PreviewRendererP
     }, [mediaCorrectedDoc, ready, previewServer]);
 
     return <div className={styles.previewWrapper}>
-        {inlineableMedia.map((media) => media.src && <MediaRenderer key={media.src} media={media} setter={setMediaSrcToDataMap}/>)}    
+        {inlineableMedia.map((media) => media.src && <MediaDataLoader key={media.src} media={media} setMapData={setMediaSrcToDataMap} />)}    
         <div className="m-2">
             Preview for: <span className="fw-bold">{doc?.title ?? "undefined"}</span>
         </div>
@@ -84,13 +84,13 @@ const PreviewRenderer = ({doc, inlineableMedia, previewServer}: PreviewRendererP
     </div>;
 };
 
-const MediaRenderer = ({media, setter}: {media: Media, setter: (fn: (map: MediaMap) => MediaMap) => void}) => {
-    const result = useLoadMedia(media);
+const MediaDataLoader = ({media, setMapData}: {media: Media, setMapData: (fn: (map: MediaSrcToDataMap) => MediaSrcToDataMap) => void}) => {
+    const data = useLoadMedia(media);
     useEffect(() => {
-        if (media.src !== undefined && result) {
-            setter(map => ({...map, [media.src!]: result}));
+        if (media.src !== undefined && data) {
+            setMapData(map => ({...map, [media.src!]: data}));
         }
-    }, [result, media.src, setter]);
+    }, [data, media.src, setMapData]);
     
     return null;
 };
