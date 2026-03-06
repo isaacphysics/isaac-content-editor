@@ -151,6 +151,7 @@ export function AccordionPresenter(props: PresenterProps) {
         elementName: "Section",
         styles,
         showTitles: false,
+        indexFormat: "alphabetical",
     });
 
     const {keyList, index, updateCurrentChild} = allProps;
