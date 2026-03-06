@@ -22,6 +22,7 @@ export type TabsSettings = {
     styles: Record<"button"|"buttons"|"buttonsSpacer"|"buttonsFill"|"main"|"header"|"hideMargins"|"buttonsShifter"|"empty", string>;
     suppressHeaderNames?: boolean;
     showTitles: boolean;
+    indexFormat?: "numeric" | "alphabetical";
 };
 
 export type TabsProps = {
@@ -43,7 +44,14 @@ const EditableTabsLayoutProp = EditableDocPropWithStyle("layout", [
     {value: undefined, label: "Default"}
 ], "Tab display type:", {value: "tabs", label: "Tabs"}, {block: true});
 
-export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styles, suppressHeaderNames, showTitles}: TabsProps) {
+const formatTabIndex = (index: number, format?: TabsProps["indexFormat"]) => {
+    if (format === "alphabetical") {
+        return String.fromCharCode(65 + index % 26);
+    }
+    return index + 1;
+};
+
+export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styles, suppressHeaderNames, showTitles, indexFormat}: TabsProps) {
     const elementNameLC = safeLowercase(elementName);
     return <div className={styles.buttons}>
         <div className={styles.buttonsShifter}>
@@ -57,7 +65,7 @@ export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styl
                         e.preventDefault();
                     }}
                     onClick={() => setIndex(i)}>
-                    {!suppressHeaderNames && `${elementName} `}{i + 1}{showTitles && child.title && `: ${child.title}`}
+                    {!suppressHeaderNames && `${elementName} `}{formatTabIndex(i, indexFormat)}{showTitles && child.title && `: ${child.title}`}
                 </Button>;
             })}
             <Button key="__add"
@@ -189,6 +197,7 @@ export function TabsPresenter(props: PresenterProps<IsaacTabs>) {
         styles,
         suppressHeaderNames: true,
         showTitles,
+        indexFormat: "numeric",
     });
 
     return <div className={styles.wrapper}>
