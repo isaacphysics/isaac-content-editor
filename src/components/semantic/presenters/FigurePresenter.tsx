@@ -186,7 +186,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
     }
 
     const figureNumberText = figureNumber === NON_STATIC_FIGURE_FLAG
-        ? <Alert color={"danger"}><small>Figure is in a non-static context, so cannot be given a number</small></Alert>
+        ? <Alert color="info"><small>Figure is in a non-static context, so cannot be given a number</small></Alert>
         : <h6>{figureNumber ? `Figure ${figureNumber}` : "Set ID to get a figure number"}</h6>;
 
     return <>
