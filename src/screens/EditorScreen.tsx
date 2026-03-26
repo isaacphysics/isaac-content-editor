@@ -21,6 +21,7 @@ import {MenuModal, MenuModalRef} from "./MenuModal";
 import {buildPageError} from "../components/PageError";
 import Split from "react-split";
 import {CDNUploadModal} from "../components/CDNUploadModal";
+import {RAGDocumentsModal} from "../components/RAGDocuments";
 import hash from "object-hash";
 import {isDefined} from "../utils/types";
 import {compare, Operation, applyReducer} from "fast-json-patch";
@@ -98,6 +99,7 @@ export function EditorScreen() {
     const [previewOpen, setPreviewOpen] = useState(false);
 
     const [cdnOpen, setCdnOpen] = useState(false);
+    const [ragOpen, setRagOpen] = useState(false);
 
     const selection = useParamsToSelection(params);
     const setSelection = useCallback(async (selection: Selection) => {
@@ -223,9 +225,15 @@ export function EditorScreen() {
                 toggle: () => {
                     setCdnOpen(!cdnOpen);
                 },
+            },
+            rag: {
+                open: ragOpen,
+                toggle: () => {
+                    setRagOpen(!ragOpen);
+                },
             }
         });
-    }, [setCurrentDoc, setDirty, loadNewDoc, params.branch, user, swrConfig.cache, navigate, previewOpen, previewMode, cdnOpen, selection, dirty, setSelection, currentContent, isAlreadyPublished, setLastChange, lastChange]);
+    }, [setCurrentDoc, setDirty, loadNewDoc, params.branch, user, swrConfig.cache, navigate, previewOpen, previewMode, cdnOpen, ragOpen, selection, dirty, setSelection, currentContent, isAlreadyPublished, setLastChange, lastChange]);
     const contextRef = useFixedRef(appContext);
 
     const blocker = useBlocker(
@@ -304,6 +312,7 @@ export function EditorScreen() {
     return <SWRConfig value={{fetcher, revalidateOnFocus: false, revalidateOnReconnect: false}}>
         <AppContext.Provider value={appContext}>
             <CDNUploadModal/>
+            <RAGDocumentsModal isOpen={ragOpen} toggle={() => setRagOpen(false)} />
             <Split
                 className={styles.editorScreen} sizes={[25, 75, 0]} minSize={[0, 200, 0]}
                 gutter={dragElement} gutterSize={20} collapsed={collapsed}

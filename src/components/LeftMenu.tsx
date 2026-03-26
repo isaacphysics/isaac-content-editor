@@ -76,6 +76,9 @@ export function LeftMenu() {
             <button className={styles.iconButton} onClick={appContext.cdn.toggle}>
                 Upload to CDN
             </button>
+            <button className={styles.iconButton} onClick={appContext.rag.toggle}>
+                📚 RAG Documents
+            </button>
         </footer>
     </div>;
 }

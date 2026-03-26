@@ -12,6 +12,12 @@ import {MenuModalRef} from "./screens/MenuModal";
 import {defaultPreview} from "./components/Preview";
 import {defaultCdn} from "./components/CDNUploadModal";
 
+export const defaultRag = {
+    open: false,
+    toggle: (() => {
+        throw new Error("rag.toggle called outside AppContext");
+    }) as () => void,
+};
 
 export const AppContext = createContext({
     selection: defaultSelectedContext,
@@ -24,6 +30,7 @@ export const AppContext = createContext({
     menuModal: {current: null} as MutableRefObject<MenuModalRef | null>,
     preview: defaultPreview,
     cdn: defaultCdn,
+    rag: defaultRag,
 });
 
 function RedirectOldOrDefault() {

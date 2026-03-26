@@ -1,0 +1,149 @@
+/* RAG Documents Panel Styles */
+
+.modalHeader {
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modalTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.modalBody {
+    min-height: 500px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.activeTab {
+    font-weight: 600;
+    border-bottom: 3px solid #0d6efd !important;
+    color: #0d6efd !important;
+}
+
+.fileUploader {
+    border: 2px dashed #ced4da;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.fileUploader:hover {
+    border-color: #0d6efd;
+}
+
+.docItem {
+    transition: background-color 0.15s;
+}
+
+.docItem:hover {
+    background-color: #f8f9fa;
+}
+
+.docName {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #212529;
+}
+
+.docMeta {
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.docSource {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 4px;
+    word-break: break-all;
+}
+
+.docSource a {
+    color: #0d6efd;
+}
+
+/* Semantic Scholar */
+.paperTitle {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.paperTitle a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.paperTitle a:hover {
+    text-decoration: underline;
+}
+
+.paperMeta {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 4px;
+}
+
+.paperAbstract {
+    font-size: 0.8rem;
+    color: #495057;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+
+/* Query Tab */
+.docFilterList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-height: 100px;
+    overflow-y: auto;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.answerContainer {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid #dee2e6;
+}
+
+.answerText {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #212529;
+    white-space: pre-wrap;
+}
+
+.citationsList {
+    padding-left: 20px;
+}
+
+.citationItem {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.citationText {
+    display: inline;
+    color: #495057;
+}
+
+.sourceChunk {
+    font-size: 0.85rem;
+    border: 1px solid #dee2e6;
+    margin-bottom: 8px;
+}

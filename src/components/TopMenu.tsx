@@ -1,4 +1,5 @@
 import React, {useContext, useRef, useState} from "react";
+import {CitationPicker} from "./CitationPicker";
 
 import {AppContext} from "../App";
 import {useGithubContents} from "../services/github";
@@ -47,6 +48,7 @@ function getPreviewLink(doc: Content, server=StagingServer) {
 export function TopMenu({previewable, undoable}: {previewable?: boolean; undoable?: boolean}) {
     const menuRef = useRef<PopupMenuRef>(null);
     const appContext = useContext(AppContext);
+    const [citeOpen, setCiteOpen] = useState(false);
 
     const selection = appContext.selection.getSelection();
     const {data} = useGithubContents(appContext, selection?.path);
@@ -77,6 +79,13 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
         {previewable && selection && !selection.isDir && previewLink && <a href={previewLink} target="_blank" className={styles.iconButton} >
             Staging
         </a>}
+        <button
+            title={"Insert citation from research"}
+            className={styles.iconButton}
+            onClick={() => setCiteOpen(true)}
+        >
+            📖 Cite
+        </button>
         {selection && !selection.isDir && <Dropdown className="d-flex" isOpen={isOpen} toggle={() => setOpen(open => !open)}>
             <DropdownToggle className={classNames(styles.iconButton, "px-1")}>▼</DropdownToggle>
             <DropdownMenu>
@@ -89,5 +98,16 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
             </DropdownMenu>
         </Dropdown>}
         <PopupMenu menuRef={menuRef} />
+        <CitationPicker
+            isOpen={citeOpen}
+            toggle={() => setCiteOpen(false)}
+            onInsertCitation={(citationMarkers, bibliography) => {
+                // In a full implementation, this would insert into the current editor
+                // For now, copy to clipboard and alert
+                const fullText = `${citationMarkers}\n\nReferences:\n${bibliography}`;
+                void navigator.clipboard.writeText(fullText);
+                alert("Citation copied to clipboard! Paste it into your content.");
+            }}
+        />
     </div>;
 }

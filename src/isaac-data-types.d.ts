@@ -570,3 +570,44 @@ export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | 
 export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge_1" | "challenge_2" | "challenge_3";
 
 export type RoleRequirement = "logged_in" | "teacher";
+
+// ============================================================
+// RAG Pipeline Types
+// ============================================================
+
+export interface IsaacRAGQuestion extends IsaacQuestionBase {
+    /** ID of the RAG corpus to query */
+    ragCorpusId?: string;
+    /** Custom system prompt for the RAG query */
+    ragSystemPrompt?: string;
+    /** Whether to show citations in the answer */
+    showCitations?: boolean;
+    /** Maximum number of chunks to retrieve */
+    ragTopK?: number;
+}
+
+export interface IsaacReferencedContent extends Content {
+    /** The document this content is referencing */
+    documentId?: string;
+    /** The chunk/passage ID this content is from */
+    chunkId?: string;
+    /** The citation text */
+    citationText?: string;
+    /** The source URL */
+    sourceUrl?: string;
+    /** The page number (for PDFs) */
+    pageNumber?: number;
+}
+
+export interface IsaacBibliography extends Content {
+    entries?: BibliographyEntry[];
+}
+
+export interface BibliographyEntry {
+    id: string;
+    citationText: string;
+    documentId: string;
+    documentName: string;
+    url?: string;
+    accessedDate?: string;
+}
