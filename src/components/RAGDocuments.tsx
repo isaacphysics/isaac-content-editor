@@ -138,8 +138,8 @@ const DocumentsTab: FunctionComponent = () => {
         try {
             const docs = await listRAGDocuments();
             setDocuments(docs);
-        } catch (e: any) {
-            setError(`Failed to load documents: ${e.message}`);
+        } catch (e: unknown) {
+            setError(`Failed to load documents: ${e instanceof Error ? e.message : String(e)}`);
         } finally {
             setLoading(false);
         }
@@ -160,8 +160,8 @@ const DocumentsTab: FunctionComponent = () => {
                 });
             }
             await loadDocuments();
-        } catch (e: any) {
-            setUploadError(`Upload failed: ${e.message}`);
+        } catch (e: unknown) {
+            setUploadError(`Upload failed: ${e instanceof Error ? e.message : String(e)}`);
         } finally {
             setUploading(false);
         }
@@ -176,8 +176,8 @@ const DocumentsTab: FunctionComponent = () => {
             setUrlInput("");
             setUrlName("");
             await loadDocuments();
-        } catch (e: any) {
-            setUploadError(`Failed to add URL: ${e.message}`);
+        } catch (e: unknown) {
+            setUploadError(`Failed to add URL: ${e instanceof Error ? e.message : String(e)}`);
         } finally {
             setAddingUrl(false);
         }
@@ -188,8 +188,8 @@ const DocumentsTab: FunctionComponent = () => {
         try {
             await deleteRAGDocument(docId);
             setDocuments(docs => docs.filter(d => d.id !== docId));
-        } catch (e: any) {
-            alert(`Failed to delete: ${e.message}`);
+        } catch (e: unknown) {
+            alert(`Failed to delete: ${e instanceof Error ? e.message : String(e)}`);
         }
     };
 
@@ -380,8 +380,8 @@ const SemanticScholarTab: FunctionComponent = () => {
             });
             setResults(result.papers);
             setTotal(result.total);
-        } catch (e: any) {
-            setError(`Search failed: ${e.message}`);
+        } catch (e: unknown) {
+            setError(`Search failed: ${e instanceof Error ? e.message : String(e)}`);
         } finally {
             setSearching(false);
         }
@@ -392,8 +392,8 @@ const SemanticScholarTab: FunctionComponent = () => {
         try {
             await addSemanticScholarPaperToRAG(paper.paperId);
             setAddedPapers(prev => new Set([...prev, paper.paperId]));
-        } catch (e: any) {
-            alert(`Failed to add paper: ${e.message}`);
+        } catch (e: unknown) {
+            alert(`Failed to add paper: ${e instanceof Error ? e.message : String(e)}`);
         } finally {
             setAddingPaper(null);
         }
@@ -616,8 +616,8 @@ const QueryTab: FunctionComponent = () => {
                 includeCitations: true,
             });
             setAnswer(result);
-        } catch (e: any) {
-            setError(`Query failed: ${e.message}`);
+        } catch (e: unknown) {
+            setError(`Query failed: ${e instanceof Error ? e.message : String(e)}`);
         } finally {
             setLoading(false);
         }
@@ -625,7 +625,7 @@ const QueryTab: FunctionComponent = () => {
 
     const handleInsertCitation = (citation: RAGQueryResult["citations"][0], index: number) => {
         const citationText = `${inlineCitation(index)} ${citation.citationText}`;
-        void navigator.clipboard.writeText(citationText).then(() => {
+        navigator.clipboard.writeText(citationText).then(() => {
             alert(`Citation copied to clipboard:\n\n${citationText}\n\nPaste it into your content.`);
         }).catch(() => {
             alert(`Citation:\n\n${citationText}\n\nPaste it into your content.`);
