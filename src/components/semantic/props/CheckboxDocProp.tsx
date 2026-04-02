@@ -42,6 +42,7 @@ export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: bool
                     [prop]: e.target.checked,
                 });
             }}
+            className="me-1"
         />
         {label}
     </Label>;
