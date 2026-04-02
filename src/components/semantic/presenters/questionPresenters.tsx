@@ -135,6 +135,12 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
         delete newDoc.disregardSignificantFigures;
         delete newDoc.displayUnit;
         delete newDoc.showConfidence;
+    } else if (newType === "isaacCoordinateQuestion") {
+        newDoc.disregardSignificantFigures = false;
+        delete newDoc.requireUnits;
+        delete newDoc.displayUnit;
+        delete newDoc.randomiseChoices;
+        delete newDoc.showConfidence;
     } else {
         // Remove the requireUnits property as it is no longer applicable to this type of question
         delete newDoc.requireUnits;
@@ -316,7 +322,7 @@ const EditablePrefixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>
 const EditableSuffixesProp = EditableDimensionalDocProp<IsaacCoordinateQuestion>("suffixes");
 
 export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
-    const {doc} = props;
+    const {doc, update} = props;
     const question = doc as IsaacCoordinateQuestion;
 
     return <>
@@ -340,6 +346,9 @@ export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinat
                         <EditableSuffixesProp {...props} dimension={i} label={"Suffix ".concat((i+1).toString())} />
                     </div>
                 )}
+            </div>
+            <div>
+                <CheckboxDocProp doc={question} update={update} prop="disregardSignificantFigures" label="Exact answers only" />
             </div>
             Significant figures (affects all values):
             <div className="row mt-2">
