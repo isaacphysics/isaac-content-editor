@@ -57,6 +57,7 @@ export interface IsaacDndQuestion extends IsaacItemQuestion {
 }
 
 export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
+    disregardSignificantFigures?: boolean;
     significantFiguresMin?: number;
     significantFiguresMax?: number;
     ordered?: boolean;
