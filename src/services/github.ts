@@ -302,6 +302,21 @@ export async function githubRename(context: ContextType<typeof AppContext>, path
     const blob = subtree?.tree?.find((b: any) => b.path === oldName);
     if (!blob) throw Error("A file with that name does not exist on the current branch.");
 
+    let newSha = blob.sha;
+    if (targetFilename?.endsWith(".json") && path === context.selection.getSelection()?.path) {
+        const updatedContent = "SOME STRING" + context.editor.getCurrentDocAsString();
+        context.editor.loadNewDoc(updatedContent);
+
+        const blobData = await fetcher(`repos/$OWNER/${GITHUB_REPO_KEYS[repo]}/git/blobs`, {
+            method: "POST",
+            body: {
+                content: encodeContent(updatedContent, "json"),
+                encoding: "base64"
+            }
+        });
+        newSha = blobData.sha;
+    }
+
     // Send the modified tree to github, with the updated path
     const newTree = await fetcher(`repos/$OWNER/${GITHUB_REPO_KEYS[repo]}/git/trees?recursive=1`,{
         method: "POST",
@@ -312,7 +327,7 @@ export async function githubRename(context: ContextType<typeof AppContext>, path
                     "path": targetPath,
                     "mode": blob.mode,
                     "type": blob.type,
-                    "sha": blob.sha
+                    "sha": newSha
                 },
                 {
                     "path": `${basePath}/${blob.path}`,
@@ -343,8 +358,8 @@ export async function githubRename(context: ContextType<typeof AppContext>, path
 
     // Ensure that requests to github after this update do not return stale data
     updateGitHubCacheKey();
-    // Renaming in this way doesn't change the file sha, so we can reuse it in the new cache entry!
-    const shouldRefresh = await addPathToCache(targetPathSegments[0], targetPathSegments.slice(1).join("/"), context, repo, {path: targetPath, name: targetFilename, sha: blob.sha, type: "file"});
+    // Renaming in this way might change the file sha (if it's a JSON file), so we use the new one!
+    const shouldRefresh = await addPathToCache(targetPathSegments[0], targetPathSegments.slice(1).join("/"), context, repo, {path: targetPath, name: targetFilename, sha: newSha, type: "file"});
     if (!shouldRefresh) await deletePathFromCache(path, context, repo);
     return shouldRefresh;
 }
