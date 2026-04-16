@@ -32,16 +32,22 @@ describe.only("updateImagePaths", () => {
             expect(result) .toEqual({ ...fig, src: "../b/figures/foo.svg" });
         });
 
-        it("rewrites src when moved up a directory", () => {
+        it("rewrites src when moved up", () => {
             const fig = figure("figures/foo.svg");
-            const result = subject(fig, "b/file.json", "file.json");
+            const result = subject(fig, "a/b/file.json", "a/file.json");
             expect(result).toEqual({ ...fig, src: "b/figures/foo.svg" });
         });
 
         it("rewrites src when moved to subfolder of sibling", () => {
             const fig = figure("figures/foo.svg");
-            const result = subject(fig, "a/b/file.json", "a/c/d/file.json");
-            expect(result).toEqual({ ...fig, src: "../../b/figures/foo.svg" });
+            const result = subject(fig, "a/file.json", "b/d/file.json");
+            expect(result).toEqual({ ...fig, src: "../../a/figures/foo.svg" });
+        });
+
+        it("rewrites src when moved to root", () => {
+            const fig = figure("figures/foo.svg");
+            const result = subject(fig, "a/file.json", "file.json");
+            expect(result).toEqual({ ...fig, src: "a/figures/foo.svg" });
         });
     });
 });

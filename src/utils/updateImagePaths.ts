@@ -2,7 +2,7 @@ import zip from "lodash/zip";
 import takeWhile from "lodash/takeWhile";
 import drop from "lodash/drop";
 import { Content } from "../isaac-data-types";
-import { dirname, nonEmpty } from "./strings";
+import { dirname } from "./strings";
 
 export const updateImagePaths = (content: string, oldPath: string, newPath: string): string => {
     if (oldPath === newPath) {
@@ -16,23 +16,20 @@ export const updateImagePaths = (content: string, oldPath: string, newPath: stri
         throw `updateImagePaths: content is not valid JSON`;
     }
 
-    const oldDir = dirname(oldPath);
-    const newDir = dirname(newPath);
-
-    if (oldDir === newDir) {
+    if (dirname(oldPath) === dirname(newPath)) {
         return content;
     }
 
     if (typeof doc.src === "string") {
-        doc.src = rewriteSrc(doc.src, oldDir, newDir);
+        doc.src = rewriteSrc(doc.src, oldPath, newPath);
     }
     return JSON.stringify(doc, null, 2);
 };
 
 
-const rewriteSrc = (src: string, oldDir: string, newDir: string): string => {
-    const oldDirParts = oldDir.split("/").filter(nonEmpty);
-    const newDirParts = newDir.split("/").filter(nonEmpty);
+const rewriteSrc = (src: string, oldPath: string, newPath: string): string => {
+    const oldDirParts = oldPath.split("/").slice(0, -1);
+    const newDirParts = newPath.split("/").slice(0, -1);
 
     const commonPrefix = takeWhile(zip(oldDirParts, newDirParts), ([a, b]) => a === b);
     const oldDirTail = drop(oldDirParts, commonPrefix.length);
