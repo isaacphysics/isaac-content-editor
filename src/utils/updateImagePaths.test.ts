@@ -1,16 +1,16 @@
 import { Content, Figure } from "../isaac-data-types";
-import { fixImagePaths } from "./imagePathFix";
+import { updateImagePaths } from "./updateImagePaths";
 
-describe.only("fixImagePaths", () => {
+describe.only("updateImagePaths", () => {
     describe("error cases", () => {
         it("throws on invalid JSON", () => {
-            expect(() => fixImagePaths("not json", p1, p2))
-                .toThrow("fixImagePaths: content is not valid JSON");
+            expect(() => updateImagePaths("not json", p1, p2))
+                .toThrow("updateImagePaths: content is not valid JSON");
         });
 
         it("throws when old and new paths are the same", () => {
             expect(() => subject(empty, p1, p1))
-                .toThrow("fixImagePaths: old and new paths are the same");
+                .toThrow("updateImagePaths: old and new paths are the same");
         });
     });
 
@@ -41,7 +41,7 @@ describe.only("fixImagePaths", () => {
 });
 
 const subject = (doc: Content, oldPath: string, newPath: string): Content =>
-    JSON.parse(fixImagePaths(JSON.stringify(doc, null, 2), oldPath, newPath)) as Content;
+    JSON.parse(updateImagePaths(JSON.stringify(doc, null, 2), oldPath, newPath)) as Content;
 
 const empty = {} as Content;
 const figure = (src: string): Figure => ({ type: "figure", src });
