@@ -1,7 +1,7 @@
 import { Content, Figure } from "../isaac-data-types";
 import { updateImagePaths } from "./updateImagePaths";
 
-describe.only("updateImagePaths", () => {
+describe("updateImagePaths", () => {
     describe("error cases", () => {
         it("throws on invalid JSON", () => {
             expect(() => updateImagePaths("not json", p1, p2))
@@ -54,6 +54,14 @@ describe.only("updateImagePaths", () => {
             const fig = figure("figures/foo.svg");
             const result = subject(fig, "file.json", "a/file.json");
             expect(result).toEqual({ ...fig, src: "../figures/foo.svg" });
+        });
+    });
+
+    describe("descent", () => {
+        it("finds figures within children", () => {
+            const doc = { children: [figure("figures/foo.svg")]};
+            const result = subject(doc, "file.json", "a/file.json");
+            expect(result).toEqual({ ...doc, children: [figure("../figures/foo.svg")]});
         });
     });
 });

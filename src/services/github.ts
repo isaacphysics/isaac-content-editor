@@ -9,6 +9,7 @@ import {Entry} from "../components/FileBrowser";
 import {dirname, resolveRelativePath} from "../utils/strings";
 import {Config, getConfig} from "./config";
 import { isDefined } from "../utils/types";
+import { updateImagePaths } from "../utils/updateImagePaths";
 
 export const GITHUB_TOKEN_COOKIE = "github-token";
 const GITHUB_API_URL = "https://api.github.com/";
@@ -304,10 +305,8 @@ export async function githubRename(context: ContextType<typeof AppContext>, path
 
     let newSha = blob.sha;
     // if we're moving a json, auto-fix figure paths
-    if (targetFilename?.endsWith(".json") && path === context.selection.getSelection()?.path) {
-        const updatedContent = "SOME STRING" + context.editor.getCurrentDocAsString();
-        context.editor.loadNewDoc(updatedContent);
-
+    if (targetFilename?.endsWith(".json")) {
+        const updatedContent = updateImagePaths(context.editor.getCurrentDocAsString(), path, targetPath);
         const blobData = await fetcher(`repos/$OWNER/${GITHUB_REPO_KEYS[repo]}/git/blobs`, {
             method: "POST",
             body: {
