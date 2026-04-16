@@ -1,7 +1,7 @@
 import zip from "lodash/zip";
 import takeWhile from "lodash/takeWhile";
 import drop from "lodash/drop";
-import { Content, Figure } from "../isaac-data-types";
+import { Content, Figure, Image } from "../isaac-data-types";
 import { dirname } from "./strings";
 
 export const updateImagePaths = (content: string, oldPath: string, newPath: string): string => {
@@ -31,7 +31,7 @@ const updateImagePathsContent = (content: Content | Content[], oldPath: string, 
     if (content.children) {
         return {...content, children: updateImagePathsContent(content.children as Content[], oldPath, newPath)} as Content;
     }
-    if (isFigure(content) && content.src) {
+    if ((isFigure(content) || isImage(content)) && content.src) {
         return {...content, src: updatePath(content.src, oldPath, newPath)} as Figure;
     }
     return content;
@@ -48,4 +48,5 @@ const updatePath = (str: string, oldPath: string, newPath: string): string => {
 };
 
 const isFigure = (content: Content): content is Figure => content.type === 'figure';
+const isImage = (content: Content): content is Image => content.type === 'image';
 

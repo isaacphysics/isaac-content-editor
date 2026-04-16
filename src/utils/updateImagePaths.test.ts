@@ -1,4 +1,4 @@
-import { Content, Figure } from "../isaac-data-types";
+import { Content, Figure, Image } from "../isaac-data-types";
 import { updateImagePaths } from "./updateImagePaths";
 
 describe("updateImagePaths", () => {
@@ -58,10 +58,24 @@ describe("updateImagePaths", () => {
     });
 
     describe("descent", () => {
-        it("finds figures within children", () => {
+        it("finds references within children arrays", () => {
             const doc = { children: [figure("figures/foo.svg")]};
             const result = subject(doc, "file.json", "a/file.json");
             expect(result).toEqual({ ...doc, children: [figure("../figures/foo.svg")]});
+        });
+    });
+
+    describe("recognised images", () => {
+        it("figure types", () => {
+            const fig = figure("figures/foo.svg");
+            const result = subject(fig, "file.json", "a/file.json");
+            expect(result).toEqual(figure("../figures/foo.svg"));
+        });
+
+        it("image types", () => {
+            const img = image("figures/foo.svg");
+            const result = subject(img, "file.json", "a/file.json");
+            expect(result).toEqual(image("../figures/foo.svg"));
         });
     });
 });
@@ -71,5 +85,6 @@ const subject = (doc: Content, oldPath: string, newPath: string): Content =>
 
 const empty = {} as Content;
 const figure = (src: string): Figure => ({ type: "figure", src });
+const image = (src: string): Image => ({ type: "image", src });
 const p1 = "a/b/file.json";
 const p2 = "a/c/file.json";
