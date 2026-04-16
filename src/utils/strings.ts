@@ -30,3 +30,7 @@ export function resolveRelativePath(relativeFilename: string, baseSrcPath: strin
 export function alphabetIndex(index: number): string {
     return String.fromCharCode('A'.charCodeAt(0) + (index % 26));
 }
+
+export function nonEmpty(str: string) {
+    return str != '';
+}

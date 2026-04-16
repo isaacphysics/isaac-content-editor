@@ -2,7 +2,7 @@ import zip from "lodash/zip";
 import takeWhile from "lodash/takeWhile";
 import drop from "lodash/drop";
 import { Content } from "../isaac-data-types";
-import { dirname } from "./strings";
+import { dirname, nonEmpty } from "./strings";
 
 export const updateImagePaths = (content: string, oldPath: string, newPath: string): string => {
     if (oldPath === newPath) {
@@ -30,12 +30,12 @@ export const updateImagePaths = (content: string, oldPath: string, newPath: stri
 };
 
 
-function rewriteSrc(src: string, oldDir: string, newDir: string): string {
-    const oldDirParts = oldDir.split("/");
-    const newDirParts = newDir.split("/");
+const rewriteSrc = (src: string, oldDir: string, newDir: string): string => {
+    const oldDirParts = oldDir.split("/").filter(nonEmpty);
+    const newDirParts = newDir.split("/").filter(nonEmpty);
 
     const commonPrefix = takeWhile(zip(oldDirParts, newDirParts), ([a, b]) => a === b);
     const oldDirTail = drop(oldDirParts, commonPrefix.length);
     const ups = new Array(newDirParts.length - commonPrefix.length).fill("..");
     return [...ups, ...oldDirTail, src].join("/");
-}
+};
