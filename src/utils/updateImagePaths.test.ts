@@ -49,6 +49,12 @@ describe.only("updateImagePaths", () => {
             const result = subject(fig, "a/file.json", "file.json");
             expect(result).toEqual({ ...fig, src: "a/figures/foo.svg" });
         });
+
+        it("rewrites src when moved from root", () => {
+            const fig = figure("figures/foo.svg");
+            const result = subject(fig, "file.json", "a/file.json");
+            expect(result).toEqual({ ...fig, src: "../figures/foo.svg" });
+        });
     });
 });
 
