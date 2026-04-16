@@ -1,3 +1,5 @@
+import zip from "lodash/zip";
+import takeWhile from "lodash/takeWhile";
 import { Content } from "../isaac-data-types";
 import { dirname } from "./strings";
 
@@ -20,9 +22,20 @@ export const fixImagePaths = (content: string, oldPath: string, newPath: string)
         return content;
     }
 
-    const oldDirName = oldDir.split("/").at(-1);
     if (typeof doc.src === "string") {
-        doc.src = `../${oldDirName}/${doc.src}`;
+        doc.src = rewriteSrc(doc.src, oldDir, newDir);
     }
     return JSON.stringify(doc, null, 2);
 };
+
+
+function rewriteSrc(src: string, oldDir: string, newDir: string): string {
+    const oldDirParts = oldDir.split("/");
+    const newDirParts = newDir.split("/");
+
+    const commonPrefix = takeWhile(zip(oldDirParts, newDirParts), ([a, b]) => a === b);
+
+    const ups = Array(newDirParts.length - commonPrefix.length).fill("..");
+    const oldDirTail = oldDirParts.slice(commonPrefix.length);
+    return [...ups, ...oldDirTail, src].join("/");
+}

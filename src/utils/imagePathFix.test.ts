@@ -19,10 +19,24 @@ describe.only("fixImagePaths", () => {
         expect(result).toEqual(empty);
     });
 
-    it("rewrites a figure src when the file moves to a sibling directory", () => {
-        const fig = figure("figures/foo.svg");
-        const result = subject(fig, "a/b/file.json", "a/c/file.json");
-        expect(result) .toEqual({ ...fig, src: "../b/figures/foo.svg" });
+    describe("relative path construction", () => {
+        it("no change when moved within directory", () => {
+            const fig = figure("figures/foo.svg");
+            const result = subject(fig, "a/b/old.json", "a/b/new.json");
+            expect(result).toEqual(fig);
+        });
+
+        it("rewrites src when moved to sibling", () => {
+            const fig = figure("figures/foo.svg");
+            const result = subject(fig, "a/b/file.json", "a/c/file.json");
+            expect(result) .toEqual({ ...fig, src: "../b/figures/foo.svg" });
+        });
+
+        it("rewrites src when moved to subfolder of sibling", () => {
+            const fig = figure("figures/foo.svg");
+            const result = subject(fig, "a/b/file.json", "a/c/d/file.json");
+            expect(result).toEqual({ ...fig, src: "../../b/figures/foo.svg" });
+        });
     });
 });
 
