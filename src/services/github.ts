@@ -303,6 +303,7 @@ export async function githubRename(context: ContextType<typeof AppContext>, path
     if (!blob) throw Error("A file with that name does not exist on the current branch.");
 
     let newSha = blob.sha;
+    // if we're moving a json, auto-fix figure paths
     if (targetFilename?.endsWith(".json") && path === context.selection.getSelection()?.path) {
         const updatedContent = "SOME STRING" + context.editor.getCurrentDocAsString();
         context.editor.loadNewDoc(updatedContent);
