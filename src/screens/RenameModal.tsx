@@ -21,6 +21,7 @@ export function RenameModal(props: RenameModalProps) {
         <ModalHeader>Rename file</ModalHeader>
         <ModalBody>
             <FormGroup>
+                <Label for="rename-input">Please type a new name for the file. If no extension is provided, &quot;.json&quot; will be assumed.</Label>
                 <Input id="rename-input" value={newName} onChange={e => setNewName(e.target.value)} autoFocus />
             </FormGroup>
             {isJson && <FormGroup check>
