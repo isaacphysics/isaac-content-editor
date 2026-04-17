@@ -33,10 +33,6 @@ export function alphabetIndex(index: number): string {
     return String.fromCharCode('A'.charCodeAt(0) + (index % 26));
 }
 
-export function nonEmpty(str: string) {
-    return str != '';
-}
-
 export function relativePath(base: string, target: string): string {
     const [baseParts, targetParts] = [base.split('/').filter(nonEmpty), target.split('/')];
 
@@ -45,4 +41,8 @@ export function relativePath(base: string, target: string): string {
     const ups = new Array(baseParts.length - sharedPrefix.length).fill("..");
 
     return [...ups, ...tail].join("/");
+}
+
+function nonEmpty(str: string) {
+    return str != '';
 }
