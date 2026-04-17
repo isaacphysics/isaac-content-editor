@@ -64,10 +64,18 @@ describe("updateImagePaths", () => {
     });
 
     describe("descent", () => {
-        it("finds references within children arrays", () => {
+        // eg: content/questions/biology/cell_biology/mitosis/gcse/alternation_of_generations.json
+        it("descends into any object path (children)", () => {
             const doc = { children: [figure("figures/foo.svg")]};
             const result = subject(doc, "file.json", "a/file.json");
             expect(result).toEqual({ ...doc, children: [figure("../figures/foo.svg")]});
+        });
+
+        // eg: content/books/quantum_mechanics_primer/chapter_1/qmp_ch1_q23.json
+        it("descends into any object path (explanation)", () => {
+            const doc = { type: "formula", explanation: { type: "content", children: [figure("figures/foo.svg")]}};
+            const result = subject(doc, "file.json", "a/file.json");
+            expect(result).toEqual({ type: "formula", explanation: { type: "content", children: [figure("../figures/foo.svg")]}});
         });
     });
 

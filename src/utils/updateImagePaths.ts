@@ -1,3 +1,4 @@
+import isPlainObject from "lodash/isPlainObject";
 import { Content, Figure, Image } from "../isaac-data-types";
 import { dirname, relativePath, resolveRelativePath } from "./strings";
 
@@ -25,11 +26,11 @@ const updateImagePathsContent = (content: Content | Content[], oldPath: string, 
     if (Array.isArray(content)) {
         return content.map(c => updateImagePathsContent(c, oldPath, newPath)) as Content[];
     }
-    if (content.children) {
-        return {...content, children: updateImagePathsContent(content.children as Content[], oldPath, newPath)} as Content;
-    }
     if ((isFigure(content) || isImage(content)) && content.src) {
-        return {...content, src: updatePath(content.src, oldPath, newPath)} as Figure;
+        return {...content, src: updatePath(content.src, oldPath, newPath)} as Content;
+    }
+    if (isPlainObject(content)) {
+        return Object.fromEntries(Object.entries(content).map(([k, v]) => [k, updateImagePathsContent(v, oldPath, newPath)]));
     }
     return content;
 };
