@@ -1,5 +1,5 @@
 import { Content, Figure, Image } from "../isaac-data-types";
-import { updateImagePaths } from "./updateImagePaths";
+import { relative, updateImagePaths } from "./updateImagePaths";
 
 describe("updateImagePaths", () => {
     describe("error cases", () => {
@@ -29,7 +29,7 @@ describe("updateImagePaths", () => {
         it("rewrites src when moved to sibling", () => {
             const fig = figure("figures/foo.svg");
             const result = subject(fig, "a/b/file.json", "a/c/file.json");
-            expect(result) .toEqual({ ...fig, src: "../b/figures/foo.svg" });
+            expect(result).toEqual({ ...fig, src: "../b/figures/foo.svg" });
         });
 
         it("rewrites src when moved up", () => {
@@ -55,6 +55,12 @@ describe("updateImagePaths", () => {
             const result = subject(fig, "file.json", "a/file.json");
             expect(result).toEqual({ ...fig, src: "../figures/foo.svg" });
         });
+
+        it("simplifies src that already contains ..", () => {
+            const fig = figure("../foo.svg");
+            const result = subject(fig, "a/b/file.json", "a/c/file.json");
+            expect(result).toEqual({ ...fig, src: "../foo.svg" });
+        });
     });
 
     describe("descent", () => {
@@ -76,6 +82,19 @@ describe("updateImagePaths", () => {
             const img = image("figures/foo.svg");
             const result = subject(img, "file.json", "a/file.json");
             expect(result).toEqual(image("../figures/foo.svg"));
+        });
+    });
+});
+
+describe("relative", () => {
+    ([
+        ["a", "a/b/figures/foo.svg", "b/figures/foo.svg"],
+        ["a/b", "a/b/figures/foo.svg", "figures/foo.svg"],
+        ["a/b/c", "a/b/figures/foo.svg", "../figures/foo.svg"],
+        ["", "figures/foo.svg", "figures/foo.svg"],
+    ] as const).forEach(([base, target, relPath]) => {
+        it(`works for ${base}, ${target}, ${relPath}`, () => {
+            expect(relative(base, target)).toBe(relPath);
         });
     });
 });
