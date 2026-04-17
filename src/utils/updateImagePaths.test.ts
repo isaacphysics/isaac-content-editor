@@ -1,5 +1,5 @@
 import { Content, Figure, Image } from "../isaac-data-types";
-import { relative, updateImagePaths } from "./updateImagePaths";
+import { updateImagePaths } from "./updateImagePaths";
 
 describe("updateImagePaths", () => {
     describe("error cases", () => {
@@ -82,19 +82,6 @@ describe("updateImagePaths", () => {
             const img = image("figures/foo.svg");
             const result = subject(img, "file.json", "a/file.json");
             expect(result).toEqual(image("../figures/foo.svg"));
-        });
-    });
-});
-
-describe("relative", () => {
-    ([
-        ["a", "a/b/figures/foo.svg", "b/figures/foo.svg"],
-        ["a/b", "a/b/figures/foo.svg", "figures/foo.svg"],
-        ["a/b/c", "a/b/figures/foo.svg", "../figures/foo.svg"],
-        ["", "figures/foo.svg", "figures/foo.svg"],
-    ] as const).forEach(([base, target, relPath]) => {
-        it(`works for ${base}, ${target}, ${relPath}`, () => {
-            expect(relative(base, target)).toBe(relPath);
         });
     });
 });

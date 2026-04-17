@@ -1,7 +1,5 @@
-import zip from "lodash/zip";
-import takeWhile from "lodash/takeWhile";
 import { Content, Figure, Image } from "../isaac-data-types";
-import { dirname, nonEmpty, resolveRelativePath } from "./strings";
+import { dirname, relativePath, resolveRelativePath } from "./strings";
 
 export const updateImagePaths = (content: string, oldPath: string, newPath: string): string => {
     if (oldPath === newPath) {
@@ -37,20 +35,10 @@ const updateImagePathsContent = (content: Content | Content[], oldPath: string, 
 };
 
 const updatePath = (oldRelativeResourcePath: string, oldHostPath: string, newHostPath: string): string => {
-    return relative(
+    return relativePath(
         newHostPath.split('/').slice(0, -1).join('/'),
         resolveRelativePath(oldRelativeResourcePath, oldHostPath)
     );
-};
-
-export const relative = (base: string, target: string): string => {
-    const [baseParts, targetParts] = [base.split('/').filter(nonEmpty), target.split('/')];
-
-    const sharedPrefix = takeWhile(zip(baseParts, targetParts), ([a, b]) => a === b);
-    const tail = targetParts.slice(sharedPrefix.length);
-    const ups = new Array(baseParts.length - sharedPrefix.length).fill("..");
-
-    return [...ups, ...tail].join("/");
 };
 
 const isFigure = (content: Content): content is Figure => content.type === 'figure';

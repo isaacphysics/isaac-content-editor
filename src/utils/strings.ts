@@ -1,3 +1,5 @@
+import zip from "lodash/zip";
+import takeWhile from "lodash/takeWhile";
 import {isDefined} from "./types";
 
 export function safeLowercase(label: string | undefined) {
@@ -33,4 +35,14 @@ export function alphabetIndex(index: number): string {
 
 export function nonEmpty(str: string) {
     return str != '';
+}
+
+export function relativePath(base: string, target: string): string {
+    const [baseParts, targetParts] = [base.split('/').filter(nonEmpty), target.split('/')];
+
+    const sharedPrefix = takeWhile(zip(baseParts, targetParts), ([a, b]) => a === b);
+    const tail = targetParts.slice(sharedPrefix.length);
+    const ups = new Array(baseParts.length - sharedPrefix.length).fill("..");
+
+    return [...ups, ...tail].join("/");
 }
