@@ -24,6 +24,7 @@ export const AppContext = createContext({
     }) as NavigateFunction,
     menuModal: {current: null} as MutableRefObject<MenuModalRef | null>,
     showRenameModal: async (_: string) => null as RenameResult | null,
+    setActionRunning: (_: boolean) => {},
     preview: defaultPreview,
     cdn: defaultCdn,
 });

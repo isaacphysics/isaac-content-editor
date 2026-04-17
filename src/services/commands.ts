@@ -151,6 +151,7 @@ async function doRename(context: ContextType<typeof AppContext>, action: ActionF
     const choice = await context.showRenameModal(action.name);
 
     if (choice) {
+        context.setActionRunning(true);
         const oldPath = action.path;
 
         if (oldPath.replace(dirname(oldPath) + "/", "") === choice.newName) {

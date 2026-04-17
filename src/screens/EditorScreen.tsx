@@ -153,7 +153,7 @@ export function EditorScreen() {
     const appContext = useMemo<ContextType<typeof AppContext>>(() => {
         async function dispatch(action: Action) {
             try {
-                setActionRunning(true);
+                if (action.type !== "rename") setActionRunning(true);
                 await doDispatch(appContext, action);
             } finally {
                 setActionRunning(false);
@@ -210,6 +210,7 @@ export function EditorScreen() {
             dispatch,
             navigate,
             menuModal: menuRef,
+            setActionRunning,
             showRenameModal(currentName: string) {
                 return new Promise<RenameResult | null>((resolve) => {
                     const onClose = (a: RenameResult | null) => {
