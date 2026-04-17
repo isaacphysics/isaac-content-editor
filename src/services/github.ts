@@ -255,7 +255,7 @@ export async function githubDelete(context: ContextType<typeof AppContext>, path
 }
 
 // Adapted from this blog post: https://medium.com/@obodley/renaming-a-file-using-the-git-api-fed1e6f04188
-export async function githubRename(context: ContextType<typeof AppContext>, path: string, name: string, repo: GitHubRepository = "content"): Promise<boolean> {
+export async function githubRename(context: ContextType<typeof AppContext>, path: string, name: string, repo: GitHubRepository = "content", updatePaths: boolean = true): Promise<boolean> {
     const isPublished = context.editor?.isAlreadyPublished();
 
     const pathSegments = path.split("/");
@@ -304,8 +304,8 @@ export async function githubRename(context: ContextType<typeof AppContext>, path
     if (!blob) throw Error("A file with that name does not exist on the current branch.");
 
     let newSha = blob.sha;
-    // if we're moving a json, auto-fix figure paths
-    if (targetFilename?.endsWith(".json")) {
+    // if we're moving a json, and the user has asked for this, auto-fix figure paths
+    if (updatePaths && targetFilename?.endsWith(".json")) {
         const updatedContent = updateImagePaths(context.editor.getCurrentDocAsString(), path, targetPath);
         const blobData = await fetcher(`repos/$OWNER/${GITHUB_REPO_KEYS[repo]}/git/blobs`, {
             method: "POST",

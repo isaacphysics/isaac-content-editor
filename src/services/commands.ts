@@ -148,23 +148,23 @@ async function doRename(context: ContextType<typeof AppContext>, action: ActionF
         await githubSave(context);
     }
 
-    let newName = window.prompt("Please type a new name for the file. If no extension is provided, \".json\" will be assumed", action.name);
+    const choice = await context.showRenameModal(action.name);
 
-    if (newName) {
+    if (choice) {
         const oldPath = action.path;
 
-        if (oldPath.replace(dirname(oldPath) + "/", "") === newName) {
+        if (oldPath.replace(dirname(oldPath) + "/", "") === choice.newName) {
             return;
         }
 
-        if (newName.indexOf(".") === -1 && oldPath.toLowerCase().endsWith(".json")) {
-            newName += ".json";
+        if (choice.newName.indexOf(".") === -1 && oldPath.toLowerCase().endsWith(".json")) {
+            choice.newName += ".json";
         }
 
         const basePath = dirname(oldPath);
         try {
-            const shouldRefresh = await githubRename(context, oldPath, newName);
-            context.selection.setSelection({path: `${basePath}/${newName}`, isDir: false, forceRefresh: shouldRefresh});
+            const shouldRefresh = await githubRename(context, oldPath, choice.newName, "content", choice.updateImagePaths);
+            context.selection.setSelection({path: `${basePath}/${choice.newName}`, isDir: false, forceRefresh: shouldRefresh});
         } catch (e) {
             window.alert("Could not rename file. Perhaps one with that name already exists.");
             console.error(e);

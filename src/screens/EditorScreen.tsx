@@ -18,6 +18,7 @@ import {SVGViewer} from "../components/SVGViewer";
 import {PDFViewer} from "../components/PDFViewer";
 import {Preview, PreviewMode} from "../components/Preview";
 import {MenuModal, MenuModalRef} from "./MenuModal";
+import {RenameModal, RenameModalProps, RenameResult} from "./RenameModal";
 import {buildPageError} from "../components/PageError";
 import Split from "react-split";
 import {CDNUploadModal} from "../components/CDNUploadModal";
@@ -91,6 +92,7 @@ export function EditorScreen() {
     const navigate = useNavigate();
     const location = useLocation();
     const menuRef = useRef<MenuModalRef>(null);
+    const [renameState, setRenameState] = useState<RenameModalProps>({isOpen: false, currentName: "", onClose: () => {}});
 
     const swrConfig = useSWRConfig();
 
@@ -208,6 +210,15 @@ export function EditorScreen() {
             dispatch,
             navigate,
             menuModal: menuRef,
+            showRenameModal(currentName: string) {
+                return new Promise<RenameResult | null>((resolve) => {
+                    const onClose = (a: RenameResult | null) => {
+                        setRenameState({ isOpen: false, currentName: "", onClose });
+                        resolve(a);
+                    };
+                    setRenameState({ isOpen: true, currentName, onClose });
+                });
+            },
             preview: {
                 open: previewOpen,
                 toggle: () => {
@@ -331,6 +342,7 @@ export function EditorScreen() {
                 </div>
             </Modal>
             <MenuModal menuRef={menuRef} />
+            <RenameModal key={renameState?.currentName} {...renameState} />
         </AppContext.Provider>
     </SWRConfig>;
 }
