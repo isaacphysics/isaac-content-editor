@@ -19,7 +19,32 @@ describe("updateImagePaths", () => {
         expect(result).toEqual(empty);
     });
 
-    describe("relative path construction", () => {
+    describe("path update", () => {
+        describe('ignored path types', () => {
+            // https://github.com/isaacphysics/isaac-api/blob/8fbc3c1fe3992918083ba65f241bd0449dbbe1e1/src/main/java/uk/ac/cam/cl/dtg/segue/etl/ContentIndexer.java#L544
+        
+            // eg. content/junior_24/itsp24_lesson_disttime.json
+            it("no change for '/assets' path", () => {
+                const fig = figure("/assets/foo.svg");
+                const result = subject(fig, "a/b/old.json", "a/new.json");
+                expect(result).toEqual(fig);
+            });
+
+            // couldn't find any good examples
+            it("no change for http path", () => {
+                const fig = figure("http://assets/foo.svg");
+                const result = subject(fig, "a/b/old.json", "a/new.json");
+                expect(result).toEqual(fig);
+            });
+
+            // couldn't find any good examples
+            it("no change for https path", () => {
+                const fig = figure("https://assets/foo.svg");
+                const result = subject(fig, "a/b/old.json", "a/new.json");
+                expect(result).toEqual(fig);
+            });
+        });
+
         it("no change when moved within directory", () => {
             const fig = figure("figures/foo.svg");
             const result = subject(fig, "a/b/old.json", "a/b/new.json");

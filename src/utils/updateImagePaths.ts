@@ -36,10 +36,11 @@ const updateImagePathsContent = (content: Content | Content[], oldPath: string, 
 };
 
 const updatePath = (oldRelativeResourcePath: string, oldHostPath: string, newHostPath: string): string => {
-    return relativePath(
-        newHostPath.split('/').slice(0, -1).join('/'),
-        resolveRelativePath(oldRelativeResourcePath, oldHostPath)
-    );
+    if (['/assets/', 'http://', 'https://'].some(str => oldRelativeResourcePath.startsWith(str))) {
+        return oldRelativeResourcePath;
+    }
+    const dirname = newHostPath.split('/').slice(0, -1).join('/');
+    return relativePath(dirname, resolveRelativePath(oldRelativeResourcePath, oldHostPath));
 };
 
 const isFigure = (content: Content): content is Figure => content.type === 'figure';
