@@ -250,6 +250,8 @@ export interface IsaacSymbolicChemistryQuestion extends IsaacSymbolicQuestion {
 
 export type IsaacSymbolicLogicQuestion = IsaacSymbolicQuestion
 
+export type IsaacSymbolicGraphQuestion = IsaacSymbolicQuestion
+
 export interface IsaacSymbolicQuestion extends IsaacQuestionBase {
     formulaSeed?: string;
     availableSymbols?: string[];

@@ -325,6 +325,7 @@ const CHOICE_REGISTRY: Record<CHOICE_TYPES, ValuePresenter<Choice>> = {
     stringChoice: StringChoicePresenter,
     freeTextRule: FreeTextRulePresenter,
     logicFormula: FormulaPresenter,
+    graphFormula: FormulaPresenter,
     graphChoice: GraphChoicePresenter,
     regexPattern: RegexPatternPresenter,
     itemChoice: ItemChoicePresenter,

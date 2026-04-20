@@ -18,6 +18,7 @@ const choicesType: Record<QUESTION_TYPES, CHOICE_TYPES | null> = {
     isaacFreeTextQuestion: "freeTextRule",
     isaacLLMFreeTextQuestion: null,
     isaacSymbolicLogicQuestion: "logicFormula",
+    isaacSymbolicGraphQuestion: "graphFormula",
     isaacGraphSketcherQuestion: "graphChoice",
     isaacRegexMatchQuestion: "regexPattern",
     isaacItemQuestion: "itemChoice",

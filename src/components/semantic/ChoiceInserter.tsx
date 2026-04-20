@@ -29,6 +29,7 @@ export type CHOICE_TYPES =
     | "stringChoice"
     | "freeTextRule"
     | "logicFormula"
+    | "graphFormula"
     | "graphChoice"
     | "regexPattern"
     | "itemChoice"
@@ -45,6 +46,7 @@ const emptyChoices = [
     {...emptyChoice, type: "stringChoice", caseInsensitive: false},
     {...emptyChoice, type: "freeTextRule", caseInsensitive: true, allowsExtraWords: true},
     {...emptyChoice, type: "logicFormula", pythonExpression: "", requiresExactMatch: false},
+    {...emptyChoice, type: "graphFormula", pythonExpression: "", requiresExactMatch: false},
     {...emptyChoice, type: "graphChoice", graphSpec: ""},
     {...emptyChoice, type: "regexPattern", matchWholeString: false, caseInsensitive: false, multiLineRegex: true},
     {...emptyChoice, type: "itemChoice", children: []},
