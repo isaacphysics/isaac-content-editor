@@ -1,4 +1,4 @@
-import { Content, ContentBase, Figure, Image, IsaacNumericQuestion } from "../isaac-data-types";
+import { Content, ContentBase, Figure, Image, IsaacInlineQuestion, IsaacNumericQuestion } from "../isaac-data-types";
 import { updateImagePaths } from "./updateImagePaths";
 
 describe("updateImagePaths", () => {
@@ -121,6 +121,13 @@ describe("updateImagePaths", () => {
             const doc = numericQuestion(hints(content(figure("figures/foo.svg"))));
             const result = subject(doc, "file.json", "a/file.json");
             expect(result).toEqual(numericQuestion(hints(content(figure("../figures/foo.svg")))));
+        });
+
+        // eg: content/questions/biology/genetics/dna_replication/pentose_sugars.json
+        it("descends into inline questions", () => {
+            const doc = {type: "isaacInlineRegion", children: [figure("figures/foo.svg")]};
+            const result = subject(doc, "file.json", "a/file.json");
+            expect(result).toEqual({type: "isaacInlineRegion", children: [figure("../figures/foo.svg")]});
         });
     });
 
