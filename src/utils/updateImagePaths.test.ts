@@ -142,7 +142,7 @@ describe("updateImagePaths", () => {
         });
     });
 
-    describe("modified content blocks", () => {
+    describe("modifies content blocks", () => {
         it("updates figure paths", () => {
             const fig = figure("figures/foo.svg");
             const result = subject(fig, "file.json", "a/file.json");
@@ -157,7 +157,7 @@ describe("updateImagePaths", () => {
 
         // eg: content/books/quantum_mechanics_primer/qmp_intro.json
         // eg (items with images): https://staging.adacomputerscience.org/questions/sort_27
-        it("does not update <img> tags within content blocks, as these contain absolute urls", () => {
+        it("does not update <img> tags within content blocks, as these contain absolute url's", () => {
             const doc = content('<img src="/images/content/pods/figures/mentoring.svg">');
             const result = subject(doc, "file.json", "a/file.json");
             expect(result).toEqual(content('<img src="/images/content/pods/figures/mentoring.svg">'));
