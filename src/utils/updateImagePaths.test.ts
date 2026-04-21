@@ -1,4 +1,4 @@
-import { Content, ContentBase, Figure, Image, IsaacInlineQuestion, IsaacNumericQuestion } from "../isaac-data-types";
+import { Content, ContentBase, Figure, Image, IsaacNumericQuestion } from "../isaac-data-types";
 import { updateImagePaths } from "./updateImagePaths";
 
 describe("updateImagePaths", () => {
@@ -128,6 +128,13 @@ describe("updateImagePaths", () => {
             const doc = {type: "isaacInlineRegion", children: [figure("figures/foo.svg")]};
             const result = subject(doc, "file.json", "a/file.json");
             expect(result).toEqual({type: "isaacInlineRegion", children: [figure("../figures/foo.svg")]});
+        });
+
+        // eg: content/questions/biology/cell_biology/mitosis/gcse/alternation_of_generations.json
+        it("descends into drag-and-drop questions", () => {
+            const doc = {type: "isaacDndQuestion", children: [figure("figures/foo.svg")]};
+            const result = subject(doc, "file.json", "a/file.json");
+            expect(result).toEqual({type: "isaacDndQuestion", children: [figure("../figures/foo.svg")]});
         });
     });
 
