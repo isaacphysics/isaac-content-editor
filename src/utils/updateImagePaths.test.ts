@@ -19,6 +19,13 @@ describe("updateImagePaths", () => {
         expect(result).toEqual(empty);
     });
 
+    // eg: content/questions/maths/statistics/hypothesis_testing/level3/testing_3_9_r1.json
+    it("can update paths on documents with a `null` field", () => {
+        const doc = { type: "isaacSymbolicQuestion", children: [figure("/assets/foo.svg")], defaultFeedback: null };
+        const result = subject(doc, "a/b/old.json", "a/new.json");
+        expect(result).toEqual({ type: "isaacSymbolicQuestion", children: [figure("/assets/foo.svg")], defaultFeedback: null });
+    });
+
     describe("path update", () => {
         describe('path types', () => {
             // these are to mirror
@@ -151,6 +158,7 @@ describe("updateImagePaths", () => {
             expect(result).toEqual(image("../figures/foo.svg"));
         });
 
+        // eg: content/books/quantum_mechanics_primer/qmp_intro.json
         it("does not update <img> tags within content blocks, as these contain absolute urls", () => {
             const doc = content('<img src="/images/content/pods/figures/mentoring.svg">');
             const result = subject(doc, "file.json", "a/file.json");

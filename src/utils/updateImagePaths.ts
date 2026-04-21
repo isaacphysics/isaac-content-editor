@@ -43,6 +43,5 @@ const updatePath = (oldRelativeResourcePath: string, oldHostPath: string, newHos
     return relativePath(dirname, resolveRelativePath(oldRelativeResourcePath, oldHostPath));
 };
 
-const isFigure = (content: Content): content is Figure => content.type === 'figure';
-const isImage = (content: Content): content is Image => content.type === 'image';
-
+const isFigure = (content: Content | null): content is Figure => content !== null && content.type === 'figure';
+const isImage = (content: Content): content is Image => content !== null && content.type === 'image';
