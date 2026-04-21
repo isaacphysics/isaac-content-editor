@@ -138,17 +138,23 @@ describe("updateImagePaths", () => {
         });
     });
 
-    describe("recognised images", () => {
-        it("figure types", () => {
+    describe("modified content blocks", () => {
+        it("updates figure paths", () => {
             const fig = figure("figures/foo.svg");
             const result = subject(fig, "file.json", "a/file.json");
             expect(result).toEqual(figure("../figures/foo.svg"));
         });
 
-        it("image types", () => {
+        it("updates image paths", () => {
             const img = image("figures/foo.svg");
             const result = subject(img, "file.json", "a/file.json");
             expect(result).toEqual(image("../figures/foo.svg"));
+        });
+
+        it("does not update <img> tags within content blocks, as these contain absolute urls", () => {
+            const doc = content('<img src="/images/content/pods/figures/mentoring.svg">');
+            const result = subject(doc, "file.json", "a/file.json");
+            expect(result).toEqual(content('<img src="/images/content/pods/figures/mentoring.svg">'));
         });
     });
 });
@@ -161,6 +167,14 @@ const figure = (src: string): Figure => ({ type: "figure", src });
 const image = (src: string): Image => ({ type: "image", src });
 const numericQuestion = (hints: ContentBase[]): IsaacNumericQuestion => ({ type: "isaacNumericQuestion", hints });
 const hints = (content: Content): ContentBase[] => [content];
-const content = (figure: Figure): Content => ({ children: [figure]});
+const content = (val: Figure | string): Content => {
+    if (isFigure(val)) {
+        return ({ type: "content", children: [val] });
+    }
+    return { type: "content", value: val};
+};
+const isFigure = (maybeFigure: unknown): maybeFigure is Figure => typeof maybeFigure === 'object' && maybeFigure !== null &&
+    "type" in maybeFigure && maybeFigure.type === 'figure';
+
 const p1 = "a/b/file.json";
 const p2 = "a/c/file.json";
