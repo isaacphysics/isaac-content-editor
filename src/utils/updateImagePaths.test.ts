@@ -97,7 +97,7 @@ describe("updateImagePaths", () => {
                 expect(result).toEqual({ ...fig, src: "../figures/foo.svg" });
             });
 
-            it("simplifies src that already contains ..", () => {
+            it("rewrites src that already contains ..", () => {
                 const fig = figure("../foo.svg");
                 const result = subject(fig, "a/b/file.json", "a/c/file.json");
                 expect(result).toEqual({ ...fig, src: "../foo.svg" });
@@ -114,14 +114,11 @@ describe("updateImagePaths", () => {
         });
 
         // eg: content/books/quantum_mechanics_primer/chapter_1/qmp_ch1_q23.json
-        it("descends into explanation)", () => {
+        it("descends into explanation", () => {
             const doc = { type: "formula", explanation: { type: "content", children: [figure("figures/foo.svg")]}};
             const result = subject(doc, "file.json", "a/file.json");
             expect(result).toEqual({ type: "formula", explanation: { type: "content", children: [figure("../figures/foo.svg")]}});
         });
-
-        // eg: https://staging.adacomputerscience.org/questions/sort_27
-        it("TODO descends into items", () => {});
 
         // eg: content/NSTIA/SM/nst1A_SR_q23.json
         it("descends into hints", () => {
@@ -159,6 +156,7 @@ describe("updateImagePaths", () => {
         });
 
         // eg: content/books/quantum_mechanics_primer/qmp_intro.json
+        // eg (items with images): https://staging.adacomputerscience.org/questions/sort_27
         it("does not update <img> tags within content blocks, as these contain absolute urls", () => {
             const doc = content('<img src="/images/content/pods/figures/mentoring.svg">');
             const result = subject(doc, "file.json", "a/file.json");
