@@ -44,5 +44,5 @@ export function relativePath(base: string, target: string): string {
 }
 
 function nonEmpty(str: string) {
-    return str != '';
+    return str !== '';
 }
