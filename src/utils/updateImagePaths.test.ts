@@ -1,4 +1,4 @@
-import { Content, Figure, Image } from "../isaac-data-types";
+import { Content, ContentBase, Figure, Image, IsaacNumericQuestion } from "../isaac-data-types";
 import { updateImagePaths } from "./updateImagePaths";
 
 describe("updateImagePaths", () => {
@@ -100,17 +100,27 @@ describe("updateImagePaths", () => {
 
     describe("descent", () => {
         // eg: content/questions/biology/cell_biology/mitosis/gcse/alternation_of_generations.json
-        it("descends into any object path, maps arrays (children)", () => {
+        it("descends into children, maps arrays", () => {
             const doc = { children: [figure("figures/foo.svg")]};
             const result = subject(doc, "file.json", "a/file.json");
             expect(result).toEqual({ ...doc, children: [figure("../figures/foo.svg")]});
         });
 
         // eg: content/books/quantum_mechanics_primer/chapter_1/qmp_ch1_q23.json
-        it("descends into any object path (explanation)", () => {
+        it("descends into explanation)", () => {
             const doc = { type: "formula", explanation: { type: "content", children: [figure("figures/foo.svg")]}};
             const result = subject(doc, "file.json", "a/file.json");
             expect(result).toEqual({ type: "formula", explanation: { type: "content", children: [figure("../figures/foo.svg")]}});
+        });
+
+        // eg: https://staging.adacomputerscience.org/questions/sort_27
+        it("TODO descends into items", () => {});
+
+        // eg: content/NSTIA/SM/nst1A_SR_q23.json
+        it("descends into hints", () => {
+            const doc = numericQuestion(hints(content(figure("figures/foo.svg"))));
+            const result = subject(doc, "file.json", "a/file.json");
+            expect(result).toEqual(numericQuestion(hints(content(figure("../figures/foo.svg")))));
         });
     });
 
@@ -135,5 +145,8 @@ const subject = (doc: Content, oldPath: string, newPath: string): Content =>
 const empty = {} as Content;
 const figure = (src: string): Figure => ({ type: "figure", src });
 const image = (src: string): Image => ({ type: "image", src });
+const numericQuestion = (hints: ContentBase[]): IsaacNumericQuestion => ({ type: "isaacNumericQuestion", hints });
+const hints = (content: Content): ContentBase[] => [content];
+const content = (figure: Figure): Content => ({ children: [figure]});
 const p1 = "a/b/file.json";
 const p2 = "a/c/file.json";
