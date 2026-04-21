@@ -6,20 +6,20 @@ export const updateImagePaths = (content: string, oldPath: string, newPath: stri
     if (oldPath === newPath) {
         throw `updateImagePaths: old and new paths are the same (${oldPath})`;
     }
-
     if (directory(oldPath) === directory(newPath)) {
         return content;
     }
 
-    let doc: Content;
+    const updated = updateImagePathsContent(decode(content), oldPath, newPath);
+    return JSON.stringify(updated, null, 2);
+};
+
+const decode = (content: string): Content => {
     try {
-        doc = JSON.parse(content) as Content;
+        return JSON.parse(content) as Content;
     } catch {
         throw `updateImagePaths: content is not valid JSON`;
     }
-
-    const updated = updateImagePathsContent(doc, oldPath, newPath);
-    return JSON.stringify(updated, null, 2);
 };
 
 const updateImagePathsContent = (content: Content | Content[], oldPath: string, newPath: string): Content | Content[] => {
