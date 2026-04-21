@@ -1,13 +1,13 @@
 import isPlainObject from "lodash/isPlainObject";
 import { Content, Figure, Image } from "../isaac-data-types";
-import { dirname, relativePath, resolveRelativePath } from "./strings";
+import { relativePath, resolveRelativePath } from "./strings";
 
 export const updateImagePaths = (content: string, oldPath: string, newPath: string): string => {
     if (oldPath === newPath) {
         throw `updateImagePaths: old and new paths are the same (${oldPath})`;
     }
 
-    if (dirname(oldPath) === dirname(newPath)) {
+    if (directory(oldPath) === directory(newPath)) {
         return content;
     }
 
@@ -39,9 +39,9 @@ const updatePath = (oldRelativeResourcePath: string, oldHostPath: string, newHos
     if (['/assets/', 'http://', 'https://'].some(str => oldRelativeResourcePath.startsWith(str))) {
         return oldRelativeResourcePath;
     }
-    const dirname = newHostPath.split('/').slice(0, -1).join('/');
-    return relativePath(dirname, resolveRelativePath(oldRelativeResourcePath, oldHostPath));
+    return relativePath(directory(newHostPath), resolveRelativePath(oldRelativeResourcePath, oldHostPath));
 };
 
+const directory = (path: string): string => path.split('/').slice(0, -1).join('/');
 const isFigure = (content: Content | null): content is Figure => content !== null && content.type === 'figure';
 const isImage = (content: Content): content is Image => content !== null && content.type === 'image';
