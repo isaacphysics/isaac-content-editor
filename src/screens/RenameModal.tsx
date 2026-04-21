@@ -36,3 +36,15 @@ export function RenameModal(props: RenameModalProps) {
         </ModalFooter>
     </Modal>;
 }
+
+export const showRenameModal = (setRenameState: (p: RenameModalProps) => void) => (currentName: string): Promise<RenameResult | null> => {
+    return new Promise<RenameResult | null>((resolve) => {
+        const onClose = (result: RenameResult | null) => {
+            setRenameState({ isOpen: false, currentName: "", onClose });
+            resolve(result);
+        };
+        setRenameState({ isOpen: true, currentName, onClose });
+    });
+};
+
+export const closedRenameModalState = (): RenameModalProps => ({isOpen: false, currentName: "", onClose: () => {}});
