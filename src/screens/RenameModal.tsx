@@ -10,9 +10,9 @@ export interface RenameModalProps {
 export type RenameResult = { newName: string; updateImagePaths: boolean };
 
 export function RenameModal(props: RenameModalProps) {
-    const isJson = props.currentName.endsWith(".json");
     const [newName, setNewName] = useState(props.currentName);
-    const [updateImagePaths, setUpdateImagePaths] = useState(isJson ? true : false);
+    const isJson = props.currentName.endsWith(".json");
+    const [updateImagePaths, setUpdateImagePaths] = useState(isJson);
 
     const confirm = () => props.onClose({ newName, updateImagePaths });
     const cancel = () => props.onClose(null);
