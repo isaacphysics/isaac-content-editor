@@ -255,7 +255,7 @@ export async function githubDelete(context: ContextType<typeof AppContext>, path
 }
 
 // Adapted from this blog post: https://medium.com/@obodley/renaming-a-file-using-the-git-api-fed1e6f04188
-export async function githubRename(context: ContextType<typeof AppContext>, path: string, name: string, repo: GitHubRepository = "content", updatePaths: boolean = true): Promise<boolean> {
+export async function githubRename(context: ContextType<typeof AppContext>, path: string, name: string, repo: GitHubRepository = "content", updatePaths: boolean = false): Promise<boolean> {
     const isPublished = context.editor?.isAlreadyPublished();
 
     const pathSegments = path.split("/");
