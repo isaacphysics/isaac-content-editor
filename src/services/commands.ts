@@ -158,7 +158,7 @@ async function doRename(context: ContextType<typeof AppContext>, action: ActionF
             return;
         }
 
-        if (choice.newName.indexOf(".") === -1 && oldPath.toLowerCase().endsWith(".json")) {
+        if ([0, -1].includes(choice.newName.indexOf(".")) && oldPath.toLowerCase().endsWith(".json")) {
             choice.newName += ".json";
         }
 
