@@ -1,6 +1,6 @@
 import isPlainObject from "lodash/isPlainObject";
 import { Content, Figure, Image } from "../isaac-data-types";
-import { relativePath, resolveRelativePath } from "./strings";
+import { getRelativePath, resolveRelativePath } from "./strings";
 
 export const updateImagePaths = (content: string, oldPath: string, newPath: string): string => {
     if (oldPath === newPath) {
@@ -39,9 +39,11 @@ const updatePath = (oldRelativeResourcePath: string, oldHostPath: string, newHos
     if (['/assets/', 'http://', 'https://'].some(str => oldRelativeResourcePath.startsWith(str))) {
         return oldRelativeResourcePath;
     }
-    return relativePath(directory(newHostPath), resolveRelativePath(oldRelativeResourcePath, oldHostPath));
+    return getRelativePath(directory(newHostPath), resolveRelativePath(oldRelativeResourcePath, oldHostPath));
 };
 
 const directory = (path: string): string => path.split('/').slice(0, -1).join('/');
-const isFigure = (content: Content | null): content is Figure => content !== null && content.type === 'figure';
-const isImage = (content: Content): content is Image => content !== null && content.type === 'image';
+export const isFigure = (maybeFigure: unknown): maybeFigure is Figure => typeof maybeFigure === 'object' &&
+    maybeFigure !== null && 'type' in maybeFigure && maybeFigure.type === 'figure';
+const isImage = (maybeImage: unknown): maybeImage is Image => typeof maybeImage === 'object' &&
+    maybeImage !== null && 'type' in maybeImage && maybeImage.type === 'image';

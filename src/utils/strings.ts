@@ -33,16 +33,12 @@ export function alphabetIndex(index: number): string {
     return String.fromCharCode('A'.charCodeAt(0) + (index % 26));
 }
 
-export function relativePath(base: string, target: string): string {
-    const [baseParts, targetParts] = [base.split('/').filter(nonEmpty), target.split('/')];
+export function getRelativePath(base: string, target: string): string {
+    const [baseParts, targetParts] = [base.split('/').filter(str => str !== ''), target.split('/')];
 
     const sharedPrefix = takeWhile(zip(baseParts, targetParts), ([a, b]) => a === b);
     const tail = targetParts.slice(sharedPrefix.length);
     const ups = new Array(baseParts.length - sharedPrefix.length).fill("..");
 
     return [...ups, ...tail].join("/");
-}
-
-function nonEmpty(str: string) {
-    return str !== '';
 }

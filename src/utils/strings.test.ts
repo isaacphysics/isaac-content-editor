@@ -1,4 +1,4 @@
-import { relativePath } from "./strings";
+import { getRelativePath } from "./strings";
 
 describe("relativePath", () => {
     ([
@@ -8,7 +8,7 @@ describe("relativePath", () => {
         ["", "figures/foo.svg", "figures/foo.svg"],
     ] as const).forEach(([base, target, relPath]) => {
         it(`works for ${base}, ${target}, ${relPath}`, () => {
-            expect(relativePath(base, target)).toBe(relPath);
+            expect(getRelativePath(base, target)).toBe(relPath);
         });
     });
 });
