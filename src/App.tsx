@@ -11,6 +11,7 @@ import {defaultDispatch} from "./services/commands";
 import {MenuModalRef} from "./screens/MenuModal";
 import {defaultPreview} from "./components/Preview";
 import {defaultCdn} from "./components/CDNUploadModal";
+import { RenameResult } from "./screens/RenameModal";
 
 
 export const AppContext = createContext({
@@ -22,6 +23,8 @@ export const AppContext = createContext({
         throw new Error("Can't navigate outside of AppContext");
     }) as NavigateFunction,
     menuModal: {current: null} as MutableRefObject<MenuModalRef | null>,
+    showRenameModal: async (_: string) => null as RenameResult | null,
+    setActionRunning: (_: boolean) => {},
     preview: defaultPreview,
     cdn: defaultCdn,
 });

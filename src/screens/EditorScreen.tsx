@@ -18,6 +18,7 @@ import {SVGViewer} from "../components/SVGViewer";
 import {PDFViewer} from "../components/PDFViewer";
 import {Preview, PreviewMode} from "../components/Preview";
 import {MenuModal, MenuModalRef} from "./MenuModal";
+import {RenameModal, closedRenameModalState, showRenameModal} from "./RenameModal";
 import {buildPageError} from "../components/PageError";
 import Split from "react-split";
 import {CDNUploadModal} from "../components/CDNUploadModal";
@@ -91,6 +92,7 @@ export function EditorScreen() {
     const navigate = useNavigate();
     const location = useLocation();
     const menuRef = useRef<MenuModalRef>(null);
+    const [renameState, setRenameState] = useState(closedRenameModalState());
 
     const swrConfig = useSWRConfig();
 
@@ -151,7 +153,7 @@ export function EditorScreen() {
     const appContext = useMemo<ContextType<typeof AppContext>>(() => {
         async function dispatch(action: Action) {
             try {
-                setActionRunning(true);
+                if (action.type !== "rename") setActionRunning(true);
                 await doDispatch(appContext, action);
             } finally {
                 setActionRunning(false);
@@ -208,6 +210,8 @@ export function EditorScreen() {
             dispatch,
             navigate,
             menuModal: menuRef,
+            setActionRunning,
+            showRenameModal: showRenameModal(setRenameState),
             preview: {
                 open: previewOpen,
                 toggle: () => {
@@ -331,6 +335,7 @@ export function EditorScreen() {
                 </div>
             </Modal>
             <MenuModal menuRef={menuRef} />
+            <RenameModal key={renameState?.currentName} {...renameState} />
         </AppContext.Provider>
     </SWRConfig>;
 }

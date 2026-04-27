@@ -9,6 +9,7 @@ import {Entry} from "../components/FileBrowser";
 import {dirname, resolveRelativePath} from "../utils/strings";
 import {Config, getConfig} from "./config";
 import { isDefined } from "../utils/types";
+import { updateImagePaths } from "../utils/updateImagePaths";
 
 export const GITHUB_TOKEN_COOKIE = "github-token";
 const GITHUB_API_URL = "https://api.github.com/";
@@ -254,7 +255,7 @@ export async function githubDelete(context: ContextType<typeof AppContext>, path
 }
 
 // Adapted from this blog post: https://medium.com/@obodley/renaming-a-file-using-the-git-api-fed1e6f04188
-export async function githubRename(context: ContextType<typeof AppContext>, path: string, name: string, repo: GitHubRepository = "content"): Promise<boolean> {
+export async function githubRename(context: ContextType<typeof AppContext>, path: string, name: string, repo: GitHubRepository = "content", updatePaths: boolean = false): Promise<boolean> {
     const isPublished = context.editor?.isAlreadyPublished();
 
     const pathSegments = path.split("/");
@@ -302,6 +303,20 @@ export async function githubRename(context: ContextType<typeof AppContext>, path
     const blob = subtree?.tree?.find((b: any) => b.path === oldName);
     if (!blob) throw Error("A file with that name does not exist on the current branch.");
 
+    let newSha = blob.sha;
+    // if we're moving a json, and the user has asked for this, auto-fix figure paths
+    if (updatePaths && targetFilename?.endsWith(".json")) {
+        const updatedContent = updateImagePaths(context.editor.getCurrentDocAsString(), path, targetPath);
+        const blobData = await fetcher(`repos/$OWNER/${GITHUB_REPO_KEYS[repo]}/git/blobs`, {
+            method: "POST",
+            body: {
+                content: encodeContent(updatedContent, "json"),
+                encoding: "base64"
+            }
+        });
+        newSha = blobData.sha;
+    }
+
     // Send the modified tree to github, with the updated path
     const newTree = await fetcher(`repos/$OWNER/${GITHUB_REPO_KEYS[repo]}/git/trees?recursive=1`,{
         method: "POST",
@@ -312,7 +327,7 @@ export async function githubRename(context: ContextType<typeof AppContext>, path
                     "path": targetPath,
                     "mode": blob.mode,
                     "type": blob.type,
-                    "sha": blob.sha
+                    "sha": newSha
                 },
                 {
                     "path": `${basePath}/${blob.path}`,
@@ -343,8 +358,8 @@ export async function githubRename(context: ContextType<typeof AppContext>, path
 
     // Ensure that requests to github after this update do not return stale data
     updateGitHubCacheKey();
-    // Renaming in this way doesn't change the file sha, so we can reuse it in the new cache entry!
-    const shouldRefresh = await addPathToCache(targetPathSegments[0], targetPathSegments.slice(1).join("/"), context, repo, {path: targetPath, name: targetFilename, sha: blob.sha, type: "file"});
+    // Renaming in this way might change the file sha (if it's a JSON file), so we use the new one!
+    const shouldRefresh = await addPathToCache(targetPathSegments[0], targetPathSegments.slice(1).join("/"), context, repo, {path: targetPath, name: targetFilename, sha: newSha, type: "file"});
     if (!shouldRefresh) await deletePathFromCache(path, context, repo);
     return shouldRefresh;
 }
