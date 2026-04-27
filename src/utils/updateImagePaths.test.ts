@@ -1,22 +1,22 @@
 import { Content, ContentBase, Figure, Image, IsaacNumericQuestion } from "../isaac-data-types";
-import { updateImagePaths } from "./updateImagePaths";
+import { isFigure, updateImagePaths } from "./updateImagePaths";
 
 describe("updateImagePaths", () => {
     describe("error cases", () => {
         it("throws on invalid JSON", () => {
-            expect(() => updateImagePaths("not json", path1, path2))
+            expect(() => updateImagePaths("not json", "a/b/file.json", "a/c/file.json"))
                 .toThrow("updateImagePaths: content is not valid JSON");
         });
 
         it("throws when old and new paths are the same", () => {
-            expect(() => testUpdateImagePaths(empty, path1, path1))
+            expect(() => testUpdateImagePaths(({}), "a/b/file.json", "a/b/file.json"))
                 .toThrow("updateImagePaths: old and new paths are the same");
         });
     });
 
     it("returns an empty document unchanged", () => {
-        const result = testUpdateImagePaths(empty, path1, path2);
-        expect(result).toEqual(empty);
+        const result = testUpdateImagePaths(({}), "a/b/file.json", "a/c/file.json");
+        expect(result).toEqual(({}));
     });
 
     // eg: content/questions/maths/statistics/hypothesis_testing/level3/testing_3_9_r1.json
@@ -180,9 +180,3 @@ const makeContent = (val: Figure | string): Content => {
     }
     return { type: "content", value: val};
 };
-const isFigure = (maybeFigure: unknown): maybeFigure is Figure => typeof maybeFigure === 'object' && maybeFigure !== null &&
-    "type" in maybeFigure && maybeFigure.type === 'figure';
-
-const empty = {} as Content;
-const path1 = "a/b/file.json";
-const path2 = "a/c/file.json";
