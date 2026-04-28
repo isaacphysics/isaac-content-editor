@@ -44,7 +44,7 @@ import {ContentType, getEntryType} from "./registry";
 import {JSONEditor} from "./JSONEditor";
 
 import styles from "./styles/semantic.module.css";
-import {MetadataPresenter} from "./Metadata";
+import {MetaItemKey, MetadataPresenter} from "./Metadata";
 import classNames from "classnames";
 
 interface Shift {
@@ -112,10 +112,6 @@ function SemanticItemInner(props: SemanticItemProps) {
 
     const entryType = getEntryType(typeOverride ?? doc);
 
-    const metadata = entryType.metadata;
-    const meta = metadata && showMeta && !jsonMode && <div className={styles.metadata}>
-        <MetadataPresenter {...subProps} metadata={metadata} />
-    </div>;
 
     const HeaderPresenter = entryType.headerPresenter;
     const header = !jsonMode && HeaderPresenter ? <HeaderPresenter {...subProps} /> : null;
@@ -125,6 +121,11 @@ function SemanticItemInner(props: SemanticItemProps) {
 
     const FooterPresenter = entryType.footerPresenter;
     const footer = !jsonMode && FooterPresenter ? <FooterPresenter {...subProps} /> : null;
+
+    const metadata = ((BodyPresenter as {filterMetadata?: (metadata: string[] | undefined, doc: Content) => string[] | undefined} | undefined)?.filterMetadata?.(entryType.metadata, doc) ?? entryType.metadata) as MetaItemKey[] | undefined;
+    const meta = metadata && showMeta && !jsonMode && <div className={styles.metadata}>
+        <MetadataPresenter {...subProps} metadata={metadata} />
+    </div>;
 
     // Render outline with type name
     const BoxedItem = <Box
