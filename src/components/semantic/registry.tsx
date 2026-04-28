@@ -21,7 +21,7 @@ import {CHOICE_TYPES} from "./ChoiceInserter";
 import {TabsPresenter} from "./presenters/TabsPresenter";
 import React, {FunctionComponent, Provider} from "react";
 import {ChoicePresenter, CoordinateItemPresenter} from "./presenters/ChoicePresenter";
-import {Content} from "../../isaac-data-types";
+import {Content, Figure} from "../../isaac-data-types";
 import {FigurePresenter} from "./presenters/FigurePresenter";
 import {ValuePresenter} from "./presenters/BaseValuePresenter";
 import {ContentValueOrChildrenPresenter} from "./presenters/ContentValueOrChildrenPresenter";
@@ -113,7 +113,7 @@ interface RegistryEntry {
     bodyPresenter?: ValuePresenter;
     footerPresenter?: Presenter;
     blankValue?: string;
-    metadata?: MetaItemKey[];
+    metadata?: (MetaItemKey | ((doc: Content) => MetaItemKey | undefined))[];
     contextProviderWrapper?: Provider<Content | null>;
     className?: string;
 }
@@ -194,7 +194,12 @@ const figure: RegistryEntry = {
     name: "Figure",
     bodyPresenter: FigurePresenter,
     blankValue: "Enter caption here",
-    metadata: mediaMeta,
+    metadata: (mediaMeta as RegistryEntry['metadata'])?.toSpliced(
+        // hide altText if doc.altText is the empty string (i.e. has been marked as decorative)
+        mediaMeta.indexOf("altText"), 
+        1, 
+        (doc: Figure) => (doc.altText === "" ? undefined : "altText")
+    ),
 };
 const video: RegistryEntry = {
     name: "Video",

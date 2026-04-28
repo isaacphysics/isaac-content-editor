@@ -122,7 +122,9 @@ function SemanticItemInner(props: SemanticItemProps) {
     const FooterPresenter = entryType.footerPresenter;
     const footer = !jsonMode && FooterPresenter ? <FooterPresenter {...subProps} /> : null;
 
-    const metadata = ((BodyPresenter as {filterMetadata?: (metadata: string[] | undefined, doc: Content) => string[] | undefined} | undefined)?.filterMetadata?.(entryType.metadata, doc) ?? entryType.metadata) as MetaItemKey[] | undefined;
+    const metadata = entryType.metadata
+        ?.map(m => typeof m === "function" ? m(doc) : m)
+        .filter(Boolean) as MetaItemKey[];
     const meta = metadata && showMeta && !jsonMode && <div className={styles.metadata}>
         <MetadataPresenter {...subProps} metadata={metadata} />
     </div>;
