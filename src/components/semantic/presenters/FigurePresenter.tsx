@@ -12,7 +12,7 @@ import { useFixedRef } from "../../../utils/hooks";
 
 import styles from "../styles/figure.module.css";
 import {NON_STATIC_FIGURE_FLAG} from "../../../isaac/IsaacTypes";
-import {Alert} from "reactstrap";
+import {Alert, Input, Label} from "reactstrap";
 import { DropZoneQuestionContext } from "./ItemQuestionPresenter";
 import { FigureRegionModal } from "../../FigureRegionModal";
 import { InlineQuestionContext } from "./questionPresenters";
@@ -232,5 +232,27 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
                 regions={figureRegions} setRegions={setFigureRegions} figureNum={typeof figureNumber === "number" ? figureNumber : undefined}
             />}
         </div>}
+
+        {/*Set alt text to empty string for decorative images*/}
+        <Label>
+            <Input type="checkbox"
+                checked={doc.altText === ""}
+                onChange={(e) => {
+                    if (e.target.checked) {
+                        update({
+                            ...doc,
+                            altText: "",
+                        });
+                    } else {
+                        update({
+                            ...doc,
+                            altText: undefined,
+                        });
+                    }
+                }}
+                className="me-1"
+            />
+            Decorative (sets empty alt text)
+        </Label>
     </>;
 }
