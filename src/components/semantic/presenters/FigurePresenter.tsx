@@ -246,7 +246,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
                     } else {
                         update({
                             ...doc,
-                            altText: undefined,
+                            altText: doc.altText === "" ? undefined : doc.altText,
                         });
                     }
                 }}
