@@ -7,7 +7,7 @@ import { PresenterProps } from "../registry";
 import { BaseValuePresenter } from "./BaseValuePresenter";
 import {githubUpload, updateGitHubCacheKey, useGithubContents} from "../../../services/github";
 import { AppContext } from "../../../App";
-import { dirname } from "../../../utils/strings";
+import { dirname, generateGuid } from "../../../utils/strings";
 import { useFixedRef } from "../../../utils/hooks";
 
 import styles from "../styles/figure.module.css";
@@ -16,6 +16,7 @@ import {Alert, Input, Label} from "reactstrap";
 import { DropZoneQuestionContext } from "./ItemQuestionPresenter";
 import { FigureRegionModal } from "../../FigureRegionModal";
 import { InlineQuestionContext } from "./questionPresenters";
+import { isDefined } from "../../../utils/types";
 
 function githubURLFromGithubData(data: {download_url: string}, svgView?: string | null) {
     // If there is an SVG view, include at the end of the URL
@@ -120,6 +121,12 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
             imageRef.current.src = dataUrl;
         }
     }, [imageDataFromGithub, doc]);
+
+    useEffect(() => {
+        if (!isDefined(doc.id)) {
+            update({...doc, id: generateGuid()});
+        }
+    }, [doc, update]);
 
     useEffect(() => {
         if (figureRegions?.length) {
