@@ -115,18 +115,16 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
 
     const imageDataFromGithub = useGetContentMediaSrcDataFromGithub(doc);
 
+    if (!isDefined(doc.id)) {
+        update({...doc, id: generateGuid()});
+    }
+
     useEffect(() => {
         const dataUrl = getImageDataFromGithub({doc, data: imageDataFromGithub});
         if (imageRef.current && dataUrl) {
             imageRef.current.src = dataUrl;
         }
     }, [imageDataFromGithub, doc]);
-
-    useEffect(() => {
-        if (!isDefined(doc.id)) {
-            update({...doc, id: generateGuid()});
-        }
-    }, [doc, update]);
 
     useEffect(() => {
         if (figureRegions?.length) {
