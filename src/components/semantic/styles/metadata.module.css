@@ -5,10 +5,18 @@
     margin-left: -15px;
     align-items: baseline;
     margin-bottom: 0;
+
+    &:has(:global(.form-check-input)) {
+        align-items: center;
+    }
 }
 
 .label {
     text-align: right;
+
+    :global(label) {
+        margin-bottom: 3px;
+    }
 }
 
 .row :global(.form-control), .row :global(.btn) {
@@ -17,7 +25,7 @@
 
 .row :global(.form-check-input) {
     position: static;
-    margin: 12px 0 calc(13px + 0.5em);
+    margin: 12px 0;
 }
 
 .row :global(.btn-link.btn-sm) {
