@@ -17,6 +17,15 @@
     :global(label) {
         margin-bottom: 3px;
     }
+    + div:has(:global(.form-check-input)) {
+        display: flex;
+        align-items: center;
+
+        :global(.form-text) {
+            margin-left: 0.75em;
+            margin-bottom: 0.5em;
+        }
+    }
 }
 
 .row :global(.form-control), .row :global(.btn) {
