@@ -503,6 +503,7 @@ export type Video = Media
 
 export interface DesmosEmbedding extends Media {
     calculatorId?: string;
+    calculatorType?: "3d";
 }
 
 export interface GeogebraEmbedding extends Media {
