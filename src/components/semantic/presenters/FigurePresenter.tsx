@@ -246,11 +246,13 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
                     if (e.target.checked) {
                         update({
                             ...doc,
+                            decorative: true,
                             altText: "",
                         });
                     } else {
                         update({
                             ...doc,
+                            decorative: false,
                             altText: doc.altText === "" ? undefined : doc.altText,
                         });
                     }
