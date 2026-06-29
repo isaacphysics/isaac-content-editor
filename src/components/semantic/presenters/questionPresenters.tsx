@@ -584,6 +584,7 @@ export function InlineQuestionPartPresenter(props: PresenterProps<IsaacInlinePar
     }, [choices.props.doc.choices]);
 
     return <>
+        <h4><EditableTitleProp {...props} placeHolder="Question part title"/></h4>
         <h6><EditableIDProp {...props} label="Question ID"/></h6>
         {props.doc.id && props.doc.id.match(/^\[|\]$/) && <p className="text-danger"><i>Warning: the ID should not include the surrounding square brackets!</i></p>}
         <EditableInlineTypeProp {...props} disabled={isDisabled} />
