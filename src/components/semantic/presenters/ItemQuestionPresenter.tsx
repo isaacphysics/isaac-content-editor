@@ -110,9 +110,9 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>}
         <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>
         {isDndQuestion(doc) && <DndQuestionInstructions />}
-
-        <ContentValueOrChildrenPresenter {...props} update={updateWithDropZoneCount} topLevel />
         {isClozeQuestion(doc) && <ClozeQuestionInstructions />}
+        <ContentValueOrChildrenPresenter {...props} update={updateWithDropZoneCount} topLevel />
+
         <Box name="Items">
             <Row className={styles.itemsHeaderRow}>
                 <Col xs={3} className={styles.center}>

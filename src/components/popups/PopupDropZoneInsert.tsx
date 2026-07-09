@@ -1,11 +1,15 @@
-import React, {RefObject, useCallback, useRef, useState} from "react";
+import React, {RefObject, useCallback, useContext, useRef, useState} from "react";
 import {Popup, PopupCloseContext, PopupRef} from "./Popup";
 import {Button, Container, Input, InputGroup, Label} from "reactstrap";
 import {ReactCodeMirrorRef} from "@uiw/react-codemirror";
 import styles from "../../styles/editor.module.css";
+import { DropZoneQuestionContext } from "../semantic/presenters/ItemQuestionPresenter";
 
 export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemirror: RefObject<ReactCodeMirrorRef> }) => {
     const popupRef = useRef<PopupRef>(null);
+    const {isDndQuestion, dropZoneIds} = useContext(DropZoneQuestionContext);
+
+    const updatedDropZoneIds = useRef<Set<string>>(dropZoneIds);
 
     const [width, setWidth] = useState<number>();
     const [height, setHeight] = useState<number>();
@@ -13,12 +17,28 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
     const [valid, setValid] = useState<boolean>(true);
     const [inLatex, setInLatex] = useState<boolean>(false);
 
+    const nextDropZoneId = useCallback(() => {
+        let nextId = "A1";
+        while (updatedDropZoneIds.current?.has(nextId)) {
+            const number = parseInt(nextId.substring(1));
+            nextId = `A${number + 1}`;
+        }
+        return nextId;
+    }, [updatedDropZoneIds]);
+    const [id, setId] = useState<string>(nextDropZoneId());
+
     const generateAndInsertDropZone = useCallback(() => {
-        const dropZoneSyntax = `[drop-zone${(width || height || index) ? "|" : ""}${index ? `i-${index}` : ""}${width ? `w-${width}` : ""}${height ? `h-${height}` : ""}]`;
+        const dropZoneSyntax = `[drop-zone${id ? `:${id}` : ""}${(width || height || index) ? "|" : ""}${index ? `i-${index}` : ""}${width ? `w-${width}` : ""}${height ? `h-${height}` : ""}]`;
+        if (id) {
+            if (!updatedDropZoneIds.current) {
+                updatedDropZoneIds.current = new Set<string>();
+            }
+            updatedDropZoneIds.current.add(id);
+        }
         codemirror.current?.view?.dispatch(
             codemirror.current?.view?.state.replaceSelection(inLatex ? `\\text{${dropZoneSyntax}}` : dropZoneSyntax)
         );
-    }, [width, height, index, inLatex, codemirror]);
+    }, [width, height, index, id, inLatex, codemirror]);
 
     const ifValidNumericalInputThen = (f: (n: number | undefined) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const n = parseInt(e.target.value);
@@ -34,9 +54,14 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
     return <>
         <button className={styles.cmPanelButton} title={"Insert cloze drop-zone"} onClick={(event) => {
             popupRef.current?.open(event);
-        }}>{wide ? "Add cloze drop-zone" : "➕ drop-zone"}</button>
+        }}>{wide ? `Add ${isDndQuestion ? "DnD" : "cloze"} drop-zone` : "➕ drop-zone"}</button>
         <Popup popUpRef={popupRef}>
             <Container className={styles.cmPanelPopup}>
+                {isDndQuestion && <>
+                    <Label for={"drop-zone-id"}>Drop-zone ID:</Label>
+                    <Input id={"drop-zone-id"} defaultValue={nextDropZoneId()} onChange={(e) => setId(e.target.value)} />
+                    <hr/>
+                </>}
                 <Label for={"drop-zone-width"}>Width:</Label>
                 <Input id={"drop-zone-width"} placeholder={"Default"} onChange={ifValidNumericalInputThen(setWidth)}/>
                 <hr/>
@@ -57,6 +82,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
                         setWidth(undefined);
                         setHeight(undefined);
                         setIndex(undefined);
+                        setId(nextDropZoneId());
                         setInLatex(false);
                         close?.();
                     }}>
