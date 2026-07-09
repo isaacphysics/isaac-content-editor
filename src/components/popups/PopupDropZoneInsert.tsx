@@ -11,10 +11,9 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
 
     const updatedDropZoneIds = useRef<Set<string>>(dropZoneIds);
 
-    const [width, setWidth] = useState<number>();
-    const [height, setHeight] = useState<number>();
-    const [index, setIndex] = useState<number>();
-    const [valid, setValid] = useState<boolean>(true);
+    const [width, setWidth] = useState<string>();
+    const [height, setHeight] = useState<string>();
+    const [index, setIndex] = useState<string>();
     const [inLatex, setInLatex] = useState<boolean>(false);
 
     const nextDropZoneId = useCallback(() => {
@@ -40,15 +39,11 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
         );
     }, [width, height, index, id, inLatex, codemirror]);
 
-    const ifValidNumericalInputThen = (f: (n: number | undefined) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        const n = parseInt(e.target.value);
-        if (!isNaN(n) || !e.target.value || e.target.value === "") {
-            setValid(true);
-            f(n);
-        } else {
-            setValid(false);
-        }
-    };
+    const widthInvalid = width && !(Number(width) > 0 && Number(width) <= 100);
+    const heightInvalid = height && !(Number(height) > 0 && Number(height) <= 100);
+    const indexInvalid = index && !Number(index);
+    const idInvalid = isDndQuestion && !id;
+    const valid = !idInvalid && !widthInvalid && !heightInvalid && !indexInvalid;
 
     return <>
         <button className={styles.cmPanelButton} title={"Insert cloze drop-zone"} onClick={(event) => {
@@ -57,19 +52,22 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
         <Popup popUpRef={popupRef}>
             <Container className={styles.cmPanelPopup}>
                 <Label for={"drop-zone-width"}>Width:</Label>
-                <Input id={"drop-zone-width"} placeholder={"Default"} onChange={ifValidNumericalInputThen(setWidth)}/>
+                <Input id={"drop-zone-width"} placeholder={"Default"} onChange={(e) => setWidth(e.target.value)} />
+                {widthInvalid && <Alert className="my-1" color="danger">Width must be a number between 1 and 100</Alert>}
                 <Label className="mt-2" for={"drop-zone-height"}>Height:</Label>
-                <Input id={"drop-zone-height"} placeholder={"Default"} onChange={ifValidNumericalInputThen(setHeight)} />
+                <Input id={"drop-zone-height"} placeholder={"Default"} onChange={(e) => setHeight(e.target.value)} />
+                {heightInvalid && <Alert className="my-1" color="danger">Height must be a number between 1 and 100</Alert>}
                 <hr/>
                 {isClozeQuestion && <>
                     <Label for={"drop-zone-index"}>Index override:</Label>
-                    <Input id={"drop-zone-index"} placeholder={"None"} onChange={ifValidNumericalInputThen(setIndex)} />
+                    <Input id={"drop-zone-index"} placeholder={"None"} onChange={(e) => setIndex(e.target.value)} />
+                    {indexInvalid && <Alert className="my-1" color="danger">Index must be a number</Alert>}
                     <hr/>
                 </>}
                 {isDndQuestion && <>
                     <Label for={"drop-zone-id"}>Drop-zone ID:</Label>
-                    <Input id={"drop-zone-id"} defaultValue={nextDropZoneId()} onChange={(e) => {setId(e.target.value); setValid(!!e.target.value)}} />
-                    {!id && <Alert className="mt-1" color="danger">Missing ID field</Alert>}
+                    <Input id={"drop-zone-id"} defaultValue={nextDropZoneId()} onChange={(e) => setId(e.target.value)} />
+                    {idInvalid && <Alert className="my-1" color="danger">Drop zone missing ID!</Alert>}
                     <hr/>
                 </>}
                 <InputGroup className={"ps-4"}>
