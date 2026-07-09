@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {createContext, useEffect, useRef, useState} from "react";
 import {Button, Input} from "reactstrap";
 
 import {EditableTitleProp} from "../props/EditableDocProp";
-import {TabsHeader, TabsMain, useTabs} from "./TabsPresenter";
+import {formatTabIndex, TabsHeader, TabsMain, useTabs} from "./TabsPresenter";
 import {PresenterProps} from "../registry";
 import {AudiencePresenter} from "./AudiencePresenter";
+import {QuestionTypes} from "./questionPresenters";
 
 import styles from "../styles/accordion.module.css";
+import { Content } from "../../../isaac-data-types";
 
 type Display = { audience: string[]; nonAudience: string[] } | undefined;
 
@@ -139,6 +141,13 @@ function AudienceDisplayControl({display, set, title}: AudienceDisplayControlPro
     </div>;
 }
 
+export const AccordionContext = createContext<{
+    accordionCharacter?: string;
+    questionNumber: Map<string, number>;
+}>({
+    questionNumber: new Map()
+});
+
 export function AccordionPresenter(props: PresenterProps) {
     const {doc, update} = props;
     const {
@@ -162,7 +171,25 @@ export function AccordionPresenter(props: PresenterProps) {
         display
     });
 
-    return <>
+    const accordionCharacter = String(formatTabIndex(index, "alphabetical"));
+    const [questionNumber, setQuestionNumber] = useState(() => {
+        const questionNumbers = new Map<string, number>();
+
+        doc.children?.forEach((child, i) => {
+            const childAccordionCharacter = String(formatTabIndex(i, "alphabetical"));
+            console.log("child", child, childAccordionCharacter);
+            (child as Content).children?.forEach((grandchild) => {
+                if (grandchild.type && grandchild.type in QuestionTypes) {
+                    questionNumbers.set(childAccordionCharacter, (questionNumbers.get(childAccordionCharacter) ?? 0) + 1);
+                }
+            });
+        });
+        return questionNumbers;
+    });
+
+
+
+    return <AccordionContext.Provider value={{ accordionCharacter, questionNumber: questionNumber }}>
         <div className={styles.headerDisplayControls}>
             <AudienceDisplayControl
                 display={doc.display as Display}
@@ -206,5 +233,5 @@ export function AccordionPresenter(props: PresenterProps) {
                 {!currentChild.title && <Button onClick={() => editTitleRef.current?.startEdit()}>Set section title</Button>}
             </> : undefined}/>
         </div>
-    </>;
+    </AccordionContext.Provider>;
 }

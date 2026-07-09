@@ -44,7 +44,7 @@ const EditableTabsLayoutProp = EditableDocPropWithStyle("layout", [
     {value: undefined, label: "Default"}
 ], "Tab display type:", {value: "tabs", label: "Tabs"}, {block: true});
 
-const formatTabIndex = (index: number, format?: TabsProps["indexFormat"]) => {
+export const formatTabIndex = (index: number, format?: TabsProps["indexFormat"]) => {
     if (format === "alphabetical") {
         return String.fromCharCode(65 + index % 26);
     }

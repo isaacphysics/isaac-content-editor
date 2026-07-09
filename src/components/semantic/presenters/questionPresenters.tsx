@@ -32,6 +32,7 @@ import { EditableInlineTypeProp, INLINE_TYPES } from "./InlineQuestionTypePresen
 import { isAda } from "../../../services/site";
 import { extractValueOrChildrenText } from "../../../utils/content";
 import { inlineQuestionRegex } from "../../../isaac/IsaacTypes";
+import { AccordionContext } from "./AccordionPresenter";
 
 export const QuestionContext = React.createContext<Content | null>(null);
 
@@ -55,7 +56,7 @@ export type QUESTION_TYPES =
     | "isaacCoordinateQuestion"
 ;
 
-const QuestionTypes: Record<QUESTION_TYPES, {name: string}> = {
+export const QuestionTypes: Record<QUESTION_TYPES, {name: string}> = {
     isaacQuestion: {
         name: "Quick Question",
     },
@@ -205,11 +206,16 @@ export function QuestionTypeSelector({doc, update, questionTypes = QuestionTypes
 }
 
 export function QuestionMetaPresenter(props: PresenterProps) {
+    const { accordionCharacter, questionNumber } = useContext(AccordionContext);
+    const definedAccordionCharacter = accordionCharacter ?? "?";
+
+    console.log(questionNumber, definedAccordionCharacter, questionNumber.get(definedAccordionCharacter));
+
     return <div>
         <div className={styles.questionType}>
             <QuestionTypeSelector {...props} />
         </div>
-        <h4><EditableTitleProp {...props} placeHolder="Question title"/></h4>
+        <h4><EditableTitleProp {...props} placeHolder={`${definedAccordionCharacter}${(questionNumber.get(definedAccordionCharacter) || 0) + 1}`} /></h4>
         <h6><EditableIDProp {...props} label="Question ID"/></h6>
     </div>;
 }
