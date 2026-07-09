@@ -39,9 +39,9 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
         );
     }, [width, height, index, id, inLatex, codemirror]);
 
-    const widthInvalid = width && !(Number(width) > 0 && Number(width) <= 100);
-    const heightInvalid = height && !(Number(height) > 0 && Number(height) <= 100);
-    const indexInvalid = index && !Number(index);
+    const widthInvalid = width && (Number.isNaN(Number(width)) || Number(width) < 0);
+    const heightInvalid = height && (Number.isNaN(Number(height)) || Number(height) < 0);
+    const indexInvalid = index && (!Number.isInteger(Number(index)) || Number(index) < 0);
     const idInvalid = isDndQuestion && !id;
     const valid = !idInvalid && !widthInvalid && !heightInvalid && !indexInvalid;
 
@@ -53,15 +53,15 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
             <Container className={styles.cmPanelPopup}>
                 <Label for={"drop-zone-width"}>Width:</Label>
                 <Input id={"drop-zone-width"} placeholder={"Default"} onChange={(e) => setWidth(e.target.value)} />
-                {widthInvalid && <Alert className="my-1" color="danger">Width must be a number between 1 and 100</Alert>}
+                {widthInvalid && <Alert className="my-1" color="warning">Width must be a positive number</Alert>}
                 <Label className="mt-2" for={"drop-zone-height"}>Height:</Label>
                 <Input id={"drop-zone-height"} placeholder={"Default"} onChange={(e) => setHeight(e.target.value)} />
-                {heightInvalid && <Alert className="my-1" color="danger">Height must be a number between 1 and 100</Alert>}
+                {heightInvalid && <Alert className="my-1" color="warning">Height must be a positive number</Alert>}
                 <hr/>
                 {isClozeQuestion && <>
                     <Label for={"drop-zone-index"}>Index override:</Label>
                     <Input id={"drop-zone-index"} placeholder={"None"} onChange={(e) => setIndex(e.target.value)} />
-                    {indexInvalid && <Alert className="my-1" color="danger">Index must be a number</Alert>}
+                    {indexInvalid && <Alert className="my-1" color="warning">Index must be a positive integer</Alert>}
                     <hr/>
                 </>}
                 {isDndQuestion && <>
