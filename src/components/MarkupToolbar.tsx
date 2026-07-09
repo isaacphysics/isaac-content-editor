@@ -75,7 +75,7 @@ export const MarkupToolbar = ({set, cancel, codemirror, encoding, value}: { set:
             </button>
             {encodingSpecific(
                 <>
-                    {isClozeQuestion || isDndQuestion && <PopupDropZoneInsert wide={wide} codemirror={codemirror}/>}
+                    {(isClozeQuestion || isDndQuestion) && <PopupDropZoneInsert wide={wide} codemirror={codemirror}/>}
                     {inlineContext.isInlineQuestion && <PopupInlineQuestionInsert wide={wide} codemirror={codemirror}/>}
                     {value?.includes("<table") && <PopupTableClass wide={wide} codemirror={codemirror}/>}
                     <PopupGlossaryTermSelect wide={wide} codemirror={codemirror}/>

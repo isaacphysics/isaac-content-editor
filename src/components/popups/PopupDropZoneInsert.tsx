@@ -1,13 +1,13 @@
 import React, {RefObject, useCallback, useContext, useRef, useState} from "react";
 import {Popup, PopupCloseContext, PopupRef} from "./Popup";
-import {Button, Container, Input, InputGroup, Label} from "reactstrap";
+import {Alert, Button, Container, Input, InputGroup, Label} from "reactstrap";
 import {ReactCodeMirrorRef} from "@uiw/react-codemirror";
 import styles from "../../styles/editor.module.css";
 import { DropZoneQuestionContext } from "../semantic/presenters/ItemQuestionPresenter";
 
 export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemirror: RefObject<ReactCodeMirrorRef> }) => {
     const popupRef = useRef<PopupRef>(null);
-    const {isDndQuestion, dropZoneIds} = useContext(DropZoneQuestionContext);
+    const {isDndQuestion, isClozeQuestion, dropZoneIds} = useContext(DropZoneQuestionContext);
 
     const updatedDropZoneIds = useRef<Set<string>>(dropZoneIds);
 
@@ -48,7 +48,6 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
         } else {
             setValid(false);
         }
-
     };
 
     return <>
@@ -57,20 +56,22 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
         }}>{wide ? `Add ${isDndQuestion ? "DnD" : "cloze"} drop-zone` : "➕ drop-zone"}</button>
         <Popup popUpRef={popupRef}>
             <Container className={styles.cmPanelPopup}>
-                {isDndQuestion && <>
-                    <Label for={"drop-zone-id"}>Drop-zone ID:</Label>
-                    <Input id={"drop-zone-id"} defaultValue={nextDropZoneId()} onChange={(e) => setId(e.target.value)} />
-                    <hr/>
-                </>}
                 <Label for={"drop-zone-width"}>Width:</Label>
                 <Input id={"drop-zone-width"} placeholder={"Default"} onChange={ifValidNumericalInputThen(setWidth)}/>
-                <hr/>
-                <Label for={"drop-zone-height"}>Height:</Label>
+                <Label className="mt-2" for={"drop-zone-height"}>Height:</Label>
                 <Input id={"drop-zone-height"} placeholder={"Default"} onChange={ifValidNumericalInputThen(setHeight)} />
                 <hr/>
-                <Label for={"drop-zone-index"}>Index override:</Label>
-                <Input id={"drop-zone-index"} placeholder={"None"} onChange={ifValidNumericalInputThen(setIndex)} />
-                <hr/>
+                {isClozeQuestion && <>
+                    <Label for={"drop-zone-index"}>Index override:</Label>
+                    <Input id={"drop-zone-index"} placeholder={"None"} onChange={ifValidNumericalInputThen(setIndex)} />
+                    <hr/>
+                </>}
+                {isDndQuestion && <>
+                    <Label for={"drop-zone-id"}>Drop-zone ID:</Label>
+                    <Input id={"drop-zone-id"} defaultValue={nextDropZoneId()} onChange={(e) => {setId(e.target.value); setValid(!!e.target.value)}} />
+                    {!id && <Alert className="mt-1" color="danger">Missing ID field</Alert>}
+                    <hr/>
+                </>}
                 <InputGroup className={"ps-4"}>
                     <Label for={"drop-zone-in-latex"}>Inside LaTeX?:</Label>
                     <Input type={"checkbox"} id={"drop-zone-in-latex"} onChange={() => setInLatex(b => !b)} checked={inLatex} />
