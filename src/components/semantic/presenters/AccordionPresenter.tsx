@@ -8,7 +8,7 @@ import {AudiencePresenter} from "./AudiencePresenter";
 import {QuestionTypes} from "./questionPresenters";
 
 import styles from "../styles/accordion.module.css";
-import { Content } from "../../../isaac-data-types";
+import { Content, IsaacInlineQuestion } from "../../../isaac-data-types";
 
 type Display = { audience: string[]; nonAudience: string[] } | undefined;
 
@@ -173,9 +173,19 @@ export function AccordionPresenter(props: PresenterProps) {
     });
 
     const countQuestions = (doc: Content) => {
+        const answerableQuestionTypes = Object.keys(QuestionTypes).filter((type) => type !== "isaacQuestion");
+
         let count = 0;
         doc.children?.forEach((child) => {
-            if (child.type && child.type in QuestionTypes) count += 1;
+            if (child.type && answerableQuestionTypes.includes(child.type)) {
+                count += 1;
+            }
+
+            if (child.type && child.type === "isaacInlineRegion") {
+                (child as IsaacInlineQuestion).inlineQuestions?.forEach((inlineQuestion) => {
+                    if (inlineQuestion.type && answerableQuestionTypes.includes(inlineQuestion.type)) count += 1;
+                });
+            }
         });
         return count;
     };

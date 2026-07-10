@@ -581,13 +581,14 @@ const getInlineQuestionPresenter = (type: INLINE_TYPES, props: PresenterProps<Is
 export function InlineQuestionPartPresenter(props: PresenterProps<IsaacInlinePart>) {
     const [isDisabled, setIsDisabled] = useState(false);
     const choices = <ChoicesPresenter {...props} />;
+    const { accordionCharacter, questionCount } = useContext(AccordionContext);
     
     useEffect(() => {
         setIsDisabled(choices.props.doc.choices && choices.props.doc.choices.length > 0);
     }, [choices.props.doc.choices]);
 
     return <>
-        <h4><EditableTitleProp {...props} placeHolder="Question part title"/></h4>
+        <h4><EditableTitleProp {...props} placeHolder={`${accordionCharacter}${(questionCount.get(accordionCharacter) || 0)}`}/></h4>
         <h6><EditableIDProp {...props} label="Question ID"/></h6>
         {props.doc.id && props.doc.id.match(/^\[|\]$/) && <p className="text-danger"><i>Warning: the ID should not include the surrounding square brackets!</i></p>}
         <EditableInlineTypeProp {...props} disabled={isDisabled} />
