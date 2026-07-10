@@ -1,8 +1,9 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useContext, useRef } from "react";
 
 import { ContentBase } from "../isaac-data-types";
 
 import { generateGuid } from "./strings";
+import { AccordionContext } from "../components/semantic/presenters/AccordionPresenter";
 
 export const generate = Symbol("generate id") as unknown as string;
 
@@ -37,6 +38,7 @@ export function useKeyedList<T, D>(items: T[] | undefined, deriveNewList: () => 
             const [newDoc, newList] = deriveNewList();
             newList.splice(index, 0, newElement);
             keyList.current.splice(index, 0, createKey(newElement, index));
+
             update(newDoc);
         }, [deriveNewList, update]),
         insertMultiple: useCallback((elements: [number, T][]) => {

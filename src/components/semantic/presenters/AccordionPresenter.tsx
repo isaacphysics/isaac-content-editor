@@ -143,9 +143,9 @@ function AudienceDisplayControl({display, set, title}: AudienceDisplayControlPro
 
 export const AccordionContext = createContext<{
     accordionCharacter?: string;
-    questionNumber: Map<string, number>;
+    questionCount: Map<string, number>;
 }>({
-    questionNumber: new Map()
+    questionCount: new Map()
 });
 
 export function AccordionPresenter(props: PresenterProps) {
@@ -172,24 +172,35 @@ export function AccordionPresenter(props: PresenterProps) {
     });
 
     const accordionCharacter = String(formatTabIndex(index, "alphabetical"));
-    const [questionNumber, setQuestionNumber] = useState(() => {
-        const questionNumbers = new Map<string, number>();
+
+    const countQuestions = (doc: Content) => {
+        let count = 0;
+        doc.children?.forEach((child) => {
+            if (child.type && child.type in QuestionTypes) count += 1;
+        });
+        return count;
+    };
+
+    const [questionCount, setQuestionCount] = useState(() => {
+        const newQuestionCount = new Map<string, number>();
 
         doc.children?.forEach((child, i) => {
             const childAccordionCharacter = String(formatTabIndex(i, "alphabetical"));
-            console.log("child", child, childAccordionCharacter);
-            (child as Content).children?.forEach((grandchild) => {
-                if (grandchild.type && grandchild.type in QuestionTypes) {
-                    questionNumbers.set(childAccordionCharacter, (questionNumbers.get(childAccordionCharacter) ?? 0) + 1);
-                }
-            });
+            newQuestionCount.set(childAccordionCharacter, countQuestions(child));
         });
-        return questionNumbers;
+        return newQuestionCount;
     });
 
+    const updateCurrentChildWithQuestionCount = (newDoc: Content, childAccordionCharacter: string) => {
+        setQuestionCount((prev => {
+            const newQuestionCount = new Map(prev);
+            newQuestionCount.set(childAccordionCharacter, countQuestions(newDoc));
+            return newQuestionCount;
+        }));
+        updateCurrentChild(newDoc);
+    };
 
-
-    return <AccordionContext.Provider value={{ accordionCharacter, questionNumber: questionNumber }}>
+    return <AccordionContext.Provider value={{ accordionCharacter, questionCount }}>
         <div className={styles.headerDisplayControls}>
             <AudienceDisplayControl
                 display={doc.display as Display}
@@ -203,8 +214,8 @@ export function AccordionPresenter(props: PresenterProps) {
             />
         </div>
         <div className={styles.wrapper}>
-            <TabsHeader {...allProps} />
-            <TabsMain {...allProps} back="▲" forward="▼" contentHeader={
+            <TabsHeader {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, accordionCharacter)} />
+            <TabsMain {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, accordionCharacter)} back="▲" forward="▼" contentHeader={
                 currentChild ? <>
                     <div className={styles.meta}>
                         <h3><EditableTitleProp ref={editTitleRef} {...currentChildProps} placeHolder="Section title" hideWhenEmpty /></h3>

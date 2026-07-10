@@ -206,16 +206,14 @@ export function QuestionTypeSelector({doc, update, questionTypes = QuestionTypes
 }
 
 export function QuestionMetaPresenter(props: PresenterProps) {
-    const { accordionCharacter, questionNumber } = useContext(AccordionContext);
+    const { accordionCharacter, questionCount } = useContext(AccordionContext);
     const definedAccordionCharacter = accordionCharacter ?? "?";
-
-    console.log(questionNumber, definedAccordionCharacter, questionNumber.get(definedAccordionCharacter));
 
     return <div>
         <div className={styles.questionType}>
             <QuestionTypeSelector {...props} />
         </div>
-        <h4><EditableTitleProp {...props} placeHolder={`${definedAccordionCharacter}${(questionNumber.get(definedAccordionCharacter) || 0) + 1}`} /></h4>
+        <h4><EditableTitleProp {...props} placeHolder={`${definedAccordionCharacter}${(questionCount.get(definedAccordionCharacter) || 0)}`} /></h4>
         <h6><EditableIDProp {...props} label="Question ID"/></h6>
     </div>;
 }
