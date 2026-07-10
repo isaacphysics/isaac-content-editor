@@ -1,9 +1,7 @@
 import { useCallback, useContext, useRef } from "react";
-
-import { ContentBase } from "../isaac-data-types";
-
+import { ContentBase, IsaacQuestionBase } from "../isaac-data-types";
 import { generateGuid } from "./strings";
-import { AccordionContext } from "../components/semantic/presenters/AccordionPresenter";
+import { AccordionContext } from "../isaac/IsaacTypes";
 
 export const generate = Symbol("generate id") as unknown as string;
 
@@ -23,17 +21,32 @@ const modifyContentId = (newContent: ContentBase) => {
     }
 };
 
+const modifyTitle = (newContent: ContentBase, title: string) => {
+    if (newContent.type === "isaacQuestion") {
+        const newQuestion = newContent as IsaacQuestionBase;
+        if (!newQuestion.title) {
+            newQuestion.title = title;
+        }
+    }
+};
+
 export function useKeyedList<T, D>(items: T[] | undefined, deriveNewList: () => [D, T[]], update: (newDoc: D, invertible?: boolean) => void) {
     const keyList = useRef(UNINITIALISED);
     if (keyList.current === UNINITIALISED) {
         // We only want to do this pre-mount, and then we manually keep this up to date after that.
         keyList.current = items?.map(createKey) ?? [];
     }
+    
+    const context = useContext(AccordionContext);
+    console.log("context", context);
+    const newQuestionTitle = `${context.accordionCharacter}${(context.questionCount.get(context.accordionCharacter) || 0) + 1}`;
+    // console.log("newQuestionTitle", newQuestionTitle, "questionCount", context.questionCount.get(context.accordionCharacter));
 
     return {
         insert: useCallback((index: number, newElement: T) => {
             const newContent = newElement as ContentBase;
             modifyContentId(newContent);
+            modifyTitle(newContent, newQuestionTitle);
             
             const [newDoc, newList] = deriveNewList();
             newList.splice(index, 0, newElement);

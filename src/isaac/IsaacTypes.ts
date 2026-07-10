@@ -24,3 +24,12 @@ export const dndDropZoneMissingIdRegex = /\[drop-zone([^:].*)?\]/g;
 export const dndDropZoneRegex = /\[drop-zone:(?<id>[a-zA-Z0-9_-]+)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?\]/g;
 
 export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<params>(\|(?<width>w-\d+?)?(?<height>h-\d+?)?| class="(?<classes>.*?)"))?\]/g;
+
+// Defined here to prevent circular imports crashing the app
+export const AccordionContext = createContext<{
+    accordionCharacter: string;
+    questionCount: Map<string, number>;
+}>({
+    accordionCharacter: "A",
+    questionCount: new Map()
+});

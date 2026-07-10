@@ -32,7 +32,6 @@ import { EditableInlineTypeProp, INLINE_TYPES } from "./InlineQuestionTypePresen
 import { isAda } from "../../../services/site";
 import { extractValueOrChildrenText } from "../../../utils/content";
 import { inlineQuestionRegex } from "../../../isaac/IsaacTypes";
-import { AccordionContext } from "./AccordionPresenter";
 
 export const QuestionContext = React.createContext<Content | null>(null);
 
@@ -206,13 +205,11 @@ export function QuestionTypeSelector({doc, update, questionTypes = QuestionTypes
 }
 
 export function QuestionMetaPresenter(props: PresenterProps) {
-    const { accordionCharacter, questionCount } = useContext(AccordionContext);
-
     return <div>
         <div className={styles.questionType}>
             <QuestionTypeSelector {...props} />
         </div>
-        <h4><EditableTitleProp {...props} placeHolder={`${accordionCharacter}${(questionCount.get(accordionCharacter) || 0)}`} /></h4>
+        <h4><EditableTitleProp {...props} placeHolder="Question title" /></h4>
         <h6><EditableIDProp {...props} label="Question ID"/></h6>
     </div>;
 }
@@ -581,14 +578,13 @@ const getInlineQuestionPresenter = (type: INLINE_TYPES, props: PresenterProps<Is
 export function InlineQuestionPartPresenter(props: PresenterProps<IsaacInlinePart>) {
     const [isDisabled, setIsDisabled] = useState(false);
     const choices = <ChoicesPresenter {...props} />;
-    const { accordionCharacter, questionCount } = useContext(AccordionContext);
     
     useEffect(() => {
         setIsDisabled(choices.props.doc.choices && choices.props.doc.choices.length > 0);
     }, [choices.props.doc.choices]);
 
     return <>
-        <h4><EditableTitleProp {...props} placeHolder={`${accordionCharacter}${(questionCount.get(accordionCharacter) || 0)}`}/></h4>
+        <h4><EditableTitleProp {...props} placeHolder="Question title"/></h4>
         <h6><EditableIDProp {...props} label="Question ID"/></h6>
         {props.doc.id && props.doc.id.match(/^\[|\]$/) && <p className="text-danger"><i>Warning: the ID should not include the surrounding square brackets!</i></p>}
         <EditableInlineTypeProp {...props} disabled={isDisabled} />

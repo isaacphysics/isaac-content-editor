@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Input} from "reactstrap";
 
 import {EditableTitleProp} from "../props/EditableDocProp";
@@ -9,6 +9,7 @@ import {QuestionTypes} from "./questionPresenters";
 
 import styles from "../styles/accordion.module.css";
 import { Content, IsaacInlineQuestion } from "../../../isaac-data-types";
+import { AccordionContext } from "../../../isaac/IsaacTypes";
 
 type Display = { audience: string[]; nonAudience: string[] } | undefined;
 
@@ -141,14 +142,6 @@ function AudienceDisplayControl({display, set, title}: AudienceDisplayControlPro
     </div>;
 }
 
-export const AccordionContext = createContext<{
-    accordionCharacter: string;
-    questionCount: Map<string, number>;
-}>({
-    accordionCharacter: "A",
-    questionCount: new Map()
-});
-
 export function AccordionPresenter(props: PresenterProps) {
     const {doc, update} = props;
     const {
@@ -173,17 +166,15 @@ export function AccordionPresenter(props: PresenterProps) {
     });
 
     const countQuestions = (doc: Content) => {
-        const answerableQuestionTypes = Object.keys(QuestionTypes).filter((type) => type !== "isaacQuestion");
-
         let count = 0;
         doc.children?.forEach((child) => {
-            if (child.type && answerableQuestionTypes.includes(child.type)) {
+            if (child.type && child.type in QuestionTypes) {
                 count += 1;
             }
 
             if (child.type && child.type === "isaacInlineRegion") {
                 (child as IsaacInlineQuestion).inlineQuestions?.forEach((inlineQuestion) => {
-                    if (inlineQuestion.type && answerableQuestionTypes.includes(inlineQuestion.type)) count += 1;
+                    if (inlineQuestion.type && inlineQuestion.type in QuestionTypes) count += 1;
                 });
             }
         });
@@ -202,6 +193,7 @@ export function AccordionPresenter(props: PresenterProps) {
 
     const updateCurrentChildWithQuestionCount = (newDoc: Content, childAccordionCharacter: string) => {
         setQuestionCount(prev => new Map(prev).set(childAccordionCharacter, countQuestions(newDoc)));
+        console.log("count", countQuestions(newDoc), newDoc);
         updateCurrentChild(newDoc);
     };
     
