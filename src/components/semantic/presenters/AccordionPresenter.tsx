@@ -142,9 +142,10 @@ function AudienceDisplayControl({display, set, title}: AudienceDisplayControlPro
 }
 
 export const AccordionContext = createContext<{
-    accordionCharacter?: string;
+    accordionCharacter: string;
     questionCount: Map<string, number>;
 }>({
+    accordionCharacter: "A",
     questionCount: new Map()
 });
 
@@ -171,8 +172,6 @@ export function AccordionPresenter(props: PresenterProps) {
         display
     });
 
-    const accordionCharacter = String(formatTabIndex(index, "alphabetical"));
-
     const countQuestions = (doc: Content) => {
         let count = 0;
         doc.children?.forEach((child) => {
@@ -192,15 +191,12 @@ export function AccordionPresenter(props: PresenterProps) {
     });
 
     const updateCurrentChildWithQuestionCount = (newDoc: Content, childAccordionCharacter: string) => {
-        setQuestionCount((prev => {
-            const newQuestionCount = new Map(prev);
-            newQuestionCount.set(childAccordionCharacter, countQuestions(newDoc));
-            return newQuestionCount;
-        }));
+        setQuestionCount(prev => new Map(prev).set(childAccordionCharacter, countQuestions(newDoc)));
         updateCurrentChild(newDoc);
     };
-
-    return <AccordionContext.Provider value={{ accordionCharacter, questionCount }}>
+    
+    const accordionChar = String(formatTabIndex(index, "alphabetical"));
+    return <AccordionContext.Provider value={{ accordionCharacter: accordionChar, questionCount }}>
         <div className={styles.headerDisplayControls}>
             <AudienceDisplayControl
                 display={doc.display as Display}
@@ -214,8 +210,8 @@ export function AccordionPresenter(props: PresenterProps) {
             />
         </div>
         <div className={styles.wrapper}>
-            <TabsHeader {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, accordionCharacter)} />
-            <TabsMain {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, accordionCharacter)} back="▲" forward="▼" contentHeader={
+            <TabsHeader {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, accordionChar)} />
+            <TabsMain {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, accordionChar)} back="▲" forward="▼" contentHeader={
                 currentChild ? <>
                     <div className={styles.meta}>
                         <h3><EditableTitleProp ref={editTitleRef} {...currentChildProps} placeHolder="Section title" hideWhenEmpty /></h3>
