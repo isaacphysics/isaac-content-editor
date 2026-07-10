@@ -32,14 +32,15 @@ const modifyContentId = (newContent: ContentBase) => {
 
 const modifyTitle = (newContent: ContentBase, newDoc: Content, index: number, questionCount: number) => {
     const contentType = newContent.type || "";
-    if (contentType in QuestionTypes || contentType === "inlineQuestionPart") {
+    if (index >= 0 && (contentType in QuestionTypes || contentType === "inlineQuestionPart")) {
+        // Give the question part inside an accordion a title to match a specified format (e.g. "A.i", "A.ii", "B", etc)
         const newQuestion = newContent as IsaacQuestionBase;
         if (!newQuestion.title) {
             newQuestion.title = `${formatTabIndex(index, "alphabetical")}${questionCount ? `.${convertNumberToRoman(questionCount + 1).toLowerCase()}` : ""}`;
         }
 
         // If the first question in the accordion had the title e.g. A, now convert it to A.i
-        if (newDoc.children) {
+        if (newDoc.children && questionCount === 1) {
             for (const child of newDoc.children) {
                 const childContent = child.type || "";
                 if (childContent in QuestionTypes || childContent === "inlineQuestionPart") {
@@ -54,7 +55,7 @@ const modifyTitle = (newContent: ContentBase, newDoc: Content, index: number, qu
     }
 };
 
-export function useKeyedList<T, D>(items: T[] | undefined, deriveNewList: () => [D, T[]], update: (newDoc: D, invertible?: boolean) => void) {
+export function useKeyedList<T, D extends ContentBase>(items: T[] | undefined, deriveNewList: () => [D, T[]], update: (newDoc: D, invertible?: boolean) => void) {
     const keyList = useRef(UNINITIALISED);
     if (keyList.current === UNINITIALISED) {
         // We only want to do this pre-mount, and then we manually keep this up to date after that.
@@ -80,7 +81,7 @@ export function useKeyedList<T, D>(items: T[] | undefined, deriveNewList: () => 
             const [newDoc, newList] = deriveNewList();
             elements.forEach(([index, newElement]) => {
                 modifyContentId(newElement as ContentBase);
-                modifyTitle(newElement as ContentBase, accordionIndex, (questionCount.get(accordionIndex) || 0) + index);
+                modifyTitle(newElement as ContentBase, newDoc, accordionIndex, (questionCount.get(accordionIndex) || 0) + index);
                 newList.splice(index, 0, newElement);
                 keyList.current.splice(index, 0, createKey(newElement, index));
             });
