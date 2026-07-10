@@ -12,7 +12,7 @@ import { EditableDocPropWithStyle, EditableIDProp, EditableTitleProp } from "../
 import { EditableTextRef } from "../props/EditableText";
 import { PresenterProps } from "../registry";
 import styles from "../styles/tabs.module.css";
-import { useKeyedList, useWithIndex } from "../../../utils/keyedListHook";
+import { formatTabIndex, useKeyedList, useWithIndex } from "../../../utils/keyedListHook";
 import { CheckboxDocProp } from "../props/CheckboxDocProp";
 import { isAda } from "../../../services/site";
 
@@ -43,13 +43,6 @@ const EditableTabsLayoutProp = EditableDocPropWithStyle("layout", [
     {value: "dropdowns", label: "Dropdowns"},
     {value: undefined, label: "Default"}
 ], "Tab display type:", {value: "tabs", label: "Tabs"}, {block: true});
-
-export const formatTabIndex = (index: number, format?: TabsProps["indexFormat"]) => {
-    if (format === "alphabetical") {
-        return String.fromCharCode(65 + index % 26);
-    }
-    return index + 1;
-};
 
 export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styles, suppressHeaderNames, showTitles, indexFormat}: TabsProps) {
     const elementNameLC = safeLowercase(elementName);

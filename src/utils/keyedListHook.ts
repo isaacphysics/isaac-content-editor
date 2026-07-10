@@ -2,12 +2,20 @@ import { useCallback, useContext, useRef } from "react";
 import { ContentBase, IsaacQuestionBase } from "../isaac-data-types";
 import { generateGuid } from "./strings";
 import { AccordionContext } from "../isaac/IsaacTypes";
+import { QuestionTypes } from "../components/semantic/presenters/questionPresenters";
 
 export const generate = Symbol("generate id") as unknown as string;
 
 let keyBase = 0;
 const createKey = (_: unknown, index: number) => `@${index}: ${++keyBase}`;
 const UNINITIALISED = [] as string[];
+
+export const formatTabIndex = (index: number, format?: "numeric" | "alphabetical") => {
+    if (format === "alphabetical") {
+        return String.fromCharCode(65 + index % 26);
+    }
+    return index + 1;
+};
 
 const modifyContentId = (newContent: ContentBase) => {
     if (newContent.id === generate) {
@@ -21,11 +29,12 @@ const modifyContentId = (newContent: ContentBase) => {
     }
 };
 
-const modifyTitle = (newContent: ContentBase, title: string) => {
-    if (newContent.type === "isaacQuestion") {
+const modifyTitle = (newContent: ContentBase, index: number, questionCount: number) => {
+    const contentType = newContent.type || "";
+    if (contentType in QuestionTypes || contentType === "inlineQuestionPart") {
         const newQuestion = newContent as IsaacQuestionBase;
         if (!newQuestion.title) {
-            newQuestion.title = title;
+            newQuestion.title = `${formatTabIndex(index, "alphabetical")}${questionCount + 1}`;
         }
     }
 };
@@ -37,33 +46,31 @@ export function useKeyedList<T, D>(items: T[] | undefined, deriveNewList: () => 
         keyList.current = items?.map(createKey) ?? [];
     }
     
-    const context = useContext(AccordionContext);
-    console.log("context", context);
-    const newQuestionTitle = `${context.accordionCharacter}${(context.questionCount.get(context.accordionCharacter) || 0) + 1}`;
-    // console.log("newQuestionTitle", newQuestionTitle, "questionCount", context.questionCount.get(context.accordionCharacter));
+    const { accordionIndex, questionCount } = useContext(AccordionContext);
 
     return {
         insert: useCallback((index: number, newElement: T) => {
             const newContent = newElement as ContentBase;
             modifyContentId(newContent);
-            modifyTitle(newContent, newQuestionTitle);
+            modifyTitle(newContent, accordionIndex, questionCount.get(accordionIndex) || 0);
             
             const [newDoc, newList] = deriveNewList();
             newList.splice(index, 0, newElement);
             keyList.current.splice(index, 0, createKey(newElement, index));
 
             update(newDoc);
-        }, [deriveNewList, update]),
+        }, [accordionIndex, deriveNewList, questionCount, update]),
         insertMultiple: useCallback((elements: [number, T][]) => {
             // Calling insert() multiple times before update() can modify the doc (each render?) will overwrite previous changes. Prefer this.
             const [newDoc, newList] = deriveNewList();
             elements.forEach(([index, newElement]) => {
                 modifyContentId(newElement as ContentBase);
+                modifyTitle(newElement as ContentBase, accordionIndex, (questionCount.get(accordionIndex) || 0) + index);
                 newList.splice(index, 0, newElement);
                 keyList.current.splice(index, 0, createKey(newElement, index));
             });
             update(newDoc);
-        }, [deriveNewList, update]),
+        }, [accordionIndex, deriveNewList, questionCount, update]),
         remove: useCallback((index: number) => {
             const [newDoc, newList] = deriveNewList();
             newList.splice(index, 1);

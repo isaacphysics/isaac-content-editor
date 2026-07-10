@@ -27,9 +27,9 @@ export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<pa
 
 // Defined here to prevent circular imports crashing the app
 export const AccordionContext = createContext<{
-    accordionCharacter: string;
-    questionCount: Map<string, number>;
+    accordionIndex: number;
+    questionCount: Map<number, number>;
 }>({
-    accordionCharacter: "A",
+    accordionIndex: -1,
     questionCount: new Map()
 });

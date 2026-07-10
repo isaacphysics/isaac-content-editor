@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Button, Input} from "reactstrap";
 
 import {EditableTitleProp} from "../props/EditableDocProp";
-import {formatTabIndex, TabsHeader, TabsMain, useTabs} from "./TabsPresenter";
+import {TabsHeader, TabsMain, useTabs} from "./TabsPresenter";
 import {PresenterProps} from "../registry";
 import {AudiencePresenter} from "./AudiencePresenter";
 import {QuestionTypes} from "./questionPresenters";
@@ -182,23 +182,20 @@ export function AccordionPresenter(props: PresenterProps) {
     };
 
     const [questionCount, setQuestionCount] = useState(() => {
-        const newQuestionCount = new Map<string, number>();
+        const newQuestionCount = new Map<number, number>();
 
         doc.children?.forEach((child, i) => {
-            const childAccordionCharacter = String(formatTabIndex(i, "alphabetical"));
-            newQuestionCount.set(childAccordionCharacter, countQuestions(child));
+            newQuestionCount.set(i, countQuestions(child));
         });
         return newQuestionCount;
     });
 
-    const updateCurrentChildWithQuestionCount = (newDoc: Content, childAccordionCharacter: string) => {
-        setQuestionCount(prev => new Map(prev).set(childAccordionCharacter, countQuestions(newDoc)));
-        console.log("count", countQuestions(newDoc), newDoc);
+    const updateCurrentChildWithQuestionCount = (newDoc: Content, accordionIndex: number) => {
+        setQuestionCount(prev => new Map(prev).set(accordionIndex, countQuestions(newDoc)));
         updateCurrentChild(newDoc);
     };
-    
-    const accordionChar = String(formatTabIndex(index, "alphabetical"));
-    return <AccordionContext.Provider value={{ accordionCharacter: accordionChar, questionCount }}>
+
+    return <AccordionContext.Provider value={{ accordionIndex: index, questionCount }}>
         <div className={styles.headerDisplayControls}>
             <AudienceDisplayControl
                 display={doc.display as Display}
@@ -212,8 +209,8 @@ export function AccordionPresenter(props: PresenterProps) {
             />
         </div>
         <div className={styles.wrapper}>
-            <TabsHeader {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, accordionChar)} />
-            <TabsMain {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, accordionChar)} back="▲" forward="▼" contentHeader={
+            <TabsHeader {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, index)} />
+            <TabsMain {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, index)} back="▲" forward="▼" contentHeader={
                 currentChild ? <>
                     <div className={styles.meta}>
                         <h3><EditableTitleProp ref={editTitleRef} {...currentChildProps} placeHolder="Section title" hideWhenEmpty /></h3>
