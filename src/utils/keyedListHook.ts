@@ -1,8 +1,9 @@
 import { useCallback, useContext, useRef } from "react";
-import { ContentBase, IsaacQuestionBase } from "../isaac-data-types";
+import { Content, ContentBase, IsaacQuestionBase } from "../isaac-data-types";
 import { generateGuid } from "./strings";
 import { AccordionContext } from "../isaac/IsaacTypes";
 import { QuestionTypes } from "../components/semantic/presenters/questionPresenters";
+import { convertNumberToRoman } from "cr-numeral";
 
 export const generate = Symbol("generate id") as unknown as string;
 
@@ -29,12 +30,26 @@ const modifyContentId = (newContent: ContentBase) => {
     }
 };
 
-const modifyTitle = (newContent: ContentBase, index: number, questionCount: number) => {
+const modifyTitle = (newContent: ContentBase, newDoc: Content, index: number, questionCount: number) => {
     const contentType = newContent.type || "";
     if (contentType in QuestionTypes || contentType === "inlineQuestionPart") {
         const newQuestion = newContent as IsaacQuestionBase;
         if (!newQuestion.title) {
-            newQuestion.title = `${formatTabIndex(index, "alphabetical")}${questionCount + 1}`;
+            newQuestion.title = `${formatTabIndex(index, "alphabetical")}${questionCount ? `.${convertNumberToRoman(questionCount + 1).toLowerCase()}` : ""}`;
+        }
+
+        // If the first question in the accordion had the title e.g. A, now convert it to A.i
+        if (newDoc.children) {
+            for (const child of newDoc.children) {
+                const childContent = child.type || "";
+                if (childContent in QuestionTypes || childContent === "inlineQuestionPart") {
+                    const oldQuestion = child as IsaacQuestionBase;
+                    if (oldQuestion.title === formatTabIndex(index, "alphabetical")) {
+                        oldQuestion.title = `${formatTabIndex(index, "alphabetical")}.i`;
+                    }
+                    break;
+                }
+            }
         }
     }
 };
@@ -52,9 +67,9 @@ export function useKeyedList<T, D>(items: T[] | undefined, deriveNewList: () => 
         insert: useCallback((index: number, newElement: T) => {
             const newContent = newElement as ContentBase;
             modifyContentId(newContent);
-            modifyTitle(newContent, accordionIndex, questionCount.get(accordionIndex) || 0);
             
             const [newDoc, newList] = deriveNewList();
+            modifyTitle(newContent, newDoc, accordionIndex, questionCount.get(accordionIndex) || 0);
             newList.splice(index, 0, newElement);
             keyList.current.splice(index, 0, createKey(newElement, index));
 
