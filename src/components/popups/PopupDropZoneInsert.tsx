@@ -16,6 +16,14 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
     const [index, setIndex] = useState<string>();
     const [inLatex, setInLatex] = useState<boolean>(false);
 
+    const resetState = () => {
+        setWidth(undefined);
+        setHeight(undefined);
+        setIndex(undefined);
+        setId(nextDropZoneId());
+        setInLatex(false);
+    };
+
     const nextDropZoneId = useCallback(() => {
         let nextId = "A1";
         while (updatedDropZoneIds.current?.has(nextId)) {
@@ -49,7 +57,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
         <button className={styles.cmPanelButton} title={"Insert cloze drop-zone"} onClick={(event) => {
             popupRef.current?.open(event);
         }}>{wide ? `Add ${isDndQuestion ? "DnD" : "cloze"} drop-zone` : "➕ drop-zone"}</button>
-        <Popup popUpRef={popupRef}>
+        <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
                 <Label for={"drop-zone-width"}>Width:</Label>
                 <Input id={"drop-zone-width"} placeholder={"Default"} onChange={(e) => setWidth(e.target.value)} />
@@ -78,11 +86,6 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
                 <PopupCloseContext.Consumer>
                     {close => <Button disabled={!valid} onClick={() => {
                         generateAndInsertDropZone();
-                        setWidth(undefined);
-                        setHeight(undefined);
-                        setIndex(undefined);
-                        setId(nextDropZoneId());
-                        setInLatex(false);
                         close?.();
                     }}>
                         Generate drop zone
