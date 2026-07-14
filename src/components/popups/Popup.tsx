@@ -17,7 +17,11 @@ export interface PopupRef {
     open: (event: React.MouseEvent) => void
 }
 
-export function Popup({ popUpRef, children }: { popUpRef: MutableRefObject<PopupRef | null>; children: ReactNode }) {
+export function Popup({ popUpRef, children, onClose }: { 
+    popUpRef: MutableRefObject<PopupRef | null>;
+    children: ReactNode;
+    onClose?: () => void; 
+}) {
     const [isOpen, setOpen] = useState(false);
     const [anchorPoint, setAnchorPoint] = useState({x: 0, y: 0});
     const [height, setHeight] = useState<number>();
@@ -33,10 +37,14 @@ export function Popup({ popUpRef, children }: { popUpRef: MutableRefObject<Popup
         if (insideRef.current?.contains(event.target as Node)) {
             return;
         }
+
+        onClose?.();
         setOpen(false);
+
         event.stopPropagation();
         event.preventDefault();
-    }, []);
+    }, [onClose]);
+
     useLayoutEffect(() => {
         if (isOpen) {
             const tempAnchor = {x: anchorPoint.x, y: anchorPoint.y};
@@ -68,8 +76,9 @@ export function Popup({ popUpRef, children }: { popUpRef: MutableRefObject<Popup
     }), [handleContextMenu]);
 
     const close = useCallback(() => {
+        onClose?.();
         setOpen(false);
-    }, []);
+    }, [onClose]);
 
     return isOpen ?
         <Portal>

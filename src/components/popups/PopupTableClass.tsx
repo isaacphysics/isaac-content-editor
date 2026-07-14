@@ -13,6 +13,13 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
     const [topScrollable, setTopScrollable] = useState<boolean>(false);
     const tableRegex = /<table(.*class=")(.*)(".*)>/i;
 
+    const resetState = () => {
+        const tableClasses = codemirror.current?.view?.state.doc.toString().match(tableRegex)?.[2];
+        setClasses(tableClasses ?? "");
+        setExpandable(tableClasses?.includes("expandable") ?? false);
+        setTopScrollable(tableClasses?.includes("topScrollable") ?? false);
+    };
+
     const makeTableClass = (className: string) => (view: EditorView | undefined) => {
         if (!view) return false;
         const docText = view.state.doc.toString();
@@ -40,12 +47,9 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
     return <>
         <button className={styles.cmPanelButton} title={"Augment table"} onClick={(event) => {
             popupRef.current?.open(event);
-            const tableClasses = codemirror.current?.view?.state.doc.toString().match(tableRegex)?.[2];
-            setClasses(tableClasses ?? "");
-            setExpandable(tableClasses?.includes("expandable") ?? false);
-            setTopScrollable(tableClasses?.includes("topScrollable") ?? false);
+            resetState();
         }}>{wide ? "Augment table" : "Table"}</button>
-        <Popup popUpRef={popupRef}>
+        <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
                 {isAda && <InputGroup className={"ps-4"}>
                     <Label for={"table-expandable"}>Expandable</Label>
@@ -66,7 +70,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                         if (e.target.checked) {
                             setClasses(prev => prev ? `${prev} topScrollable` : "topScrollable");
                         } else {
-                            setClasses(prev => prev?.replace(/\bscrollable\b/g, "").trim());
+                            setClasses(prev => prev?.replace(/\btopScrollable\b/g, "").trim());
                         }
                     }}/>
                 </InputGroup>
@@ -76,9 +80,6 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                 <PopupCloseContext.Consumer>
                     {close => <Button disabled={!classes && !expandable && !topScrollable} onClick={() => {
                         makeTableClass(classes)(codemirror.current?.view);
-                        setExpandable(false);
-                        setTopScrollable(false);
-                        setClasses("");
                         close?.();
                     }}>
                         Add class

@@ -50,6 +50,13 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
     const [isInlineTerm, setIsInlineTerm] = useState<boolean>(true);
     const [isTitledTerm, setIsTitledTerm] = useState<boolean>(isAda); // Ada should default to being checked
 
+    const resetState = () => {
+        setGlossaryTerm(undefined);
+        setGlossaryTermText(undefined);
+        setIsInlineTerm(true);
+        setIsTitledTerm(isAda);
+    };
+
     const generateAndInsertGlossaryTerm = useCallback(() => {
         if (glossaryTerm) {
             const trimmedGlossaryTermText = glossaryTermText?.trim();
@@ -62,7 +69,7 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
         <button className={styles.cmPanelButton} title={"Insert glossary term"} onClick={(event) => {
             popupRef.current?.open(event);
         }}>{wide ? "Add glossary term" : "➕ glossary"}</button>
-        <Popup popUpRef={popupRef}>
+        <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
                 {isPhy && <>
                     <Label for={"glossary-subject-select"}>Select subject:</Label>
@@ -106,9 +113,6 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
                 <PopupCloseContext.Consumer>
                     {close => <Button disabled={!glossaryTerm} onClick={() => {
                         generateAndInsertGlossaryTerm();
-                        setGlossaryTerm(undefined);
-                        setGlossaryTermText(undefined);
-                        setIsInlineTerm(true);
                         close?.();
                     }}>
                         Generate markup
