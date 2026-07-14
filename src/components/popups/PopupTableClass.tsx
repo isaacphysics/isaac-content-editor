@@ -47,6 +47,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
     return <>
         <button className={styles.cmPanelButton} title={"Augment table"} onClick={(event) => {
             popupRef.current?.open(event);
+            resetState();
         }}>{wide ? "Augment table" : "Table"}</button>
         <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
