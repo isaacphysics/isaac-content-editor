@@ -19,6 +19,13 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
     const [classes, setClasses] = useState<string>();
     const [mode, setMode] = useState<"classes" | "dimensions">("classes");
 
+    const resetState = () => {
+        setWidth(undefined);
+        setHeight(undefined);
+        setClasses(undefined);
+        setID(undefined);
+    };
+
     const generateAndInsertInlinePart = useCallback(() => {
         const partId = id ? id : generateGuid().slice(0, 8);
         const inlinePartSyntax = mode === "classes" ? 
@@ -53,7 +60,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
         <button className={styles.cmPanelButton} title={"Insert inline question part"} onClick={(event) => {
             popupRef.current?.open(event);
         }}>{wide ? "Add inline question part" : "➕ inline part"}</button>
-        <Popup popUpRef={popupRef}>
+        <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
                 <Label for={"inline-part-index"}>Part ID</Label>
                 <Input id={"inline-part-index"} placeholder={"Default"} onChange={ifContainsNoSpacesThen(setID)} />
@@ -84,10 +91,6 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
                 <PopupCloseContext.Consumer>
                     {close => <Button disabled={!!invalid} onClick={() => {
                         generateAndInsertInlinePart();
-                        setWidth(undefined);
-                        setHeight(undefined);
-                        setClasses(undefined);
-                        setID(undefined);
                         close?.();
                     }}>Insert</Button>}
                 </PopupCloseContext.Consumer>
