@@ -70,7 +70,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                         if (e.target.checked) {
                             setClasses(prev => prev ? `${prev} topScrollable` : "topScrollable");
                         } else {
-                            setClasses(prev => prev?.replace(/\bscrollable\b/g, "").trim());
+                            setClasses(prev => prev?.replace(/\btopScrollable\b/g, "").trim());
                         }
                     }}/>
                 </InputGroup>
