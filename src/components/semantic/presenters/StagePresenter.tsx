@@ -5,7 +5,7 @@ import { GlossaryTerm } from "../../../isaac-data-types";
 import { PresenterProps } from "../registry";
 
 import styles from "../styles/tags.module.css";
-import { stagesOrdered } from "../../../services/constants";
+import { STAGES_PHY, stagesOrdered } from "../../../services/constants";
 
 export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     const [searchString, setSearchString] = useState("");
@@ -44,8 +44,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     }
 
     function addallStages() {
-        // TODO: use constants.ts once merged
-        const remainingStages = ["university", "further_a", "a_level", "gcse", "year_9", "year_7_and_8"].filter(
+        const remainingStages = STAGES_PHY.filter(
             stage => !doc.stages?.includes(stage)
         );
         update({

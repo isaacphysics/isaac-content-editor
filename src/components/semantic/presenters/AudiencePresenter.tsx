@@ -10,7 +10,7 @@ import styles from "../styles/audience.module.css";
 import { CS_EXAM_BOARDS_BY_STAGE, difficultiesOrdered, EXAM_BOARD, EXAM_BOARDS_CS, STAGES_CS, STAGES_PHY } from "../../../services/constants";
 
 function adaDifficulty(doc : AudienceContext[]): Difficulty | undefined {
-    return  isAda && doc[0].difficulty ? doc[0].difficulty[0] : undefined;
+    return isAda ? doc?.[0].difficulty?.[0] : undefined;
 } 
 
 function defaultAudience(): AudienceContext {
