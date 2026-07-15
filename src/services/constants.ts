@@ -61,7 +61,7 @@ export const CS_EXAM_BOARDS_BY_STAGE: Partial<Record<Stage, ExamBoard[]>> = {
 };
 
 // DIFFICULTIES
-export enum DIFFICULTIES {
+export enum DIFFICULTY {
     PRACTICE_1 = "practice_1",
     PRACTICE_2 = "practice_2",
     PRACTICE_3 = "practice_3",
@@ -75,13 +75,13 @@ export const difficultiesOrdered: Difficulty[] = siteSpecific(
 );
 
 // SUBJECTS
-export enum SUBJECTS {
+export enum SUBJECT {
     PHYSICS = 'physics',
     MATHS = 'maths',
     CHEMISTRY = 'chemistry',
     BIOLOGY = 'biology',
     CS = 'computer_science'
 }
-export const SUBJECTS_SCI = [SUBJECTS.PHYSICS, SUBJECTS.MATHS, SUBJECTS.CHEMISTRY, SUBJECTS.BIOLOGY];
+export const SUBJECTS_SCI = [SUBJECT.PHYSICS, SUBJECT.MATHS, SUBJECT.CHEMISTRY, SUBJECT.BIOLOGY];
 
 export const BOOK_DETAIL_ID_SEPARATOR = "__";

@@ -7,17 +7,17 @@ import {ExtractRecordArrayValue, isDefined} from "../../../utils/types";
 
 import {PresenterProps} from "../registry";
 import styles from "../styles/audience.module.css";
-import { CS_EXAM_BOARDS_BY_STAGE, difficultiesOrdered, EXAM_BOARD, EXAM_BOARDS_CS, STAGES_CS, STAGES_SCI } from "../../../services/constants";
+import { CS_EXAM_BOARDS_BY_STAGE, difficultiesOrdered, EXAM_BOARD, EXAM_BOARDS_CS, STAGE, STAGES_CS, STAGES_SCI } from "../../../services/constants";
 
 function adaDifficulty(doc : AudienceContext[]): Difficulty | undefined {
     return isAda ? doc?.[0].difficulty?.[0] : undefined;
 } 
 
 function defaultAudience(): AudienceContext {
-    return isAda ? {stage: ["core"], examBoard: ["ada"]} : {stage: ["a_level"]};
+    return isAda ? {stage: [STAGE.CORE], examBoard: [EXAM_BOARD.ADA]} : {stage: [STAGE.A_LEVEL]};
 }
 function defaultAudienceWithDifficulty(doc: AudienceContext[]): AudienceContext{
-    return {stage: ["core"], examBoard: ["ada"], difficulty: (adaDifficulty(doc) ? [adaDifficulty(doc)] : undefined)} as AudienceContext;
+    return {stage: [STAGE.CORE], examBoard: [EXAM_BOARD.ADA], difficulty: (adaDifficulty(doc) ? [adaDifficulty(doc)] : undefined)} as AudienceContext;
 } 
 
 type AudienceKey = keyof AudienceContext;
