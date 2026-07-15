@@ -7,7 +7,7 @@ import {ExtractRecordArrayValue, isDefined} from "../../../utils/types";
 
 import {PresenterProps} from "../registry";
 import styles from "../styles/audience.module.css";
-import { CS_EXAM_BOARDS_BY_STAGE, difficultiesOrdered, EXAM_BOARD, EXAM_BOARDS_CS, STAGES_CS, STAGES_PHY } from "../../../services/constants";
+import { CS_EXAM_BOARDS_BY_STAGE, difficultiesOrdered, EXAM_BOARD, EXAM_BOARDS_CS, STAGES_CS, STAGES_SCI } from "../../../services/constants";
 
 function adaDifficulty(doc : AudienceContext[]): Difficulty | undefined {
     return isAda ? doc?.[0].difficulty?.[0] : undefined;
@@ -55,9 +55,9 @@ function getPossibleFields(type?: string): Possibilities {
     } else { //if isPhy OR default
         switch (type) {
             case "accordion":
-                return {stage: STAGES_PHY};
+                return {stage: STAGES_SCI};
             default:
-                return {stage: STAGES_PHY, difficulty: difficultiesOrdered};
+                return {stage: STAGES_SCI, difficulty: difficultiesOrdered};
         }
     }
 }

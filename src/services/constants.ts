@@ -17,9 +17,9 @@ export enum STAGE {
     POST_18 = "post_18",
     ALL = "all",
 }
-export const STAGES_PHY = [STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY];
+export const STAGES_SCI = [STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY];
 export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.CORE, STAGE.ADVANCED, STAGE.POST_18];
-export const stagesOrdered: Stage[] = [...siteSpecific(STAGES_PHY, STAGES_CS), STAGE.ALL];
+export const stagesOrdered: Stage[] = [...siteSpecific(STAGES_SCI, STAGES_CS), STAGE.ALL];
 export const stageLabelMap: {[stage in Stage]: string} = {
     year_7_and_8: "Year\u00A07&8",
     year_9: "Year\u00A09",
@@ -82,6 +82,6 @@ export enum SUBJECTS {
     BIOLOGY = 'biology',
     CS = 'computer_science'
 }
-export const SUBJECTS_PHY = [SUBJECTS.PHYSICS, SUBJECTS.MATHS, SUBJECTS.CHEMISTRY, SUBJECTS.BIOLOGY];
+export const SUBJECTS_SCI = [SUBJECTS.PHYSICS, SUBJECTS.MATHS, SUBJECTS.CHEMISTRY, SUBJECTS.BIOLOGY];
 
 export const BOOK_DETAIL_ID_SEPARATOR = "__";

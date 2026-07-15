@@ -5,7 +5,8 @@ import { GlossaryTerm } from "../../../isaac-data-types";
 import { PresenterProps } from "../registry";
 
 import styles from "../styles/tags.module.css";
-import { STAGES_PHY, stagesOrdered } from "../../../services/constants";
+import { STAGES_CS, STAGES_SCI } from "../../../services/constants";
+import { siteSpecific } from "../../../services/site";
 
 export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     const [searchString, setSearchString] = useState("");
@@ -14,7 +15,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     const [filteredStageList, setFilteredStageList] = useState<string[]>();
 
     useEffect(() => {
-        setFilteredStageList(stagesOrdered?.filter(stage => stage.includes(searchString) && !doc.stages?.includes(stage)));
+        setFilteredStageList(siteSpecific(STAGES_SCI, STAGES_CS)?.filter(stage => stage.includes(searchString) && !doc.stages?.includes(stage)));
     }, [searchString, doc.stages]);
 
     function addStage(stage: string) {
@@ -44,7 +45,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     }
 
     function addallStages() {
-        const remainingStages = STAGES_PHY.filter(
+        const remainingStages = siteSpecific(STAGES_SCI, STAGES_CS).filter(
             stage => !doc.stages?.includes(stage)
         );
         update({
