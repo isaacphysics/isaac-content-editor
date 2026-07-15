@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Input } from "reactstrap";
 import { GlossaryTerm } from "../../../isaac-data-types";
-import { stageList } from "../../../services/constants";
 
 import { PresenterProps } from "../registry";
 
 import styles from "../styles/tags.module.css";
+import { stagesOrdered } from "../../../services/constants";
 
 export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     const [searchString, setSearchString] = useState("");
@@ -14,7 +14,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     const [filteredStageList, setFilteredStageList] = useState<string[]>();
 
     useEffect(() => {
-        setFilteredStageList(stageList?.filter(stage => stage.includes(searchString) && !doc.stages?.includes(stage)));
+        setFilteredStageList(stagesOrdered?.filter(stage => stage.includes(searchString) && !doc.stages?.includes(stage)));
     }, [searchString, doc.stages]);
 
     function addStage(stage: string) {

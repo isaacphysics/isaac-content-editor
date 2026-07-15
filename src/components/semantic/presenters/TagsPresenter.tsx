@@ -3,7 +3,7 @@ import { Button, Input } from "reactstrap";
 import useSWR from "swr";
 
 import { stagingFetcher } from "../../../services/isaacApi";
-import { subjectList } from "../../../services/constants";
+import { SUBJECTS_PHY } from "../../../services/constants";
 
 import { PresenterProps } from "../registry";
 
@@ -16,7 +16,7 @@ export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {sub
         searchString !== "" ? "content/tags" : null,
         stagingFetcher,
     );
-    const searchList = subjectsOnly ? subjectList : tagList;
+    const searchList = subjectsOnly ? SUBJECTS_PHY : tagList;
     const [showTagList, setShowTagList] = useState(true);
     const [filteredTagList, setFilteredTagList] = useState<string[]>();
 
