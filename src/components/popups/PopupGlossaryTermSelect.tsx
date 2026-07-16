@@ -10,7 +10,7 @@ import Select from "react-select";
 import {Item} from "../../utils/select";
 import {isDefined} from "../../utils/types";
 import {isPhy, isAda} from "../../services/site";
-import { stageList, stagePrintList, subjectList } from "../../services/constants";
+import { stageLabelMap, stagesOrdered, SUBJECTS_SCI } from "../../services/constants";
 
 export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, codemirror: RefObject<ReactCodeMirrorRef> }) => {
     const popupRef = useRef<PopupRef>(null);
@@ -22,11 +22,11 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
     const [filterSubject, setFilterSubject] = useState<string>();
     const [filterStage, setFilterStage] = useState<string>();
 
-    const subjectListOptions: Item<string>[] = subjectList.map(
+    const subjectListOptions: Item<string>[] = SUBJECTS_SCI.map(
         subject => ({value: subject, label: subject.charAt(0).toUpperCase() + subject.slice(1)})
     );
-    const stageListOptions: Item<string>[] = stageList.map(
-        (stage, index) => ({value: stage, label: stagePrintList.at(index) ?? "Unknown"})
+    const stageListOptions: Item<string>[] = stagesOrdered.map(
+        stage => ({value: stage, label: stageLabelMap[stage]})
     );
 
     const glossaryTermOptions: Item<string>[] = useMemo(() =>

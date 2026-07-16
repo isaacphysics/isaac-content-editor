@@ -1,50 +1,35 @@
 import React, {Fragment, useState} from "react";
 import {Button} from "reactstrap";
 
-import {AudienceContext, Difficulty, ExamBoard, RoleRequirement, Stage} from "../../../isaac-data-types";
+import {AudienceContext, Difficulty, ExamBoard, RoleRequirement} from "../../../isaac-data-types";
 import {isAda, siteSpecific} from "../../../services/site";
 import {ExtractRecordArrayValue, isDefined} from "../../../utils/types";
 
 import {PresenterProps} from "../registry";
 import styles from "../styles/audience.module.css";
+import { CS_EXAM_BOARDS_BY_STAGE, difficultiesOrdered, EXAM_BOARD, EXAM_BOARDS_CS, STAGE, STAGES_CS, STAGES_SCI } from "../../../services/constants";
 
 function adaDifficulty(doc : AudienceContext[]): Difficulty | undefined {
-    return  isAda && doc[0].difficulty ? doc[0].difficulty[0] : undefined;
+    return isAda ? doc?.[0].difficulty?.[0] : undefined;
 } 
 
 function defaultAudience(): AudienceContext {
-    return isAda ? {stage: ["core"], examBoard: ["ada"]} : {stage: ["a_level"]};
+    return isAda ? {stage: [STAGE.CORE], examBoard: [EXAM_BOARD.ADA]} : {stage: [STAGE.A_LEVEL]};
 }
 function defaultAudienceWithDifficulty(doc: AudienceContext[]): AudienceContext{
-    return {stage: ["core"], examBoard: ["ada"], difficulty: (adaDifficulty(doc) ? [adaDifficulty(doc)] : undefined)} as AudienceContext;
+    return {stage: [STAGE.CORE], examBoard: [EXAM_BOARD.ADA], difficulty: (adaDifficulty(doc) ? [adaDifficulty(doc)] : undefined)} as AudienceContext;
 } 
 
 type AudienceKey = keyof AudienceContext;
 type AudienceValue = ExtractRecordArrayValue<Required<AudienceContext>>;
 
-const phyStages: Stage[] = ["university", "further_a", "a_level", "gcse", "year_9", "year_7_and_8"];
-const difficulties: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
-
-const csStages: Stage[] = ["a_level", "gcse", "scotland_national_5", "scotland_higher", "scotland_advanced_higher", "core", "advanced", "post_18"];
-const csExamBoards: ExamBoard[] = ["aqa", "ocr", "cie", "edexcel", "eduqas", "wjec", "sqa", "ada"];
-const csStagedExamBoards: Partial<Record<Stage, ExamBoard[]>> = {
-    "a_level": ["aqa", "cie", "eduqas", "ocr", "wjec"],
-    "gcse": ["aqa", "edexcel", "eduqas", "ocr", "wjec"],
-    "scotland_national_5": ["sqa"],
-    "scotland_higher": ["sqa"],
-    "scotland_advanced_higher": ["sqa"],
-    "core": ["ada"],
-    "advanced": ["ada"],
-    "post_18": ["ada"],
-};
-
 function isExamboardArray(arr: string[]): arr is ExamBoard[] {
-    return arr.every(v => (csExamBoards as string[]).includes(v));
+    return arr.every(v => v in EXAM_BOARD);
 }
 
 function examBoardsForStage(audienceContext: AudienceContext): ExamBoard[] {
-    const stageSpecificExamBoards = audienceContext.stage?.length === 1 && csStagedExamBoards[audienceContext.stage[0]];
-    return stageSpecificExamBoards || csExamBoards;
+    const stageSpecificExamBoards = audienceContext.stage?.length === 1 && CS_EXAM_BOARDS_BY_STAGE[audienceContext.stage[0]];
+    return stageSpecificExamBoards || EXAM_BOARDS_CS;
 }
 
 function allExamBoardsForStagePresent(audienceContext: AudienceContext) {
@@ -63,16 +48,16 @@ function getPossibleFields(type?: string): Possibilities {
     if (isAda) {
         switch (type) {
             case "accordion":
-                return {stage: csStages, examBoard: csExamBoards, role: roles};
+                return {stage: STAGES_CS, examBoard: EXAM_BOARDS_CS, role: roles};
             default:
-                return {stage: csStages, examBoard: csExamBoards};
+                return {stage: STAGES_CS, examBoard: EXAM_BOARDS_CS};
         }
     } else { //if isPhy OR default
         switch (type) {
             case "accordion":
-                return {stage: phyStages};
+                return {stage: STAGES_SCI};
             default:
-                return {stage: phyStages, difficulty: difficulties};
+                return {stage: STAGES_SCI, difficulty: difficultiesOrdered};
         }
     }
 }
@@ -224,7 +209,7 @@ function safeJoin(list: string[], joiner: string): string {
     if (list.length === 1) {
         return list[0];
     }
-    list = list.filter((item) => (isAda && difficulties.includes(item as Difficulty)) ? false : true);
+    list = list.filter((item) => (isAda && difficultiesOrdered.includes(item as Difficulty)) ? false : true);
     return list.map((item) => item.replaceAll(joiner, "").includes(" ") ? `(${item})` : item).join(joiner);
 }
 
@@ -341,7 +326,7 @@ export function AudiencePresenter({doc, update, type}: PresenterProps & {type?: 
         >
             <AudienceEditor doc={editingAudience} update={setEditingAudience} possible={getPossibleFields(type)} />
             {isAda ? <> 
-                <DifficultyEditor doc={editingAudience} update={setEditingAudience} possible={{difficulty: difficulties}}/> 
+                <DifficultyEditor doc={editingAudience} update={setEditingAudience} possible={{difficulty: difficultiesOrdered}}/> 
                 <br/> 
             </> : null}
             Concise: {conciseAudiences(editingAudience)}

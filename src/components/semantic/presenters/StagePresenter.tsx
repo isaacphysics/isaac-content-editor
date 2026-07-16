@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Input } from "reactstrap";
 import { GlossaryTerm } from "../../../isaac-data-types";
-import { stageList } from "../../../services/constants";
 
 import { PresenterProps } from "../registry";
 
 import styles from "../styles/tags.module.css";
+import { STAGES_CS, STAGES_SCI } from "../../../services/constants";
+import { siteSpecific } from "../../../services/site";
 
 export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     const [searchString, setSearchString] = useState("");
@@ -14,7 +15,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     const [filteredStageList, setFilteredStageList] = useState<string[]>();
 
     useEffect(() => {
-        setFilteredStageList(stageList?.filter(stage => stage.includes(searchString) && !doc.stages?.includes(stage)));
+        setFilteredStageList(siteSpecific(STAGES_SCI, STAGES_CS)?.filter(stage => stage.includes(searchString) && !doc.stages?.includes(stage)));
     }, [searchString, doc.stages]);
 
     function addStage(stage: string) {
@@ -44,8 +45,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     }
 
     function addallStages() {
-        // TODO: use constants.ts once merged
-        const remainingStages = ["university", "further_a", "a_level", "gcse", "year_9", "year_7_and_8"].filter(
+        const remainingStages = siteSpecific(STAGES_SCI, STAGES_CS).filter(
             stage => !doc.stages?.includes(stage)
         );
         update({
