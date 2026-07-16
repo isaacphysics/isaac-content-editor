@@ -9,7 +9,7 @@ import {LeftMenu} from "../components/LeftMenu";
 import {AppContext} from "../App";
 import {defaultGithubContext, fetcher} from "../services/github";
 import {SemanticEditor} from "../components/SemanticEditor";
-import {Content} from "../isaac-data-types";
+import {Content, IsaacInlineQuestion} from "../isaac-data-types";
 import {Action, doDispatch} from "../services/commands";
 import {useFixedRef} from "../utils/hooks";
 import {TextEditor} from "../components/TextEditor";
@@ -28,6 +28,9 @@ import {compare, Operation, applyReducer} from "fast-json-patch";
 import {invertJSONPatch} from "../utils/inversePatch";
 
 import styles from "../styles/editor.module.css";
+import { QuestionTypes } from "../components/semantic/presenters/questionPresenters";
+import { formatTabIndex } from "../utils/keyedListHook";
+import { convertNumberToRoman } from "cr-numeral";
 
 const FILE_COMPONENTS = {
     "json": SemanticEditor,
@@ -133,6 +136,46 @@ export function EditorScreen() {
 
     const [actionRunning, setActionRunning] = useState(false);
 
+    const formatTitle = (accordionIndex: number, questionIndex: number, onlyQuestion?: boolean) => {
+        return `${formatTabIndex(accordionIndex, "alphabetical")}${onlyQuestion ? "" : `.${convertNumberToRoman(questionIndex + 1).toLowerCase()}`}`;
+    };
+
+    const calculateQuestionTitles = (content: Content | string) => {
+        if (typeof content === "string") return false;
+        const doThey = false;
+
+        content.children?.forEach((child) => {
+            const contentChild = child as Content;
+            if (contentChild.type === "content" && contentChild.layout === "accordion") {
+                const accordion = child as Content;
+                accordion.children?.forEach((accordionChild, accordionIndex) => {
+                    const accordionSection = accordionChild as Content;
+                    const questionCount = accordionSection.children?.filter(c => (c.type || "") in QuestionTypes).length;
+                    const inlineQuestionCount = accordionSection.children?.reduce((acc, c) => acc + (c.type === "isaacInlineRegion" ?
+                        (c as IsaacInlineQuestion).inlineQuestions?.length ?? 0 : 0), 0);
+                    const containsOneQuestion = questionCount === (1 - Number(inlineQuestionCount));
+
+                    let questionIndex = 0;
+                    accordionSection.children?.forEach((sectionChild) => {
+                        if ((sectionChild.type || "") in QuestionTypes) {
+                            console.log("I'm an accordion question: ", formatTitle(accordionIndex, questionIndex, containsOneQuestion));
+                            questionIndex += 1;
+                        } else if (sectionChild.type === "isaacInlineRegion") {
+                            const inlineRegion = sectionChild as IsaacInlineQuestion;
+                            inlineRegion.inlineQuestions?.forEach((inlineQuestion) => {
+                                if ((inlineQuestion.type || "") in QuestionTypes) {
+                                    console.log("I'm an inline accordion question: ", formatTitle(accordionIndex, questionIndex, containsOneQuestion));
+                                    questionIndex += 1;
+                                } 
+                            });
+                        }
+                    });
+                });
+            }
+        });
+        return doThey;
+    };
+
     const setCurrentDoc = useCallback((content: Content | string, invertible = false) => {
         if (invertible) {
             const currentLastChanges = compare(currentContent, content, true);
@@ -140,6 +183,7 @@ export function EditorScreen() {
         }
         setCurrentContent(content);
         setDirty(hash(content) !== fileHash);
+        calculateQuestionTitles(content);
     }, [fileHash, currentContent]);
     const loadNewDoc = useCallback((content: Content | string) => {
         setDirty(false);
@@ -148,6 +192,8 @@ export function EditorScreen() {
         setIsAlreadyPublished(typeof content === "string" ? false : !!content.published);
         setCurrentContent(content);
         setCurrentContentPath(selection?.path);
+        console.log("loaded");
+        calculateQuestionTitles(content);
     }, [selection]);
 
     const appContext = useMemo<ContextType<typeof AppContext>>(() => {
