@@ -143,9 +143,9 @@ export function EditorScreen() {
         return `${formatTabIndex(accordionIndex, "alphabetical")}${onlyQuestion ? "" : `.${convertNumberToRoman(questionIndex + 1).toLowerCase()}`}`;
     };
 
-    const calculateQuestionTitles = (content: Content | string) => {
+    const calculateQuestionTitles = useCallback((content: Content | string) => {
         if (typeof content === "string") return;
-        
+
         let noMismatch = true;
         content.children?.forEach((child) => {
             const contentChild = child as Content;
@@ -180,7 +180,7 @@ export function EditorScreen() {
             }
         });
         setPartTitleMismatch(!noMismatch);
-    };
+    }, []);
 
     const setCurrentDoc = useCallback((content: Content | string, invertible = false) => {
         if (invertible) {
@@ -190,7 +190,7 @@ export function EditorScreen() {
         setCurrentContent(content);
         setDirty(hash(content) !== fileHash);
         calculateQuestionTitles(content);
-    }, [fileHash, currentContent]);
+    }, [fileHash, calculateQuestionTitles, currentContent]);
     const loadNewDoc = useCallback((content: Content | string) => {
         setDirty(false);
         setFileHash(hash(content));
@@ -198,9 +198,8 @@ export function EditorScreen() {
         setIsAlreadyPublished(typeof content === "string" ? false : !!content.published);
         setCurrentContent(content);
         setCurrentContentPath(selection?.path);
-        console.log("loaded");
         calculateQuestionTitles(content);
-    }, [selection]);
+    }, [calculateQuestionTitles, selection?.path]);
 
     const appContext = useMemo<ContextType<typeof AppContext>>(() => {
         async function dispatch(action: Action) {
