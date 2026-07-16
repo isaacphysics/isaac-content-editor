@@ -31,6 +31,7 @@ import styles from "../styles/editor.module.css";
 import { QuestionTypes } from "../components/semantic/presenters/questionPresenters";
 import { formatTabIndex } from "../utils/keyedListHook";
 import { convertNumberToRoman } from "cr-numeral";
+import { closedPartTitleModalState, SetPartTitleModal, showPartTitleModal } from "./SetPartTitleModal";
 
 const FILE_COMPONENTS = {
     "json": SemanticEditor,
@@ -96,6 +97,7 @@ export function EditorScreen() {
     const location = useLocation();
     const menuRef = useRef<MenuModalRef>(null);
     const [renameState, setRenameState] = useState(closedRenameModalState());
+    const [partTitleState, setPartTitleState] = useState(closedPartTitleModalState());
 
     const swrConfig = useSWRConfig();
 
@@ -150,10 +152,10 @@ export function EditorScreen() {
                 const accordion = child as Content;
                 accordion.children?.forEach((accordionChild, accordionIndex) => {
                     const accordionSection = accordionChild as Content;
-                    const questionCount = accordionSection.children?.filter(c => (c.type || "") in QuestionTypes).length;
+                    const questionCount = accordionSection.children?.filter(c => (c.type || "") in QuestionTypes).length ?? 0;
                     const inlineQuestionCount = accordionSection.children?.reduce((acc, c) => acc + (c.type === "isaacInlineRegion" ?
-                        (c as IsaacInlineQuestion).inlineQuestions?.length ?? 0 : 0), 0);
-                    const containsOneQuestion = questionCount === (1 - Number(inlineQuestionCount));
+                        (c as IsaacInlineQuestion).inlineQuestions?.length ?? 0 : 0), 0) ?? 0;
+                    const containsOneQuestion = questionCount + inlineQuestionCount === 1;
 
                     let questionIndex = 0;
                     accordionSection.children?.forEach((sectionChild) => {
@@ -258,6 +260,7 @@ export function EditorScreen() {
             menuModal: menuRef,
             setActionRunning,
             showRenameModal: showRenameModal(setRenameState),
+            showPartTitleModal: showPartTitleModal(setPartTitleState),
             preview: {
                 open: previewOpen,
                 toggle: () => {
@@ -380,6 +383,7 @@ export function EditorScreen() {
                     <h2>Processing...</h2>
                 </div>
             </Modal>
+            <SetPartTitleModal {...partTitleState}/>
             <MenuModal menuRef={menuRef} />
             <RenameModal key={renameState?.currentName} {...renameState} />
         </AppContext.Provider>
