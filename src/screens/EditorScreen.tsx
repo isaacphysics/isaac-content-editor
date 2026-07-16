@@ -97,7 +97,7 @@ export function EditorScreen() {
     const location = useLocation();
     const menuRef = useRef<MenuModalRef>(null);
     const [renameState, setRenameState] = useState(closedRenameModalState());
-    const [partTitleState, setPartTitleState] = useState(closedPartTitleModalState());
+    const [partTitleState, setPartTitleState] = useState(closedPartTitleModalState);
 
     const swrConfig = useSWRConfig();
 
@@ -135,6 +135,7 @@ export function EditorScreen() {
     const [lastChange, setLastChange] = useState<Operation[]>();
     const [currentContentPath, setCurrentContentPath] = useState<string | undefined>();
     const [isAlreadyPublished, setIsAlreadyPublished] = useState<boolean>(false);
+    const [partTitleMismatch, setPartTitleMismatch] = useState<boolean>(false);
 
     const [actionRunning, setActionRunning] = useState(false);
 
@@ -143,9 +144,9 @@ export function EditorScreen() {
     };
 
     const calculateQuestionTitles = (content: Content | string) => {
-        if (typeof content === "string") return false;
-        const doThey = false;
-
+        if (typeof content === "string") return;
+        
+        let noMismatch = true;
         content.children?.forEach((child) => {
             const contentChild = child as Content;
             if (contentChild.type === "content" && contentChild.layout === "accordion") {
@@ -160,13 +161,16 @@ export function EditorScreen() {
                     let questionIndex = 0;
                     accordionSection.children?.forEach((sectionChild) => {
                         if ((sectionChild.type || "") in QuestionTypes) {
+                            const sectionQuestion = sectionChild as Content;
                             console.log("I'm an accordion question: ", formatTitle(accordionIndex, questionIndex, containsOneQuestion));
+                            noMismatch = noMismatch && sectionQuestion.title === formatTitle(accordionIndex, questionIndex, containsOneQuestion);
                             questionIndex += 1;
                         } else if (sectionChild.type === "isaacInlineRegion") {
                             const inlineRegion = sectionChild as IsaacInlineQuestion;
                             inlineRegion.inlineQuestions?.forEach((inlineQuestion) => {
                                 if ((inlineQuestion.type || "") in QuestionTypes) {
                                     console.log("I'm an inline accordion question: ", formatTitle(accordionIndex, questionIndex, containsOneQuestion));
+                                    noMismatch = noMismatch && inlineQuestion.title === formatTitle(accordionIndex, questionIndex, containsOneQuestion);
                                     questionIndex += 1;
                                 } 
                             });
@@ -175,7 +179,7 @@ export function EditorScreen() {
                 });
             }
         });
-        return doThey;
+        setPartTitleMismatch(!noMismatch);
     };
 
     const setCurrentDoc = useCallback((content: Content | string, invertible = false) => {
@@ -245,9 +249,11 @@ export function EditorScreen() {
                     }
                 },
                 getCurrentDocPath: () => currentContentPath,
+                getPartTitleMismatch: () => partTitleMismatch,
                 setDirty: setDirty,
                 setCurrentDoc: setCurrentDoc,
                 loadNewDoc: loadNewDoc,
+                setPartTitleMismatch: setPartTitleMismatch,
                 isAlreadyPublished: () => isAlreadyPublished,
             },
             github: {

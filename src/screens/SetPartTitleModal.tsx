@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 import styles from "../styles/editor.module.css";
@@ -23,7 +23,7 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
 }
 
 export const showPartTitleModal = (setPartTitleState: (p: PartTitleModalProps) => void) => (): void => {
-    setPartTitleState({ isOpen: true, setOpen: () => setPartTitleState({ isOpen: false, setOpen: () => {}})});
+    setPartTitleState({ isOpen: true, setOpen: () => setPartTitleState(closedPartTitleModalState)});
 };
 
-export const closedPartTitleModalState = (): PartTitleModalProps => ({isOpen: false, setOpen: () => {}});
+export const closedPartTitleModalState: PartTitleModalProps = ({isOpen: false, setOpen: () => {}});
