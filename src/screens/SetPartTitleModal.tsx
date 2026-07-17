@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Alert, Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 import styles from "../styles/editor.module.css";
+import { AppContext } from "../App";
+import { makeQuestionTitlesStandard } from "../utils/setQuestionTitles";
 
 export interface PartTitleModalProps {
     isOpen: boolean;
     setOpen?: (open: boolean) => void;
-    isPublished?: boolean;
 }
 
 export function SetPartTitleModal(props: PartTitleModalProps) {
-    const {isOpen, setOpen, isPublished} = props;
+    const appContext = useContext(AppContext);
+    const content = appContext?.editor.getCurrentDoc();
+
+    const {isOpen, setOpen} = props;
     const [overrideOldTitles, setOverrideOldTitles] = useState(false);
 
     return <Modal isOpen={isOpen}>
@@ -23,23 +27,23 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
                     onChange={e => setOverrideOldTitles(e.target.checked)} />
                 <Label check for="override-old-titles">Override titles not already in the standard format</Label>
             </FormGroup>
-            {isPublished && <Alert color="warning">Replacing question part titles on published content may lead to inconsistent progress stats, so should be avoided.</Alert>}
+            {content?.published && <Alert color="warning">Replacing question part titles on published content may lead to inconsistent progress stats, so should be avoided.</Alert>}
         </ModalBody>
         <ModalFooter>
             <Button color="primary" onClick={() => {
+                const newContent = makeQuestionTitlesStandard(content, overrideOldTitles);
+                appContext.editor.setCurrentDoc(newContent);
                 setOpen?.(false);
-                // Some other code
             }}>Set titles</Button>
             <Button color="secondary" onClick={() => setOpen?.(false)}>Cancel</Button>
         </ModalFooter>
     </Modal>;
 }
 
-export const showPartTitleModal = (setPartTitleState: (p: PartTitleModalProps) => void) => (isPublished?: boolean): void => {
+export const showPartTitleModal = (setPartTitleState: (p: PartTitleModalProps) => void) => (): void => {
     setPartTitleState({
         isOpen: true,
         setOpen: (open: boolean) => open ? {} : setPartTitleState(closedPartTitleModalState),
-        isPublished,
     });
 };
 

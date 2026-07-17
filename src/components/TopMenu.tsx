@@ -68,7 +68,7 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
         </button>
         <div className={styles.flexFill} />
         {appContext.editor.getPartTitleMismatch() && <button title={"Set all question part titles"} className={styles.iconButton}
-            onClick={() => appContext.showPartTitleModal(appContext.editor.getCurrentDoc().published)}>
+            onClick={() => appContext.showPartTitleModal()}>
             ✏️<span className="d-none d-lg-inline"> Set part titles</span>
         </button>}
         {appContext.editor.getDirty() &&
