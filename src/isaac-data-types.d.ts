@@ -446,6 +446,7 @@ export interface LogicFormula extends Choice {
 export interface Media extends Content {
     src?: string;
     altText?: string;
+    decorative?: boolean;
 }
 
 export interface Notification extends Content {
