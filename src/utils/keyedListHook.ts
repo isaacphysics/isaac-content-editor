@@ -1,5 +1,7 @@
 import { useCallback, useRef } from "react";
+
 import { ContentBase } from "../isaac-data-types";
+
 import { generateGuid } from "./strings";
 
 export const generate = Symbol("generate id") as unknown as string;
@@ -20,7 +22,7 @@ const modifyContentId = (newContent: ContentBase) => {
     }
 };
 
-export function useKeyedList<T, D extends ContentBase>(items: T[] | undefined, deriveNewList: () => [D, T[]], update: (newDoc: D, invertible?: boolean) => void) {
+export function useKeyedList<T, D>(items: T[] | undefined, deriveNewList: () => [D, T[]], update: (newDoc: D, invertible?: boolean) => void) {
     const keyList = useRef(UNINITIALISED);
     if (keyList.current === UNINITIALISED) {
         // We only want to do this pre-mount, and then we manually keep this up to date after that.
@@ -35,7 +37,6 @@ export function useKeyedList<T, D extends ContentBase>(items: T[] | undefined, d
             const [newDoc, newList] = deriveNewList();
             newList.splice(index, 0, newElement);
             keyList.current.splice(index, 0, createKey(newElement, index));
-
             update(newDoc);
         }, [deriveNewList, update]),
         insertMultiple: useCallback((elements: [number, T][]) => {

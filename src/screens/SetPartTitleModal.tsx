@@ -17,11 +17,18 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
     const {isOpen, setOpen} = props;
     const [overrideOldTitles, setOverrideOldTitles] = useState(false);
 
+    const closeModal = () => {
+        setOverrideOldTitles(false);
+        setOpen?.(false);
+    };
+
     return <Modal isOpen={isOpen}>
         <ModalHeader>Set question part titles</ModalHeader>
         <ModalBody className={styles.menuModalButtons}>
-            Rename the titles of question parts inside accordions to match a standard format
-            (e.g. &quot;A.i&quot;, &quot;A.ii&quot;, &quot;B&quot;, etc)
+            <span>
+                Rename the titles of question parts <b>inside accordions</b> to match a standard format
+                (e.g. &quot;A.i&quot;, &quot;A.ii&quot;, &quot;B&quot;, etc)
+            </span>
             <FormGroup check className="my-2">
                 <Input type="checkbox" id="override-old-titles" checked={overrideOldTitles}
                     onChange={e => setOverrideOldTitles(e.target.checked)} />
@@ -33,9 +40,9 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
             <Button color="primary" onClick={() => {
                 const newContent = makeQuestionTitlesStandard(content, overrideOldTitles);
                 appContext.editor.setCurrentDoc(newContent);
-                setOpen?.(false);
+                closeModal();
             }}>Set titles</Button>
-            <Button color="secondary" onClick={() => setOpen?.(false)}>Cancel</Button>
+            <Button color="secondary" onClick={closeModal}>Cancel</Button>
         </ModalFooter>
     </Modal>;
 }
