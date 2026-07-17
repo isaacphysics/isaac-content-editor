@@ -97,7 +97,7 @@ export function EditorScreen() {
     const navigate = useNavigate();
     const location = useLocation();
     const menuRef = useRef<MenuModalRef>(null);
-    const [renameState, setRenameState] = useState(closedRenameModalState());
+    const [renameState, setRenameState] = useState(closedRenameModalState);
     const [partTitleState, setPartTitleState] = useState(closedPartTitleModalState);
 
     const swrConfig = useSWRConfig();
