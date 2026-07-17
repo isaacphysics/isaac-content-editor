@@ -143,7 +143,14 @@ export function EditorScreen() {
         return `${formatTabIndex(accordionIndex, "alphabetical")}${onlyQuestion ? "" : `.${convertNumberToRoman(questionIndex + 1).toLowerCase()}`}`;
     };
 
-    const calculateQuestionTitles = useCallback((content: Content | string) => {
+    const isTitleStandardFormat = (title?: string) => {
+        if (!title) return true;
+
+        const regexFormat = new RegExp(/^[A-Z](?:\.(?=(?=[clxvi])(c{0,3}(?:xc|xl|l?x{0,3})(?:ix|iv|v?i{0,3})))\1)?$/);
+        return regexFormat.test(title);
+    };
+
+    const calculateQuestionTitles = useCallback((content: Content | string, writeNewTitles: boolean, overrideOldTitles: boolean) => {
         if (typeof content === "string") return;
 
         let noMismatch = true;
@@ -162,7 +169,10 @@ export function EditorScreen() {
                     accordionSection.children?.forEach((sectionChild) => {
                         if ((sectionChild.type || "") in QuestionTypes) {
                             const sectionQuestion = sectionChild as Content;
-                            console.log("I'm an accordion question: ", formatTitle(accordionIndex, questionIndex, containsOneQuestion));
+                            console.log("I'm an accordion question: ", formatTitle(accordionIndex, questionIndex, containsOneQuestion), sectionQuestion.title, isTitleStandardFormat(sectionQuestion.title));
+                            if (writeNewTitles && (overrideOldTitles || isTitleStandardFormat(sectionQuestion.title))) {
+                                sectionQuestion.title = formatTitle(accordionIndex, questionIndex, containsOneQuestion);
+                            }
                             noMismatch = noMismatch && sectionQuestion.title === formatTitle(accordionIndex, questionIndex, containsOneQuestion);
                             questionIndex += 1;
                         } else if (sectionChild.type === "isaacInlineRegion") {
@@ -170,6 +180,9 @@ export function EditorScreen() {
                             inlineRegion.inlineQuestions?.forEach((inlineQuestion) => {
                                 if ((inlineQuestion.type || "") in QuestionTypes) {
                                     console.log("I'm an inline accordion question: ", formatTitle(accordionIndex, questionIndex, containsOneQuestion));
+                                    if (writeNewTitles && (overrideOldTitles || isTitleStandardFormat(inlineQuestion.title))) {
+                                        inlineQuestion.title = formatTitle(accordionIndex, questionIndex, containsOneQuestion);
+                                    }
                                     noMismatch = noMismatch && inlineQuestion.title === formatTitle(accordionIndex, questionIndex, containsOneQuestion);
                                     questionIndex += 1;
                                 } 
@@ -179,7 +192,14 @@ export function EditorScreen() {
                 });
             }
         });
-        setPartTitleMismatch(!noMismatch);
+        if (writeNewTitles) {
+            setPartTitleMismatch(false);
+        } else {
+            setPartTitleMismatch(!noMismatch);
+        }
+
+        // Temporary for testing
+        setCurrentContent(content);
     }, []);
 
     const setCurrentDoc = useCallback((content: Content | string, invertible = false) => {
@@ -189,7 +209,7 @@ export function EditorScreen() {
         }
         setCurrentContent(content);
         setDirty(hash(content) !== fileHash);
-        calculateQuestionTitles(content);
+        calculateQuestionTitles(content, true, false);
     }, [fileHash, calculateQuestionTitles, currentContent]);
     const loadNewDoc = useCallback((content: Content | string) => {
         setDirty(false);
@@ -198,7 +218,7 @@ export function EditorScreen() {
         setIsAlreadyPublished(typeof content === "string" ? false : !!content.published);
         setCurrentContent(content);
         setCurrentContentPath(selection?.path);
-        calculateQuestionTitles(content);
+        calculateQuestionTitles(content, false, false);
     }, [calculateQuestionTitles, selection?.path]);
 
     const appContext = useMemo<ContextType<typeof AppContext>>(() => {

@@ -5,7 +5,7 @@ import styles from "../styles/editor.module.css";
 
 export interface PartTitleModalProps {
     isOpen: boolean;
-    setOpen?: (isOpen: boolean) => void;
+    setOpen?: (open: boolean) => void;
     isPublished?: boolean;
 }
 
@@ -26,7 +26,11 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
             {isPublished && <Alert color="warning">Replacing question part titles on published content may lead to inconsistent progress stats, so should be avoided.</Alert>}
         </ModalBody>
         <ModalFooter>
-            <Button color="danger" onClick={() => setOpen?.(false)}>Cancel</Button>
+            <Button color="primary" onClick={() => {
+                setOpen?.(false);
+                // Some other code
+            }}>Set titles</Button>
+            <Button color="secondary" onClick={() => setOpen?.(false)}>Cancel</Button>
         </ModalFooter>
     </Modal>;
 }
@@ -34,7 +38,7 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
 export const showPartTitleModal = (setPartTitleState: (p: PartTitleModalProps) => void) => (isPublished?: boolean): void => {
     setPartTitleState({
         isOpen: true,
-        setOpen: () => setPartTitleState(closedPartTitleModalState),
+        setOpen: (open: boolean) => open ? {} : setPartTitleState(closedPartTitleModalState),
         isPublished,
     });
 };
