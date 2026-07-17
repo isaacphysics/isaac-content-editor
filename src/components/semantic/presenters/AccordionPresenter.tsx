@@ -5,11 +5,8 @@ import {EditableTitleProp} from "../props/EditableDocProp";
 import {TabsHeader, TabsMain, useTabs} from "./TabsPresenter";
 import {PresenterProps} from "../registry";
 import {AudiencePresenter} from "./AudiencePresenter";
-import {QuestionTypes} from "./questionPresenters";
 
 import styles from "../styles/accordion.module.css";
-import { Content, IsaacInlineQuestion } from "../../../isaac-data-types";
-import { AccordionContext } from "../../../isaac/IsaacTypes";
 
 type Display = { audience: string[]; nonAudience: string[] } | undefined;
 
@@ -165,37 +162,7 @@ export function AccordionPresenter(props: PresenterProps) {
         display
     });
 
-    const countQuestions = (doc: Content) => {
-        let count = 0;
-        doc.children?.forEach((child) => {
-            if (child.type && child.type in QuestionTypes) {
-                count += 1;
-            }
-
-            if (child.type && child.type === "isaacInlineRegion") {
-                (child as IsaacInlineQuestion).inlineQuestions?.forEach((inlineQuestion) => {
-                    if (inlineQuestion.type && inlineQuestion.type in QuestionTypes) count += 1;
-                });
-            }
-        });
-        return count;
-    };
-
-    const [questionCount, setQuestionCount] = useState(() => {
-        const newQuestionCount = new Map<number, number>();
-
-        doc.children?.forEach((child, i) => {
-            newQuestionCount.set(i, countQuestions(child));
-        });
-        return newQuestionCount;
-    });
-
-    const updateCurrentChildWithQuestionCount = (newDoc: Content, accordionIndex: number) => {
-        setQuestionCount(prev => new Map(prev).set(accordionIndex, countQuestions(newDoc)));
-        updateCurrentChild(newDoc);
-    };
-
-    return <AccordionContext.Provider value={{ accordionIndex: index, questionCount }}>
+    return <>
         <div className={styles.headerDisplayControls}>
             <AudienceDisplayControl
                 display={doc.display as Display}
@@ -209,8 +176,8 @@ export function AccordionPresenter(props: PresenterProps) {
             />
         </div>
         <div className={styles.wrapper}>
-            <TabsHeader {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, index)} />
-            <TabsMain {...allProps} updateCurrentChild={(content) => updateCurrentChildWithQuestionCount(content, index)} back="▲" forward="▼" contentHeader={
+            <TabsHeader {...allProps} />
+            <TabsMain {...allProps} back="▲" forward="▼" contentHeader={
                 currentChild ? <>
                     <div className={styles.meta}>
                         <h3><EditableTitleProp ref={editTitleRef} {...currentChildProps} placeHolder="Section title" hideWhenEmpty /></h3>
@@ -239,5 +206,5 @@ export function AccordionPresenter(props: PresenterProps) {
                 {!currentChild.title && <Button onClick={() => editTitleRef.current?.startEdit()}>Set section title</Button>}
             </> : undefined}/>
         </div>
-    </AccordionContext.Provider>;
+    </>;
 }

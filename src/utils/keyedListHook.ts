@@ -1,22 +1,12 @@
-import { useCallback, useContext, useRef } from "react";
-import { Content, ContentBase, IsaacQuestionBase } from "../isaac-data-types";
+import { useCallback, useRef } from "react";
+import { ContentBase } from "../isaac-data-types";
 import { generateGuid } from "./strings";
-import { AccordionContext } from "../isaac/IsaacTypes";
-import { QuestionTypes } from "../components/semantic/presenters/questionPresenters";
-import { convertNumberToRoman } from "cr-numeral";
 
 export const generate = Symbol("generate id") as unknown as string;
 
 let keyBase = 0;
 const createKey = (_: unknown, index: number) => `@${index}: ${++keyBase}`;
 const UNINITIALISED = [] as string[];
-
-export const formatTabIndex = (index: number, format?: "numeric" | "alphabetical") => {
-    if (format === "alphabetical") {
-        return String.fromCharCode(65 + index % 26);
-    }
-    return index + 1;
-};
 
 const modifyContentId = (newContent: ContentBase) => {
     if (newContent.id === generate) {
@@ -30,39 +20,12 @@ const modifyContentId = (newContent: ContentBase) => {
     }
 };
 
-const modifyTitle = (newContent: ContentBase, newDoc: Content, index: number, questionCount: number) => {
-    const contentType = newContent.type || "";
-    if (index >= 0 && (contentType in QuestionTypes || contentType === "inlineQuestionPart")) {
-        // Give the question part inside an accordion a title to match a specified format (e.g. "A.i", "A.ii", "B", etc)
-        const newQuestion = newContent as IsaacQuestionBase;
-        if (!newQuestion.title) {
-            newQuestion.title = `${formatTabIndex(index, "alphabetical")}${questionCount ? `.${convertNumberToRoman(questionCount + 1).toLowerCase()}` : ""}`;
-        }
-
-        // If the first question in the accordion had the title e.g. A, now convert it to A.i
-        if (newDoc.children && questionCount === 1) {
-            for (const child of newDoc.children) {
-                const childContent = child.type || "";
-                if (childContent in QuestionTypes || childContent === "inlineQuestionPart") {
-                    const oldQuestion = child as IsaacQuestionBase;
-                    if (oldQuestion.title === formatTabIndex(index, "alphabetical")) {
-                        oldQuestion.title = `${formatTabIndex(index, "alphabetical")}.i`;
-                    }
-                    break;
-                }
-            }
-        }
-    }
-};
-
 export function useKeyedList<T, D extends ContentBase>(items: T[] | undefined, deriveNewList: () => [D, T[]], update: (newDoc: D, invertible?: boolean) => void) {
     const keyList = useRef(UNINITIALISED);
     if (keyList.current === UNINITIALISED) {
         // We only want to do this pre-mount, and then we manually keep this up to date after that.
         keyList.current = items?.map(createKey) ?? [];
     }
-    
-    const { accordionIndex, questionCount } = useContext(AccordionContext);
 
     return {
         insert: useCallback((index: number, newElement: T) => {
@@ -70,23 +33,21 @@ export function useKeyedList<T, D extends ContentBase>(items: T[] | undefined, d
             modifyContentId(newContent);
             
             const [newDoc, newList] = deriveNewList();
-            modifyTitle(newContent, newDoc, accordionIndex, questionCount.get(accordionIndex) || 0);
             newList.splice(index, 0, newElement);
             keyList.current.splice(index, 0, createKey(newElement, index));
 
             update(newDoc);
-        }, [accordionIndex, deriveNewList, questionCount, update]),
+        }, [deriveNewList, update]),
         insertMultiple: useCallback((elements: [number, T][]) => {
             // Calling insert() multiple times before update() can modify the doc (each render?) will overwrite previous changes. Prefer this.
             const [newDoc, newList] = deriveNewList();
             elements.forEach(([index, newElement]) => {
                 modifyContentId(newElement as ContentBase);
-                modifyTitle(newElement as ContentBase, newDoc, accordionIndex, (questionCount.get(accordionIndex) || 0) + index);
                 newList.splice(index, 0, newElement);
                 keyList.current.splice(index, 0, createKey(newElement, index));
             });
             update(newDoc);
-        }, [accordionIndex, deriveNewList, questionCount, update]),
+        }, [deriveNewList, update]),
         remove: useCallback((index: number) => {
             const [newDoc, newList] = deriveNewList();
             newList.splice(index, 1);

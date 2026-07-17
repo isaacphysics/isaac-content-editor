@@ -1,7 +1,7 @@
 import { convertNumberToRoman } from "cr-numeral";
 import { Content, IsaacInlineQuestion } from "../isaac-data-types";
-import { formatTabIndex } from "./keyedListHook";
 import { QuestionTypes } from "../components/semantic/presenters/questionPresenters";
+import { formatTabIndex } from "../components/semantic/presenters/TabsPresenter";
 
 const formatTitle = (accordionIndex: number, questionIndex: number, onlyQuestion?: boolean) => {
     return `${formatTabIndex(accordionIndex, "alphabetical")}${onlyQuestion ? "" : `.${convertNumberToRoman(questionIndex + 1).toLowerCase()}`}`;
