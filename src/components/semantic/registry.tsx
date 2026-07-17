@@ -339,7 +339,7 @@ const isaacWildcard: RegistryEntry = {
 const sidebar: RegistryEntry = {
     name: "Sidebar",
     bodyPresenter: SidebarPresenter,
-    metadata: [...defaultMeta],
+    metadata: [...defaultMeta, "published"],
 };
 
 const sidebarEntry: RegistryEntry = {
