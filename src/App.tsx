@@ -12,7 +12,6 @@ import {MenuModalRef} from "./screens/MenuModal";
 import {defaultPreview} from "./components/Preview";
 import {defaultCdn} from "./components/CDNUploadModal";
 import { RenameResult } from "./screens/RenameModal";
-import { Content } from "./isaac-data-types";
 
 
 export const AppContext = createContext({

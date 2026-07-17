@@ -9,7 +9,7 @@ import {LeftMenu} from "../components/LeftMenu";
 import {AppContext} from "../App";
 import {defaultGithubContext, fetcher} from "../services/github";
 import {SemanticEditor} from "../components/SemanticEditor";
-import {Content, IsaacInlineQuestion} from "../isaac-data-types";
+import {Content} from "../isaac-data-types";
 import {Action, doDispatch} from "../services/commands";
 import {useFixedRef} from "../utils/hooks";
 import {TextEditor} from "../components/TextEditor";
@@ -28,9 +28,6 @@ import {compare, Operation, applyReducer} from "fast-json-patch";
 import {invertJSONPatch} from "../utils/inversePatch";
 
 import styles from "../styles/editor.module.css";
-import { QuestionTypes } from "../components/semantic/presenters/questionPresenters";
-import { formatTabIndex } from "../utils/keyedListHook";
-import { convertNumberToRoman } from "cr-numeral";
 import { closedPartTitleModalState, SetPartTitleModal, showPartTitleModal } from "./SetPartTitleModal";
 import { areQuestionTitlesMismatched } from "../utils/setQuestionTitles";
 
