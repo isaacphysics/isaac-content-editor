@@ -237,7 +237,7 @@ export interface IsaacStringMatchQuestion extends IsaacQuestionBase {
 }
 
 export interface IsaacInlineQuestion extends IsaacQuestionBase {
-    inlineQuestions?: IsaacStringMatchQuestion[];
+    inlineQuestions?: (IsaacStringMatchQuestion | IsaacNumericQuestion | IsaacMultiChoiceQuestion | IsaacRegexMatchQuestion)[];
 }
 
 export type IsaacInlinePart = IsaacQuestionBase

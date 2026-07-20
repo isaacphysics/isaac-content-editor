@@ -67,6 +67,10 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
             ☰<span className="d-none d-lg-inline"> Menu</span>
         </button>
         <div className={styles.flexFill} />
+        {appContext.editor.getPartTitleMismatch() && <button title={"Set all question part titles"} className={styles.iconButton}
+            onClick={() => appContext.showPartTitleModal()}>
+            ✏️<span className="d-none d-lg-inline"> Set part titles</span>
+        </button>}
         {appContext.editor.getDirty() &&
             <button title={"Save changes"} className={styles.iconButton} onClick={() => appContext.dispatch({"type": "save"})}>
                 💾<span className="d-none d-lg-inline"> Save</span>

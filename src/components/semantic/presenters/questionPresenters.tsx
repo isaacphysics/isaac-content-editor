@@ -55,7 +55,7 @@ export type QUESTION_TYPES =
     | "isaacCoordinateQuestion"
 ;
 
-const QuestionTypes: Record<QUESTION_TYPES, {name: string}> = {
+export const QuestionTypes: Record<QUESTION_TYPES, {name: string}> = {
     isaacQuestion: {
         name: "Quick Question",
     },
