@@ -59,10 +59,6 @@ function isParsonsQuestion(doc: Content | null | undefined): doc is IsaacParsons
     return doc?.type === "isaacParsonsQuestion";
 }
 
-function isReorderQuestion(doc: Content | null | undefined): doc is IsaacReorderQuestion {
-    return doc?.type === "isaacReorderQuestion";
-}
-
 function isClozeQuestion(doc: Content | null | undefined): doc is IsaacClozeQuestion {
     return doc?.type === "isaacClozeQuestion";
 }
@@ -73,7 +69,7 @@ function isDndQuestion(doc: Content | null | undefined): doc is IsaacDndQuestion
 
 type ItemQuestionType = IsaacItemQuestion | IsaacReorderQuestion | IsaacParsonsQuestion | IsaacClozeQuestion | IsaacDndQuestion;
 
-export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
+export function ClozeDndQuestionPresenter(props: PresenterProps<IsaacClozeQuestion | IsaacDndQuestion>) {
     const {doc, update} = props;
 
     // Logic to count cloze question drop zones (if necessary) on initial presenter render and doc update
@@ -109,14 +105,31 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         figureMap: figureMap.current,
         calculateDZIndexFromFigureId: (id) => extractFigureRegionStartIndex(doc, id),
     }}>
-        {isParsonsQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" /></div>}
-        {(isParsonsQuestion(doc) || isReorderQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Display only one list (all items must be required)" /></div>}
-        {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>}
-        {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>}
+        <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>
+        <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>
         <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>
         {isDndQuestion(doc) && <DndQuestionInstructions />}
         {isClozeQuestion(doc) && <ClozeQuestionInstructions />}
-        <ContentValueOrChildrenPresenter {...props} update={updateWithDropZoneCount} topLevel />
+        <ItemQuestionPresenter {...props} update={updateWithDropZoneCount}/>
+    </DropZoneQuestionContext.Provider>;
+}
+
+export function ReorderParsonsQuestionPresenter(props: PresenterProps<IsaacReorderQuestion | IsaacParsonsQuestion>) {
+    const {doc, update} = props;
+
+    return <>
+        {isParsonsQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" /></div>}
+        <div><CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Reorder within single list (all items are required in all answers)" /></div>
+        <ItemQuestionPresenter {...props} />
+    </>;
+}
+
+export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
+    const {doc, update} = props;
+
+    return <>
+        {!isClozeQuestion(doc) && !isDndQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>}
+        <ContentValueOrChildrenPresenter {...props} topLevel />
 
         <Box name="Items">
             <Row className={styles.itemsHeaderRow}>
@@ -139,7 +152,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         }}>
             <QuestionFooterPresenter {...props} />
         </ItemsContext.Provider>
-    </DropZoneQuestionContext.Provider>;
+    </>;
 }
 
 export function ItemPresenter(props: PresenterProps<Item>) {

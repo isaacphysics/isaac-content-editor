@@ -37,10 +37,12 @@ import {defaultMeta, MetaItemKey} from "./Metadata";
 import {CardDeckPresenter, CardPresenter} from "./presenters/CardPresenter";
 import {MetaItems} from "./metaItems";
 import {
+    ClozeDndQuestionPresenter,
     DndChoicePresenter,
     ItemChoicePresenter,
     ItemPresenter,
-    ItemQuestionPresenter
+    ItemQuestionPresenter,
+    ReorderParsonsQuestionPresenter
 } from "./presenters/ItemQuestionPresenter";
 import styles from "./styles/semantic.module.css";
 import {ListChildrenPresenter} from "./presenters/ListChildrenPresenter";
@@ -178,6 +180,16 @@ const isaacStringMatchQuestion = {
 const isaacItemQuestion = {
     ...question,
     bodyPresenter: ItemQuestionPresenter,
+    footerPresenter: undefined,
+};
+const isaacClozeDragAndDropQuestion = {
+    ...question,
+    bodyPresenter: ClozeDndQuestionPresenter,
+    footerPresenter: undefined,
+};
+const isaacReorderParsonsQuestion = {
+    ...question,
+    bodyPresenter: ReorderParsonsQuestionPresenter,
     footerPresenter: undefined,
 };
 const isaacLLMFreeTextQuestion: RegistryEntry = {
@@ -403,12 +415,12 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacGraphSketcherQuestion: {...question, headerPresenter: GraphSketcherQuestionPresenter},
     graphChoice: choice,
     isaacItemQuestion,
-    isaacReorderQuestion: isaacItemQuestion,
-    isaacParsonsQuestion: isaacItemQuestion,
+    isaacReorderQuestion: isaacReorderParsonsQuestion,
+    isaacParsonsQuestion: isaacReorderParsonsQuestion,
     itemChoice: choice,
     parsonsChoice: choice,
-    isaacClozeQuestion: isaacItemQuestion,
-    isaacDndQuestion: isaacItemQuestion,
+    isaacClozeQuestion: isaacClozeDragAndDropQuestion,
+    isaacDndQuestion: isaacClozeDragAndDropQuestion,
     dndChoice: choice,
     dndItem$choice: {bodyPresenter: DndChoicePresenter},
     coordinateItem$choice: {bodyPresenter: CoordinateItemPresenter},
