@@ -19,9 +19,11 @@ export interface EditorState {
     getCurrentDocAsString: () => string;
     getCurrentDocExt: () => string;
     getCurrentDocPath: () => string | undefined;
+    getPartTitleMismatch: () => boolean;
     setDirty: (isDirty: boolean) => void;
     setCurrentDoc: (newContent: Content | string, invertible?: boolean) => void;
     loadNewDoc: (newContent: Content | string) => void;
+    setPartTitleMismatch: (mismatch: boolean) => void;
     isAlreadyPublished: () => boolean;
 }
 
@@ -35,6 +37,7 @@ export const defaultEditorState: EditorState = {
     getCurrentDocAsString: () => "",
     getCurrentDocExt: () => "",
     getCurrentDocPath: () => undefined,
+    getPartTitleMismatch: () => false,
     setDirty: () => {
         throw new Error('setDirty called outside of AppContent');
     },
@@ -43,6 +46,9 @@ export const defaultEditorState: EditorState = {
     },
     loadNewDoc: () => {
         throw new Error("loadNewDoc called outside of AppContent");
+    },
+    setPartTitleMismatch: () => {
+        throw new Error("setPartTitleMismatch called outside of AppContent");
     },
     isAlreadyPublished: () => false,
 };

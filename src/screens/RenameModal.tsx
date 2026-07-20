@@ -47,4 +47,4 @@ export const showRenameModal = (setRenameState: (p: RenameModalProps) => void) =
     });
 };
 
-export const closedRenameModalState = (): RenameModalProps => ({isOpen: false, currentName: "", onClose: () => {}});
+export const closedRenameModalState: RenameModalProps = {isOpen: false, currentName: "", onClose: () => {}};

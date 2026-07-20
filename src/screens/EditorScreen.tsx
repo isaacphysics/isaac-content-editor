@@ -28,6 +28,8 @@ import {compare, Operation, applyReducer} from "fast-json-patch";
 import {invertJSONPatch} from "../utils/inversePatch";
 
 import styles from "../styles/editor.module.css";
+import { closedPartTitleModalState, SetPartTitleModal, showPartTitleModal } from "./SetPartTitleModal";
+import { areQuestionTitlesMismatched } from "../utils/setQuestionTitles";
 
 const FILE_COMPONENTS = {
     "json": SemanticEditor,
@@ -92,7 +94,8 @@ export function EditorScreen() {
     const navigate = useNavigate();
     const location = useLocation();
     const menuRef = useRef<MenuModalRef>(null);
-    const [renameState, setRenameState] = useState(closedRenameModalState());
+    const [renameState, setRenameState] = useState(closedRenameModalState);
+    const [partTitleState, setPartTitleState] = useState(closedPartTitleModalState);
 
     const swrConfig = useSWRConfig();
 
@@ -130,6 +133,7 @@ export function EditorScreen() {
     const [lastChange, setLastChange] = useState<Operation[]>();
     const [currentContentPath, setCurrentContentPath] = useState<string | undefined>();
     const [isAlreadyPublished, setIsAlreadyPublished] = useState<boolean>(false);
+    const [partTitleMismatch, setPartTitleMismatch] = useState<boolean>(false);
 
     const [actionRunning, setActionRunning] = useState(false);
 
@@ -140,6 +144,7 @@ export function EditorScreen() {
         }
         setCurrentContent(content);
         setDirty(hash(content) !== fileHash);
+        setPartTitleMismatch(areQuestionTitlesMismatched(content));
     }, [fileHash, currentContent]);
     const loadNewDoc = useCallback((content: Content | string) => {
         setDirty(false);
@@ -148,7 +153,8 @@ export function EditorScreen() {
         setIsAlreadyPublished(typeof content === "string" ? false : !!content.published);
         setCurrentContent(content);
         setCurrentContentPath(selection?.path);
-    }, [selection]);
+        setPartTitleMismatch(areQuestionTitlesMismatched(content));
+    }, [selection?.path]);
 
     const appContext = useMemo<ContextType<typeof AppContext>>(() => {
         async function dispatch(action: Action) {
@@ -197,9 +203,11 @@ export function EditorScreen() {
                     }
                 },
                 getCurrentDocPath: () => currentContentPath,
+                getPartTitleMismatch: () => partTitleMismatch,
                 setDirty: setDirty,
                 setCurrentDoc: setCurrentDoc,
                 loadNewDoc: loadNewDoc,
+                setPartTitleMismatch: setPartTitleMismatch,
                 isAlreadyPublished: () => isAlreadyPublished,
             },
             github: {
@@ -212,6 +220,7 @@ export function EditorScreen() {
             menuModal: menuRef,
             setActionRunning,
             showRenameModal: showRenameModal(setRenameState),
+            showPartTitleModal: showPartTitleModal(setPartTitleState),
             preview: {
                 open: previewOpen,
                 toggle: () => {
@@ -334,6 +343,7 @@ export function EditorScreen() {
                     <h2>Processing...</h2>
                 </div>
             </Modal>
+            <SetPartTitleModal {...partTitleState}/>
             <MenuModal menuRef={menuRef} />
             <RenameModal key={renameState?.currentName} {...renameState} />
         </AppContext.Provider>

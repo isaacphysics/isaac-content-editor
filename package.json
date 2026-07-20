@@ -18,6 +18,7 @@
     "@uiw/react-codemirror": "~4.25.4",
     "bootstrap": "^5.3.8",
     "classnames": "^2.5.1",
+    "cr-numeral": "^2.1.0",
     "fast-json-patch": "^3.1.1",
     "he": "^1.2.0",
     "js-cookie": "^3.0.5",

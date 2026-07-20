@@ -4722,6 +4722,11 @@ cosmiconfig@^7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+cr-numeral@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/cr-numeral/-/cr-numeral-2.1.0.tgz#5e0c4afc39667072518fe7860b6fc0098e36f5a6"
+  integrity sha512-z1pGSmEzYeqsUSSLCy6rXEGIzQ3szYESC/fIoVP0Dlu58JnQB3+xtUoXW6LtSCISSN8jIAmRbFuvsyYca2QKzA==
+
 create-require@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
