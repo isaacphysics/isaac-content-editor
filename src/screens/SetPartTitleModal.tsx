@@ -37,7 +37,7 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
                     <span className="me-2">Overwrite titles not already in the standard format</span>
                     <span style={{textDecoration: "underline", color:"blue"}} id="overwrite-tooltip">?</span>
                     <Tooltip isOpen={tooltipOpen} placement="bottom" target="overwrite-tooltip" toggle={() => setTooltipOpen(!tooltipOpen)}>
-                        {"Titles in the standard format but incorrect position (or empty titles) will be overwritten regardless"}
+                        Titles in the standard format but incorrect position (or empty titles) will be overwritten regardless
                     </Tooltip>
                 </Label>
             </FormGroup>
