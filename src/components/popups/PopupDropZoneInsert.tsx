@@ -35,7 +35,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
     const [id, setId] = useState<string>(nextDropZoneId());
 
     const generateAndInsertDropZone = useCallback(() => {
-        const dropZoneSyntax = `[drop-zone${id ? `:${id}` : ""}${(width || height || index) ? "|" : ""}${index ? `i-${index}` : ""}${width ? `w-${width}` : ""}${height ? `h-${height}` : ""}]`;
+        const dropZoneSyntax = `[drop-zone${(id && isDndQuestion) ? `:${id}` : ""}${(width || height || index) ? "|" : ""}${index ? `i-${index}` : ""}${width ? `w-${width}` : ""}${height ? `h-${height}` : ""}]`;
         if (id) {
             if (!updatedDropZoneIds.current) {
                 updatedDropZoneIds.current = new Set<string>();
