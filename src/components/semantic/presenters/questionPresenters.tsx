@@ -32,82 +32,9 @@ import { EditableInlineTypeProp, INLINE_TYPES } from "./InlineQuestionTypePresen
 import { isAda } from "../../../services/site";
 import { extractValueOrChildrenText } from "../../../utils/content";
 import { inlineQuestionRegex } from "../../../isaac/IsaacTypes";
+import { HUMAN_QUESTION_TYPES, QUESTION_TYPES } from "../../../services/constants";
 
 export const QuestionContext = React.createContext<Content | null>(null);
-
-export type QUESTION_TYPES =
-    | "isaacQuestion"
-    | "isaacMultiChoiceQuestion"
-    | "isaacNumericQuestion"
-    | "isaacSymbolicQuestion"
-    | "isaacSymbolicChemistryQuestion"
-    | "isaacStringMatchQuestion"
-    | "isaacFreeTextQuestion"
-    | "isaacLLMFreeTextQuestion"
-    | "isaacSymbolicLogicQuestion"
-    | "isaacGraphSketcherQuestion"
-    | "isaacRegexMatchQuestion"
-    | "isaacItemQuestion"
-    | "isaacReorderQuestion"
-    | "isaacParsonsQuestion"
-    | "isaacClozeQuestion"
-    | "isaacDndQuestion"
-    | "isaacCoordinateQuestion"
-;
-
-export const QuestionTypes: Record<QUESTION_TYPES, {name: string}> = {
-    isaacQuestion: {
-        name: "Quick Question",
-    },
-    isaacMultiChoiceQuestion: {
-        name: "Multiple Choice Question",
-    },
-    isaacNumericQuestion: {
-        name: "Numeric Question",
-    },
-    isaacSymbolicQuestion: {
-        name: "Symbolic Question",
-    },
-    isaacStringMatchQuestion: {
-        name: "String Match Question",
-    },
-    isaacRegexMatchQuestion: {
-        name: "Regex Match Question",
-    },
-    isaacFreeTextQuestion: {
-        name: "Free Text Question",
-    },
-    isaacLLMFreeTextQuestion: {
-        name: "LLM-Marked Free Text Question",
-    },
-    isaacSymbolicLogicQuestion: {
-        name: "Logic Question",
-    },
-    isaacItemQuestion: {
-        name: "Item Question",
-    },
-    isaacReorderQuestion: {
-        name: "Reorder Question",
-    },
-    isaacParsonsQuestion: {
-        name: "Parsons Question",
-    },
-    isaacClozeQuestion: {
-        name: "Cloze Question",
-    },
-    isaacDndQuestion: {
-        name: "Drag and Drop Question"
-    },
-    isaacCoordinateQuestion: {
-        name: "Coordinate Question",
-    },
-    isaacSymbolicChemistryQuestion: {
-        name: "Chemistry Question",
-    },
-    isaacGraphSketcherQuestion: {
-        name: "Graph Sketcher Question",
-    },
-};
 
 export function changeQuestionType({doc, update, newType} : PresenterProps & {newType: QUESTION_TYPES}) {
     const newDoc = {...doc, type: newType} as IsaacQuickQuestion & IsaacNumericQuestion & IsaacCoordinateQuestion;
@@ -179,15 +106,15 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
     update(newDoc);
 }
 
-export function QuestionTypeSelector({doc, update, questionTypes = QuestionTypes, disabled = false}
-: PresenterProps & {questionTypes?: Partial<Record<QUESTION_TYPES, { name: string; }>>, disabled?: boolean}) {
+export function QuestionTypeSelector({doc, update, questionTypes = HUMAN_QUESTION_TYPES, disabled = false}
+: PresenterProps & {questionTypes?: Partial<Record<QUESTION_TYPES, string>>, disabled?: boolean}) {
     const [isOpen, setOpen] = useState(false);
 
     const questionType = questionTypes[doc.type as QUESTION_TYPES];
 
     return <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen} disabled={disabled}>
         <DropdownToggle caret>
-            {questionType?.name}
+            {questionType}
         </DropdownToggle>
         <DropdownMenu>
             {Object.keys(questionTypes).map((key) => {
@@ -197,7 +124,7 @@ export function QuestionTypeSelector({doc, update, questionTypes = QuestionTypes
                         changeQuestionType({doc, update, newType: key as QUESTION_TYPES});
                     }
                 }}>
-                    {possibleType?.name}
+                    {possibleType}
                 </DropdownItem>;
             })}
         </DropdownMenu>

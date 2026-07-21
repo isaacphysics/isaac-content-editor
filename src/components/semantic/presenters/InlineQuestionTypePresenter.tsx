@@ -1,6 +1,7 @@
 import { PresenterProps } from "../registry";
 import { Content } from "../../../isaac-data-types";
-import { QUESTION_TYPES, QuestionTypeSelector } from "./questionPresenters";
+import { QuestionTypeSelector } from "./questionPresenters";
+import { QUESTION_TYPES } from "../../../services/constants";
 
 export type INLINE_TYPES = Extract<QUESTION_TYPES,
     "isaacStringMatchQuestion"
@@ -9,14 +10,14 @@ export type INLINE_TYPES = Extract<QUESTION_TYPES,
     | "isaacRegexMatchQuestion"
 >;
 
-export const EditableInlineTypeProp = (props : PresenterProps<Content> & {disabled? : boolean}) => {
+export const EditableInlineTypeProp = (props: PresenterProps<Content> & {disabled? : boolean}) => {
     const {doc, update, disabled} = props;
 
-    const inlineQuestionTypes: Record<INLINE_TYPES, { name: string }> = {
-        isaacStringMatchQuestion: { name: "String Match Question" },
-        isaacNumericQuestion: { name: "Numeric Question" },
-        isaacMultiChoiceQuestion: { name: "Multiple Choice Question" },
-        isaacRegexMatchQuestion: { name: "Regex Match Question" },
+    const inlineQuestionTypes: Record<INLINE_TYPES, string> = {
+        isaacStringMatchQuestion: "String Match Question",
+        isaacNumericQuestion: "Numeric Question",
+        isaacMultiChoiceQuestion: "Multiple Choice Question",
+        isaacRegexMatchQuestion: "Regex Match Question",
     };
 
     if (doc.type === "inlineQuestionPart") {

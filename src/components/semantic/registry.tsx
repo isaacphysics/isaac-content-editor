@@ -8,7 +8,6 @@ import {
     InlineRegionPresenter,
     MultipleChoiceQuestionPresenter,
     NumericQuestionPresenter,
-    QUESTION_TYPES,
     QuestionContext,
     QuestionFooterPresenter,
     QuestionMetaPresenter,
@@ -52,6 +51,7 @@ import {LLMQuestionPresenter} from "./presenters/LLMQuestionPresenter";
 import { SidebarEntryPresenter, SidebarPresenter } from "./presenters/SidebarPresenters";
 import { DesmosEmbeddingPresenter } from "./presenters/DesmosEmbeddingPresenter";
 import { GeogebraEmbeddingPresenter } from "./presenters/GeogebraEmbeddingPresenter";
+import { QUESTION_TYPES } from "../../services/constants";
 
 export type ContentType =
     | "content"

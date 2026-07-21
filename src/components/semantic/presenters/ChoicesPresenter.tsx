@@ -5,8 +5,9 @@ import { IsaacQuestionBase } from "../../../isaac-data-types";
 import { CHOICE_TYPES } from "../ChoiceInserter";
 import { PresenterProps } from "../registry";
 import { ListPresenterProp } from "../props/listProps";
-import { FreeTextQuestionInstructions, QUESTION_TYPES } from "./questionPresenters";
+import { FreeTextQuestionInstructions } from "./questionPresenters";
 import { Box } from "../SemanticItem";
+import { QUESTION_TYPES } from "../../../services/constants";
 
 const choicesType: Record<QUESTION_TYPES, CHOICE_TYPES | null> = {
     isaacQuestion: null,

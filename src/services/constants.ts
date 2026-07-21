@@ -84,4 +84,45 @@ export enum SUBJECT {
 }
 export const SUBJECTS_SCI = [SUBJECT.PHYSICS, SUBJECT.MATHS, SUBJECT.CHEMISTRY, SUBJECT.BIOLOGY];
 
+// QUESTIONS
+export type QUESTION_TYPES =
+    | "isaacQuestion"
+    | "isaacMultiChoiceQuestion"
+    | "isaacNumericQuestion"
+    | "isaacSymbolicQuestion"
+    | "isaacSymbolicChemistryQuestion"
+    | "isaacStringMatchQuestion"
+    | "isaacFreeTextQuestion"
+    | "isaacLLMFreeTextQuestion"
+    | "isaacSymbolicLogicQuestion"
+    | "isaacGraphSketcherQuestion"
+    | "isaacRegexMatchQuestion"
+    | "isaacItemQuestion"
+    | "isaacReorderQuestion"
+    | "isaacParsonsQuestion"
+    | "isaacClozeQuestion"
+    | "isaacDndQuestion"
+    | "isaacCoordinateQuestion"
+;
+
+export const HUMAN_QUESTION_TYPES: Record<QUESTION_TYPES, string> = {
+    isaacQuestion: "Quick Question",
+    isaacMultiChoiceQuestion: "Multiple choice Question",
+    isaacItemQuestion: "Item Question",
+    isaacReorderQuestion: "Reorder Question",
+    isaacParsonsQuestion: "Parsons Question",
+    isaacNumericQuestion: "Numeric Question",
+    isaacSymbolicQuestion: "Symbolic Question",
+    isaacSymbolicChemistryQuestion: "Symbolic Chemistry Question",
+    isaacStringMatchQuestion: "String Match Question",
+    isaacRegexMatchQuestion: "Regex Match Question",
+    isaacFreeTextQuestion: "Free Text Question",
+    isaacLLMFreeTextQuestion: "LLM-Marked Free Text Question",
+    isaacSymbolicLogicQuestion: "Logic Question",
+    isaacGraphSketcherQuestion: "Graph Sketcher Question",
+    isaacClozeQuestion: "Cloze Question",
+    isaacDndQuestion: "Drag and Drop Question",
+    isaacCoordinateQuestion: "Coordinate Question"
+};
+
 export const BOOK_DETAIL_ID_SEPARATOR = "__";
