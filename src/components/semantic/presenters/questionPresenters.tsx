@@ -1,7 +1,7 @@
 import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
 import {EditableDimensionalDocProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
 import styles from "../styles/question.module.css";
-import {Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,} from "reactstrap";
+import {Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
 import {
     Content,
     IsaacCoordinateQuestion,
@@ -527,12 +527,12 @@ function SymbolicQuestionPresenterHead(props: PresenterProps<IsaacSymbolicQuesti
 
 export function SymbolicChemistryQuestionPresenter(props: PresenterProps<IsaacSymbolicChemistryQuestion>) {
     return <>
-        <CheckboxDocProp {...props} prop="isNuclear" label="Nuclear question" />
-        <CheckboxDocProp {...props} prop="allowPermutations" label="Allow molecule permutations" disabled={props.doc.isNuclear} />
-        <CheckboxDocProp {...props} prop="allowScalingCoefficients" label="Allow coefficient scaling" disabled={props.doc.isNuclear} />
-        <SymbolicQuestionPresenterHead {...props} />
+        <SymbolicQuestionPresenterHead {...props}/>
         {!props.doc.isNuclear && <SymbolicMetaSymbols {...props} metaSymbols={availableChemistryMetaSymbols} />}
         <hr />
+        <CheckboxDocProp {...props} className="d-inline-block" prop="isNuclear" label="Nuclear question" />
+        <CheckboxDocProp {...props} className="d-inline-block" prop="allowPermutations" label="Allow molecule permutations" disabled={props.doc.isNuclear} />
+        <CheckboxDocProp {...props} className="d-inline-block" prop="allowScalingCoefficients" label="Allow coefficient scaling" disabled={props.doc.isNuclear} />
         <CheckboxDocProp {...props} prop="showInequalitySeed" label="Show seed in inequality before opening the editor" />
         <div className={styles.editableFullwidth}>
             <EditableFormulaSeed {...props}/>
@@ -544,6 +544,7 @@ export function SymbolicQuestionPresenter(props: PresenterProps<IsaacSymbolicQue
     return <>
         <SymbolicQuestionPresenterHead {...props} />
         {props.doc.type === "isaacSymbolicQuestion" && <SymbolicMetaSymbols {...props} metaSymbols={availableMetaSymbols} />}
+        <hr />
         <div className={styles.editableFullwidth}>
             <EditableFormulaSeed {...props}/>
         </div>
