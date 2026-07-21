@@ -1,6 +1,198 @@
 /* tslint:disable */
 // Generated using typescript-generator version 2.12.476 on 2022-03-25 13:08:59.
 
+// CONTENT
+export interface ContentBase {
+    id?: string;
+    type?: string;
+    tags?: string[];
+    canonicalSourceFile?: string;
+    version?: string;
+    audience?: AudienceContext[];
+    display?: { [index: string]: string[] };
+}
+
+export interface Content extends ContentBase {
+    title?: string;
+    subtitle?: string;
+    author?: string;
+    encoding?: string;
+    layout?: string;
+    children?: ContentBase[];
+    value?: string;
+    attribution?: string;
+    relatedContent?: string[];
+    published?: boolean;
+    deprecated?: boolean;
+    level?: number;
+    searchableContent?: string;
+}
+
+export interface IsaacCard extends Content {
+    image?: Image;
+    clickUrl?: string;
+    disabled?: boolean;
+    verticalContent?: boolean;
+    buttonText?: string;
+}
+
+export interface IsaacCardDeck extends Content {
+    cards?: IsaacCard[];
+}
+
+export interface IsaacPod extends Content {
+    image?: Image;
+    url?: string;
+}
+
+export interface IsaacPageFragment extends Content {
+    summary?: string;
+}
+
+export interface IsaacFeaturedProfile extends Content {
+    emailAddress?: string;
+    image?: Image;
+    homepage?: string;
+}
+
+export interface Sidebar extends Content {
+    sidebarEntries?: SidebarEntry[];
+}
+
+export interface SidebarEntry extends Content {
+    label?: string;
+    pageId?: string;
+    pageType?: SidebarEntryType;
+}
+
+export interface SidebarGroup extends SidebarEntry {
+    sidebarEntries?: SidebarEntry[];
+}
+
+export interface IsaacWildcard extends Content {
+    description?: string;
+    url?: string;
+}
+
+export interface AnvilApp extends Content {
+    appId?: string;
+    appAccessKey?: string;
+}
+
+export interface CodeSnippet extends Content {
+    language?: string;
+    code?: string;
+    disableHighlighting?: boolean;
+    expandable?: boolean;
+    url?: string;
+}
+
+export interface InteractiveCodeSnippet extends CodeSnippet {
+    setupCode?: string;
+    testCode?: string;
+    expectedResult?: string;
+    wrapCodeInMain?: boolean;
+    dataUrl?: string;
+}
+
+export interface Choice extends Content {
+    correct?: boolean;
+    explanation?: ContentBase;
+}
+
+export interface IsaacTabs extends Content {
+    expandable?: boolean;
+    hideTitles?: boolean;
+}
+export type CodeTabs = IsaacTabs
+
+export interface EmailTemplate extends Content {
+    subject?: string;
+    plainTextContent?: string;
+    htmlContent?: string;
+    overrideFromAddress?: string;
+    overrideFromName?: string;
+    overrideEnvelopeFrom?: string;
+    replyToEmailAddress?: string;
+    replyToName?: string;
+}
+
+export interface GlossaryTerm extends Content {
+    explanation?: Content;
+    examBoard?: string;
+    stages?: string[];
+}
+
+export interface Item extends Content {
+    altText?: string;
+}
+
+export interface Notification extends Content {
+    externalReference?: ExternalReference;
+    expiry?: Date;
+}
+
+export type IsaacQuizSection = Content
+
+// PAGES
+export interface SeguePage extends Content {
+    summary?: string;
+    permissions?: string;
+    notes?: string;
+}
+
+export interface IsaacQuestionPage extends SeguePage {
+    difficulty?: number;
+    passMark?: number;
+    supersededBy?: string;
+}
+
+export type IsaacFastTrackQuestionPage = IsaacQuestionPage
+
+export type IsaacConceptPage = SeguePage;
+
+export interface IsaacQuiz extends SeguePage {
+    hiddenFromRoles?: string[];
+    rubric?: Content;
+}
+
+export interface IsaacBookIndexPage extends SeguePage {
+    sidebar?: string; // the ID of the sidebar
+    coverImage?: Image;
+}
+
+export interface IsaacBookDetailPage extends SeguePage {
+    gameboards?: string[];
+    extensionGameboards?: string[];
+}
+
+export interface IsaacTopicSummaryPage extends SeguePage {
+    linkedGameboards?: string[];
+}
+
+export interface IsaacEventPage extends Content {
+    date?: number;
+    bookingDeadline?: number;
+    prepWorkDeadline?: number;
+    location?: Location;
+    preResources?: ExternalReference[];
+    postResources?: ExternalReference[];
+    eventThumbnail?: Image;
+    numberOfPlaces?: number;
+    groupReservationLimit?: number;
+    allowGroupReservations?: boolean;
+    preResourceContent?: Content[];
+    emailEventDetails?: string;
+    emailConfirmedBookingText?: string;
+    emailWaitingListBookingText?: string;
+    postResourceContent?: Content[];
+    eventStatus?: EventStatus;
+    isaacGroupToken?: string;
+    address?: Address;
+    endDate?: number;
+}
+
+// GAMEBOARDS AND QUIZZES
 export interface AssignmentDO {
     id?: number;
     gameboardId?: string;
@@ -30,30 +222,42 @@ export interface GameboardDO {
     _id?: string;
 }
 
+export interface QuizAssignmentDO {
+    id?: number;
+    quizId?: string;
+    groupId?: number;
+    ownerUserId?: number;
+    creationDate?: Date;
+    dueDate?: Date;
+    quizFeedbackMode?: QuizFeedbackMode;
+}
+
+export interface QuizAttemptDO {
+    id?: number;
+    userId?: number;
+    quizId?: string;
+    quizAssignmentId?: number;
+    startDate?: Date;
+    completedDate?: Date;
+}
+
+// QUESTIONS
+export interface Question extends Content {
+    answer?: ContentBase;
+    hints?: ContentBase[];
+    defaultFeedback?: Content;
+    passMark?: number;
+}
+
+export interface ChoiceQuestion extends Question {
+    choices?: Choice[];
+    randomiseChoices?: boolean;
+}
+
+export type IsaacQuestionBase = ChoiceQuestion
+
 export interface IsaacAnvilQuestion extends IsaacQuestionBase {
     anvilApp?: AnvilApp;
-}
-
-export interface IsaacCard extends Content {
-    image?: Image;
-    clickUrl?: string;
-    disabled?: boolean;
-    verticalContent?: boolean;
-    buttonText?: string;
-}
-
-export interface IsaacCardDeck extends Content {
-    cards?: IsaacCard[];
-}
-
-export interface IsaacClozeQuestion extends IsaacItemQuestion {
-    withReplacement?: boolean;
-    detailedItemFeedback?: boolean;
-}
-
-export interface IsaacDndQuestion extends IsaacItemQuestion {
-    withReplacement?: boolean;
-    detailedItemFeedback?: boolean;
 }
 
 export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
@@ -71,71 +275,7 @@ export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
     buttonText?: string;
 }
 
-export type IsaacConceptPage = SeguePage
-
-export interface IsaacEventPage extends Content {
-    date?: number;
-    bookingDeadline?: number;
-    prepWorkDeadline?: number;
-    location?: Location;
-    preResources?: ExternalReference[];
-    postResources?: ExternalReference[];
-    eventThumbnail?: Image;
-    numberOfPlaces?: number;
-    groupReservationLimit?: number;
-    allowGroupReservations?: boolean;
-    preResourceContent?: Content[];
-    emailEventDetails?: string;
-    emailConfirmedBookingText?: string;
-    emailWaitingListBookingText?: string;
-    postResourceContent?: Content[];
-    eventStatus?: EventStatus;
-    isaacGroupToken?: string;
-    address?: Address;
-    endDate?: number;
-}
-
-export type IsaacFastTrackQuestionPage = IsaacQuestionPage
-
-export interface IsaacFeaturedProfile extends Content {
-    emailAddress?: string;
-    image?: Image;
-    homepage?: string;
-}
-
-export type IsaacFreeTextQuestion = Question
-
-export interface LLMFreeTextMarkSchemeEntry {
-    jsonField?: string;
-    shortDescription?: string;
-    marks?: number;
-}
-
-export interface LLMFormulaNode {
-    type: "LLMMarkingFunction" | "LLMMarkingVariable" | "LLMMarkingConstant";
-}
-
-export interface LLMFunctionNode extends LLMFormulaNode{
-    arguments: LLMFormulaNode[] | LLMFormulaNode;
-    name: string;
-    type: "LLMMarkingFunction";
-}
-
-export interface LLMVariableNode extends LLMFormulaNode {
-    name: string;
-    type: "LLMMarkingVariable";
-}
-
-export interface LLMConstantNode extends LLMFormulaNode {
-    value: number;
-    type: "LLMMarkingConstant";
-}
-
-export interface LLMFreeTextMarkedExample {
-    answer?: string;
-    marks?: Record<string, number>;
-    marksAwarded?: number;
-}
+export type IsaacFreeTextQuestion = IsaacQuestionBase;
 
 export interface IsaacLLMFreeTextQuestion extends IsaacQuestionBase {
     markScheme?: LLMFreeTextMarkSchemeEntry[];
@@ -157,7 +297,7 @@ export interface IsaacItemQuestion extends IsaacQuestionBase {
     randomiseItems?: boolean;
 }
 
-export type IsaacMultiChoiceQuestion = IsaacQuestionBase
+export type IsaacMultiChoiceQuestion = IsaacQuestionBase;
 
 export interface IsaacNumericQuestion extends IsaacQuestionBase {
     requireUnits?: boolean;
@@ -168,8 +308,8 @@ export interface IsaacNumericQuestion extends IsaacQuestionBase {
     displayUnit?: string;
 }
 
-export interface IsaacPageFragment extends Content {
-    summary?: string;
+export interface IsaacReorderQuestion extends IsaacItemQuestion {
+    useSingleList?: boolean;
 }
 
 export interface IsaacParsonsQuestion extends IsaacItemQuestion {
@@ -177,57 +317,19 @@ export interface IsaacParsonsQuestion extends IsaacItemQuestion {
     useSingleList?: boolean;
 }
 
-export interface IsaacReorderQuestion extends IsaacItemQuestion {
-    useSingleList?: boolean;
+export interface IsaacClozeQuestion extends IsaacItemQuestion {
+    withReplacement?: boolean;
+    detailedItemFeedback?: boolean;
 }
 
-export interface IsaacPod extends Content {
-    image?: Image;
-    url?: string;
-}
-
-export type IsaacQuestionBase = ChoiceQuestion
-
-export interface IsaacQuestionPage extends SeguePage {
-    difficulty?: number;
-    passMark?: number;
-    supersededBy?: string;
+export interface IsaacDndQuestion extends IsaacItemQuestion {
+    withReplacement?: boolean;
+    detailedItemFeedback?: boolean;
 }
 
 export interface IsaacQuickQuestion extends IsaacQuestionBase {
     showConfidence?: boolean;
 }
-
-export interface IsaacQuiz extends SeguePage {
-    hiddenFromRoles?: string[];
-    rubric?: Content;
-}
-
-export interface SidebarEntry extends Content {
-    label?: string;
-    pageId?: string;
-    pageType?: SidebarEntryType;
-}
-
-export interface SidebarGroup extends SidebarEntry {
-    sidebarEntries?: SidebarEntry[];
-}
-
-export interface Sidebar extends Content {
-    sidebarEntries?: SidebarEntry[];
-}
-
-export interface IsaacBookIndexPage extends SeguePage {
-    sidebar?: string; // the ID of the sidebar
-    coverImage?: Image;
-}
-
-export interface IsaacBookDetailPage extends SeguePage {
-    gameboards?: string[];
-    extensionGameboards?: string[];
-}
-
-export type IsaacQuizSection = Content
 
 export interface IsaacRegexMatchQuestion extends IsaacQuestionBase {
     multiLineEntry?: boolean;
@@ -259,154 +361,28 @@ export interface IsaacSymbolicQuestion extends IsaacQuestionBase {
     availableSymbols?: string[];
 }
 
-export interface IsaacTopicSummaryPage extends SeguePage {
-    linkedGameboards?: string[];
-}
-
-export interface IsaacWildcard extends Content {
-    description?: string;
-    url?: string;
-}
-
-export interface QuizAssignmentDO {
-    id?: number;
-    quizId?: string;
-    groupId?: number;
-    ownerUserId?: number;
-    creationDate?: Date;
-    dueDate?: Date;
-    quizFeedbackMode?: QuizFeedbackMode;
-}
-
-export interface QuizAttemptDO {
-    id?: number;
-    userId?: number;
-    quizId?: string;
-    quizAssignmentId?: number;
-    startDate?: Date;
-    completedDate?: Date;
-}
-
-export interface TestCase extends QuestionValidationResponse {
-    expected?: boolean;
-}
+export type AnyQuestion = IsaacQuickQuestion & IsaacMultiChoiceQuestion & IsaacItemQuestion & IsaacReorderQuestion & IsaacParsonsQuestion & IsaacNumericQuestion
+    & IsaacSymbolicQuestion & IsaacSymbolicLogicQuestion & IsaacSymbolicChemistryQuestion & IsaacStringMatchQuestion & IsaacFreeTextQuestion & IsaacGraphSketcherQuestion
+    & IsaacClozeQuestion & IsaacDndQuestion & IsaacCoordinateQuestion & IsaacLLMFreeTextQuestion;
 
 export interface TestQuestion {
     userDefinedChoices?: Choice[];
     testCases?: TestCase[];
 }
 
-export interface EventBooking {
-    id?: number;
-    creationDate?: Date;
-    userId?: number;
-    eventId?: string;
-    additionalInformation?: { [index: string]: string };
-    reservedById?: number;
-    bookingStatus?: BookingStatus;
-    updateDate?: Date;
+// ITEMS AND CHOICES
+export interface Formula extends Choice {
+    pythonExpression?: string;
+    requiresExactMatch?: boolean;
 }
 
-export interface AnvilApp extends Content {
-    appId?: string;
-    appAccessKey?: string;
+export interface LogicFormula extends Choice {
+    pythonExpression?: string;
+    requiresExactMatch?: boolean;
 }
 
 export interface ChemicalFormula extends Choice {
     mhchemExpression?: string;
-}
-
-export interface Choice extends Content {
-    correct?: boolean;
-    explanation?: ContentBase;
-}
-
-export interface ChoiceQuestion extends Question {
-    choices?: Choice[];
-    randomiseChoices?: boolean;
-}
-
-export interface CodeSnippet extends Content {
-    language?: string;
-    code?: string;
-    disableHighlighting?: boolean;
-    expandable?: boolean;
-    url?: string;
-}
-
-export interface InteractiveCodeSnippet extends CodeSnippet {
-    setupCode?: string;
-    testCode?: string;
-    expectedResult?: string;
-    wrapCodeInMain?: boolean;
-    dataUrl?: string;
-}
-
-export interface IsaacTabs extends Content {
-    expandable?: boolean;
-    hideTitles?: boolean;
-}
-
-export type CodeTabs = IsaacTabs
-
-export interface Content extends ContentBase {
-    title?: string;
-    subtitle?: string;
-    author?: string;
-    encoding?: string;
-    layout?: string;
-    children?: ContentBase[];
-    value?: string;
-    attribution?: string;
-    relatedContent?: string[];
-    published?: boolean;
-    deprecated?: boolean;
-    level?: number;
-    searchableContent?: string;
-}
-
-export interface ContentBase {
-    id?: string;
-    type?: string;
-    tags?: string[];
-    canonicalSourceFile?: string;
-    version?: string;
-    audience?: AudienceContext[];
-    display?: { [index: string]: string[] };
-}
-
-export interface EmailTemplate extends Content {
-    subject?: string;
-    plainTextContent?: string;
-    htmlContent?: string;
-    overrideFromAddress?: string;
-    overrideFromName?: string;
-    overrideEnvelopeFrom?: string;
-    replyToEmailAddress?: string;
-    replyToName?: string;
-}
-
-export interface ExternalReference {
-    title?: string;
-    url?: string;
-}
-
-export interface PositionableFigureRegionProps {
-    id: string;
-    minWidth: string;
-    width?: number;
-    left: number;
-    top: number;
-}
-
-export interface Figure extends Image {
-    figureRegions?: PositionableFigureRegionProps[];
-    condensedMaxWidth?: string;
-}
-
-export interface Formula extends Choice {
-    pythonExpression?: string;
-    requiresExactMatch?: boolean;
 }
 
 export interface FreeTextRule extends Choice {
@@ -417,23 +393,8 @@ export interface FreeTextRule extends Choice {
     wordProximity?: number;
 }
 
-export interface GlossaryTerm extends Content {
-    explanation?: Content;
-    examBoard?: string;
-    stages?: string[];
-}
-
 export interface GraphChoice extends Choice {
     graphSpec?: string;
-}
-
-export interface Image extends Media {
-    clickUrl?: string;
-    clickTarget?: string;
-}
-
-export interface Item extends Content {
-    altText?: string;
 }
 
 export interface ItemChoice extends Choice {
@@ -441,20 +402,18 @@ export interface ItemChoice extends Choice {
     items?: Item[];
 }
 
-export interface LogicFormula extends Choice {
-    pythonExpression?: string;
-    requiresExactMatch?: boolean;
+export interface Quantity extends Choice {
+    units?: string;
 }
 
-export interface Media extends Content {
-    src?: string;
-    altText?: string;
-    decorative?: boolean;
+export interface RegexPattern extends Choice {
+    caseInsensitive?: boolean;
+    multiLineRegex?: boolean;
+    matchWholeString?: boolean;
 }
 
-export interface Notification extends Content {
-    externalReference?: ExternalReference;
-    expiry?: Date;
+export interface StringChoice extends Choice {
+    caseInsensitive?: boolean;
 }
 
 export type ParsonsChoice = ItemChoice
@@ -476,34 +435,24 @@ export interface DndItem extends Item {
     dropZoneId?: string;
 }
 
-export interface Quantity extends Choice {
-    units?: string;
+// MEDIA
+export interface Media extends Content {
+    src?: string;
+    altText?: string;
+    decorative?: boolean;
 }
 
-export interface Question extends Content {
-    answer?: ContentBase;
-    hints?: ContentBase[];
-    defaultFeedback?: Content;
-    passMark?: number;
+export type Video = Media;
+
+export interface Image extends Media {
+    clickUrl?: string;
+    clickTarget?: string;
 }
 
-export interface RegexPattern extends Choice {
-    caseInsensitive?: boolean;
-    multiLineRegex?: boolean;
-    matchWholeString?: boolean;
+export interface Figure extends Image {
+    figureRegions?: PositionableFigureRegionProps[];
+    condensedMaxWidth?: string;
 }
-
-export interface SeguePage extends Content {
-    summary?: string;
-    permissions?: string;
-    notes?: string;
-}
-
-export interface StringChoice extends Choice {
-    caseInsensitive?: boolean;
-}
-
-export type Video = Media
 
 export interface DesmosEmbedding extends Media {
     calculatorId?: string;
@@ -516,6 +465,7 @@ export interface GeogebraEmbedding extends Media {
     allowNewInputs?: boolean;
 }
 
+// OTHER
 export interface AudienceContext {
     stage?: Stage[];
     examBoard?: ExamBoard[];
@@ -550,17 +500,78 @@ export interface Address {
     country?: string;
 }
 
-export interface QuestionValidationResponse extends LightweightQuestionValidationResponse {
-    answer?: Choice;
-    explanation?: Content;
-}
-
 export interface LightweightQuestionValidationResponse {
     questionId?: string;
     correct?: boolean;
     dateAttempted?: Date;
 }
 
+export interface QuestionValidationResponse extends LightweightQuestionValidationResponse {
+    answer?: Choice;
+    explanation?: Content;
+}
+
+export interface TestCase extends QuestionValidationResponse {
+    expected?: boolean;
+}
+
+export interface EventBooking {
+    id?: number;
+    creationDate?: Date;
+    userId?: number;
+    eventId?: string;
+    additionalInformation?: { [index: string]: string };
+    reservedById?: number;
+    bookingStatus?: BookingStatus;
+    updateDate?: Date;
+}
+
+export interface ExternalReference {
+    title?: string;
+    url?: string;
+}
+
+export interface PositionableFigureRegionProps {
+    id: string;
+    minWidth: string;
+    width?: number;
+    left: number;
+    top: number;
+}
+
+export interface LLMFreeTextMarkSchemeEntry {
+    jsonField?: string;
+    shortDescription?: string;
+    marks?: number;
+}
+
+export interface LLMFormulaNode {
+    type: "LLMMarkingFunction" | "LLMMarkingVariable" | "LLMMarkingConstant";
+}
+
+export interface LLMFunctionNode extends LLMFormulaNode{
+    arguments: LLMFormulaNode[] | LLMFormulaNode;
+    name: string;
+    type: "LLMMarkingFunction";
+}
+
+export interface LLMVariableNode extends LLMFormulaNode {
+    name: string;
+    type: "LLMMarkingVariable";
+}
+
+export interface LLMConstantNode extends LLMFormulaNode {
+    value: number;
+    type: "LLMMarkingConstant";
+}
+
+export interface LLMFreeTextMarkedExample {
+    answer?: string;
+    marks?: Record<string, number>;
+    marksAwarded?: number;
+}
+
+// TYPES
 export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
