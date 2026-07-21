@@ -6,7 +6,7 @@ import {utils} from "remarkable";
 import {usePortalsInHtml, useStatefulElementRef} from "./portals/utils";
 import {compose} from "redux";
 import {isDefined} from "../../utils/types";
-import { DropZoneQuestionContext } from "../../components/semantic/presenters/ItemQuestionPresenter";
+import { DropZoneQuestionContext } from "../../components/semantic/presenters/questions/ItemQuestionPresenter";
 
 // This component renders the HTML given to it inside a React element.
 //

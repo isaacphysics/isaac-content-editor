@@ -11,8 +11,8 @@ import {
     makeItalic,
     makeStrikethrough
 } from "../utils/codeMirrorExtensions";
-import {DropZoneQuestionContext} from "./semantic/presenters/ItemQuestionPresenter";
-import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
+import {DropZoneQuestionContext} from "./semantic/presenters/questions/ItemQuestionPresenter";
+import { InlineQuestionContext } from "./semantic/presenters/questions/questionPresenters";
 import { PopupInlineQuestionInsert } from "./popups/PopupInlineQuestionInsert";
 import { PopupTableClass } from "./popups/PopupTableClass";
 

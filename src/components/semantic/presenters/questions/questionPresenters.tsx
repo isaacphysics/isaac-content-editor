@@ -1,8 +1,9 @@
 import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
-import {EditableDimensionalDocProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../props/EditableDocProp";
+import {EditableDimensionalDocProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../../props/EditableDocProp";
 import styles from "../styles/question.module.css";
 import {Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
 import {
+    AnyQuestion,
     Content,
     IsaacCoordinateQuestion,
     IsaacGraphSketcherQuestion,
@@ -17,32 +18,32 @@ import {
     IsaacSymbolicQuestion,
     PositionableFigureRegionProps,
     Quantity,
-} from "../../../isaac-data-types";
-import {SemanticDocProp} from "../props/SemanticDocProp";
-import {EditableText} from "../props/EditableText";
-import {CheckboxDocProp} from "../props/CheckboxDocProp";
-import {PresenterProps} from "../registry";
-import {SemanticListProp} from "../props/listProps";
-import {NumberDocPropFor} from "../props/NumberDocPropFor";
-import {ChoicesPresenter} from "./ChoicesPresenter";
-import {InserterProps} from "./ListChildrenPresenter";
-import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresenter";
-import { InlinePartsPresenter } from "./InlinePartsPresenter";
+} from "../../../../isaac-data-types";
+import {SemanticDocProp} from "../../props/SemanticDocProp";
+import {EditableText} from "../../props/EditableText";
+import {CheckboxDocProp} from "../../props/CheckboxDocProp";
+import {PresenterProps} from "../../registry";
+import {SemanticListProp} from "../../props/listProps";
+import {NumberDocPropFor} from "../../props/NumberDocPropFor";
+import {ChoicesPresenter} from "../ChoicesPresenter";
+import {InserterProps} from "../ListChildrenPresenter";
+import { ContentValueOrChildrenPresenter } from "../ContentValueOrChildrenPresenter";
+import { InlinePartsPresenter } from "../InlinePartsPresenter";
 import { EditableInlineTypeProp, INLINE_TYPES } from "./InlineQuestionTypePresenter";
-import { isAda } from "../../../services/site";
-import { extractValueOrChildrenText } from "../../../utils/content";
-import { inlineQuestionRegex } from "../../../isaac/IsaacTypes";
-import { HUMAN_QUESTION_TYPES, QUESTION_TYPES } from "../../../services/constants";
+import { isAda } from "../../../../services/site";
+import { extractValueOrChildrenText } from "../../../../utils/content";
+import { inlineQuestionRegex } from "../../../../isaac/IsaacTypes";
+import { HUMAN_QUESTION_TYPES, QUESTION_TYPES } from "../../../../services/constants";
 
 export const QuestionContext = React.createContext<Content | null>(null);
 
-export function changeQuestionType({doc, update, newType} : PresenterProps & {newType: QUESTION_TYPES}) {
-    const newDoc = {...doc, type: newType} as IsaacQuickQuestion & IsaacNumericQuestion & IsaacCoordinateQuestion;
+export function changeQuestionType({doc, update, newType}: PresenterProps & {newType: QUESTION_TYPES}) {
+    const newDoc = {...doc, type: newType} as AnyQuestion;
     if (newType === "isaacNumericQuestion" && !newDoc.hasOwnProperty("requireUnits")) {
         // Add the default value if it is missing
         newDoc.requireUnits = true;
         delete newDoc.displayUnit;
-        if(isAda) {
+        if (isAda) {
             newDoc.disregardSignificantFigures = true;
         } else {
             newDoc.disregardSignificantFigures = false;
@@ -90,9 +91,19 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
         // Remove the choices and answer properties as they are not applicable to LLM-Marked questions
         delete newDoc.answer;
         delete newDoc.choices;
+        delete newDoc.defaultFeedback;
     }
 
-    if (!(newDoc.hasOwnProperty("significantFiguresMin") && newDoc.hasOwnProperty("significantFiguresMax"))) {
+    if (newType !== "isaacLLMFreeTextQuestion") {
+        delete newDoc.markScheme;
+        delete newDoc.maxMarks;
+        delete newDoc.additionalMarkingInstructions;
+        delete newDoc.markingFormula;
+        delete newDoc.markingFormulaString;
+        delete newDoc.markedExamples;
+    }
+
+    if (newType !== "isaacCoordinateQuestion" && newType !== "isaacNumericQuestion") {
         delete newDoc.significantFiguresMin;
         delete newDoc.significantFiguresMax;
     }
@@ -101,6 +112,12 @@ export function changeQuestionType({doc, update, newType} : PresenterProps & {ne
         delete newDoc.ordered;
         delete newDoc.numberOfCoordinates;
         delete newDoc.numberOfDimensions;
+    }
+
+    if (newType !== "isaacGraphSketcherQuestion") {
+        delete newDoc.maxNumCurves;
+        delete newDoc.axisLabelX;
+        delete newDoc.axisLabelY;
     }
 
     update(newDoc);

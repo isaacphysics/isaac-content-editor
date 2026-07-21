@@ -4,7 +4,7 @@ import React from "react";
 import styles from "../../styles/editor.module.css";
 import { Popup, PopupCloseContext, PopupRef } from "./Popup";
 import { Alert, Button, Container, Input, Label } from "reactstrap";
-import { InlineQuestionContext } from "../semantic/presenters/questionPresenters";
+import { InlineQuestionContext } from "../semantic/presenters/questions/questionPresenters";
 import { generateGuid } from "../../utils/strings";
 
 

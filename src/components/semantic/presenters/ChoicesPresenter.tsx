@@ -5,7 +5,7 @@ import { IsaacQuestionBase } from "../../../isaac-data-types";
 import { CHOICE_TYPES } from "../ChoiceInserter";
 import { PresenterProps } from "../registry";
 import { ListPresenterProp } from "../props/listProps";
-import { FreeTextQuestionInstructions } from "./questionPresenters";
+import { FreeTextQuestionInstructions } from "./questions/questionPresenters";
 import { Box } from "../SemanticItem";
 import { QUESTION_TYPES } from "../../../services/constants";
 

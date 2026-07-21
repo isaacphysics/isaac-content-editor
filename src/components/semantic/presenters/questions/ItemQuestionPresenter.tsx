@@ -12,22 +12,22 @@ import {
     Item,
     ParsonsItem,
     PositionableFigureRegionProps,
-} from "../../../isaac-data-types";
+} from "../../../../isaac-data-types";
 
-import {EditableAltTextProp, EditableIDProp, EditableValueProp} from "../props/EditableDocProp";
+import {EditableAltTextProp, EditableIDProp, EditableValueProp} from "../../props/EditableDocProp";
 import {QuestionContext, QuestionFooterPresenter} from "./questionPresenters";
-import {InserterProps} from "./ListChildrenPresenter";
-import {PresenterProps} from "../registry";
-import {CheckboxDocProp} from "../props/CheckboxDocProp";
-import {ListPresenterProp} from "../props/listProps";
-import {ContentValueOrChildrenPresenter} from "./ContentValueOrChildrenPresenter";
-import {MetaItemPresenter, MetaOptions} from "../Metadata";
+import {InserterProps} from "../ListChildrenPresenter";
+import {PresenterProps} from "../../registry";
+import {CheckboxDocProp} from "../../props/CheckboxDocProp";
+import {ListPresenterProp} from "../../props/listProps";
+import {ContentValueOrChildrenPresenter} from "../ContentValueOrChildrenPresenter";
+import {MetaItemPresenter, MetaOptions} from "../../Metadata";
 
 import styles from "../styles/question.module.css";
-import {Box} from "../SemanticItem";
-import {ExpandableText} from "../ExpandableText";
-import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../utils/content";
-import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../isaac/IsaacTypes";
+import {Box} from "../../SemanticItem";
+import {ExpandableText} from "../../ExpandableText";
+import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../../utils/content";
+import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../../isaac/IsaacTypes";
 
 interface ItemsContextType {
     items: Item[] | undefined;

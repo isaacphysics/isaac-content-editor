@@ -1,7 +1,7 @@
-import { PresenterProps } from "../registry";
-import { Content } from "../../../isaac-data-types";
+import { PresenterProps } from "../../registry";
+import { Content } from "../../../../isaac-data-types";
 import { QuestionTypeSelector } from "./questionPresenters";
-import { QUESTION_TYPES } from "../../../services/constants";
+import { QUESTION_TYPES } from "../../../../services/constants";
 
 export type INLINE_TYPES = Extract<QUESTION_TYPES,
     "isaacStringMatchQuestion"

@@ -15,7 +15,7 @@ import {
     StringMatchQuestionPresenter,
     SymbolicQuestionPresenter,
     SymbolicChemistryQuestionPresenter
-} from "./presenters/questionPresenters";
+} from "./presenters/questions/questionPresenters";
 import {CHOICE_TYPES} from "./ChoiceInserter";
 import {TabsPresenter} from "./presenters/TabsPresenter";
 import React, {FunctionComponent, Provider} from "react";
@@ -42,7 +42,7 @@ import {
     ItemPresenter,
     ItemQuestionPresenter,
     ReorderParsonsQuestionPresenter
-} from "./presenters/ItemQuestionPresenter";
+} from "./presenters/questions/ItemQuestionPresenter";
 import styles from "./styles/semantic.module.css";
 import {ListChildrenPresenter} from "./presenters/ListChildrenPresenter";
 import {InteractiveCodeSnippetPresenter} from "./presenters/InteractiveCodeSnippetPresenter";

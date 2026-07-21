@@ -2,9 +2,9 @@ import React, { useCallback, useContext, useMemo, useRef, useState } from "react
 import styles from "./semantic/styles/figure.module.css";
 import markupStyles from "../isaac/styles/markup.module.css";
 import { Input, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { DropZoneQuestionContext } from "./semantic/presenters/ItemQuestionPresenter";
+import { DropZoneQuestionContext } from "./semantic/presenters/questions/ItemQuestionPresenter";
 import throttle from "lodash/throttle";
-import { InlineQuestionContext } from "./semantic/presenters/questionPresenters";
+import { InlineQuestionContext } from "./semantic/presenters/questions/questionPresenters";
 import { Figure, PositionableFigureRegionProps } from "../isaac-data-types";
 import classNames from "classnames";
 import { PresenterProps } from "./semantic/registry";

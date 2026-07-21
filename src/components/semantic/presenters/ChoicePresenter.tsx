@@ -31,10 +31,10 @@ import {EditableDimensionalDocProp, EditableValueProp} from "../props/EditableDo
 import {CHOICE_TYPES} from "../ChoiceInserter";
 import {PresenterProps} from "../registry";
 import {ListPresenterProp} from "../props/listProps";
-import {DropZoneQuestionContext, ItemsContext} from "./ItemQuestionPresenter";
+import {DropZoneQuestionContext, ItemsContext} from "./questions/ItemQuestionPresenter";
 
 import styles from "../styles/choice.module.css";
-import {CoordinateQuestionContext, InlineQuestionContext, QuestionContext} from "./questionPresenters";
+import {CoordinateQuestionContext, InlineQuestionContext, QuestionContext} from "./questions/questionPresenters";
 import {Markup} from "../../../isaac/markup";
 import {NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../isaac/IsaacTypes";
 
