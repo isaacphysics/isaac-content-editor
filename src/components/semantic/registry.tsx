@@ -45,13 +45,13 @@ import {
 } from "./presenters/questions/ItemQuestionPresenter";
 import styles from "./styles/semantic.module.css";
 import {ListChildrenPresenter} from "./presenters/ListChildrenPresenter";
-import {InteractiveCodeSnippetPresenter} from "./presenters/InteractiveCodeSnippetPresenter";
 import {CalloutPresenter} from "./presenters/CalloutPresenter";
-import {LLMQuestionPresenter} from "./presenters/LLMQuestionPresenter";
 import { SidebarEntryPresenter, SidebarPresenter } from "./presenters/SidebarPresenters";
 import { DesmosEmbeddingPresenter } from "./presenters/DesmosEmbeddingPresenter";
 import { GeogebraEmbeddingPresenter } from "./presenters/GeogebraEmbeddingPresenter";
 import { QUESTION_TYPES } from "../../services/constants";
+import { LLMQuestionPresenter } from "./presenters/questions/LLMQuestionPresenter";
+import { InteractiveCodeSnippetPresenter } from "./presenters/InteractiveCodeSnippetPresenter";
 
 export type ContentType =
     | "content"

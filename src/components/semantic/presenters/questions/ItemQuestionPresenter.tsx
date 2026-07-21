@@ -23,7 +23,7 @@ import {ListPresenterProp} from "../../props/listProps";
 import {ContentValueOrChildrenPresenter} from "../ContentValueOrChildrenPresenter";
 import {MetaItemPresenter, MetaOptions} from "../../Metadata";
 
-import styles from "../styles/question.module.css";
+import styles from "../../styles/question.module.css";
 import {Box} from "../../SemanticItem";
 import {ExpandableText} from "../../ExpandableText";
 import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../../utils/content";

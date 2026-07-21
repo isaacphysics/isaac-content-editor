@@ -1,14 +1,14 @@
 import React from "react";
-import { PresenterProps } from "../registry";
-import { IsaacLLMFreeTextQuestion, LLMFreeTextMarkedExample, LLMFreeTextMarkSchemeEntry } from "../../../isaac-data-types";
-import { EditableText } from "../props/EditableText";
-import { isDefined } from "../../../utils/types";
-import { CheckboxDocProp } from "../props/CheckboxDocProp";
-import { parseMarkingFormula } from "../../../services/llmMarkingFormula";
-import styles from "../styles/editable.module.css";
-import { evaluateMarkingFormula, evaluateMarkTotal, tallyMarkUses } from "../../../utils/llmMarkingFormula";
+import { PresenterProps } from "../../registry";
+import { IsaacLLMFreeTextQuestion, LLMFreeTextMarkedExample, LLMFreeTextMarkSchemeEntry } from "../../../../isaac-data-types";
+import { EditableText } from "../../props/EditableText";
+import { isDefined } from "../../../../utils/types";
+import { CheckboxDocProp } from "../../props/CheckboxDocProp";
+import { parseMarkingFormula } from "../../../../services/llmMarkingFormula";
+import styles from "../../styles/editable.module.css";
+import { evaluateMarkingFormula, evaluateMarkTotal, tallyMarkUses } from "../../../../utils/llmMarkingFormula";
 import { FormFeedback } from "reactstrap";
-import { HintsPresenter } from "./question/questionPresenters";
+import { HintsPresenter } from "./questionPresenters";
 
 export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuestion>) {
     const {doc, update} = props;

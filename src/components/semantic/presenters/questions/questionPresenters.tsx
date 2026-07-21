@@ -1,6 +1,6 @@
 import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
 import {EditableDimensionalDocProp, EditableDocPropFor, EditableIDProp, EditableTitleProp} from "../../props/EditableDocProp";
-import styles from "../styles/question.module.css";
+import styles from "../../styles/question.module.css";
 import {Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
 import {
     AnyQuestion,
@@ -17,7 +17,7 @@ import {
     IsaacSymbolicChemistryQuestion,
     IsaacSymbolicQuestion,
     PositionableFigureRegionProps,
-    Quantity,
+    Quantity
 } from "../../../../isaac-data-types";
 import {SemanticDocProp} from "../../props/SemanticDocProp";
 import {EditableText} from "../../props/EditableText";
