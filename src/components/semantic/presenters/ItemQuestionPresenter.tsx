@@ -105,9 +105,9 @@ export function ClozeDndQuestionPresenter(props: PresenterProps<IsaacClozeQuesti
         figureMap: figureMap.current,
         calculateDZIndexFromFigureId: (id) => extractFigureRegionStartIndex(doc, id),
     }}>
-        <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>
-        <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>
-        <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>
+        <CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" />
+        <CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" />
+        <CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} />
         {isDndQuestion(doc) && <DndQuestionInstructions />}
         {isClozeQuestion(doc) && <ClozeQuestionInstructions />}
         <ItemQuestionPresenter {...props} update={updateWithDropZoneCount}/>
@@ -118,8 +118,8 @@ export function ReorderParsonsQuestionPresenter(props: PresenterProps<IsaacReord
     const {doc, update} = props;
 
     return <>
-        {isParsonsQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" /></div>}
-        <div><CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Reorder within single list (all items are required in all answers)" /></div>
+        {isParsonsQuestion(doc) && <CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" />}
+        <CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Reorder within single list (all items are required in all answers)" />
         <ItemQuestionPresenter {...props} />
     </>;
 }
@@ -128,7 +128,8 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
     const {doc, update} = props;
 
     return <>
-        {!isClozeQuestion(doc) && !isDndQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>}
+        {/* Defined above question instructions instead for cloze and dnd questions */}
+        {!isClozeQuestion(doc) && !isDndQuestion(doc) && <CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} />}
         <ContentValueOrChildrenPresenter {...props} topLevel />
 
         <Box name="Items">
