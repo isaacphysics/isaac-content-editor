@@ -7,7 +7,7 @@ import {CheckboxDocProp} from "../../props/CheckboxDocProp";
 import {PresenterProps} from "../../registry";
 import {NumberDocPropFor} from "../../props/NumberDocPropFor";
 import {InserterProps} from "../ListChildrenPresenter";
-import { EditableSignificantFiguresMax, EditableSignificantFiguresMin, QuestionFooterPresenter, QuestionMetaPresenter } from "./questionPresenters";
+import { EditableSignificantFiguresMax, EditableSignificantFiguresMin, QuestionFooterPresenter, QuestionMetaPresenter } from "./QuestionMetaPresenter";
 
 export const CoordinateQuestionContext = createContext<{numberOfCoordinates?: number, numberOfDimensions?: number}>({});
 

@@ -15,7 +15,7 @@ import {
 } from "../../../../isaac-data-types";
 
 import {EditableAltTextProp, EditableIDProp, EditableValueProp} from "../../props/EditableDocProp";
-import {QuestionContext, QuestionFooterPresenter} from "./questionPresenters";
+import {QuestionContext, QuestionFooterPresenter} from "./QuestionMetaPresenter";
 import {InserterProps} from "../ListChildrenPresenter";
 import {PresenterProps} from "../../registry";
 import {CheckboxDocProp} from "../../props/CheckboxDocProp";

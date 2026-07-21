@@ -1,5 +1,5 @@
 import React from "react";
-import { QuestionMetaPresenter } from "./questionPresenters";
+import { QuestionMetaPresenter } from "./QuestionMetaPresenter";
 import styles from "../../styles/question.module.css";
 import { PresenterProps } from "../../registry";
 import { IsaacStringMatchQuestion } from "../../../../isaac-data-types";

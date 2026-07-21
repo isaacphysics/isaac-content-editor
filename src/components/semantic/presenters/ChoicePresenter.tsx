@@ -34,7 +34,7 @@ import {ListPresenterProp} from "../props/listProps";
 import {DropZoneQuestionContext, ItemsContext} from "./questions/ItemQuestionPresenter";
 
 import styles from "../styles/choice.module.css";
-import {QuestionContext} from "./questions/questionPresenters";
+import {QuestionContext} from "./questions/QuestionMetaPresenter";
 import {Markup} from "../../../isaac/markup";
 import {NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../isaac/IsaacTypes";
 import { InlineQuestionContext } from "./questions/InlineQuestionPresenter";

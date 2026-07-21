@@ -4,7 +4,7 @@ import styles from "../../styles/question.module.css";
 import {IsaacCoordinateQuestion, IsaacGraphSketcherQuestion} from "../../../../isaac-data-types";
 import {PresenterProps} from "../../registry";
 import {NumberDocPropFor} from "../../props/NumberDocPropFor";
-import { QuestionMetaPresenter } from "./questionPresenters";
+import { QuestionMetaPresenter } from "./QuestionMetaPresenter";
 
 export function GraphSketcherQuestionPresenter(props: PresenterProps<IsaacGraphSketcherQuestion>) {
     const {doc, update} = props;

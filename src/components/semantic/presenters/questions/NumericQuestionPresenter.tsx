@@ -4,7 +4,7 @@ import styles from "../../styles/question.module.css";
 import {IsaacNumericQuestion, Quantity} from "../../../../isaac-data-types";
 import {CheckboxDocProp} from "../../props/CheckboxDocProp";
 import {PresenterProps} from "../../registry";
-import { EditableSignificantFiguresMax, EditableSignificantFiguresMin, QuestionMetaPresenter } from "./questionPresenters";
+import { EditableSignificantFiguresMax, EditableSignificantFiguresMin, QuestionMetaPresenter } from "./QuestionMetaPresenter";
 import { EditableText } from "../../props/EditableText";
 
 export function NumericQuestionPresenter({showMeta = true, ...props}: {showMeta?: boolean} & PresenterProps) {

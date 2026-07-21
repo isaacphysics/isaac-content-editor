@@ -8,7 +8,7 @@ import { parseMarkingFormula } from "../../../../services/llmMarkingFormula";
 import styles from "../../styles/editable.module.css";
 import { evaluateMarkingFormula, evaluateMarkTotal, tallyMarkUses } from "../../../../utils/llmMarkingFormula";
 import { FormFeedback } from "reactstrap";
-import { HintsPresenter } from "./questionPresenters";
+import { HintsPresenter } from "./QuestionMetaPresenter";
 
 export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuestion>) {
     const {doc, update} = props;

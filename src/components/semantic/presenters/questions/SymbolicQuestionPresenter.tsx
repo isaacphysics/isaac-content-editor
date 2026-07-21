@@ -6,7 +6,7 @@ import {IsaacSymbolicChemistryQuestion, IsaacSymbolicQuestion} from "../../../..
 import {EditableText} from "../../props/EditableText";
 import {CheckboxDocProp} from "../../props/CheckboxDocProp";
 import {PresenterProps} from "../../registry";
-import { QuestionMetaPresenter } from "./questionPresenters";
+import { QuestionMetaPresenter } from "./QuestionMetaPresenter";
 
 const EditableAvailableSymbols = ({doc, update}: PresenterProps<IsaacSymbolicQuestion>) => {
     return <EditableText

@@ -19,6 +19,9 @@ import {HUMAN_QUESTION_TYPES, QUESTION_TYPES} from "../../../../services/constan
 
 export const QuestionContext = React.createContext<Content | null>(null);
 
+export const EditableSignificantFiguresMin = NumberDocPropFor<IsaacNumericQuestion>("significantFiguresMin", {label: "from", block: true});
+export const EditableSignificantFiguresMax = NumberDocPropFor<IsaacNumericQuestion>("significantFiguresMax", {label: "to", block: true});
+
 export function changeQuestionType({doc, update, newType}: PresenterProps & {newType: QUESTION_TYPES}) {
     const newDoc = {...doc, type: newType} as AnyQuestion;
     if (newType === "isaacNumericQuestion" && !newDoc.hasOwnProperty("requireUnits")) {
@@ -130,16 +133,6 @@ export function QuestionTypeSelector({doc, update, questionTypes = HUMAN_QUESTIO
     </Dropdown>;
 }
 
-export function QuestionMetaPresenter(props: PresenterProps) {
-    return <div>
-        <div className={styles.questionType}>
-            <QuestionTypeSelector {...props} />
-        </div>
-        <h4><EditableTitleProp {...props} placeHolder="Question title"/></h4>
-        <h6><EditableIDProp {...props} label="Question ID"/></h6>
-    </div>;
-}
-
 export function AnswerPresenter(props: PresenterProps<IsaacQuickQuestion>) {
     return <SemanticDocProp {...props} prop={"answer"} name="Answer" />;
 }
@@ -159,5 +152,12 @@ export function HintsPresenter(props: PresenterProps<IsaacQuestionBase>) {
     return <SemanticListProp {...props} prop="hints" type="hints" />;
 }
 
-export const EditableSignificantFiguresMin = NumberDocPropFor<IsaacNumericQuestion>("significantFiguresMin", {label: "from", block: true});
-export const EditableSignificantFiguresMax = NumberDocPropFor<IsaacNumericQuestion>("significantFiguresMax", {label: "to", block: true});
+export function QuestionMetaPresenter(props: PresenterProps) {
+    return <div>
+        <div className={styles.questionType}>
+            <QuestionTypeSelector {...props} />
+        </div>
+        <h4><EditableTitleProp {...props} placeHolder="Question title"/></h4>
+        <h6><EditableIDProp {...props} label="Question ID"/></h6>
+    </div>;
+}

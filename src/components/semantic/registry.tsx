@@ -1,4 +1,4 @@
-import {AnswerPresenter, HintsPresenter, QuestionContext, QuestionFooterPresenter, QuestionMetaPresenter} from "./presenters/questions/questionPresenters";
+import {AnswerPresenter, HintsPresenter, QuestionContext, QuestionFooterPresenter, QuestionMetaPresenter} from "./presenters/questions/QuestionMetaPresenter";
 import {CHOICE_TYPES} from "./ChoiceInserter";
 import {TabsPresenter} from "./presenters/TabsPresenter";
 import React, {FunctionComponent, Provider} from "react";

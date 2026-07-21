@@ -2,7 +2,7 @@ import React from "react";
 import { IsaacMultiChoiceQuestion } from "../../../../isaac-data-types";
 import { CheckboxDocProp } from "../../props/CheckboxDocProp";
 import { PresenterProps } from "../../registry";
-import { QuestionMetaPresenter } from "./questionPresenters";
+import { QuestionMetaPresenter } from "./QuestionMetaPresenter";
 
 export function MultipleChoiceQuestionPresenter({showMeta = true, ...props}: {showMeta?: boolean} & PresenterProps) {
     const {doc, update} = props;

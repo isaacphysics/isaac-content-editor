@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { PresenterProps } from "../../registry";
 import { Content, IsaacInlinePart, IsaacInlineQuestion, PositionableFigureRegionProps } from "../../../../isaac-data-types";
-import { AnswerPresenter, QuestionTypeSelector } from "./questionPresenters";
+import { AnswerPresenter, QuestionTypeSelector } from "./QuestionMetaPresenter";
 import { QUESTION_TYPES } from "../../../../services/constants";
 import { EditableIDProp, EditableTitleProp } from "../../props/EditableDocProp";
 import { ContentValueOrChildrenPresenter } from "../ContentValueOrChildrenPresenter";

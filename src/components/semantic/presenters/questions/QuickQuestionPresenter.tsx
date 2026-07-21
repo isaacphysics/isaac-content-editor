@@ -1,5 +1,5 @@
 import React from "react";
-import { QuestionMetaPresenter } from "./questionPresenters";
+import { QuestionMetaPresenter } from "./QuestionMetaPresenter";
 import { PresenterProps } from "../../registry";
 import { IsaacQuickQuestion } from "../../../../isaac-data-types";
 import { CheckboxDocProp } from "../../props/CheckboxDocProp";
