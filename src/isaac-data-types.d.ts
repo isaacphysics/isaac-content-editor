@@ -308,13 +308,10 @@ export interface IsaacNumericQuestion extends IsaacQuestionBase {
     displayUnit?: string;
 }
 
-export interface IsaacReorderQuestion extends IsaacItemQuestion {
-    useSingleList?: boolean;
-}
+export type IsaacReorderQuestion = IsaacItemQuestion
 
 export interface IsaacParsonsQuestion extends IsaacItemQuestion {
     disableIndentation?: boolean;
-    useSingleList?: boolean;
 }
 
 export interface IsaacClozeQuestion extends IsaacItemQuestion {

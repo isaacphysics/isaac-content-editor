@@ -119,7 +119,6 @@ export function ReorderParsonsQuestionPresenter(props: PresenterProps<IsaacReord
 
     return <>
         {isParsonsQuestion(doc) && <CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" />}
-        <CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Reorder within single list (all items are required in all answers)" />
         <ItemQuestionPresenter {...props} />
     </>;
 }
