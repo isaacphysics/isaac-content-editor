@@ -34,9 +34,11 @@ import {ListPresenterProp} from "../props/listProps";
 import {DropZoneQuestionContext, ItemsContext} from "./questions/ItemQuestionPresenter";
 
 import styles from "../styles/choice.module.css";
-import {CoordinateQuestionContext, InlineQuestionContext, QuestionContext} from "./questions/questionPresenters";
+import {QuestionContext} from "./questions/questionPresenters";
 import {Markup} from "../../../isaac/markup";
 import {NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../isaac/IsaacTypes";
+import { InlineQuestionContext } from "./questions/InlineQuestionPresenter";
+import { CoordinateQuestionContext } from "./questions/CoordinateQuestionPresenter";
 
 
 interface LabeledInputProps<V extends Record<string, string | undefined>> {

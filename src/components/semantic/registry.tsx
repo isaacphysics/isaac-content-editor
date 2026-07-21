@@ -1,21 +1,4 @@
-import {
-    AnswerPresenter,
-    CoordinateQuestionPresenter,
-    CoordinateQuestionFooterPresenter,
-    GraphSketcherQuestionPresenter,
-    HintsPresenter,
-    InlineQuestionPartPresenter,
-    InlineRegionPresenter,
-    MultipleChoiceQuestionPresenter,
-    NumericQuestionPresenter,
-    QuestionContext,
-    QuestionFooterPresenter,
-    QuestionMetaPresenter,
-    QuickQuestionPresenter,
-    StringMatchQuestionPresenter,
-    SymbolicQuestionPresenter,
-    SymbolicChemistryQuestionPresenter
-} from "./presenters/questions/questionPresenters";
+import {AnswerPresenter, HintsPresenter, QuestionContext, QuestionFooterPresenter, QuestionMetaPresenter} from "./presenters/questions/questionPresenters";
 import {CHOICE_TYPES} from "./ChoiceInserter";
 import {TabsPresenter} from "./presenters/TabsPresenter";
 import React, {FunctionComponent, Provider} from "react";
@@ -52,6 +35,14 @@ import { GeogebraEmbeddingPresenter } from "./presenters/GeogebraEmbeddingPresen
 import { QUESTION_TYPES } from "../../services/constants";
 import { LLMQuestionPresenter } from "./presenters/questions/LLMQuestionPresenter";
 import { InteractiveCodeSnippetPresenter } from "./presenters/InteractiveCodeSnippetPresenter";
+import { InlineQuestionPartPresenter, InlineRegionPresenter } from "./presenters/questions/InlineQuestionPresenter";
+import { MultipleChoiceQuestionPresenter } from "./presenters/questions/MultipleChoiceQuestionPresenter";
+import { NumericQuestionPresenter } from "./presenters/questions/NumericQuestionPresenter";
+import { GraphSketcherQuestionPresenter } from "./presenters/questions/GraphSketcherQuestionPresenter";
+import { CoordinateQuestionFooterPresenter, CoordinateQuestionPresenter } from "./presenters/questions/CoordinateQuestionPresenter";
+import { SymbolicChemistryQuestionPresenter, SymbolicQuestionPresenter } from "./presenters/questions/SymbolicQuestionPresenter";
+import { StringMatchQuestionPresenter } from "./presenters/questions/StringMatchQuestionPresenter";
+import { QuickQuestionPresenter } from "./presenters/questions/QuickQuestionPresenter";
 
 export type ContentType =
     | "content"

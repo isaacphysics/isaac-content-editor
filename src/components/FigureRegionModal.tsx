@@ -4,12 +4,12 @@ import markupStyles from "../isaac/styles/markup.module.css";
 import { Input, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { DropZoneQuestionContext } from "./semantic/presenters/questions/ItemQuestionPresenter";
 import throttle from "lodash/throttle";
-import { InlineQuestionContext } from "./semantic/presenters/questions/questionPresenters";
 import { Figure, PositionableFigureRegionProps } from "../isaac-data-types";
 import classNames from "classnames";
 import { PresenterProps } from "./semantic/registry";
 import { alphabetIndex } from "../utils/strings";
 import { isDefined } from "../utils/types";
+import { InlineQuestionContext } from "./semantic/presenters/questions/InlineQuestionPresenter";
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 

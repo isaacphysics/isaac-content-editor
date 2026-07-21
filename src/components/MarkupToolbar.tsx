@@ -12,9 +12,9 @@ import {
     makeStrikethrough
 } from "../utils/codeMirrorExtensions";
 import {DropZoneQuestionContext} from "./semantic/presenters/questions/ItemQuestionPresenter";
-import { InlineQuestionContext } from "./semantic/presenters/questions/questionPresenters";
 import { PopupInlineQuestionInsert } from "./popups/PopupInlineQuestionInsert";
 import { PopupTableClass } from "./popups/PopupTableClass";
+import { InlineQuestionContext } from "./semantic/presenters/questions/InlineQuestionPresenter";
 
 export const MarkupToolbar = ({set, cancel, codemirror, encoding, value}: { set: () => void, cancel: () => void, codemirror?: RefObject<ReactCodeMirrorRef>, encoding: string | undefined, value?: string }) => {
     const {isClozeQuestion, isDndQuestion} = useContext(DropZoneQuestionContext);
