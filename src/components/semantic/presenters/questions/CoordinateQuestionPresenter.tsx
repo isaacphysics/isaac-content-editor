@@ -11,7 +11,6 @@ import { EditableSignificantFiguresMax, EditableSignificantFiguresMin, QuestionF
 
 export const CoordinateQuestionContext = createContext<{numberOfCoordinates?: number, numberOfDimensions?: number}>({});
 
-
 export function CoordinateQuestionPresenter(props: PresenterProps<IsaacCoordinateQuestion>) {
     const {doc, update} = props;
     const question = doc as IsaacCoordinateQuestion;

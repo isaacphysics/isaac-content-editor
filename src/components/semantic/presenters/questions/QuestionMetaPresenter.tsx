@@ -24,59 +24,98 @@ export const EditableSignificantFiguresMax = NumberDocPropFor<IsaacNumericQuesti
 
 export function changeQuestionType({doc, update, newType}: PresenterProps & {newType: QUESTION_TYPES}) {
     const newDoc = {...doc, type: newType} as AnyQuestion;
-    if (newType === "isaacNumericQuestion" && !newDoc.hasOwnProperty("requireUnits")) {
+    if (newType === "isaacQuestion") {
+        newDoc.showConfidence = false;
+        // Remove the defaultFeedback property as it is not applicable to quick questions
+        delete newDoc.defaultFeedback;
+    } else {
+        delete newDoc.showConfidence;
+    }
+    
+    if (newType === "isaacNumericQuestion") {
         // Add the default value if it is missing
         newDoc.requireUnits = true;
-        delete newDoc.displayUnit;
         if (isAda) {
             newDoc.disregardSignificantFigures = true;
         } else {
             newDoc.disregardSignificantFigures = false;
         }
-        delete newDoc.showConfidence;
-        delete newDoc.randomiseChoices;
-    } else if (newType === "isaacQuestion" && !newDoc.hasOwnProperty("showConfidence")) {
-        newDoc.showConfidence = false;
-        delete newDoc.requireUnits;
-        delete newDoc.disregardSignificantFigures;
-        delete newDoc.displayUnit;
-        delete newDoc.randomiseChoices;
-    } else if (newType === "isaacMultiChoiceQuestion" && !newDoc.hasOwnProperty("randomiseChoices")) {
-        // Add the default value if it is missing
-        newDoc.randomiseChoices = true;
-        delete newDoc.requireUnits;
-        delete newDoc.disregardSignificantFigures;
-        delete newDoc.displayUnit;
-        delete newDoc.showConfidence;
-    } else if (newType === "isaacCoordinateQuestion") {
-        newDoc.disregardSignificantFigures = false;
-        delete newDoc.requireUnits;
-        delete newDoc.displayUnit;
-        delete newDoc.randomiseChoices;
-        delete newDoc.showConfidence;
     } else {
-        // Remove the requireUnits property as it is no longer applicable to this type of question
         delete newDoc.requireUnits;
-        // Remove the disregardSignificantFigures property as it is no longer applicable to this type of question
-        delete newDoc.disregardSignificantFigures;
-        // Remove the displayUnit property as it is no longer applicable to this type of question
+        delete newDoc.availableUnits;
         delete newDoc.displayUnit;
-        // Remove the randomiseChoices property as it is no longer applicable to this type of question
-        delete newDoc.randomiseChoices;
-        // Remove showConfidence property as it is no longer applicable to this type of question
-        delete newDoc.showConfidence;
     }
 
-    if (newType === "isaacQuestion") {
-        // Remove the defaultFeedback property as it is not applicable to quick questions
-        delete newDoc.defaultFeedback;
+    if (newType === "isaacMultiChoiceQuestion") {
+        newDoc.randomiseChoices = true;
+    } else {
+        delete newDoc.randomiseChoices;
+    }
+
+    if (newType === "isaacCoordinateQuestion") {
+        newDoc.disregardSignificantFigures = false;
+    } else {
+        delete newDoc.ordered;
+        delete newDoc.numberOfCoordinates;
+        delete newDoc.numberOfDimensions;
+        delete newDoc.placeholderValues;
+        delete newDoc.useBrackets;
+        delete newDoc.separator;
+        delete newDoc.prefixes;
+        delete newDoc.suffixes;
+        delete newDoc.buttonText;
+    }
+
+    if (["isaacNumericQuestion", "isaacCoordinateQuestion"].includes(newType)) {
+        delete newDoc.disregardSignificantFigures;
+        delete newDoc.significantFiguresMin;
+        delete newDoc.significantFiguresMax;
     }
     
     if (newType === "isaacLLMFreeTextQuestion") {
-        // Remove the choices and answer properties as they are not applicable to LLM-Marked questions
+        // Remove the choices, answer, and defaultFeedback properties as they are not applicable to LLM-Marked questions
         delete newDoc.answer;
         delete newDoc.choices;
         delete newDoc.defaultFeedback;
+    } else {
+        delete newDoc.markScheme;
+        delete newDoc.maxMarks;
+        delete newDoc.additionalMarkingInstructions;
+        delete newDoc.markingFormula;
+        delete newDoc.markingFormulaString;
+        delete newDoc.markedExamples;
+    }
+
+    if (!["isaacItemQuestion", "isaacClozeQuestion", "isaacDragAndDropQuestion",
+        "isaacReorderQuestion", "isaacParsonsQuestion"].includes(newType)) {
+        delete newDoc.items;
+        delete newDoc.randomiseItems;
+    }
+    if (!["isaacClozeQuestion", "isaacDragAndDropQuestion"].includes(newType)) {
+        delete newDoc.withReplacement;
+        delete newDoc.detailedItemFeedback;
+    }
+    if (newType !== "isaacParsonsQuestion") {
+        delete newDoc.disableIndentation;
+    }
+
+    if (!["isaacSymbolicQuestion", "isaacSymbolicLogicQuestion", "isaacSymbolicChemistryQuestion"].includes(newType)) {
+        delete newDoc.formulaSeed;
+        delete newDoc.availableSymbols;
+    }
+    if (newType !== "isaacSymbolicChemistryQuestion") {
+        delete newDoc.isNuclear;
+        delete newDoc.allowPermutations;
+        delete newDoc.allowScalingCoefficients;
+        delete newDoc.showInequalitySeed;
+    }
+
+    if (!["isaacStringMatchQuestion", "isaacRegexMatchQuestion"].includes(newType)) {
+        delete newDoc.multiLineEntry;
+    }
+    if (newType !== "isaacStringMatchQuestion") {
+        delete newDoc.preserveLeadingWhitespace;
+        delete newDoc.preserveTrailingWhitespace;
     }
 
     if (newType !== "isaacLLMFreeTextQuestion") {
@@ -86,17 +125,6 @@ export function changeQuestionType({doc, update, newType}: PresenterProps & {new
         delete newDoc.markingFormula;
         delete newDoc.markingFormulaString;
         delete newDoc.markedExamples;
-    }
-
-    if (newType !== "isaacCoordinateQuestion" && newType !== "isaacNumericQuestion") {
-        delete newDoc.significantFiguresMin;
-        delete newDoc.significantFiguresMax;
-    }
-
-    if (newType !== "isaacCoordinateQuestion") {
-        delete newDoc.ordered;
-        delete newDoc.numberOfCoordinates;
-        delete newDoc.numberOfDimensions;
     }
 
     if (newType !== "isaacGraphSketcherQuestion") {

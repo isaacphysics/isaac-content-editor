@@ -7,7 +7,6 @@ import { Alert, Button, Container, Input, Label } from "reactstrap";
 import { generateGuid } from "../../utils/strings";
 import { InlineQuestionContext } from "../semantic/presenters/questions/InlineQuestionPresenter";
 
-
 export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, codemirror: RefObject<ReactCodeMirrorRef> }) => {
     const popupRef = useRef<PopupRef>(null);
     const inlineContext = useContext(InlineQuestionContext);

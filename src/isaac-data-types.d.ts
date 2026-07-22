@@ -104,7 +104,7 @@ export interface IsaacTabs extends Content {
     expandable?: boolean;
     hideTitles?: boolean;
 }
-export type CodeTabs = IsaacTabs
+export type CodeTabs = IsaacTabs;
 
 export interface EmailTemplate extends Content {
     subject?: string;
@@ -132,7 +132,7 @@ export interface Notification extends Content {
     expiry?: Date;
 }
 
-export type IsaacQuizSection = Content
+export type IsaacQuizSection = Content;
 
 // PAGES
 export interface SeguePage extends Content {
@@ -147,7 +147,7 @@ export interface IsaacQuestionPage extends SeguePage {
     supersededBy?: string;
 }
 
-export type IsaacFastTrackQuestionPage = IsaacQuestionPage
+export type IsaacFastTrackQuestionPage = IsaacQuestionPage;
 
 export type IsaacConceptPage = SeguePage;
 
@@ -254,10 +254,27 @@ export interface ChoiceQuestion extends Question {
     randomiseChoices?: boolean;
 }
 
-export type IsaacQuestionBase = ChoiceQuestion
+export type IsaacQuestionBase = ChoiceQuestion;
 
-export interface IsaacAnvilQuestion extends IsaacQuestionBase {
-    anvilApp?: AnvilApp;
+export interface IsaacQuickQuestion extends IsaacQuestionBase {
+    showConfidence?: boolean;
+}
+
+export type IsaacInlinePart = IsaacQuestionBase;
+
+export interface IsaacInlineQuestion extends IsaacQuestionBase {
+    inlineQuestions?: (IsaacStringMatchQuestion | IsaacNumericQuestion | IsaacMultiChoiceQuestion | IsaacRegexMatchQuestion)[];
+}
+
+export type IsaacMultiChoiceQuestion = IsaacQuestionBase;
+
+export interface IsaacNumericQuestion extends IsaacQuestionBase {
+    requireUnits?: boolean;
+    disregardSignificantFigures?: boolean;
+    significantFiguresMin?: number;
+    significantFiguresMax?: number;
+    availableUnits?: string[];
+    displayUnit?: string;
 }
 
 export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
@@ -273,6 +290,51 @@ export interface IsaacCoordinateQuestion extends IsaacQuestionBase {
     prefixes?: string[];
     suffixes?: string[];
     buttonText?: string;
+}
+
+export interface IsaacItemQuestion extends IsaacQuestionBase {
+    items?: Item[];
+    randomiseItems?: boolean;
+}
+
+export type IsaacReorderQuestion = IsaacItemQuestion;
+
+export interface IsaacParsonsQuestion extends IsaacItemQuestion {
+    disableIndentation?: boolean;
+}
+
+export interface IsaacClozeQuestion extends IsaacItemQuestion {
+    withReplacement?: boolean;
+    detailedItemFeedback?: boolean;
+}
+
+export interface IsaacDndQuestion extends IsaacItemQuestion {
+    withReplacement?: boolean;
+    detailedItemFeedback?: boolean;
+}
+
+export interface IsaacSymbolicQuestion extends IsaacQuestionBase {
+    formulaSeed?: string;
+    availableSymbols?: string[];
+}
+
+export type IsaacSymbolicLogicQuestion = IsaacSymbolicQuestion;
+
+export interface IsaacSymbolicChemistryQuestion extends IsaacSymbolicQuestion {
+    isNuclear?: boolean;
+    allowPermutations?: boolean;
+    allowScalingCoefficients?: boolean;
+    showInequalitySeed?: boolean;
+}
+
+export interface IsaacStringMatchQuestion extends IsaacQuestionBase {
+    multiLineEntry?: boolean;
+    preserveLeadingWhitespace?: boolean;
+    preserveTrailingWhitespace?: boolean;
+}
+
+export interface IsaacRegexMatchQuestion extends IsaacQuestionBase {
+    multiLineEntry?: boolean;
 }
 
 export type IsaacFreeTextQuestion = IsaacQuestionBase;
@@ -292,75 +354,15 @@ export interface IsaacGraphSketcherQuestion extends IsaacQuestionBase {
     axisLabelY?: string;
 }
 
-export interface IsaacItemQuestion extends IsaacQuestionBase {
-    items?: Item[];
-    randomiseItems?: boolean;
+export interface IsaacAnvilQuestion extends IsaacQuestionBase {
+    anvilApp?: AnvilApp;
 }
 
-export type IsaacMultiChoiceQuestion = IsaacQuestionBase;
-
-export interface IsaacNumericQuestion extends IsaacQuestionBase {
-    requireUnits?: boolean;
-    disregardSignificantFigures?: boolean;
-    significantFiguresMin?: number;
-    significantFiguresMax?: number;
-    availableUnits?: string[];
-    displayUnit?: string;
-}
-
-export type IsaacReorderQuestion = IsaacItemQuestion
-
-export interface IsaacParsonsQuestion extends IsaacItemQuestion {
-    disableIndentation?: boolean;
-}
-
-export interface IsaacClozeQuestion extends IsaacItemQuestion {
-    withReplacement?: boolean;
-    detailedItemFeedback?: boolean;
-}
-
-export interface IsaacDndQuestion extends IsaacItemQuestion {
-    withReplacement?: boolean;
-    detailedItemFeedback?: boolean;
-}
-
-export interface IsaacQuickQuestion extends IsaacQuestionBase {
-    showConfidence?: boolean;
-}
-
-export interface IsaacRegexMatchQuestion extends IsaacQuestionBase {
-    multiLineEntry?: boolean;
-}
-
-export interface IsaacStringMatchQuestion extends IsaacQuestionBase {
-    multiLineEntry?: boolean;
-    preserveLeadingWhitespace?: boolean;
-    preserveTrailingWhitespace?: boolean;
-}
-
-export interface IsaacInlineQuestion extends IsaacQuestionBase {
-    inlineQuestions?: (IsaacStringMatchQuestion | IsaacNumericQuestion | IsaacMultiChoiceQuestion | IsaacRegexMatchQuestion)[];
-}
-
-export type IsaacInlinePart = IsaacQuestionBase
-
-export interface IsaacSymbolicChemistryQuestion extends IsaacSymbolicQuestion {
-    isNuclear?: boolean;
-    allowPermutations?: boolean;
-    allowScalingCoefficients?: boolean;
-    showInequalitySeed?: boolean;
-}
-
-export type IsaacSymbolicLogicQuestion = IsaacSymbolicQuestion
-
-export interface IsaacSymbolicQuestion extends IsaacQuestionBase {
-    formulaSeed?: string;
-    availableSymbols?: string[];
-}
-
-export type AnyQuestion = IsaacQuickQuestion & IsaacMultiChoiceQuestion & IsaacItemQuestion & IsaacReorderQuestion & IsaacParsonsQuestion & IsaacNumericQuestion
-    & IsaacSymbolicQuestion & IsaacSymbolicLogicQuestion & IsaacSymbolicChemistryQuestion & IsaacStringMatchQuestion & IsaacFreeTextQuestion & IsaacGraphSketcherQuestion
-    & IsaacClozeQuestion & IsaacDndQuestion & IsaacCoordinateQuestion & IsaacLLMFreeTextQuestion;
+export type AnyQuestion = IsaacQuickQuestion & IsaacMultiChoiceQuestion & IsaacNumericQuestion & IsaacCoordinateQuestion 
+    & IsaacItemQuestion & IsaacReorderQuestion & IsaacParsonsQuestion & IsaacClozeQuestion & IsaacDndQuestion
+    & IsaacSymbolicQuestion & IsaacSymbolicLogicQuestion & IsaacSymbolicChemistryQuestion 
+    & IsaacStringMatchQuestion & IsaacRegexMatchQuestion & IsaacFreeTextQuestion & IsaacLLMFreeTextQuestion 
+    & IsaacGraphSketcherQuestion & IsaacAnvilQuestion;
 
 export interface TestQuestion {
     userDefinedChoices?: Choice[];
@@ -413,9 +415,9 @@ export interface StringChoice extends Choice {
     caseInsensitive?: boolean;
 }
 
-export type ParsonsChoice = ItemChoice
+export type ParsonsChoice = ItemChoice;
 
-export type CoordinateChoice = ItemChoice
+export type CoordinateChoice = ItemChoice;
 
 export interface DndChoice extends Choice {
     items?: DndItem[];
