@@ -174,9 +174,12 @@ export interface IsaacPageFragment extends Content {
 
 export interface IsaacParsonsQuestion extends IsaacItemQuestion {
     disableIndentation?: boolean;
+    useSingleList?: boolean;
 }
 
-export type IsaacReorderQuestion = IsaacItemQuestion
+export interface IsaacReorderQuestion extends IsaacItemQuestion {
+    useSingleList?: boolean;
+}
 
 export interface IsaacPod extends Content {
     image?: Image;

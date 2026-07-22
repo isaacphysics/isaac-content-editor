@@ -59,6 +59,11 @@ function isParsonsQuestion(doc: Content | null | undefined): doc is IsaacParsons
     return doc?.type === "isaacParsonsQuestion";
 }
 
+function isReorderQuestion(doc: Content | null | undefined): doc is IsaacReorderQuestion {
+    return doc?.type === "isaacReorderQuestion";
+}
+
+
 function isClozeQuestion(doc: Content | null | undefined): doc is IsaacClozeQuestion {
     return doc?.type === "isaacClozeQuestion";
 }
@@ -108,6 +113,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         {isParsonsQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" /></div>}
         {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>}
         {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>}
+        {(isParsonsQuestion(doc) || isReorderQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Display only one list (all items must be required)" /></div>}
         <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>
         {isDndQuestion(doc) && <DndQuestionInstructions />}
         {isClozeQuestion(doc) && <ClozeQuestionInstructions />}
