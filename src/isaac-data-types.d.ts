@@ -362,7 +362,7 @@ export type AnyQuestion = IsaacQuickQuestion & IsaacMultiChoiceQuestion & IsaacN
     & IsaacItemQuestion & IsaacReorderQuestion & IsaacParsonsQuestion & IsaacClozeQuestion & IsaacDndQuestion
     & IsaacSymbolicQuestion & IsaacSymbolicLogicQuestion & IsaacSymbolicChemistryQuestion 
     & IsaacStringMatchQuestion & IsaacRegexMatchQuestion & IsaacFreeTextQuestion & IsaacLLMFreeTextQuestion 
-    & IsaacGraphSketcherQuestion & IsaacAnvilQuestion;
+    & IsaacGraphSketcherQuestion;
 
 export interface TestQuestion {
     userDefinedChoices?: Choice[];

@@ -14,8 +14,7 @@ import {PresenterProps} from "../../registry";
 import {SemanticListProp} from "../../props/listProps";
 import {NumberDocPropFor} from "../../props/NumberDocPropFor";
 import {ChoicesPresenter} from "../ChoicesPresenter";
-import {isAda} from "../../../../services/site";
-import {HUMAN_QUESTION_TYPES, QUESTION_TYPES} from "../../../../services/constants";
+import {ALL_QUESTION_FIELDS, HUMAN_QUESTION_TYPES, QUESTION_TYPE_DEFAULTS, QUESTION_TYPES} from "../../../../services/constants";
 
 export const QuestionContext = React.createContext<Content | null>(null);
 
@@ -23,114 +22,24 @@ export const EditableSignificantFiguresMin = NumberDocPropFor<IsaacNumericQuesti
 export const EditableSignificantFiguresMax = NumberDocPropFor<IsaacNumericQuestion>("significantFiguresMax", {label: "to", block: true});
 
 export function changeQuestionType({doc, update, newType}: PresenterProps & {newType: QUESTION_TYPES}) {
-    const newDoc = {...doc, type: newType} as AnyQuestion;
+    if (doc.type === newType) return;
+    const newDoc = { ...doc, type: newType } as AnyQuestion;
+
+    // Remove all question type-specific fields, then add any default values
+    for (const field of ALL_QUESTION_FIELDS) {
+        delete newDoc[field];
+    }
+    Object.assign(newDoc, QUESTION_TYPE_DEFAULTS[newType]);
+
+    // Removing base fields from special-case question types
     if (newType === "isaacQuestion") {
-        newDoc.showConfidence = false;
-        // Remove the defaultFeedback property as it is not applicable to quick questions
         delete newDoc.defaultFeedback;
-    } else {
-        delete newDoc.showConfidence;
-    }
-    
-    if (newType === "isaacNumericQuestion") {
-        // Add the default value if it is missing
-        newDoc.requireUnits = true;
-        if (isAda) {
-            newDoc.disregardSignificantFigures = true;
-        } else {
-            newDoc.disregardSignificantFigures = false;
-        }
-    } else {
-        delete newDoc.requireUnits;
-        delete newDoc.availableUnits;
-        delete newDoc.displayUnit;
     }
 
-    if (newType === "isaacMultiChoiceQuestion") {
-        newDoc.randomiseChoices = true;
-    } else {
-        delete newDoc.randomiseChoices;
-    }
-
-    if (newType === "isaacCoordinateQuestion") {
-        newDoc.disregardSignificantFigures = false;
-    } else {
-        delete newDoc.ordered;
-        delete newDoc.numberOfCoordinates;
-        delete newDoc.numberOfDimensions;
-        delete newDoc.placeholderValues;
-        delete newDoc.useBrackets;
-        delete newDoc.separator;
-        delete newDoc.prefixes;
-        delete newDoc.suffixes;
-        delete newDoc.buttonText;
-    }
-
-    if (["isaacNumericQuestion", "isaacCoordinateQuestion"].includes(newType)) {
-        delete newDoc.disregardSignificantFigures;
-        delete newDoc.significantFiguresMin;
-        delete newDoc.significantFiguresMax;
-    }
-    
     if (newType === "isaacLLMFreeTextQuestion") {
-        // Remove the choices, answer, and defaultFeedback properties as they are not applicable to LLM-Marked questions
         delete newDoc.answer;
         delete newDoc.choices;
         delete newDoc.defaultFeedback;
-    } else {
-        delete newDoc.markScheme;
-        delete newDoc.maxMarks;
-        delete newDoc.additionalMarkingInstructions;
-        delete newDoc.markingFormula;
-        delete newDoc.markingFormulaString;
-        delete newDoc.markedExamples;
-    }
-
-    if (!["isaacItemQuestion", "isaacClozeQuestion", "isaacDragAndDropQuestion",
-        "isaacReorderQuestion", "isaacParsonsQuestion"].includes(newType)) {
-        delete newDoc.items;
-        delete newDoc.randomiseItems;
-    }
-    if (!["isaacClozeQuestion", "isaacDragAndDropQuestion"].includes(newType)) {
-        delete newDoc.withReplacement;
-        delete newDoc.detailedItemFeedback;
-    }
-    if (newType !== "isaacParsonsQuestion") {
-        delete newDoc.disableIndentation;
-    }
-
-    if (!["isaacSymbolicQuestion", "isaacSymbolicLogicQuestion", "isaacSymbolicChemistryQuestion"].includes(newType)) {
-        delete newDoc.formulaSeed;
-        delete newDoc.availableSymbols;
-    }
-    if (newType !== "isaacSymbolicChemistryQuestion") {
-        delete newDoc.isNuclear;
-        delete newDoc.allowPermutations;
-        delete newDoc.allowScalingCoefficients;
-        delete newDoc.showInequalitySeed;
-    }
-
-    if (!["isaacStringMatchQuestion", "isaacRegexMatchQuestion"].includes(newType)) {
-        delete newDoc.multiLineEntry;
-    }
-    if (newType !== "isaacStringMatchQuestion") {
-        delete newDoc.preserveLeadingWhitespace;
-        delete newDoc.preserveTrailingWhitespace;
-    }
-
-    if (newType !== "isaacLLMFreeTextQuestion") {
-        delete newDoc.markScheme;
-        delete newDoc.maxMarks;
-        delete newDoc.additionalMarkingInstructions;
-        delete newDoc.markingFormula;
-        delete newDoc.markingFormulaString;
-        delete newDoc.markedExamples;
-    }
-
-    if (newType !== "isaacGraphSketcherQuestion") {
-        delete newDoc.maxNumCurves;
-        delete newDoc.axisLabelX;
-        delete newDoc.axisLabelY;
     }
 
     update(newDoc);
