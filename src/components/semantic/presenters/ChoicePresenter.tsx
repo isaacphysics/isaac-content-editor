@@ -193,7 +193,7 @@ export const RegexPatternPresenter = (props: ValuePresenterProps<RegexPattern>) 
         <CheckboxDocProp {...rest} prop="matchWholeString" label="Entire answer has to match this pattern exactly" />
         <br />
         <CheckboxDocProp {...rest} prop="caseInsensitive" label="Case insensitive" />
-        <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" disabled={inlineQuestionContext?.isInlineQuestion}/>}
+        <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" disabled={inlineQuestionContext?.isInlineQuestion}/>
         <br />
         <Button onClick={regexHelper}>Test Regex</Button>
     </>;
