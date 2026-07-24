@@ -1,12 +1,11 @@
 import React from "react";
 
 import { IsaacQuestionBase } from "../../../isaac-data-types";
-
 import { CHOICE_TYPES } from "../ChoiceInserter";
 import { PresenterProps } from "../registry";
 import { ListPresenterProp } from "../props/listProps";
-import { FreeTextQuestionInstructions, QUESTION_TYPES } from "./questionPresenters";
 import { Box } from "../SemanticItem";
+import { QUESTION_TYPES } from "../../../services/constants";
 
 const choicesType: Record<QUESTION_TYPES, CHOICE_TYPES | null> = {
     isaacQuestion: null,
@@ -28,14 +27,6 @@ const choicesType: Record<QUESTION_TYPES, CHOICE_TYPES | null> = {
     isaacCoordinateQuestion: "coordinateChoice",
 };
 
-function Instructions({doc}: { doc: IsaacQuestionBase }) {
-    switch (doc.type) {
-        case "isaacFreeTextQuestion":
-            return <FreeTextQuestionInstructions />;
-    }
-    return null;
-}
-
 export function ChoicesPresenter(props: PresenterProps<IsaacQuestionBase>) {
     const {doc} = props;
     const choiceType = choicesType[doc.type as QUESTION_TYPES];
@@ -47,7 +38,6 @@ export function ChoicesPresenter(props: PresenterProps<IsaacQuestionBase>) {
             prop="choices"
             childTypeOverride={choiceType}
         />
-        <Instructions doc={doc} />
     </Box>;
 }
 

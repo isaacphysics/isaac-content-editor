@@ -1,5 +1,5 @@
-import { Difficulty, ExamBoard, Stage } from "../isaac-data-types";
-import { siteSpecific } from "./site";
+import { AnyQuestion, Difficulty, ExamBoard, Stage } from "../isaac-data-types";
+import { isAda, siteSpecific } from "./site";
 
 // STAGES
 export enum STAGE {
@@ -83,5 +83,78 @@ export enum SUBJECT {
     CS = 'computer_science'
 }
 export const SUBJECTS_SCI = [SUBJECT.PHYSICS, SUBJECT.MATHS, SUBJECT.CHEMISTRY, SUBJECT.BIOLOGY];
+
+// QUESTIONS
+export type QUESTION_TYPES =
+    | "isaacQuestion"
+    | "isaacMultiChoiceQuestion"
+    | "isaacNumericQuestion"
+    | "isaacCoordinateQuestion"
+    | "isaacItemQuestion"
+    | "isaacReorderQuestion"
+    | "isaacParsonsQuestion"
+    | "isaacClozeQuestion"
+    | "isaacDndQuestion"
+    | "isaacSymbolicQuestion"
+    | "isaacSymbolicLogicQuestion"
+    | "isaacSymbolicChemistryQuestion"
+    | "isaacStringMatchQuestion"
+    | "isaacRegexMatchQuestion"
+    | "isaacFreeTextQuestion"
+    | "isaacLLMFreeTextQuestion"
+    | "isaacGraphSketcherQuestion"
+;
+
+export const HUMAN_QUESTION_TYPES: Record<QUESTION_TYPES, string> = {
+    isaacQuestion: "Quick Question",
+    isaacMultiChoiceQuestion: "Multiple Choice Question",
+    isaacNumericQuestion: "Numeric Question",
+    isaacCoordinateQuestion: "Coordinate Question",
+    isaacItemQuestion: "Item Question",
+    isaacReorderQuestion: "Reorder Question",
+    isaacParsonsQuestion: "Parsons Question",
+    isaacClozeQuestion: "Cloze Question",
+    isaacDndQuestion: "Drag and Drop Question",
+    isaacSymbolicQuestion: "Symbolic Question",
+    isaacSymbolicLogicQuestion: "Logic Question",
+    isaacSymbolicChemistryQuestion: "Chemistry Question",
+    isaacStringMatchQuestion: "String Match Question",
+    isaacRegexMatchQuestion: "Regex Match Question",
+    isaacFreeTextQuestion: "Free Text Question",
+    isaacLLMFreeTextQuestion: "LLM-Marked Free Text Question",
+    isaacGraphSketcherQuestion: "Graph Sketcher Question",
+};
+
+export const QUESTION_TYPE_FIELDS: Record<QUESTION_TYPES, (keyof AnyQuestion)[]> = {
+    isaacQuestion: ["showConfidence"],
+    isaacMultiChoiceQuestion: ["randomiseChoices"],
+    isaacNumericQuestion: ["requireUnits", "disregardSignificantFigures", "significantFiguresMin", "significantFiguresMax", "availableUnits", "displayUnit"],
+    isaacCoordinateQuestion: ["disregardSignificantFigures", "useBrackets", "significantFiguresMin", "significantFiguresMax", "ordered",
+        "numberOfCoordinates", "numberOfDimensions", "placeholderValues", "separator", "prefixes", "suffixes", "buttonText"],
+    isaacItemQuestion: ["randomiseItems", "items"],
+    isaacReorderQuestion: ["randomiseItems", "items"],
+    isaacParsonsQuestion: ["randomiseItems", "items", "disableIndentation"],
+    isaacClozeQuestion: ["randomiseItems", "items", "withReplacement", "detailedItemFeedback"],
+    isaacDndQuestion: ["randomiseItems", "items", "withReplacement", "detailedItemFeedback"],
+    isaacSymbolicQuestion: ["formulaSeed", "availableSymbols"],
+    isaacSymbolicLogicQuestion: ["formulaSeed", "availableSymbols"],
+    isaacSymbolicChemistryQuestion: ["formulaSeed", "availableSymbols", "isNuclear", "allowPermutations", "allowScalingCoefficients", "showInequalitySeed"],
+    isaacStringMatchQuestion: ["multiLineEntry", "preserveLeadingWhitespace", "preserveTrailingWhitespace"],
+    isaacRegexMatchQuestion: ["multiLineEntry"],
+    isaacFreeTextQuestion: [],
+    isaacLLMFreeTextQuestion: ["markScheme", "maxMarks", "additionalMarkingInstructions", "markingFormula", "markingFormulaString", "markedExamples"],
+    isaacGraphSketcherQuestion: ["maxNumCurves", "axisLabelX", "axisLabelY"],
+};
+
+export const QUESTION_TYPE_DEFAULTS: Partial<Record<QUESTION_TYPES, Partial<AnyQuestion>>> = {
+    isaacMultiChoiceQuestion: { randomiseChoices: true },
+    isaacNumericQuestion: { requireUnits: true, disregardSignificantFigures: isAda },
+    isaacCoordinateQuestion: { disregardSignificantFigures: false, useBrackets: true },
+    isaacItemQuestion: { randomiseItems: true },
+    isaacReorderQuestion: { randomiseItems: true },
+    isaacParsonsQuestion: { randomiseItems: true },
+    isaacClozeQuestion: { randomiseItems: true },
+    isaacDndQuestion: { randomiseItems: true },
+};
 
 export const BOOK_DETAIL_ID_SEPARATOR = "__";

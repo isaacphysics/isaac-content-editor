@@ -13,10 +13,10 @@ import { useFixedRef } from "../../../utils/hooks";
 import styles from "../styles/figure.module.css";
 import {NON_STATIC_FIGURE_FLAG} from "../../../isaac/IsaacTypes";
 import {Alert, Input, Label} from "reactstrap";
-import { DropZoneQuestionContext } from "./ItemQuestionPresenter";
+import { DropZoneQuestionContext } from "./questions/ItemQuestionPresenter";
 import { FigureRegionModal } from "../../FigureRegionModal";
-import { InlineQuestionContext } from "./questionPresenters";
 import { isDefined } from "../../../utils/types";
+import { InlineQuestionContext } from "./questions/InlineQuestionPresenter";
 
 function githubURLFromGithubData(data: {download_url: string}, svgView?: string | null) {
     // If there is an SVG view, include at the end of the URL

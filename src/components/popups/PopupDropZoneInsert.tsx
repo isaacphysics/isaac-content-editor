@@ -3,7 +3,7 @@ import {Popup, PopupCloseContext, PopupRef} from "./Popup";
 import {Alert, Button, Container, Input, InputGroup, Label} from "reactstrap";
 import {ReactCodeMirrorRef} from "@uiw/react-codemirror";
 import styles from "../../styles/editor.module.css";
-import { DropZoneQuestionContext } from "../semantic/presenters/ItemQuestionPresenter";
+import { DropZoneQuestionContext } from "../semantic/presenters/questions/ItemQuestionPresenter";
 
 export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemirror: RefObject<ReactCodeMirrorRef> }) => {
     const popupRef = useRef<PopupRef>(null);

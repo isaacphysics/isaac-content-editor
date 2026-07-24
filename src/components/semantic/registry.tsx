@@ -1,22 +1,4 @@
-import {
-    AnswerPresenter,
-    CoordinateQuestionPresenter,
-    CoordinateQuestionFooterPresenter,
-    GraphSketcherQuestionPresenter,
-    HintsPresenter,
-    InlineQuestionPartPresenter,
-    InlineRegionPresenter,
-    MultipleChoiceQuestionPresenter,
-    NumericQuestionPresenter,
-    QUESTION_TYPES,
-    QuestionContext,
-    QuestionFooterPresenter,
-    QuestionMetaPresenter,
-    QuickQuestionPresenter,
-    StringMatchQuestionPresenter,
-    SymbolicQuestionPresenter,
-    SymbolicChemistryQuestionPresenter
-} from "./presenters/questionPresenters";
+import {AnswerPresenter, HintsPresenter, QuestionContext, QuestionFooterPresenter, QuestionMetaPresenter} from "./presenters/questions/QuestionMetaPresenter";
 import {CHOICE_TYPES} from "./ChoiceInserter";
 import {TabsPresenter} from "./presenters/TabsPresenter";
 import React, {FunctionComponent, Provider} from "react";
@@ -37,19 +19,30 @@ import {defaultMeta, MetaItemKey} from "./Metadata";
 import {CardDeckPresenter, CardPresenter} from "./presenters/CardPresenter";
 import {MetaItems} from "./metaItems";
 import {
+    ClozeDndQuestionPresenter,
     DndChoicePresenter,
     ItemChoicePresenter,
     ItemPresenter,
-    ItemQuestionPresenter
-} from "./presenters/ItemQuestionPresenter";
+    ItemQuestionPresenter,
+    ReorderParsonsQuestionPresenter
+} from "./presenters/questions/ItemQuestionPresenter";
 import styles from "./styles/semantic.module.css";
 import {ListChildrenPresenter} from "./presenters/ListChildrenPresenter";
-import {InteractiveCodeSnippetPresenter} from "./presenters/InteractiveCodeSnippetPresenter";
 import {CalloutPresenter} from "./presenters/CalloutPresenter";
-import {LLMQuestionPresenter} from "./presenters/LLMQuestionPresenter";
 import { SidebarEntryPresenter, SidebarPresenter } from "./presenters/SidebarPresenters";
 import { DesmosEmbeddingPresenter } from "./presenters/DesmosEmbeddingPresenter";
 import { GeogebraEmbeddingPresenter } from "./presenters/GeogebraEmbeddingPresenter";
+import { QUESTION_TYPES } from "../../services/constants";
+import { LLMQuestionPresenter } from "./presenters/questions/LLMQuestionPresenter";
+import { InteractiveCodeSnippetPresenter } from "./presenters/InteractiveCodeSnippetPresenter";
+import { InlineQuestionPartPresenter, InlineRegionPresenter } from "./presenters/questions/InlineQuestionPresenter";
+import { MultipleChoiceQuestionPresenter } from "./presenters/questions/MultipleChoiceQuestionPresenter";
+import { NumericQuestionPresenter } from "./presenters/questions/NumericQuestionPresenter";
+import { GraphSketcherQuestionPresenter } from "./presenters/questions/GraphSketcherQuestionPresenter";
+import { CoordinateQuestionFooterPresenter, CoordinateQuestionPresenter } from "./presenters/questions/CoordinateQuestionPresenter";
+import { SymbolicChemistryQuestionPresenter, SymbolicQuestionPresenter } from "./presenters/questions/SymbolicQuestionPresenter";
+import { StringMatchQuestionPresenter } from "./presenters/questions/StringMatchQuestionPresenter";
+import { QuickQuestionPresenter } from "./presenters/questions/QuickQuestionPresenter";
 
 export type ContentType =
     | "content"
@@ -178,6 +171,16 @@ const isaacStringMatchQuestion = {
 const isaacItemQuestion = {
     ...question,
     bodyPresenter: ItemQuestionPresenter,
+    footerPresenter: undefined,
+};
+const isaacClozeDragAndDropQuestion = {
+    ...question,
+    bodyPresenter: ClozeDndQuestionPresenter,
+    footerPresenter: undefined,
+};
+const isaacReorderParsonsQuestion = {
+    ...question,
+    bodyPresenter: ReorderParsonsQuestionPresenter,
     footerPresenter: undefined,
 };
 const isaacLLMFreeTextQuestion: RegistryEntry = {
@@ -403,12 +406,12 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacGraphSketcherQuestion: {...question, headerPresenter: GraphSketcherQuestionPresenter},
     graphChoice: choice,
     isaacItemQuestion,
-    isaacReorderQuestion: isaacItemQuestion,
-    isaacParsonsQuestion: isaacItemQuestion,
+    isaacReorderQuestion: isaacReorderParsonsQuestion,
+    isaacParsonsQuestion: isaacReorderParsonsQuestion,
     itemChoice: choice,
     parsonsChoice: choice,
-    isaacClozeQuestion: isaacItemQuestion,
-    isaacDndQuestion: isaacItemQuestion,
+    isaacClozeQuestion: isaacClozeDragAndDropQuestion,
+    isaacDndQuestion: isaacClozeDragAndDropQuestion,
     dndChoice: choice,
     dndItem$choice: {bodyPresenter: DndChoicePresenter},
     coordinateItem$choice: {bodyPresenter: CoordinateItemPresenter},
