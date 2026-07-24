@@ -59,11 +59,6 @@ function isParsonsQuestion(doc: Content | null | undefined): doc is IsaacParsons
     return doc?.type === "isaacParsonsQuestion";
 }
 
-function isReorderQuestion(doc: Content | null | undefined): doc is IsaacReorderQuestion {
-    return doc?.type === "isaacReorderQuestion";
-}
-
-
 function isClozeQuestion(doc: Content | null | undefined): doc is IsaacClozeQuestion {
     return doc?.type === "isaacClozeQuestion";
 }
