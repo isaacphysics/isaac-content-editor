@@ -21,7 +21,7 @@ export const QuestionContext = React.createContext<Content | null>(null);
 export const EditableSignificantFiguresMin = NumberDocPropFor<IsaacNumericQuestion>("significantFiguresMin", {label: "from", block: true});
 export const EditableSignificantFiguresMax = NumberDocPropFor<IsaacNumericQuestion>("significantFiguresMax", {label: "to", block: true});
 
-export function changeQuestionType({doc, update, newType}: PresenterProps & {newType: QUESTION_TYPES}) {
+function changeQuestionType({doc, update, newType}: PresenterProps & {newType: QUESTION_TYPES}) {
     if (doc.type === newType) return;
     const allQuestionFields = [...new Set( Object.values(QUESTION_TYPE_FIELDS).flatMap(Object.keys))] as (keyof AnyQuestion)[];
     const newDoc = { ...doc, type: newType } as AnyQuestion;
