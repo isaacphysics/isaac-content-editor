@@ -1,5 +1,6 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2022-03-25 13:08:59.
+// Originally generated using typescript-generator version 2.12.476 on 2022-03-25 13:08:59.
+// We now maintain it manually.
 
 // CONTENT
 export interface ContentBase {
