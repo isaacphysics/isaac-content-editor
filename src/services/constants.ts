@@ -157,6 +157,4 @@ export const QUESTION_TYPE_DEFAULTS: Partial<Record<QUESTION_TYPES, Partial<AnyQ
     isaacDndQuestion: { randomiseItems: true },
 };
 
-export const ALL_QUESTION_FIELDS = [...new Set( Object.values(QUESTION_TYPE_FIELDS).flatMap(Object.keys))] as (keyof AnyQuestion)[];
-
 export const BOOK_DETAIL_ID_SEPARATOR = "__";

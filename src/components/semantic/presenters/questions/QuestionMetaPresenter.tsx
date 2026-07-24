@@ -14,7 +14,7 @@ import {PresenterProps} from "../../registry";
 import {SemanticListProp} from "../../props/listProps";
 import {NumberDocPropFor} from "../../props/NumberDocPropFor";
 import {ChoicesPresenter} from "../ChoicesPresenter";
-import {ALL_QUESTION_FIELDS, HUMAN_QUESTION_TYPES, QUESTION_TYPE_DEFAULTS, QUESTION_TYPES} from "../../../../services/constants";
+import {HUMAN_QUESTION_TYPES, QUESTION_TYPE_DEFAULTS, QUESTION_TYPE_FIELDS, QUESTION_TYPES} from "../../../../services/constants";
 
 export const QuestionContext = React.createContext<Content | null>(null);
 
@@ -23,10 +23,11 @@ export const EditableSignificantFiguresMax = NumberDocPropFor<IsaacNumericQuesti
 
 export function changeQuestionType({doc, update, newType}: PresenterProps & {newType: QUESTION_TYPES}) {
     if (doc.type === newType) return;
+    const allQuestionFields = [...new Set( Object.values(QUESTION_TYPE_FIELDS).flatMap(Object.keys))] as (keyof AnyQuestion)[];
     const newDoc = { ...doc, type: newType } as AnyQuestion;
 
     // Remove all question type-specific fields, then add any default values
-    for (const field of ALL_QUESTION_FIELDS) {
+    for (const field of allQuestionFields) {
         delete newDoc[field];
     }
     Object.assign(newDoc, QUESTION_TYPE_DEFAULTS[newType]);
