@@ -12,8 +12,9 @@ import {ContentType, PresenterProps} from "../registry";
 
 import styles from "../styles/semantic.module.css";
 import {ChildTypeOverride} from "../props/listProps";
-import {DndChoiceItemInserter, ItemChoiceItemInserter} from "./ItemQuestionPresenter";
-import {CoordinateChoiceItemInserter, InlinePartInserter} from "./questionPresenters";
+import {DndChoiceItemInserter, ItemChoiceItemInserter} from "./questions/ItemQuestionPresenter";
+import { CoordinateChoiceItemInserter } from "./questions/CoordinateQuestionPresenter";
+import { InlinePartInserter } from "./questions/InlineQuestionPresenter";
 
 export interface InserterProps {
     insert: (index: number, newContent: Content) => void;

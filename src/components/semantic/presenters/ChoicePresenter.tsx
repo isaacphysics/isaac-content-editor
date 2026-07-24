@@ -31,12 +31,14 @@ import {EditableDimensionalDocProp, EditableValueProp} from "../props/EditableDo
 import {CHOICE_TYPES} from "../ChoiceInserter";
 import {PresenterProps} from "../registry";
 import {ListPresenterProp} from "../props/listProps";
-import {DropZoneQuestionContext, ItemsContext} from "./ItemQuestionPresenter";
+import {DropZoneQuestionContext, ItemsContext} from "./questions/ItemQuestionPresenter";
 
 import styles from "../styles/choice.module.css";
-import {CoordinateQuestionContext, InlineQuestionContext, QuestionContext} from "./questionPresenters";
+import {QuestionContext} from "./questions/QuestionMetaPresenter";
 import {Markup} from "../../../isaac/markup";
 import {NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../isaac/IsaacTypes";
+import { InlineQuestionContext } from "./questions/InlineQuestionPresenter";
+import { CoordinateQuestionContext } from "./questions/CoordinateQuestionPresenter";
 
 
 interface LabeledInputProps<V extends Record<string, string | undefined>> {
@@ -191,9 +193,7 @@ export const RegexPatternPresenter = (props: ValuePresenterProps<RegexPattern>) 
         <CheckboxDocProp {...rest} prop="matchWholeString" label="Entire answer has to match this pattern exactly" />
         <br />
         <CheckboxDocProp {...rest} prop="caseInsensitive" label="Case insensitive" />
-        {inlineQuestionContext?.isInlineQuestion
-            ? <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" disabled checkedIfUndefined={false} />
-            : <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" />}
+        <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" disabled={inlineQuestionContext?.isInlineQuestion}/>
         <br />
         <Button onClick={regexHelper}>Test Regex</Button>
     </>;

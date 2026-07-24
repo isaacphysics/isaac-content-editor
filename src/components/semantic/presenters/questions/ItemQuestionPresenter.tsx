@@ -12,22 +12,22 @@ import {
     Item,
     ParsonsItem,
     PositionableFigureRegionProps,
-} from "../../../isaac-data-types";
+} from "../../../../isaac-data-types";
 
-import {EditableAltTextProp, EditableIDProp, EditableValueProp} from "../props/EditableDocProp";
-import {QuestionContext, QuestionFooterPresenter} from "./questionPresenters";
-import {InserterProps} from "./ListChildrenPresenter";
-import {PresenterProps} from "../registry";
-import {CheckboxDocProp} from "../props/CheckboxDocProp";
-import {ListPresenterProp} from "../props/listProps";
-import {ContentValueOrChildrenPresenter} from "./ContentValueOrChildrenPresenter";
-import {MetaItemPresenter, MetaOptions} from "../Metadata";
+import {EditableAltTextProp, EditableIDProp, EditableValueProp} from "../../props/EditableDocProp";
+import {QuestionContext, QuestionFooterPresenter} from "./QuestionMetaPresenter";
+import {InserterProps} from "../ListChildrenPresenter";
+import {PresenterProps} from "../../registry";
+import {CheckboxDocProp} from "../../props/CheckboxDocProp";
+import {ListPresenterProp} from "../../props/listProps";
+import {ContentValueOrChildrenPresenter} from "../ContentValueOrChildrenPresenter";
+import {MetaItemPresenter, MetaOptions} from "../../Metadata";
 
-import styles from "../styles/question.module.css";
-import {Box} from "../SemanticItem";
-import {ExpandableText} from "../ExpandableText";
-import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../utils/content";
-import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../isaac/IsaacTypes";
+import styles from "../../styles/question.module.css";
+import {Box} from "../../SemanticItem";
+import {ExpandableText} from "../../ExpandableText";
+import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../../utils/content";
+import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../../isaac/IsaacTypes";
 
 interface ItemsContextType {
     items: Item[] | undefined;
@@ -74,7 +74,7 @@ function isDndQuestion(doc: Content | null | undefined): doc is IsaacDndQuestion
 
 type ItemQuestionType = IsaacItemQuestion | IsaacReorderQuestion | IsaacParsonsQuestion | IsaacClozeQuestion | IsaacDndQuestion;
 
-export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
+export function ClozeDndQuestionPresenter(props: PresenterProps<IsaacClozeQuestion | IsaacDndQuestion>) {
     const {doc, update} = props;
 
     // Logic to count cloze question drop zones (if necessary) on initial presenter render and doc update
@@ -110,14 +110,32 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         figureMap: figureMap.current,
         calculateDZIndexFromFigureId: (id) => extractFigureRegionStartIndex(doc, id),
     }}>
-        {isParsonsQuestion(doc) && <div><CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" /></div>}
-        {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" /></div>}
-        {(isClozeQuestion(doc) || isDndQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" /></div>}
-        {(isParsonsQuestion(doc) || isReorderQuestion(doc)) && <div><CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Display only one list (all items must be required)" /></div>}
-        <div><CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} /></div>
+        <CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" />
+        <CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" />
+        <CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Display only one list (all items must be required)" />
+        <CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} />
         {isDndQuestion(doc) && <DndQuestionInstructions />}
         {isClozeQuestion(doc) && <ClozeQuestionInstructions />}
-        <ContentValueOrChildrenPresenter {...props} update={updateWithDropZoneCount} topLevel />
+        <ItemQuestionPresenter {...props} update={updateWithDropZoneCount}/>
+    </DropZoneQuestionContext.Provider>;
+}
+
+export function ReorderParsonsQuestionPresenter(props: PresenterProps<IsaacReorderQuestion | IsaacParsonsQuestion>) {
+    const {doc, update} = props;
+
+    return <>
+        {isParsonsQuestion(doc) && <CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" />}
+        <ItemQuestionPresenter {...props} />
+    </>;
+}
+
+export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
+    const {doc, update} = props;
+
+    return <>
+        {/* Defined above question instructions instead for cloze and dnd questions */}
+        {!isClozeQuestion(doc) && !isDndQuestion(doc) && <CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} />}
+        <ContentValueOrChildrenPresenter {...props} topLevel />
 
         <Box name="Items">
             <Row className={styles.itemsHeaderRow}>
@@ -140,7 +158,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
         }}>
             <QuestionFooterPresenter {...props} />
         </ItemsContext.Provider>
-    </DropZoneQuestionContext.Provider>;
+    </>;
 }
 
 export function ItemPresenter(props: PresenterProps<Item>) {

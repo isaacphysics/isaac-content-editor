@@ -1,7 +1,7 @@
 import { convertNumberToRoman } from "cr-numeral";
 import { Content, IsaacInlineQuestion } from "../isaac-data-types";
-import { QuestionTypes } from "../components/semantic/presenters/questionPresenters";
 import { formatTabIndex } from "../components/semantic/presenters/TabsPresenter";
+import { HUMAN_QUESTION_TYPES } from "../services/constants";
 
 const formatTitle = (accordionIndex: number, questionIndex: number, onlyQuestion?: boolean) => {
     return `${formatTabIndex(accordionIndex, "alphabetical")}${onlyQuestion ? "" : `.${convertNumberToRoman(questionIndex + 1).toLowerCase()}`}`;
@@ -25,14 +25,14 @@ const doQuestionTitleLoop = (content: Content | string, writeNewTitles?: boolean
             const accordion = child as Content;
             accordion.children?.forEach((accordionChild, accordionIndex) => {
                 const accordionSection = accordionChild as Content;
-                const questionCount = accordionSection.children?.filter(c => (c.type || "") in QuestionTypes).length ?? 0;
+                const questionCount = accordionSection.children?.filter(c => (c.type || "") in HUMAN_QUESTION_TYPES).length ?? 0;
                 const inlineQuestionCount = accordionSection.children?.reduce((acc, c) => acc + (c.type === "isaacInlineRegion" ?
                     (c as IsaacInlineQuestion).inlineQuestions?.length ?? 0 : 0), 0) ?? 0;
                 const containsOneQuestion = questionCount + inlineQuestionCount === 1;
 
                 let questionIndex = 0;
                 accordionSection.children?.forEach((sectionChild) => {
-                    if ((sectionChild.type || "") in QuestionTypes) {
+                    if ((sectionChild.type || "") in HUMAN_QUESTION_TYPES) {
                         const sectionQuestion = sectionChild as Content;
                         if (writeNewTitles && (overrideOldTitles || isTitleStandardFormat(sectionQuestion.title))) {
                             sectionQuestion.title = formatTitle(accordionIndex, questionIndex, containsOneQuestion);
@@ -42,7 +42,7 @@ const doQuestionTitleLoop = (content: Content | string, writeNewTitles?: boolean
                     } else if (sectionChild.type === "isaacInlineRegion") {
                         const inlineRegion = sectionChild as IsaacInlineQuestion;
                         inlineRegion.inlineQuestions?.forEach((inlineQuestion) => {
-                            if ((inlineQuestion.type || "") in QuestionTypes) {
+                            if ((inlineQuestion.type || "") in HUMAN_QUESTION_TYPES) {
                                 if (writeNewTitles && (overrideOldTitles || isTitleStandardFormat(inlineQuestion.title))) {
                                     inlineQuestion.title = formatTitle(accordionIndex, questionIndex, containsOneQuestion);
                                 }
