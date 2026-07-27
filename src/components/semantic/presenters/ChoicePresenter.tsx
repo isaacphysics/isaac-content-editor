@@ -264,8 +264,11 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
             If a choice does not have the same number of items as drop zones, <b>it will not be checked against the
                 users answer</b>.
         </Alert>}
-        {requireAllItems && remainingItems.length !== 0 && <Alert color={"warning"}>
-            All items are require when reordering within one list.
+        {doc.type === "itemChoice" && requireAllItems && remainingItems.length !== 0 && !doc.allowSubsetMatch && <Alert color="warning">
+            All items are required when reordering within one list. If you would like to use wildcard matching, tick the box above.
+        </Alert>}
+        {doc.type === "parsonsChoice" && requireAllItems && remainingItems.length !== 0 && <Alert color="warning">
+            All items are required when reordering within one list.
         </Alert>}
         <ItemsContext.Provider value={{items, remainingItems, remainingDropZones: undefined, withReplacement, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={augmentedUpdate} prop="items" childTypeOverride="item$choice" />
