@@ -30,16 +30,17 @@ import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValue
 import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../../isaac/IsaacTypes";
 
 interface ItemsContextType {
-    items: Item[] | undefined;
-    remainingItems: Item[] | undefined;
-    remainingDropZones: string[] | undefined;
-    withReplacement: boolean | undefined;
-    allowSubsetMatch: boolean | undefined;
-    isCorrect: boolean | undefined;
+    items?: Item[];
+    remainingItems?: Item[];
+    remainingDropZones?: string[];
+    withReplacement?: boolean;
+    allowSubsetMatch?: boolean;
+    isCorrect?: boolean;
+    requireAllItems?: boolean;
 }
 
 export const ItemsContext = createContext<ItemsContextType>(
-    {items: undefined, remainingItems: undefined, remainingDropZones: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined}
+    {items: undefined, remainingItems: undefined, remainingDropZones: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined, requireAllItems: undefined}
 );
 export const DropZoneQuestionContext = createContext<{
     isDndQuestion: boolean,
@@ -54,6 +55,10 @@ export const DropZoneQuestionContext = createContext<{
     figureMap: {},
     calculateDZIndexFromFigureId: (_id: string) => 0,
 });
+
+function isReorderQuestion(doc: Content | null | undefined): doc is IsaacReorderQuestion {
+    return doc?.type === "isaacReorderQuestion";
+}
 
 function isParsonsQuestion(doc: Content | null | undefined): doc is IsaacParsonsQuestion {
     return doc?.type === "isaacParsonsQuestion";
@@ -119,7 +124,7 @@ export function ReorderParsonsQuestionPresenter(props: PresenterProps<IsaacReord
 
     return <>
         {isParsonsQuestion(doc) && <CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" />}
-        <CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Display only one list (all items are required in correct answers)" />
+        <CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Reorder within one list" />
         <ItemQuestionPresenter {...props} />
     </>;
 }
@@ -150,6 +155,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
             withReplacement: (isClozeQuestion(doc) || isDndQuestion(doc)) && doc.withReplacement,
             allowSubsetMatch: undefined,
             isCorrect: undefined,
+            requireAllItems: (isReorderQuestion(doc) || isParsonsQuestion(doc)) && doc.useSingleList
         }}>
             <QuestionFooterPresenter {...props} />
         </ItemsContext.Provider>

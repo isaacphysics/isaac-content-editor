@@ -216,7 +216,7 @@ export const GraphChoicePresenter = buildValuePresenter(
 );
 
 export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
-    const {items: maybeItems, withReplacement} = useContext(ItemsContext);
+    const {items: maybeItems, withReplacement, requireAllItems} = useContext(ItemsContext);
     const {isClozeQuestion, dropZoneCount} = useContext(DropZoneQuestionContext);
     const {doc, update} = props;
 
@@ -263,6 +263,9 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
             wildcard matching).<br/>
             If a choice does not have the same number of items as drop zones, <b>it will not be checked against the
                 users answer</b>.
+        </Alert>}
+        {requireAllItems && remainingItems.length !== 0 && <Alert color={"warning"}>
+            All items are require when reordering within one list.
         </Alert>}
         <ItemsContext.Provider value={{items, remainingItems, remainingDropZones: undefined, withReplacement, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={augmentedUpdate} prop="items" childTypeOverride="item$choice" />
