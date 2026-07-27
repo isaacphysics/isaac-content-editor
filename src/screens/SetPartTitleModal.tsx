@@ -4,6 +4,7 @@ import { Alert, Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, 
 import styles from "../styles/editor.module.css";
 import { AppContext } from "../App";
 import { makeQuestionTitlesStandard } from "../utils/setQuestionTitles";
+import { Content } from "../isaac-data-types";
 
 export interface PartTitleModalProps {
     isOpen: boolean;
@@ -12,7 +13,12 @@ export interface PartTitleModalProps {
 
 export function SetPartTitleModal(props: PartTitleModalProps) {
     const appContext = useContext(AppContext);
-    const content = appContext?.editor.getCurrentDoc();
+    let content: Content | null = null;
+    try {
+        content = appContext.editor.getCurrentDoc();
+    } catch (_e) {
+        // No doc currently
+    }
 
     const {isOpen, setOpen} = props;
     const [overwriteOldTitles, setOverwriteOldTitles] = useState(true);
@@ -45,9 +51,11 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
         </ModalBody>
         <ModalFooter>
             <Button color="primary" onClick={() => {
-                const newContent = makeQuestionTitlesStandard(content, overwriteOldTitles);
-                appContext.editor.setCurrentDoc(newContent);
-                closeModal();
+                if (content) {
+                    const newContent = makeQuestionTitlesStandard(content, overwriteOldTitles);
+                    appContext.editor.setCurrentDoc(newContent);
+                    closeModal();
+                }
             }}>Set titles</Button>
             <Button color="secondary" onClick={closeModal}>Cancel</Button>
         </ModalFooter>
