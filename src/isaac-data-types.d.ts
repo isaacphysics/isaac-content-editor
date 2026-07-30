@@ -27,6 +27,7 @@ export interface Content extends ContentBase {
     deprecated?: boolean;
     level?: number;
     searchableContent?: string;
+    expanded?: boolean;
 }
 
 export interface IsaacCard extends Content {
