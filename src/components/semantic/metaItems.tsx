@@ -75,7 +75,7 @@ export const MetaItems = asMetaItems({
     hiddenFromStudentsAndTutors: ["Hidden from students/tutors", {presenter: HiddenFromStudentsAndTutors}],
     hiddenFromTeachers: ["Hidden from teachers", {presenter: HiddenFromTeachers}],
     linkedGameboards: ["Linked gameboards", {presenter: LinkedGameboardsPresenter}],
-    expanded: ["Expanded", {type: "checkbox"}],
+    expanded: ["Expanded", {presenter: ExpandedPresenter}],
 
     // Events stuff
     emailEventDetails: ["Email Event Details", {type: "textarea"}],
@@ -158,6 +158,16 @@ function Deprecated({doc, update, ...rest}: MetaItemPresenterProps<Content>) {
     return <Input type="checkbox" {...rest} checked={!!doc.deprecated} onChange={(e) => onChange(e.target.checked)} />;
 }
 
+export function ExpandedPresenter({doc, update, ...rest}: MetaItemPresenterProps<Content>) {
+    const onChange = (expanded: boolean) => {
+        update({
+            ...doc,
+            layout: expanded ? "expanded" : undefined
+        });
+    };
+
+    return <Input type="checkbox" {...rest} checked={doc.layout === "expanded"} onChange={(e) => onChange(e.target.checked)} />;
+}
 
 function HiddenFromStudentsAndTutors({doc, update, ...rest}: MetaItemPresenterProps<IsaacQuiz>) {
     const onChange = (hiddenFromStudentsAndTutors: boolean) => {
