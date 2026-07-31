@@ -28,6 +28,7 @@ import {Box} from "../../SemanticItem";
 import {ExpandableText} from "../../ExpandableText";
 import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../../utils/content";
 import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../../isaac/IsaacTypes";
+import { ExpandedPresenter } from "../../metaItems";
 
 interface ItemsContextType {
     items: Item[] | undefined;
@@ -119,6 +120,7 @@ export function ReorderParsonsQuestionPresenter(props: PresenterProps<IsaacReord
 
     return <>
         {isParsonsQuestion(doc) && <CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" />}
+        <ExpandedPresenter doc={doc} update={update}/>
         <ItemQuestionPresenter {...props} />
     </>;
 }

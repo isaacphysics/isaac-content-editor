@@ -183,8 +183,7 @@ export function AccordionPresenter(props: PresenterProps) {
                     <div className={styles.meta}>
                         <h3><EditableTitleProp ref={editTitleRef} {...currentChildProps} placeHolder="Section title" hideWhenEmpty /></h3>
                         <div className="d-flex justify-content-end">
-                            <ExpandedPresenter {...currentChildProps} prop="expanded" name="expanded" id="expanded-layout"/>
-                            <Label for="expanded-layout" className="ms-1">Enable expanded layout</Label>
+                            <ExpandedPresenter {...currentChildProps}/>
                         </div>
                         <div className={styles.allAudienceControls}>
                             <div className={styles.audienceControls}>
