@@ -75,7 +75,7 @@ export const MetaItems = asMetaItems({
     hiddenFromStudentsAndTutors: ["Hidden from students/tutors", {presenter: HiddenFromStudentsAndTutors}],
     hiddenFromTeachers: ["Hidden from teachers", {presenter: HiddenFromTeachers}],
     linkedGameboards: ["Linked gameboards", {presenter: LinkedGameboardsPresenter}],
-    expanded: ["Expanded", {presenter: ExpandedPresenter}],
+    expandedLayout: ["Expanded layout", {presenter: ExpandedPresenter}],
 
     // Events stuff
     emailEventDetails: ["Email Event Details", {type: "textarea"}],
