@@ -43,6 +43,7 @@ import { CoordinateQuestionFooterPresenter, CoordinateQuestionPresenter } from "
 import { SymbolicChemistryQuestionPresenter, SymbolicQuestionPresenter } from "./presenters/questions/SymbolicQuestionPresenter";
 import { StringMatchQuestionPresenter } from "./presenters/questions/StringMatchQuestionPresenter";
 import { QuickQuestionPresenter } from "./presenters/questions/QuickQuestionPresenter";
+import { siteSpecific } from "../../services/site";
 
 export type ContentType =
     | "content"
@@ -270,7 +271,7 @@ const isaacInlineQuestionPart: RegistryEntry = {
 };
 
 const pageMeta: MetaItemKey[] = ["audience", ...defaultMeta, "relatedContent", "permissions", "notes", "teacherNotes"];
-const pageMetaTail: MetaItemKey[] = ["expandedLayout", "published", "deprecated"];
+const pageMetaTail: MetaItemKey[] = siteSpecific(["published", "deprecated"], ["expandedLayout", "published", "deprecated"]);
 const basePage: RegistryEntry = {
     ...content,
     name: "Page",
