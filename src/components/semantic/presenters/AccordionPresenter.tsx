@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Input, Label} from "reactstrap";
+import {Button, Input} from "reactstrap";
 
 import {EditableTitleProp} from "../props/EditableDocProp";
 import {TabsHeader, TabsMain, useTabs} from "./TabsPresenter";
