@@ -216,7 +216,7 @@ export const GraphChoicePresenter = buildValuePresenter(
 );
 
 export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
-    const {items: maybeItems, withReplacement, requireAllItems} = useContext(ItemsContext);
+    const {items: maybeItems, withReplacement, requireAllItems, disableIndentation} = useContext(ItemsContext);
     const {isClozeQuestion, dropZoneCount} = useContext(DropZoneQuestionContext);
     const {doc, update} = props;
 
@@ -270,7 +270,7 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
         {doc.type === "parsonsChoice" && requireAllItems && remainingItems.length !== 0 && <Alert color="warning">
             All items are required when reordering within one list.
         </Alert>}
-        <ItemsContext.Provider value={{items, remainingItems, remainingDropZones: undefined, withReplacement, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
+        <ItemsContext.Provider value={{items, remainingItems, remainingDropZones: undefined, withReplacement, disableIndentation, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={augmentedUpdate} prop="items" childTypeOverride="item$choice" />
         </ItemsContext.Provider>
     </>;
@@ -278,7 +278,7 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
 
 export const DndChoicePresenter = (props: ValuePresenterProps<DndChoice>) => {
     const {doc, update} = props;
-    const {items: maybeItems, withReplacement} = useContext(ItemsContext);
+    const {items: maybeItems, withReplacement, disableIndentation} = useContext(ItemsContext);
     const {dropZoneIds: maybeDropZoneIds} = useContext(DropZoneQuestionContext);
 
     const items = maybeItems ?? [];
@@ -289,7 +289,7 @@ export const DndChoicePresenter = (props: ValuePresenterProps<DndChoice>) => {
 
     return <>
         <span>Add an entry here to attach one Item to one Drop Zone.</span>
-        <ItemsContext.Provider value={{items, remainingItems, remainingDropZones, withReplacement, allowSubsetMatch: undefined, isCorrect: doc.correct}}>
+        <ItemsContext.Provider value={{items, remainingItems, remainingDropZones, withReplacement, disableIndentation, allowSubsetMatch: undefined, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={update} prop="items" childTypeOverride="dndItem$choice" />
         </ItemsContext.Provider>
         {dropZoneIds.length === 0 && <Alert color={"warning"} className="mt-3">

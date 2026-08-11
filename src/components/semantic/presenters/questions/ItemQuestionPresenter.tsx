@@ -28,6 +28,7 @@ import {Box} from "../../SemanticItem";
 import {ExpandableText} from "../../ExpandableText";
 import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../../utils/content";
 import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../../isaac/IsaacTypes";
+import classNames from "classnames";
 
 interface ItemsContextType {
     items?: Item[];
@@ -37,10 +38,11 @@ interface ItemsContextType {
     allowSubsetMatch?: boolean;
     isCorrect?: boolean;
     requireAllItems?: boolean;
+    disableIndentation?: boolean;
 }
 
 export const ItemsContext = createContext<ItemsContextType>(
-    {items: undefined, remainingItems: undefined, remainingDropZones: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined, requireAllItems: undefined}
+    {items: undefined, remainingItems: undefined, remainingDropZones: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined, requireAllItems: undefined, disableIndentation: undefined}
 );
 export const DropZoneQuestionContext = createContext<{
     isDndQuestion: boolean,
@@ -155,7 +157,8 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
             withReplacement: (isClozeQuestion(doc) || isDndQuestion(doc)) && doc.withReplacement,
             allowSubsetMatch: undefined,
             isCorrect: undefined,
-            requireAllItems: (isReorderQuestion(doc) || isParsonsQuestion(doc)) && doc.useSingleList
+            requireAllItems: (isReorderQuestion(doc) || isParsonsQuestion(doc)) && doc.useSingleList,
+            disableIndentation: isParsonsQuestion(doc) && doc.disableIndentation,
         }}>
             <QuestionFooterPresenter {...props} />
         </ItemsContext.Provider>
@@ -205,7 +208,7 @@ const indentationOptions: MetaOptions = {type: "number", hasWarning: (value) => 
 export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     const {doc, update} = props;
     const [isOpen, setOpen] = useState(false);
-    const {items, remainingItems, allowSubsetMatch} = useContext(ItemsContext);
+    const {items, remainingItems, allowSubsetMatch, disableIndentation} = useContext(ItemsContext);
     const {isClozeQuestion} = useContext(DropZoneQuestionContext);
 
     const item = items?.find((item) => item.id === doc.id) ?? {
