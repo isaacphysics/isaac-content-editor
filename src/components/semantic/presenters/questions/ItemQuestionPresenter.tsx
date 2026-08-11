@@ -197,14 +197,6 @@ function ItemRow({item}: {item: Item}) {
         </Row>;
 }
 
-// Resuse the MetaItemPresenter as it gives a live editable view
-const indentationOptions: MetaOptions = {type: "number", hasWarning: (value) => {
-    const num = value as number;
-    if (isNaN(num) || num < 0 || num > 3) {
-        return "Outside 0–3";
-    }
-}};
-
 export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     const {doc, update} = props;
     const [isOpen, setOpen] = useState(false);
@@ -240,13 +232,20 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     </Dropdown>;
 
     if (doc.type === "parsonsItem") {
-        return <div className={styles.parsonsItem}
-            style={{borderLeftWidth: `calc(1px + ${Math.min(3, doc.indentation ?? 0) * 1.5}em)`}}>
-            {dropdown}
-            <span className={styles.parsonsIndentPresenter}>
-                <MetaItemPresenter {...props} prop="indentation" name="Indent"
-                    options={indentationOptions} />
-            </span>
+        return <div>
+            <div className={styles.parsonsItem}
+                style={{borderLeftWidth: `calc(1px + ${Math.min(3, doc.indentation ?? 0) * 1.5}em)`}}>
+                {dropdown}
+                <span className={styles.parsonsIndentPresenter}>
+                    <MetaItemPresenter {...props} prop="indentation" name="Indent" options={{type: "number"}} />
+                </span>
+            </div>
+            {disableIndentation && doc.indentation !== 0 && <Alert color="warning" className="mt-3">
+                Indentation is disabled for this question.
+            </Alert>}
+            {!!doc.indentation && (doc.indentation < 0 || doc.indentation > 3) && <Alert color="warning" className="mt-3">
+                Indentation must be between 0 and 3.
+            </Alert>}
         </div>;
     } else {
         return <div className={styles.itemsChoiceRow}>
