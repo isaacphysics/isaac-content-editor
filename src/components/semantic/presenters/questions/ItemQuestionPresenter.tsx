@@ -241,7 +241,7 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
 
     if (doc.type === "parsonsItem") {
         return <div className={styles.parsonsItem}
-            style={{borderLeftWidth: `calc(1px + ${(doc.indentation ?? 0) * 1.5}em)`}}>
+            style={{borderLeftWidth: `calc(1px + ${Math.min(3, doc.indentation ?? 0) * 1.5}em)`}}>
             {dropdown}
             <span className={styles.parsonsIndentPresenter}>
                 <MetaItemPresenter {...props} prop="indentation" name="Indent"
