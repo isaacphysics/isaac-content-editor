@@ -21,14 +21,13 @@ import {PresenterProps} from "../../registry";
 import {CheckboxDocProp} from "../../props/CheckboxDocProp";
 import {ListPresenterProp} from "../../props/listProps";
 import {ContentValueOrChildrenPresenter} from "../ContentValueOrChildrenPresenter";
-import {MetaItemPresenter, MetaOptions} from "../../Metadata";
+import {MetaItemPresenter} from "../../Metadata";
 
 import styles from "../../styles/question.module.css";
 import {Box} from "../../SemanticItem";
 import {ExpandableText} from "../../ExpandableText";
 import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../../utils/content";
 import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../../isaac/IsaacTypes";
-import classNames from "classnames";
 
 interface ItemsContextType {
     items?: Item[];
@@ -237,7 +236,9 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
                 style={{borderLeftWidth: `calc(1px + ${Math.min(3, doc.indentation ?? 0) * 1.5}em)`}}>
                 {dropdown}
                 <span className={styles.parsonsIndentPresenter}>
-                    <MetaItemPresenter {...props} prop="indentation" name="Indent" options={{type: "number"}} />
+                    <MetaItemPresenter {...props} prop="indentation" name="Indent" options={
+                        { type: "number", min: 0, max: disableIndentation ? 0 : 3}
+                    } />
                 </span>
             </div>
             {disableIndentation && doc.indentation !== 0 && <Alert color="warning" className="mt-3">

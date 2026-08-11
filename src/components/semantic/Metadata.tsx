@@ -10,14 +10,17 @@ import { AppContext } from "../../App";
 
 import styles from "./styles/metadata.module.css";
 
-export interface MetaOptions {
+export type MetaOptions = {
     hasWarning?: (value: unknown, context: ContextType<typeof AppContext>) => string | undefined;
-    type?: InputType;
     presenter?: React.FunctionComponent<MetaItemPresenterProps>;
     defaultValue?: unknown;
     deleteIfEmpty?: boolean;
     options?: Record<string, string>;
-}
+} & (
+    { type?: Exclude<InputType, "number">; min?: never; max?: never;} |
+    { type: "number"; min?: number; max?: number; }
+);
+
 type MetaItem = string | [string, MetaOptions];
 
 // This identity helper function exists to generate the type T, which is record scoped to our
@@ -96,6 +99,8 @@ export function MetaItemPresenter({doc, update, id, prop, name, options}: MetaIt
             )}
             placeholder={name}
             id={id}
+            min={options?.type === "number" ? options.min : undefined}
+            max={options?.type === "number" ? options.max : undefined}
         />
         {warning && <FormText>{warning}</FormText>}
     </>;
