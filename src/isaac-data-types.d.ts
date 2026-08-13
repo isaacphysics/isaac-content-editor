@@ -298,10 +298,13 @@ export interface IsaacItemQuestion extends IsaacQuestionBase {
     randomiseItems?: boolean;
 }
 
-export type IsaacReorderQuestion = IsaacItemQuestion;
+export interface IsaacReorderQuestion extends IsaacItemQuestion {
+    useSingleList?: boolean;
+}
 
 export interface IsaacParsonsQuestion extends IsaacItemQuestion {
     disableIndentation?: boolean;
+    useSingleList?: boolean;
 }
 
 export interface IsaacClozeQuestion extends IsaacItemQuestion {

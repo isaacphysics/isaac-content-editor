@@ -21,7 +21,7 @@ import {PresenterProps} from "../../registry";
 import {CheckboxDocProp} from "../../props/CheckboxDocProp";
 import {ListPresenterProp} from "../../props/listProps";
 import {ContentValueOrChildrenPresenter} from "../ContentValueOrChildrenPresenter";
-import {MetaItemPresenter, MetaOptions} from "../../Metadata";
+import {MetaItemPresenter} from "../../Metadata";
 
 import styles from "../../styles/question.module.css";
 import {Box} from "../../SemanticItem";
@@ -31,16 +31,18 @@ import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CL
 import { ExpandedPresenter } from "../../metaItems";
 
 interface ItemsContextType {
-    items: Item[] | undefined;
-    remainingItems: Item[] | undefined;
-    remainingDropZones: string[] | undefined;
-    withReplacement: boolean | undefined;
-    allowSubsetMatch: boolean | undefined;
-    isCorrect: boolean | undefined;
+    items?: Item[];
+    remainingItems?: Item[];
+    remainingDropZones?: string[];
+    withReplacement?: boolean;
+    allowSubsetMatch?: boolean;
+    isCorrect?: boolean;
+    requireAllItems?: boolean;
+    disableIndentation?: boolean;
 }
 
 export const ItemsContext = createContext<ItemsContextType>(
-    {items: undefined, remainingItems: undefined, remainingDropZones: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined}
+    {items: undefined, remainingItems: undefined, remainingDropZones: undefined, withReplacement: undefined, allowSubsetMatch: undefined, isCorrect: undefined, requireAllItems: undefined, disableIndentation: undefined}
 );
 export const DropZoneQuestionContext = createContext<{
     isDndQuestion: boolean,
@@ -55,6 +57,10 @@ export const DropZoneQuestionContext = createContext<{
     figureMap: {},
     calculateDZIndexFromFigureId: (_id: string) => 0,
 });
+
+function isReorderQuestion(doc: Content | null | undefined): doc is IsaacReorderQuestion {
+    return doc?.type === "isaacReorderQuestion";
+}
 
 function isParsonsQuestion(doc: Content | null | undefined): doc is IsaacParsonsQuestion {
     return doc?.type === "isaacParsonsQuestion";
@@ -121,6 +127,7 @@ export function ReorderParsonsQuestionPresenter(props: PresenterProps<IsaacReord
     return <>
         {isParsonsQuestion(doc) && <CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" />}
         <ExpandedPresenter doc={doc} update={update}/>
+        <CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Reorder within one list" />
         <ItemQuestionPresenter {...props} />
     </>;
 }
@@ -151,6 +158,8 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
             withReplacement: (isClozeQuestion(doc) || isDndQuestion(doc)) && doc.withReplacement,
             allowSubsetMatch: undefined,
             isCorrect: undefined,
+            requireAllItems: (isReorderQuestion(doc) || isParsonsQuestion(doc)) && doc.useSingleList,
+            disableIndentation: isParsonsQuestion(doc) && doc.disableIndentation,
         }}>
             <QuestionFooterPresenter {...props} />
         </ItemsContext.Provider>
@@ -189,18 +198,10 @@ function ItemRow({item}: {item: Item}) {
         </Row>;
 }
 
-// Resuse the MetaItemPresenter as it gives a live editable view
-const indentationOptions: MetaOptions = {type: "number", hasWarning: (value) => {
-    const num = value as number;
-    if (isNaN(num) || num < 0 || num > 3) {
-        return "Outside 0–3";
-    }
-}};
-
 export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     const {doc, update} = props;
     const [isOpen, setOpen] = useState(false);
-    const {items, remainingItems, allowSubsetMatch} = useContext(ItemsContext);
+    const {items, remainingItems, allowSubsetMatch, disableIndentation} = useContext(ItemsContext);
     const {isClozeQuestion} = useContext(DropZoneQuestionContext);
 
     const item = items?.find((item) => item.id === doc.id) ?? {
@@ -232,13 +233,22 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     </Dropdown>;
 
     if (doc.type === "parsonsItem") {
-        return <div className={styles.parsonsItem}
-            style={{borderLeftWidth: `calc(1px + ${(doc.indentation ?? 0) * 1.5}em)`}}>
-            {dropdown}
-            <span className={styles.parsonsIndentPresenter}>
-                <MetaItemPresenter {...props} prop="indentation" name="Indent"
-                    options={indentationOptions} />
-            </span>
+        return <div>
+            <div className={styles.parsonsItem}
+                style={{borderLeftWidth: `calc(1px + ${Math.min(3, doc.indentation ?? 0) * 1.5}em)`}}>
+                {dropdown}
+                <span className={styles.parsonsIndentPresenter}>
+                    <MetaItemPresenter {...props} prop="indentation" name="Indent" options={
+                        { type: "number", min: 0, max: disableIndentation ? 0 : 3}
+                    } />
+                </span>
+            </div>
+            {disableIndentation && doc.indentation !== 0 && <Alert color="warning" className="mt-3">
+                Indentation is disabled for this question.
+            </Alert>}
+            {!!doc.indentation && (doc.indentation < 0 || doc.indentation > 3) && <Alert color="warning" className="mt-3">
+                Indentation must be between 0 and 3.
+            </Alert>}
         </div>;
     } else {
         return <div className={styles.itemsChoiceRow}>

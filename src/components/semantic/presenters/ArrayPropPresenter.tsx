@@ -9,6 +9,8 @@ function readableContentType(type: string | undefined) {
     switch (type) {
         case "isaacQuestionPage":
             return "Question";
+        case "isaacFastTrackQuestionPage":
+            return "FastTrack Q";
         case "isaacConceptPage":
             return "Concept";
         case "isaacTopicSummaryPage":
