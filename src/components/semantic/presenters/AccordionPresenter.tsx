@@ -7,6 +7,7 @@ import {PresenterProps} from "../registry";
 import {AudiencePresenter} from "./AudiencePresenter";
 
 import styles from "../styles/accordion.module.css";
+import { ExpandedPresenter } from "../metaItems";
 
 type Display = { audience: string[]; nonAudience: string[] } | undefined;
 
@@ -181,6 +182,9 @@ export function AccordionPresenter(props: PresenterProps) {
                 currentChild ? <>
                     <div className={styles.meta}>
                         <h3><EditableTitleProp ref={editTitleRef} {...currentChildProps} placeHolder="Section title" hideWhenEmpty /></h3>
+                        <div className="d-flex justify-content-end">
+                            <ExpandedPresenter {...currentChildProps}/>
+                        </div>
                         <div className={styles.allAudienceControls}>
                             <div className={styles.audienceControls}>
                                 <small className={styles.audienceControlsLabel}>Audience:</small>

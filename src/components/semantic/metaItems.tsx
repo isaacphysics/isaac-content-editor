@@ -12,6 +12,7 @@ import {LinkedGameboardsPresenter} from "./presenters/LinkedGameboardsPresenter"
 import {asMetaItems, checkWarning, MetaItemPresenter, MetaItemPresenterProps} from "./Metadata";
 
 import styles from "./styles/metadata.module.css";
+import questionStyles from "./styles/question.module.css";
 import {isDefined} from "../../utils/types";
 import {AppContext} from "../../App";
 
@@ -75,6 +76,7 @@ export const MetaItems = asMetaItems({
     hiddenFromStudentsAndTutors: ["Hidden from students/tutors", {presenter: HiddenFromStudentsAndTutors}],
     hiddenFromTeachers: ["Hidden from teachers", {presenter: HiddenFromTeachers}],
     linkedGameboards: ["Linked gameboards", {presenter: LinkedGameboardsPresenter}],
+    expandedLayout: ["Expanded layout", {presenter: Expanded}],
 
     // Events stuff
     emailEventDetails: ["Email Event Details", {type: "textarea"}],
@@ -157,6 +159,23 @@ function Deprecated({doc, update, ...rest}: MetaItemPresenterProps<Content>) {
     return <Input type="checkbox" {...rest} checked={!!doc.deprecated} onChange={(e) => onChange(e.target.checked)} />;
 }
 
+function Expanded({doc, update, ...rest}: MetaItemPresenterProps<Content> & {className?: string}) {
+    const onChange = (expanded: boolean) => {
+        update({
+            ...doc,
+            layout: expanded ? "expanded" : undefined
+        });
+    };
+
+    return <Input type="checkbox" {...rest} checked={doc.layout === "expanded"} onChange={(e) => onChange(e.target.checked)} />;
+}
+
+export function ExpandedPresenter({doc, update}: Omit<MetaItemPresenterProps<Content>, "prop" | "name">) {
+    return <Label className={questionStyles.checkboxLabel}>
+        <Expanded doc={doc} update={update} prop="expanded" name="expanded" className="me-1"/>
+        Enable expanded layout
+    </Label>;
+}
 
 function HiddenFromStudentsAndTutors({doc, update, ...rest}: MetaItemPresenterProps<IsaacQuiz>) {
     const onChange = (hiddenFromStudentsAndTutors: boolean) => {

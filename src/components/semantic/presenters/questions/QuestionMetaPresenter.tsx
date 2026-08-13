@@ -23,7 +23,7 @@ export const EditableSignificantFiguresMax = NumberDocPropFor<IsaacNumericQuesti
 
 function changeQuestionType({doc, update, newType}: PresenterProps & {newType: QUESTION_TYPES}) {
     if (doc.type === newType) return;
-    const allQuestionFields = [...new Set( Object.values(QUESTION_TYPE_FIELDS).flatMap(Object.keys))] as (keyof AnyQuestion)[];
+    const allQuestionFields = [...new Set( Object.values(QUESTION_TYPE_FIELDS).flatMap(Object.values))] as (keyof AnyQuestion)[];
     const newDoc = { ...doc, type: newType } as AnyQuestion;
 
     // Remove all question type-specific fields, then add any default values
