@@ -1,6 +1,6 @@
 export type SITES = "ADA" | "PHY";
 
-const DEFAULT_DEV_SITE: SITES = "PHY";
+const DEFAULT_DEV_SITE: SITES = "ADA";
 
 function getCurrentSite(): SITES {
     switch(document.location.host) {
