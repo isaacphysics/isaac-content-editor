@@ -1,4 +1,4 @@
-import { AnyQuestion, Difficulty, ExamBoard, Stage } from "../isaac-data-types";
+import { AnyQuestion, Difficulty, ExamBoard, RoleRequirement, Stage } from "../isaac-data-types";
 import { isAda, siteSpecific } from "./site";
 
 // STAGES
@@ -12,13 +12,14 @@ export enum STAGE {
     SCOTLAND_NATIONAL_5 = "scotland_national_5",
     SCOTLAND_HIGHER = "scotland_higher",
     SCOTLAND_ADVANCED_HIGHER = "scotland_advanced_higher",
+    FOUNDATION = "foundation",
     CORE = "core",
     ADVANCED = "advanced",
     POST_18 = "post_18",
     ALL = "all",
 }
 export const STAGES_SCI = [STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY];
-export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.CORE, STAGE.ADVANCED, STAGE.POST_18];
+export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.FOUNDATION, STAGE.CORE, STAGE.ADVANCED, STAGE.POST_18];
 export const stagesOrdered: Stage[] = [...siteSpecific(STAGES_SCI, STAGES_CS), STAGE.ALL];
 export const stageLabelMap: {[stage in Stage]: string} = {
     year_7_and_8: "Year\u00A07&8",
@@ -30,6 +31,7 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     scotland_national_5: "N5",
     scotland_higher: "Higher",
     scotland_advanced_higher: "Adv Higher",
+    foundation: "11-14",
     core: "Core",
     advanced: "Advanced",
     post_18: "Post-18",
@@ -55,6 +57,7 @@ export const CS_EXAM_BOARDS_BY_STAGE: Partial<Record<Stage, ExamBoard[]>> = {
     scotland_national_5: [EXAM_BOARD.SQA],
     scotland_higher: [EXAM_BOARD.SQA],
     scotland_advanced_higher: [EXAM_BOARD.SQA],
+    foundation: [EXAM_BOARD.ADA],
     core: [EXAM_BOARD.ADA],
     advanced: [EXAM_BOARD.ADA],
     post_18: [EXAM_BOARD.ADA],
@@ -83,6 +86,31 @@ export enum SUBJECT {
     CS = 'computer_science'
 }
 export const SUBJECTS_SCI = [SUBJECT.PHYSICS, SUBJECT.MATHS, SUBJECT.CHEMISTRY, SUBJECT.BIOLOGY];
+
+export const AUDIENCE_ITEM_MAP : Record<Stage | ExamBoard | Difficulty | RoleRequirement, string> = {
+    ...stageLabelMap,
+
+    aqa: "AQA",
+    cie: "CIE",
+    edexcel: "Edexcel",
+    eduqas: "Eduqas",
+    ocr: "OCR",
+    wjec: "WJEC",
+    sqa: "SQA",
+    ada: "Ada",
+
+    practice_1: "Practice 1",
+    practice_2: "Practice 2",
+    practice_3: "Practice 3",
+    challenge_1: "Challenge 1",
+    challenge_2: "Challenge 2",
+    challenge_3: "Challenge 3",
+
+    logged_in: "Logged in",
+    teacher: "Teacher",
+
+    all: "All",
+};
 
 // QUESTIONS
 export type QUESTION_TYPES =

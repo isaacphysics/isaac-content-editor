@@ -7,7 +7,7 @@ import {ExtractRecordArrayValue, isDefined} from "../../../utils/types";
 
 import {PresenterProps} from "../registry";
 import styles from "../styles/audience.module.css";
-import { CS_EXAM_BOARDS_BY_STAGE, difficultiesOrdered, EXAM_BOARD, EXAM_BOARDS_CS, STAGE, STAGES_CS, STAGES_SCI } from "../../../services/constants";
+import { AUDIENCE_ITEM_MAP, CS_EXAM_BOARDS_BY_STAGE, difficultiesOrdered, EXAM_BOARD, EXAM_BOARDS_CS, STAGE, STAGES_CS, STAGES_SCI } from "../../../services/constants";
 
 function adaDifficulty(doc : AudienceContext[]): Difficulty | undefined {
     return isAda ? doc?.[0].difficulty?.[0] : undefined;
@@ -129,9 +129,9 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
                     newValues[index ?? 0] = e.target.value as AudienceValue;
                     updateValues(newValues);
                 }}>
-                    <option key={value}>{value}</option>
+                    <option key={value} value={value}>{AUDIENCE_ITEM_MAP[value]}</option>
                     {[...unusedOptions].map((possibleOption) =>
-                        <option key={possibleOption}>{possibleOption}</option>
+                        <option key={possibleOption} value={possibleOption}>{AUDIENCE_ITEM_MAP[possibleOption]}</option>
                     )}
                 </select>
                 {multiple && <Button outline size="sm" className="border-0 p-0 ms-1" onClick={() => {
@@ -219,7 +219,7 @@ function conciseAudience(audience: AudienceContext): string {
         const values = audience[key];
         if (values) {
             if (key === "examBoard" && allExamBoardsForStagePresent(audience)) return "any\u00A0exam\u00A0board";
-            else return values.join(" or ");
+            else return values.map((value) => AUDIENCE_ITEM_MAP[value]).join(" or ");
         }
         return undefined;
     }).filter(isDefined);
