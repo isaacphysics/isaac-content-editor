@@ -241,7 +241,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
         {/*Set alt text to empty string for decorative images*/}
         <Label>
             <Input type="checkbox"
-                checked={doc.altText === ""}
+                checked={doc.decorative ?? false}
                 onChange={(e) => {
                     if (e.target.checked) {
                         update({
