@@ -540,6 +540,7 @@ export interface PositionableFigureRegionProps {
     width?: number;
     left: number;
     top: number;
+    boxAlign?: "left" | "center" | "right";
 }
 
 export interface LLMFreeTextMarkSchemeEntry {
