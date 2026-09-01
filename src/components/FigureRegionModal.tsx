@@ -242,17 +242,17 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                                     }
                                 }}/>
                             </td>
-                                <td>
-                                    <select value={regionProps.boxAlign ?? "left"} onChange={event => {
-                                        const newRegionStates = [...regions];
-                                        newRegionStates[i].boxAlign = event.target.value as "left" | "center" | "right";
-                                        setRegions(newRegionStates);
-                                    }}>
-                                        <option value="left">Left</option>
-                                        <option value="center">Centre</option>
-                                        <option value="right">Right</option>
-                                    </select>
-                                </td>
+                            <td>
+                                <select value={regionProps.boxAlign ?? "left"} onChange={event => {
+                                    const newRegionStates = [...regions];
+                                    newRegionStates[i].boxAlign = event.target.value as "left" | "center" | "right";
+                                    setRegions(newRegionStates);
+                                }}>
+                                    <option value="left">Left</option>
+                                    <option value="center">Centre</option>
+                                    <option value="right">Right</option>
+                                </select>
+                            </td>
                             <td>
                                 <button onClick={() => {
                                     setRegions(regions.filter((_, j) => j !== i));
