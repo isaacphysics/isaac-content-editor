@@ -1,12 +1,13 @@
 import { ContextType } from "react";
 
 import { AppContext } from "../App";
-import { dirname, generateGuid } from "../utils/strings";
+import { dirname, generateGuid, resolveRelativePath } from "../utils/strings";
 import { ContentType } from "../components/semantic/registry";
 import { Content } from "../isaac-data-types";
 
 import { githubSave, githubCreate, githubDelete, githubRename } from "./github";
 import { EMPTY_DOCUMENTS } from "./emptyDocuments";
+import { updateImagePaths } from "../utils/updateImagePaths";
 
 export const defaultDispatch: (action: Action) => void = () => {
     throw new Error("dispatch called from outside AppContext");
@@ -148,7 +149,7 @@ async function doRename(context: ContextType<typeof AppContext>, action: ActionF
         await githubSave(context);
     }
 
-    const choice = await context.showRenameModal(action.name);
+    const choice = await context.showRenameModal("Rename", action.name);
 
     if (choice) {
         context.setActionRunning(true);
@@ -174,13 +175,14 @@ async function doRename(context: ContextType<typeof AppContext>, action: ActionF
 }
 
 async function doSaveAs(context: ContextType<typeof AppContext>, action: ActionFor<"saveAs">) {
-    let newName = window.prompt("Please type a new name for the file. If no extension is provided, \".json\" will be assumed", action.name);
-    if (newName && newName !== action.name) {
+    const choice = await context.showRenameModal("Save as", action.name);
+
+    if (choice && choice.newName !== action.name) {
         const oldPath = action.path;
-        if (newName.indexOf(".") === -1 && oldPath.toLowerCase().endsWith(".json"))
-            newName += ".json";
+        if (choice.newName.indexOf(".") === -1 && oldPath.toLowerCase().endsWith(".json"))
+            choice.newName += ".json";
         const basePath = dirname(oldPath);
-        const newPath = basePath + "/" + newName;
+        const newPath = basePath + "/" + choice.newName;
 
         let alteredContent: Content | string;
         try {
@@ -190,14 +192,16 @@ async function doSaveAs(context: ContextType<typeof AppContext>, action: ActionF
                 id: generateGuid(),
                 published: false,
             };
+            if (choice.updateImagePaths) {
+                alteredContent = JSON.parse(updateImagePaths(JSON.stringify(alteredContent), oldPath, resolveRelativePath(choice.newName, oldPath)));
+            }
         } catch {
             alteredContent = context.editor.getCurrentDocAsString();
         }
         context.editor.loadNewDoc(alteredContent);
 
         const contentToSave = typeof alteredContent === "string" ? alteredContent : JSON.stringify(alteredContent, null, 2);
-
-        githubCreate(context, basePath, newName, contentToSave).then(function([_, shouldRefresh]) {
+        githubCreate(context, basePath, choice.newName, contentToSave).then(function([_, shouldRefresh]) {
             context.selection.setSelection({path: newPath, isDir: false, forceRefresh: shouldRefresh});
         }).catch(function(e) {
             window.alert("Could not create file. Perhaps it already exists.");

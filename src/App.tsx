@@ -23,7 +23,7 @@ export const AppContext = createContext({
         throw new Error("Can't navigate outside of AppContext");
     }) as NavigateFunction,
     menuModal: {current: null} as MutableRefObject<MenuModalRef | null>,
-    showRenameModal: async (_: string) => null as RenameResult | null,
+    showRenameModal: async (_: string, __: string) => null as RenameResult | null,
     showPartTitleModal: () => {},
     setActionRunning: (_: boolean) => {},
     preview: defaultPreview,

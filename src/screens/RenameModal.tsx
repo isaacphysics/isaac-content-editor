@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 export interface RenameModalProps {
+    actionName: string;
     isOpen: boolean;
     currentName: string;
     onClose: (res: RenameResult | null) => void;
@@ -18,7 +19,7 @@ export function RenameModal(props: RenameModalProps) {
     const cancel = () => props.onClose(null);
 
     return <Modal isOpen={props.isOpen}>
-        <ModalHeader>Rename file</ModalHeader>
+        <ModalHeader>File: {props.actionName}</ModalHeader>
         <ModalBody>
             <FormGroup>
                 <Label for="rename-input">Please type a new name for the file. If no extension is provided, &quot;.json&quot; will be assumed.</Label>
@@ -31,20 +32,20 @@ export function RenameModal(props: RenameModalProps) {
             </FormGroup>}
         </ModalBody>
         <ModalFooter>
-            <Button color="primary" onClick={confirm}>Rename</Button>
+            <Button color="primary" onClick={confirm}>{props.actionName}</Button>
             <Button color="secondary" onClick={cancel}>Cancel</Button>
         </ModalFooter>
     </Modal>;
 }
 
-export const showRenameModal = (setRenameState: (p: RenameModalProps) => void) => (currentName: string): Promise<RenameResult | null> => {
-    return new Promise<RenameResult | null>((resolve) => {
+export const showRenameModal = (setRenameState: (p: RenameModalProps) => void) => (actionName: string, currentName: string): Promise<RenameResult | null> => {
+    return new Promise((resolve) => {
         const onClose = (result: RenameResult | null) => {
-            setRenameState({ isOpen: false, currentName: "", onClose });
+            setRenameState({ actionName, isOpen: false, currentName: "", onClose });
             resolve(result);
         };
-        setRenameState({ isOpen: true, currentName, onClose });
+        setRenameState({ actionName, isOpen: true, currentName, onClose });
     });
 };
 
-export const closedRenameModalState: RenameModalProps = {isOpen: false, currentName: "", onClose: () => {}};
+export const closedRenameModalState: RenameModalProps = {actionName: "Save as", isOpen: false, currentName: "", onClose: () => {}};
