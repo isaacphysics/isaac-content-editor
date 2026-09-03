@@ -149,7 +149,7 @@ async function doRename(context: ContextType<typeof AppContext>, action: ActionF
         await githubSave(context);
     }
 
-    const choice = await context.showRenameModal("Rename", action.name);
+    const choice = await context.showFileNameModal("Rename", action.name);
 
     if (choice) {
         context.setActionRunning(true);
@@ -175,7 +175,7 @@ async function doRename(context: ContextType<typeof AppContext>, action: ActionF
 }
 
 async function doSaveAs(context: ContextType<typeof AppContext>, action: ActionFor<"saveAs">) {
-    const choice = await context.showRenameModal("Save as", action.name);
+    const choice = await context.showFileNameModal("Save as", action.name);
 
     if (choice && choice.newName !== action.name) {
         const oldPath = action.path;

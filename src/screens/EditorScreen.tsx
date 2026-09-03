@@ -18,7 +18,7 @@ import {SVGViewer} from "../components/SVGViewer";
 import {PDFViewer} from "../components/PDFViewer";
 import {Preview, PreviewMode} from "../components/Preview";
 import {MenuModal, MenuModalRef} from "./MenuModal";
-import {RenameModal, closedRenameModalState, showRenameModal} from "./RenameModal";
+import {FileNameModal, closedFileNameModalState, showFileNameModal} from "./FileNameModal";
 import {buildPageError} from "../components/PageError";
 import Split from "react-split";
 import {CDNUploadModal} from "../components/CDNUploadModal";
@@ -94,7 +94,7 @@ export function EditorScreen() {
     const navigate = useNavigate();
     const location = useLocation();
     const menuRef = useRef<MenuModalRef>(null);
-    const [renameState, setRenameState] = useState(closedRenameModalState);
+    const [fileNameState, setFileNameState] = useState(closedFileNameModalState);
     const [partTitleState, setPartTitleState] = useState(closedPartTitleModalState);
 
     const swrConfig = useSWRConfig();
@@ -219,7 +219,7 @@ export function EditorScreen() {
             navigate,
             menuModal: menuRef,
             setActionRunning,
-            showRenameModal: showRenameModal(setRenameState),
+            showFileNameModal: showFileNameModal(setFileNameState),
             showPartTitleModal: showPartTitleModal(setPartTitleState),
             preview: {
                 open: previewOpen,
@@ -345,7 +345,7 @@ export function EditorScreen() {
             </Modal>
             <SetPartTitleModal {...partTitleState}/>
             <MenuModal menuRef={menuRef} />
-            <RenameModal key={renameState?.currentName} {...renameState} />
+            <FileNameModal key={fileNameState?.currentName} {...fileNameState} />
         </AppContext.Provider>
     </SWRConfig>;
 }

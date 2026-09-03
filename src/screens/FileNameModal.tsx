@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
-export interface RenameModalProps {
+export interface FileNameModalProps {
     actionName: string;
     isOpen: boolean;
     currentName: string;
-    onClose: (res: RenameResult | null) => void;
+    onClose: (res: FileNameResult | null) => void;
 }
 
-export type RenameResult = { newName: string; updateImagePaths: boolean };
+export type FileNameResult = { newName: string; updateImagePaths: boolean };
 
-export function RenameModal(props: RenameModalProps) {
+export function FileNameModal(props: FileNameModalProps) {
     const [newName, setNewName] = useState(props.currentName);
     const isJson = props.currentName.endsWith(".json");
     const [updateImagePaths, setUpdateImagePaths] = useState(isJson);
@@ -38,9 +38,9 @@ export function RenameModal(props: RenameModalProps) {
     </Modal>;
 }
 
-export const showRenameModal = (setRenameState: (p: RenameModalProps) => void) => (actionName: string, currentName: string): Promise<RenameResult | null> => {
+export const showFileNameModal = (setRenameState: (p: FileNameModalProps) => void) => (actionName: string, currentName: string): Promise<FileNameResult | null> => {
     return new Promise((resolve) => {
-        const onClose = (result: RenameResult | null) => {
+        const onClose = (result: FileNameResult | null) => {
             setRenameState({ actionName, isOpen: false, currentName: "", onClose });
             resolve(result);
         };
@@ -48,4 +48,4 @@ export const showRenameModal = (setRenameState: (p: RenameModalProps) => void) =
     });
 };
 
-export const closedRenameModalState: RenameModalProps = {actionName: "Save as", isOpen: false, currentName: "", onClose: () => {}};
+export const closedFileNameModalState: FileNameModalProps = {actionName: "", isOpen: false, currentName: "", onClose: () => {}};
