@@ -159,7 +159,7 @@ export function EditorScreen() {
     const appContext = useMemo<ContextType<typeof AppContext>>(() => {
         async function dispatch(action: Action) {
             try {
-                if (action.type !== "rename") setActionRunning(true);
+                if (action.type !== "rename" && action.type !== "saveAs") setActionRunning(true);
                 await doDispatch(appContext, action);
             } finally {
                 setActionRunning(false);

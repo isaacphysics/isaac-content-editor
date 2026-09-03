@@ -178,6 +178,7 @@ async function doSaveAs(context: ContextType<typeof AppContext>, action: ActionF
     const choice = await context.showFileNameModal("Save as", action.name);
 
     if (choice && choice.newName !== action.name) {
+        context.setActionRunning(true);
         const oldPath = action.path;
         if (choice.newName.indexOf(".") === -1 && oldPath.toLowerCase().endsWith(".json"))
             choice.newName += ".json";
@@ -201,7 +202,7 @@ async function doSaveAs(context: ContextType<typeof AppContext>, action: ActionF
         context.editor.loadNewDoc(alteredContent);
 
         const contentToSave = typeof alteredContent === "string" ? alteredContent : JSON.stringify(alteredContent, null, 2);
-        githubCreate(context, basePath, choice.newName, contentToSave).then(function([_, shouldRefresh]) {
+        return githubCreate(context, basePath, choice.newName, contentToSave).then(function([_, shouldRefresh]) {
             context.selection.setSelection({path: newPath, isDir: false, forceRefresh: shouldRefresh});
         }).catch(function(e) {
             window.alert("Could not create file. Perhaps it already exists.");
