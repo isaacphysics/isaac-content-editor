@@ -27,7 +27,7 @@ interface DraggableDropZoneProps {
 }
 
 const PositionableDropZone = (props: PositionableFigureRegionProps & DraggableDropZoneProps) => {
-    const {id, minWidth, width, left, top, isCondensed, index} = props;
+    const {id, minWidth, width, left, top, boxAlign, isCondensed, index} = props;
     const imgPos = useRef({left: 0, right: 0, top: 0, bottom: 0});
 
     const dropZoneQuestionContext = useContext(DropZoneQuestionContext);
@@ -41,7 +41,7 @@ const PositionableDropZone = (props: PositionableFigureRegionProps & DraggableDr
             const newY = toFixedDP(clamp(((e.pageY - imgPos.current.top) / (imgPos.current.bottom - imgPos.current.top)) * 100, 0, 100), 1);
             props.setPercentageLeft(newX);
             props.setPercentageTop(newY);
-            props.setDropZone({id, minWidth, width, left: newX, top: newY});
+            props.setDropZone({id, minWidth, width, left: newX, top: newY, boxAlign});
         }, 40); 
     }, [id, minWidth, width]);
 
@@ -84,7 +84,10 @@ const PositionableDropZone = (props: PositionableFigureRegionProps & DraggableDr
             handleDrag(e);
         }}
     >
-        <span className={`d-inline-block text-end w-100 h-100 ${markupStyles.clozeDropZonePlaceholder}`}>
+        <span
+            className={`d-inline-block w-100 h-100 ${markupStyles.clozeDropZonePlaceholder}`}
+            style={{textAlign: boxAlign ?? "left"}}
+        >
             {!isCondensed ? id : (isDefined(index) ? alphabetIndex(index) : "?")}&nbsp;&nbsp;
         </span>
     </div>;
@@ -177,6 +180,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                         <th>Width (%)</th>
                         <th>X (%)</th>
                         <th>Y (%)</th>
+                        <th>Box alignment</th>
                         <th/>{/* remove button */}
                     </tr>
                 </thead>
@@ -239,6 +243,17 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                                 }}/>
                             </td>
                             <td>
+                                <select value={regionProps.boxAlign ?? "left"} onChange={event => {
+                                    const newRegionStates = [...regions];
+                                    newRegionStates[i].boxAlign = event.target.value as "left" | "center" | "right";
+                                    setRegions(newRegionStates);
+                                }}>
+                                    <option value="left">Left</option>
+                                    <option value="center">Centre</option>
+                                    <option value="right">Right</option>
+                                </select>
+                            </td>
+                            <td>
                                 <button onClick={() => {
                                     setRegions(regions.filter((_, j) => j !== i));
                                     setPercentageLeft(percentageLeft.filter((_, j) => j !== i));
@@ -259,7 +274,8 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                         minWidth: "100px", 
                         width: 15, 
                         left: 50, 
-                        top: 50
+                        top: 50,
+                        boxAlign: "left"
                     }]);
                     setPercentageLeft([...percentageLeft, 50]);
                     setPercentageTop([...percentageTop, 50]);
