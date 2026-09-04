@@ -18,12 +18,12 @@ export function FileNameModal(props: FileNameModalProps) {
     const confirm = () => props.onClose({ newName, updateImagePaths });
     const cancel = () => props.onClose(null);
 
-    return <Modal isOpen={props.isOpen}>
-        <ModalHeader>File: {props.actionName}</ModalHeader>
+    return <Modal isOpen={props.isOpen} toggle={cancel} onKeyDown={e => e.key === "Enter" && confirm()} autoFocus={false}>
+        <ModalHeader >File: {props.actionName}</ModalHeader>
         <ModalBody>
             <FormGroup>
                 <Label for="rename-input">Please type a new name for the file. If no extension is provided, &quot;.json&quot; will be assumed.</Label>
-                <Input id="rename-input" value={newName} onChange={e => setNewName(e.target.value)} autoFocus />
+                <Input id="rename-input" value={newName} onChange={e => setNewName(e.target.value)} autoFocus/>
             </FormGroup>
             {isJson && <FormGroup check>
                 <Input type="checkbox" id="update-image-paths" checked={updateImagePaths}
