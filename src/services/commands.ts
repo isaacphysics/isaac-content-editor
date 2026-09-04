@@ -196,8 +196,14 @@ async function doSaveAs(context: ContextType<typeof AppContext>, action: ActionF
             if (choice.updateImagePaths) {
                 alteredContent = JSON.parse(updateImagePaths(JSON.stringify(alteredContent), oldPath, resolveRelativePath(choice.newName, oldPath)));
             }
-        } catch {
-            alteredContent = context.editor.getCurrentDocAsString();
+        } catch (error) {
+            // given current file "sample.json" and `choice.newName` "sample", we ignore the error from updateImagePaths
+            // and attempt to create the file, erroring out with the message from github  
+            if (typeof error !== 'string' || !error.includes("updateImagePaths")) {
+                // we assume other errors come from attempting to spread a raw string (eg: an SVG file), and just keep 
+                // the file as-is
+                alteredContent = context.editor.getCurrentDocAsString();
+            }
         }
         context.editor.loadNewDoc(alteredContent);
 
