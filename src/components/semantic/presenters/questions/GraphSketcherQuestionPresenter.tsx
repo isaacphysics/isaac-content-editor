@@ -5,6 +5,7 @@ import {IsaacCoordinateQuestion, IsaacGraphSketcherQuestion} from "../../../../i
 import {PresenterProps} from "../../registry";
 import {NumberDocPropFor} from "../../props/NumberDocPropFor";
 import { QuestionMetaPresenter } from "./QuestionMetaPresenter";
+import { InaccessibleContentWarning } from "../../InaccessibleContentWarning";
 
 export function GraphSketcherQuestionPresenter(props: PresenterProps<IsaacGraphSketcherQuestion>) {
     const {doc, update} = props;
@@ -16,6 +17,7 @@ export function GraphSketcherQuestionPresenter(props: PresenterProps<IsaacGraphS
 
     return <>
         <QuestionMetaPresenter {...props} />
+        <InaccessibleContentWarning tags={["access:motor", "access:visual"]} />
         <div className={styles.questionLabel}>
             Axis labels:
             <div className="row">
