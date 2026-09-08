@@ -29,6 +29,7 @@ import {ExpandableText} from "../../ExpandableText";
 import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValueOrChildrenText} from "../../../../utils/content";
 import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../../isaac/IsaacTypes";
 import { ExpandedPresenter } from "../../metaItems";
+import { InaccessibleContentWarning } from "../../InaccessibleContentWarning";
 
 interface ItemsContextType {
     items?: Item[];
@@ -112,6 +113,7 @@ export function ClozeDndQuestionPresenter(props: PresenterProps<IsaacClozeQuesti
         figureMap: figureMap.current,
         calculateDZIndexFromFigureId: (id) => extractFigureRegionStartIndex(doc, id),
     }}>
+        <InaccessibleContentWarning tags={["access:motor"]} />
         <CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" />
         <CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" />
         <CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} />
