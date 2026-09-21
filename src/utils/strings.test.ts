@@ -1,6 +1,6 @@
-import { getRelativePath } from "./strings";
+import { extname, getRelativePath } from "./strings";
 
-describe("relativePath", () => {
+describe("getRelativePath", () => {
     ([
         ["a", "a/b/figures/foo.svg", "b/figures/foo.svg"],
         ["a/b", "a/b/figures/foo.svg", "figures/foo.svg"],
@@ -12,3 +12,22 @@ describe("relativePath", () => {
         });
     });
 });
+
+describe.only("extName", () => {
+    ([
+        ["a", ""],
+        [".gitignore", ""],
+        ["../a", ""],
+        ["./a", ""],
+        ["../a.json", ".json"],
+        ["./a.json", ".json"],
+        [".eslintrc.json", ".json"],
+        ["a.json", ".json"],
+        ["a.svg", ".svg"],
+        ["a.tar.gz", ".gz"],
+    ] as const).forEach(([path, expectedExtName]) => {
+        it(`returns ${expectedExtName} for ${path}`, () => {
+            expect(extname(path)).toBe(expectedExtName);
+        });
+    });
+})
