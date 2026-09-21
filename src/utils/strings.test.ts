@@ -13,8 +13,9 @@ describe("getRelativePath", () => {
     });
 });
 
-describe.only("extName", () => {
+describe("extname", () => {
     ([
+        ["", ""],
         ["a", ""],
         [".gitignore", ""],
         ["../a", ""],
@@ -25,9 +26,10 @@ describe.only("extName", () => {
         ["a.json", ".json"],
         ["a.svg", ".svg"],
         ["a.tar.gz", ".gz"],
+        ["A.SVG", ".SVG"],
     ] as const).forEach(([path, expectedExtName]) => {
         it(`returns ${expectedExtName} for ${path}`, () => {
             expect(extname(path)).toBe(expectedExtName);
         });
     });
-})
+});

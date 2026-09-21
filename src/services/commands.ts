@@ -1,7 +1,7 @@
 import { ContextType } from "react";
 
 import { AppContext } from "../App";
-import { dirname, generateGuid, resolveRelativePath } from "../utils/strings";
+import { dirname, extname, generateGuid, resolveRelativePath } from "../utils/strings";
 import { ContentType } from "../components/semantic/registry";
 import { Content } from "../isaac-data-types";
 
@@ -28,7 +28,7 @@ async function doNew(context: ContextType<typeof AppContext>, action: ActionFor<
     let newName = window.prompt("Please type a name for the new file. If no extension is provided, '.json' will be assumed", "untitled");
 
     if (newName) {
-        if (newName.indexOf(".") === -1) {
+        if (extname(newName) === "") {
             newName += ".json";
         }
         const name = newName as string;
@@ -159,7 +159,7 @@ async function doRename(context: ContextType<typeof AppContext>, action: ActionF
             return;
         }
 
-        if (choice.newName.indexOf(".") === -1 && oldPath.toLowerCase().endsWith(".json")) {
+        if (extname(choice.newName) === "" && oldPath.toLowerCase().endsWith(".json")) {
             choice.newName += ".json";
         }
 
@@ -180,7 +180,7 @@ async function doSaveAs(context: ContextType<typeof AppContext>, action: ActionF
     if (choice && choice.newName !== action.name) {
         context.setActionRunning(true);
         const oldPath = action.path;
-        if (choice.newName.indexOf(".") === -1 && oldPath.toLowerCase().endsWith(".json"))
+        if (extname(choice.newName) === "" && oldPath.toLowerCase().endsWith(".json"))
             choice.newName += ".json";
         const basePath = dirname(oldPath);
         const newPath = basePath + "/" + choice.newName;

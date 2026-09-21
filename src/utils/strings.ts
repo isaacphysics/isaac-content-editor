@@ -42,3 +42,10 @@ export function getRelativePath(base: string, target: string): string {
 
     return [...ups, ...tail].join("/");
 }
+
+// a (naive) in-browser implementation that attempts to mimic the interface and
+// behavior of path.extname
+export function extname(path: string): string | null {
+    const splt = path.split('.').filter(s => s != '');
+    return splt.length <= 1 ? "" : `.${splt[splt.length -1]}`;
+}
