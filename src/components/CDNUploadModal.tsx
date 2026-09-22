@@ -16,7 +16,7 @@ import {FileUploader} from "react-drag-drop-files";
 import {PopupMenuRef, MenuItem, buildPopupMenu, PopupEntry} from "./popups/PopupMenu";
 import styles from "../styles/editor.module.css";
 import {Files, FilesContext, Selection} from "./FileBrowser";
-import {dirname, ext} from "../utils/strings";
+import {dirname, extname} from "../utils/strings";
 import {GitHubDirInput} from "./GitHubDirInput";
 import {isDefined} from "../utils/types";
 
@@ -35,7 +35,7 @@ const renameCDNFile = async (context: ContextType<typeof AppContext>, item: Popu
             return;
         }
         // Ensure the file type (extension) stays the same
-        if (ext(newName) !== ext(item.name)) {
+        if (extname(newName) !== extname(item.name)) {
             alert("Please don't modify the file extension! Cancelling rename operation...");
         }
         const basePath = dirname(item.path);
