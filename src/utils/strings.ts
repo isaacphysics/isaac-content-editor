@@ -20,6 +20,16 @@ export function dirname(path: string | undefined) {
     return path.slice(0, path.lastIndexOf('/'));
 }
 
+// a (naive) in-browser implementation that attempts to mimic the interface and
+// behavior of path.extname, meaning this function's test suite should also pass
+// for path.extname.
+export function extname(pth: string): string | null {
+    const fileName = pth.split('/').reverse()[0];
+    const parts = fileName.split('.').filter(s => s != '');
+    return parts.length <= 1 ? "" : `.${parts.reverse()[0]}`;
+}
+
+
 export function resolveRelativePath(relativeFilename: string, baseSrcPath: string): string {
     return new URL(relativeFilename, "http://example.org/" + baseSrcPath).pathname.substring(1); // The host name is ignored
 }
@@ -36,13 +46,4 @@ export function getRelativePath(base: string, target: string): string {
     const ups = new Array(baseParts.length - sharedPrefix.length).fill("..");
 
     return [...ups, ...tail].join("/");
-}
-
-// a (naive) in-browser implementation that attempts to mimic the interface and
-// behavior of path.extname, meaning this function's test suite should also pass
-// for path.extname.
-export function extname(pth: string): string | null {
-    const fileName = pth.split('/').reverse()[0];
-    const parts = fileName.split('.').filter(s => s != '');
-    return parts.length <= 1 ? "" : `.${parts.reverse()[0]}`;
 }
