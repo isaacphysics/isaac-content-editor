@@ -20,12 +20,14 @@ describe("extname", () => {
         [".gitignore", ""],
         ["../a", ""],
         ["./a", ""],
+        ["dotted.folder/a", ""],
         ["../a.json", ".json"],
         ["./a.json", ".json"],
         [".eslintrc.json", ".json"],
         ["a.json", ".json"],
         ["a.svg", ".svg"],
         ["a.tar.gz", ".gz"],
+        ["dotted.folder/a.png", ".png"],
         ["A.SVG", ".SVG"],
     ] as const).forEach(([path, expectedExtName]) => {
         it(`returns ${expectedExtName} for ${path}`, () => {
