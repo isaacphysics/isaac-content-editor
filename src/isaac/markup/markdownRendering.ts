@@ -54,7 +54,8 @@ export const renderDndDropZones = (markdown: string) => {
     return markdown.replace(dndDropZoneRegex, (_match, id, params, widthMatch, heightMatch, altTextMatch) => {
         const minWidth = widthMatch ? widthMatch.slice("w-".length) + "px" : "100px";
         const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
-        return `<span class="d-inline-block text-end ${styles.clozeDropZonePlaceholder}" style="min-width: ${minWidth}; min-height: ${minHeight}">${id}&nbsp;&nbsp;</span>`;
+        const altText = altTextMatch ? altTextMatch : "";
+        return `<span class="d-inline-block text-end ${styles.clozeDropZonePlaceholder}" style="min-width: ${minWidth}; min-height: ${minHeight}" title=${altText}>${id}&nbsp;&nbsp;</span>`;
     }).replace(dndDropZoneMissingIdRegex, (_match) => {
         return `<span class="d-inline-block text-end ${styles.clozeDropZonePlaceholder} text-white bg-danger px-3">Drop zone missing ID!</span>`;
     });
