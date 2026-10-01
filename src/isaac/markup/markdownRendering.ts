@@ -51,7 +51,7 @@ export const renderClozeDropZones = (markdown: string) => {
 };
 
 export const renderDndDropZones = (markdown: string) => {
-    return markdown.replace(dndDropZoneRegex, (_match, id, params, widthMatch, heightMatch) => {
+    return markdown.replace(dndDropZoneRegex, (_match, id, params, widthMatch, heightMatch, altTextMatch) => {
         const minWidth = widthMatch ? widthMatch.slice("w-".length) + "px" : "100px";
         const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
         return `<span class="d-inline-block text-end ${styles.clozeDropZonePlaceholder}" style="min-width: ${minWidth}; min-height: ${minHeight}">${id}&nbsp;&nbsp;</span>`;
