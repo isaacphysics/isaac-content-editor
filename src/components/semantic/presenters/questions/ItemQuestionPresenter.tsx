@@ -179,7 +179,7 @@ export function ItemPresenter(props: PresenterProps<Item>) {
                 <EditableValueProp {...props} multiLine />
             </Col>
         </Row>
-        {isClozeQuestion(doc) && <Row>
+        {(isClozeQuestion(doc) || isDndQuestion(doc)) && <Row>
             <Col xs={8} className={"offset-3"}>
                 <EditableAltTextProp {...props} multiLine />
             </Col>

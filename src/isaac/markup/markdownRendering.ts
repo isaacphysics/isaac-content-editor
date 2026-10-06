@@ -35,9 +35,10 @@ export const renderClozeDropZones = (markdown: string) => {
     }
 
     let nonReservedIndex = 0;
-    return markdown.replace(dropZoneRegex, (_match, params, indexMatch, widthMatch, heightMatch) => {
+    return markdown.replace(dropZoneRegex, (_match, params, indexMatch, widthMatch, heightMatch, altTextMatch) => {
         const minWidth = widthMatch ? widthMatch.slice("w-".length) + "px" : "100px";
         const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
+        const altText = altTextMatch ? altTextMatch : "";
         const manualIndex: number | undefined = indexMatch ? parseInt(indexMatch.slice("i-".length)) : undefined;
         let usingManualIndex = isDefined(manualIndex) && !isNaN(manualIndex) && (manualIndex < dropZoneMatches.length);
         if (usingManualIndex && reservedIndices.get(manualIndex as number) as number > 1) {
@@ -46,15 +47,16 @@ export const renderClozeDropZones = (markdown: string) => {
         }
         const index = usingManualIndex ? manualIndex : nonReservedIndex++;
         while (reservedIndices.has(nonReservedIndex)) nonReservedIndex++;
-        return `<span class="d-inline-block text-end ${styles.clozeDropZonePlaceholder}" style="min-width: ${minWidth}; min-height: ${minHeight}">${index}&nbsp;&nbsp;</span>`;
+        return `<span class="d-inline-block text-end ${styles.clozeDropZonePlaceholder}" style="min-width: ${minWidth}; min-height: ${minHeight}" title="${altText}">${index}&nbsp;&nbsp;</span>`;
     });
 };
 
 export const renderDndDropZones = (markdown: string) => {
-    return markdown.replace(dndDropZoneRegex, (_match, id, params, widthMatch, heightMatch) => {
+    return markdown.replace(dndDropZoneRegex, (_match, id, params, widthMatch, heightMatch, altTextMatch) => {
         const minWidth = widthMatch ? widthMatch.slice("w-".length) + "px" : "100px";
         const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
-        return `<span class="d-inline-block text-end ${styles.clozeDropZonePlaceholder}" style="min-width: ${minWidth}; min-height: ${minHeight}">${id}&nbsp;&nbsp;</span>`;
+        const altText = altTextMatch ? altTextMatch : "";
+        return `<span class="d-inline-block text-end ${styles.clozeDropZonePlaceholder}" style="min-width: ${minWidth}; min-height: ${minHeight}" title="${altText}">${id}&nbsp;&nbsp;</span>`;
     }).replace(dndDropZoneMissingIdRegex, (_match) => {
         return `<span class="d-inline-block text-end ${styles.clozeDropZonePlaceholder} text-white bg-danger px-3">Drop zone missing ID!</span>`;
     });

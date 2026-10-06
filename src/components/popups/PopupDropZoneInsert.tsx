@@ -15,6 +15,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
     const [height, setHeight] = useState<string>();
     const [index, setIndex] = useState<string>();
     const [inLatex, setInLatex] = useState<boolean>(false);
+    const [altText, setAltText] = useState<string>();
 
     const resetState = () => {
         setWidth(undefined);
@@ -22,6 +23,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
         setIndex(undefined);
         setId(nextDropZoneId());
         setInLatex(false);
+        setAltText(undefined);
     };
 
     const nextDropZoneId = useCallback(() => {
@@ -35,7 +37,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
     const [id, setId] = useState<string>(nextDropZoneId());
 
     const generateAndInsertDropZone = useCallback(() => {
-        const dropZoneSyntax = `[drop-zone${(id && isDndQuestion) ? `:${id}` : ""}${(width || height || index) ? "|" : ""}${index ? `i-${index}` : ""}${width ? `w-${width}` : ""}${height ? `h-${height}` : ""}]`;
+        const dropZoneSyntax = `[drop-zone${(id && isDndQuestion) ? `:${id}` : ""}${(width || height || index) ? "|" : ""}${index ? `i-${index}` : ""}${width ? `w-${width}` : ""}${height ? `h-${height}` : ""}${altText ? `|altText="${altText}"` : ""}]`;
         if (id) {
             if (!updatedDropZoneIds.current) {
                 updatedDropZoneIds.current = new Set<string>();
@@ -70,14 +72,16 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
                     <Label for={"drop-zone-index"}>Index override:</Label>
                     <Input id={"drop-zone-index"} placeholder={"None"} onChange={(e) => setIndex(e.target.value)} />
                     {indexInvalid && <Alert className="my-1" color="warning">Index must be a positive integer</Alert>}
-                    <hr/>
                 </>}
                 {isDndQuestion && <>
                     <Label for={"drop-zone-id"}>Drop-zone ID:</Label>
                     <Input id={"drop-zone-id"} defaultValue={nextDropZoneId()} onChange={(e) => setId(e.target.value)} />
                     {idInvalid && <Alert className="my-1" color="danger">Drop zone missing ID!</Alert>}
-                    <hr/>
                 </>}
+                <hr/>
+                <Label className="mt-2" for={"drop-zone-alt-text"}>Alt Text:</Label>
+                <Input id={"drop-zone-alt-text"} placeholder={"Default"} onChange={(e) => setAltText(e.target.value)} />
+                <hr/>
                 <InputGroup className={"ps-4"}>
                     <Label for={"drop-zone-in-latex"}>Inside LaTeX?:</Label>
                     <Input type={"checkbox"} className="ms-1 rounded-1" id={"drop-zone-in-latex"} onChange={() => setInLatex(b => !b)} checked={inLatex} />
