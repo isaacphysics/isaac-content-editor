@@ -14,19 +14,20 @@ const regexpLinter = linter(view => {
     const diagnostics: Diagnostic[] = [];
     let isValidObject = false;
     syntaxTree(view.state).cursor().iterate(node => {
-        console.log("JSONEditor: ", node.name, node.from, node.to, view.state.doc.sliceString(node.from, node.to));
+        // The top level of a syntax tree is "JsonText". For a valid JSON file, the only child of that should be an "Object" node
+        // If we find any other node at the top level, report an error.
         if (!isValidObject) {
             if (node.name === "JsonText") {
                 return;
             } else if (node.name === "Object") {
                 isValidObject = true;
             } else {
-                diagnostics.push({
+                diagnostics[0] = {
                     from: node.from,
                     to: node.to,
                     severity: "error",
-                    message: "JSON files must contain a single object at the top level",
-                });
+                    message: "JSON text must contain a single object at the top level",
+                };
             }
         }
     });
@@ -67,10 +68,9 @@ export function JSONEditor({doc, update, close}: PresenterProps & { close: () =>
             onChange={(newValue) => {
                 value.current = newValue;
                 try {
-                    const a = JSON.parse(newValue);
-                    console.log("Validating JSON: ", newValue, a);
-                    if (typeof a !== "object" || a === null || Array.isArray(a)) {
-                        throw new Error("Not an object");
+                    const parsed = JSON.parse(newValue);
+                    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+                        throw new Error("JSON text must contain a single object at the top level");
                     }
                     setValid(true);
                 } catch (e) {
