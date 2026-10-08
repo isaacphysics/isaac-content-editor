@@ -1,15 +1,40 @@
 import React, {useRef, useState} from "react";
 import {Button} from "reactstrap";
-import CodeMirror, {EditorView, rectangularSelection} from "@uiw/react-codemirror";
+import CodeMirror, {EditorState, EditorView, rectangularSelection} from "@uiw/react-codemirror";
 import {json, jsonParseLinter} from "@codemirror/lang-json";
-import {linter, lintGutter} from "@codemirror/lint";
+import {Diagnostic, linter, lintGutter} from "@codemirror/lint";
+import {syntaxTree} from "@codemirror/language";
 
 import {PresenterProps} from "./registry";
 import styles from "./styles/semantic.module.css";
 import {keyBindings, spellchecker} from "../../utils/codeMirrorExtensions";
 import {MarkupToolbar} from "../MarkupToolbar";
 
-const extensions = [json(), EditorView.lineWrapping, linter(jsonParseLinter()), lintGutter(), rectangularSelection(), spellchecker()];
+const topLevelJSONLinter = () => (view: {state: EditorState}) => {
+    const diagnostics: Diagnostic[] = [];
+    let isValidObject = false;
+    syntaxTree(view.state).cursor().iterate(node => {
+        // The top level of a syntax tree is "JsonText". For a valid JSON file, the only child of that should be an "Object" node
+        // If we find any other node at the top level, report an error.
+        if (!isValidObject) {
+            if (node.name === "JsonText") {
+                return;
+            } else if (node.name === "Object") {
+                isValidObject = true;
+            } else {
+                diagnostics[0] = {
+                    from: node.from,
+                    to: node.to,
+                    severity: "error",
+                    message: "JSON text must contain a single object at the top level",
+                };
+            }
+        }
+    });
+    return diagnostics;
+};
+
+const extensions = [json(), EditorView.lineWrapping, linter(jsonParseLinter()), linter(topLevelJSONLinter()), lintGutter(), rectangularSelection(), spellchecker()];
 const empty = Symbol("empty") as unknown as string;
 
 export function JSONEditor({doc, update, close}: PresenterProps & { close: () => void }) {
@@ -20,8 +45,12 @@ export function JSONEditor({doc, update, close}: PresenterProps & { close: () =>
     const [valid, setValid] = useState(true);
 
     function setDocChanges() {
-        update(JSON.parse(value.current));
-        close();
+        if (valid) {
+            update(JSON.parse(value.current));
+            close();
+        } else {
+            console.error("Cannot set changes, JSON is invalid: ", value.current);
+        }
         return true;
     }
 
@@ -39,7 +68,10 @@ export function JSONEditor({doc, update, close}: PresenterProps & { close: () =>
             onChange={(newValue) => {
                 value.current = newValue;
                 try {
-                    JSON.parse(newValue);
+                    const parsed = JSON.parse(newValue);
+                    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+                        throw new Error("JSON text must contain a single object at the top level");
+                    }
                     setValid(true);
                 } catch (e) {
                     console.error(e);
