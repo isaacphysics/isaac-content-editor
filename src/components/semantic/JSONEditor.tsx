@@ -1,6 +1,6 @@
 import React, {useRef, useState} from "react";
 import {Button} from "reactstrap";
-import CodeMirror, {EditorView, rectangularSelection} from "@uiw/react-codemirror";
+import CodeMirror, {EditorState, EditorView, rectangularSelection} from "@uiw/react-codemirror";
 import {json, jsonParseLinter} from "@codemirror/lang-json";
 import {Diagnostic, linter, lintGutter} from "@codemirror/lint";
 import {syntaxTree} from "@codemirror/language";
@@ -10,7 +10,7 @@ import styles from "./styles/semantic.module.css";
 import {keyBindings, spellchecker} from "../../utils/codeMirrorExtensions";
 import {MarkupToolbar} from "../MarkupToolbar";
 
-const regexpLinter = linter(view => {
+const topLevelJSONLinter = () => (view: {state: EditorState}) => {
     const diagnostics: Diagnostic[] = [];
     let isValidObject = false;
     syntaxTree(view.state).cursor().iterate(node => {
@@ -32,9 +32,9 @@ const regexpLinter = linter(view => {
         }
     });
     return diagnostics;
-});
+};
 
-const extensions = [json(), EditorView.lineWrapping, linter(jsonParseLinter()), regexpLinter, lintGutter(), rectangularSelection(), spellchecker()];
+const extensions = [json(), EditorView.lineWrapping, linter(jsonParseLinter()), linter(topLevelJSONLinter()), lintGutter(), rectangularSelection(), spellchecker()];
 const empty = Symbol("empty") as unknown as string;
 
 export function JSONEditor({doc, update, close}: PresenterProps & { close: () => void }) {
