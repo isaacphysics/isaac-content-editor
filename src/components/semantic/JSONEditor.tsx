@@ -2,14 +2,38 @@ import React, {useRef, useState} from "react";
 import {Button} from "reactstrap";
 import CodeMirror, {EditorView, rectangularSelection} from "@uiw/react-codemirror";
 import {json, jsonParseLinter} from "@codemirror/lang-json";
-import {linter, lintGutter} from "@codemirror/lint";
+import {Diagnostic, linter, lintGutter} from "@codemirror/lint";
+import {syntaxTree} from "@codemirror/language";
 
 import {PresenterProps} from "./registry";
 import styles from "./styles/semantic.module.css";
 import {keyBindings, spellchecker} from "../../utils/codeMirrorExtensions";
 import {MarkupToolbar} from "../MarkupToolbar";
 
-const extensions = [json(), EditorView.lineWrapping, linter(jsonParseLinter()), lintGutter(), rectangularSelection(), spellchecker()];
+const regexpLinter = linter(view => {
+    const diagnostics: Diagnostic[] = [];
+    let isValidObject = false;
+    syntaxTree(view.state).cursor().iterate(node => {
+        console.log("JSONEditor: ", node.name, node.from, node.to, view.state.doc.sliceString(node.from, node.to));
+        if (!isValidObject) {
+            if (node.name === "JsonText") {
+                return;
+            } else if (node.name === "Object") {
+                isValidObject = true;
+            } else {
+                diagnostics.push({
+                    from: node.from,
+                    to: node.to,
+                    severity: "error",
+                    message: "JSON files must contain a single object at the top level",
+                });
+            }
+        }
+    });
+    return diagnostics;
+});
+
+const extensions = [json(), EditorView.lineWrapping, linter(jsonParseLinter()), regexpLinter, lintGutter(), rectangularSelection(), spellchecker()];
 const empty = Symbol("empty") as unknown as string;
 
 export function JSONEditor({doc, update, close}: PresenterProps & { close: () => void }) {
@@ -20,8 +44,12 @@ export function JSONEditor({doc, update, close}: PresenterProps & { close: () =>
     const [valid, setValid] = useState(true);
 
     function setDocChanges() {
-        update(JSON.parse(value.current));
-        close();
+        if (valid) {
+            update(JSON.parse(value.current));
+            close();
+        } else {
+            console.error("Cannot set changes, JSON is invalid: ", value.current);
+        }
         return true;
     }
 
@@ -39,7 +67,11 @@ export function JSONEditor({doc, update, close}: PresenterProps & { close: () =>
             onChange={(newValue) => {
                 value.current = newValue;
                 try {
-                    JSON.parse(newValue);
+                    const a = JSON.parse(newValue);
+                    console.log("Validating JSON: ", newValue, a);
+                    if (typeof a !== "object" || a === null || Array.isArray(a)) {
+                        throw new Error("Not an object");
+                    }
                     setValid(true);
                 } catch (e) {
                     console.error(e);
