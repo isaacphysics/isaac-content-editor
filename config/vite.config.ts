@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { nearleyPlugin } from './nearleyPlugin.ts';
+import { nearleyPlugin } from './nearleyPlugin';
 
 export default defineConfig({
     plugins: [nearleyPlugin()],
@@ -7,5 +7,9 @@ export default defineConfig({
     server: {
         open: true,
         port: 8421,
+    },
+
+    build: {
+        outDir: "build",
     }
 });
