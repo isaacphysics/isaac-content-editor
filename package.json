@@ -2,6 +2,7 @@
   "name": "isaac-content-editor",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@codemirror/lang-json": "^6.0.2",
     "@codemirror/lang-markdown": "^6.5.0",
@@ -39,14 +40,14 @@
     "swr": "^2.5.1",
     "ts-jest": "^29.4.14",
     "typescript": "^5.9.3",
+    "vite": "^8.3.4",
     "web-vitals": "^5.3.0"
   },
   "scripts": {
-    "start": "craco start --verbose",
+    "start": "vite --config config/vite.config.ts",
     "lint": "eslint -c eslint.config.mjs src/",
-    "build": "yarn run lint && craco build",
-    "test": "craco test --watchAll",
-    "eject": "react-scripts eject"
+    "build": "yarn run lint && vite build --config config/vite.config.ts",
+    "test": "jest --config config/jest.config.ts"
   },
   "browserslist": [
     ">0.2%",
@@ -55,8 +56,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
-    "@craco/types": "^7.1.0",
     "@eslint/compat": "^2.0.0",
     "@eslint/js": "^9.39.2",
     "@stylistic/eslint-plugin": "^5.6.1",
