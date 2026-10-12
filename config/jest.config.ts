@@ -1,3 +1,3 @@
-const jestConfig = {}
+const jestConfig = {};
 
 export default jestConfig;
