@@ -1,6 +1,5 @@
 import type { Plugin } from 'vite';
 import { createRequire } from 'node:module';
-import { resolve } from 'node:path';
 
 const require = createRequire(import.meta.url);
 
@@ -32,12 +31,22 @@ export function nearleyPlugin(): Plugin {
       const compiled = compile(grammarAst, {});
       const js = generate(compiled, 'grammar');
 
-      // The generated code uses CommonJS exports.
-      // Wrap it so Vite receives a valid ES module.
+      // Replace the CommonJS moo import in the grammar header.
+      const transformedJs = js.replace(
+        /const moo = require\(["']moo["']\);?/,
+        'const moo = globalThis.__nearleyMoo;',
+      );
+
       const code = `
+        import * as mooModule from 'moo';
+
+        globalThis.__nearleyMoo = mooModule.default ?? mooModule;
+
         const module = { exports: {} };
         const exports = module.exports;
-        ${js}
+
+        ${transformedJs}
+
         export default module.exports;
       `;
 

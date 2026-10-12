@@ -323,24 +323,24 @@ export const CoordinateChoicePresenter = (props: ValuePresenterProps<CoordinateC
     </>;
 };
 
-const CHOICE_REGISTRY: Record<CHOICE_TYPES, ValuePresenter<Choice>> = {
-    choice: BaseValuePresenter,
-    quantity: QuantityPresenter,
-    formula: FormulaPresenter,
-    chemicalFormula: ChemicalFormulaPresenter,
-    stringChoice: StringChoicePresenter,
-    freeTextRule: FreeTextRulePresenter,
-    logicFormula: FormulaPresenter,
-    graphChoice: GraphChoicePresenter,
-    regexPattern: RegexPatternPresenter,
-    itemChoice: ItemChoicePresenter,
-    parsonsChoice: ItemChoicePresenter,
-    dndChoice: DndChoicePresenter,
-    coordinateChoice: CoordinateChoicePresenter,
-};
-
 export function ChoicePresenter(props: PresenterProps<Choice>) {
     const choiceValueRef = useRef<ValuePresenterRef>(null);
+
+    const CHOICE_REGISTRY: Record<CHOICE_TYPES, ValuePresenter<Choice>> = {
+        choice: BaseValuePresenter,
+        quantity: QuantityPresenter,
+        formula: FormulaPresenter,
+        chemicalFormula: ChemicalFormulaPresenter,
+        stringChoice: StringChoicePresenter,
+        freeTextRule: FreeTextRulePresenter,
+        logicFormula: FormulaPresenter,
+        graphChoice: GraphChoicePresenter,
+        regexPattern: RegexPatternPresenter,
+        itemChoice: ItemChoicePresenter,
+        parsonsChoice: ItemChoicePresenter,
+        dndChoice: DndChoicePresenter,
+        coordinateChoice: CoordinateChoicePresenter,
+    };
 
     const choice = props.doc;
     const ChoiceValuePresenter = CHOICE_REGISTRY[choice.type as CHOICE_TYPES] ?? BaseValuePresenter;
