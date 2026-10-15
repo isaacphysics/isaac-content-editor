@@ -9,6 +9,7 @@ import { SemanticRoot } from "./SemanticRoot";
 import { PresenterProps } from "./registry";
 import styles from "./styles/semantic.module.css";
 import { render, fireEvent } from "@testing-library/react";
+import { existsSync } from "fs";
 
 // Katex is slow to render and doesn't throw so won't surface any bugs in this test anyway.
 jest.mock("../../isaac/markup/latexRendering", () => {
@@ -133,12 +134,30 @@ describe.skip("can render existing docs without errors", () => {
         expect(errorLog.length).toBeGreaterThan(0);
     });
 
-    describe.skip("Can render Computer Science content correctly", () => { testFiles("../ada-content/content"); });
-    describe.skip("Can render Physics content correctly", () => { testFiles("../rutherford-content/content"); });
+    describe.skip("Can render Computer Science content correctly", () => {
+        const adaContentPath = "../ada-content/content";
+        if (existsSync(adaContentPath)) {
+            testFiles(adaContentPath); 
+        }
+    });
+    describe.skip("Can render Physics content correctly", () => {
+        const rutherfordContentPath = "../rutherford-content/content";
+        if (existsSync(rutherfordContentPath)) {
+            testFiles(rutherfordContentPath);
+        }
+    });
 
     it.skip("Checks specific files with errors found previously", () => {
-        testFile("../rutherford-content/content/questions/chemistry/foundations/atomic_structure/elements_reversal.json");
-        testFile("../rutherford-content/content/questions/chemistry/inorganic/bonding/oxides.json");
-        testFile("../rutherford-content/content/questions/physics/mechanics/kinematics/level1/glidepath.json");
+        const errorFiles = [
+            "../rutherford-content/content/questions/chemistry/foundations/atomic_structure/elements_reversal.json",
+            "../rutherford-content/content/questions/chemistry/inorganic/bonding/oxides.json",
+            "../rutherford-content/content/questions/physics/mechanics/kinematics/level1/glidepath.json",
+        ];
+        errorFiles.forEach((file) => {
+            if (existsSync(file)) {
+                testFile(file);
+            }
+        });
+
     });
 });
