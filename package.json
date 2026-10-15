@@ -13,6 +13,7 @@
     "cr-numeral": "^2.1.0",
     "fast-json-patch": "^3.1.1",
     "he": "^1.2.0",
+    "identity-obj-proxy": "^3.0.0",
     "jest-environment-jsdom": "^30.5.2",
     "js-cookie": "^3.0.8",
     "katex": "^0.16.47",
