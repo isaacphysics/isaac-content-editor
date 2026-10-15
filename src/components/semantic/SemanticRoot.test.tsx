@@ -1,7 +1,6 @@
 import { readdirSync, readFileSync, statSync } from "fs";
 
 import React from "react";
-import TestRenderer from 'react-test-renderer';
 
 import { Content } from "../../isaac-data-types";
 
@@ -9,6 +8,7 @@ import { SemanticItem } from "./SemanticItem";
 import { SemanticRoot } from "./SemanticRoot";
 import { PresenterProps } from "./registry";
 import styles from "./styles/semantic.module.css";
+import { render, fireEvent } from "@testing-library/react";
 
 // Katex is slow to render and doesn't throw so won't surface any bugs in this test anyway.
 jest.mock("../../isaac/markup/latexRendering", () => {
@@ -71,17 +71,21 @@ function getFiles(dir: string): string[] {
 }
 
 function renderDoc(doc: Content) {
-    const dom = TestRenderer.create(<SemanticRoot doc={doc} update={() => {
-        fail("update called");
-    }}/>);
+    const dom = render(
+        <SemanticRoot
+            doc={doc}
+            update={() => {
+                fail("update called");
+            }}
+        />
+    );
 
     // Force metadata open everywhere it appears
-    const metadata = dom.root.findAllByProps({className: styles.metaLabel}, {deep: true});
-    TestRenderer.act(() =>
-        metadata?.forEach(metadata => {
-            metadata.props?.onClick();
-        })
-    );
+    const metadata = dom.container.querySelectorAll(`.${styles.metaLabel}`);
+
+    metadata.forEach((element: Element) => {
+        fireEvent.click(element);
+    });
 
     return dom;
 }

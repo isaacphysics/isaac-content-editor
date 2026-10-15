@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { nearleyPlugin } from './nearleyPlugin';
+import { nearleyPlugin } from './nearleyPlugin.ts';
 
 export default defineConfig({
     plugins: [nearleyPlugin()],

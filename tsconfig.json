@@ -22,6 +22,8 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "sourceMap": true,
+    "rewriteRelativeImportExtensions": true,
+    "allowImportingTsExtensions": true,
   },
   "include": [
     "src",
