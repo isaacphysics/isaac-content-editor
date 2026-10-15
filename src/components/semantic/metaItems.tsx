@@ -14,7 +14,7 @@ import {asMetaItems, checkWarning, MetaItemPresenter, MetaItemPresenterProps} fr
 import styles from "./styles/metadata.module.css";
 import questionStyles from "./styles/question.module.css";
 import {isDefined} from "../../utils/types";
-import {AppContext} from "../../App";
+import {AppContext} from "../../AppContext";
 
 const TITLE_MAX_LENGTH = 32;
 

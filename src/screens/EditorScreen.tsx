@@ -6,7 +6,7 @@ import {Modal, Spinner} from "reactstrap";
 import {ErrorBoundary} from "react-error-boundary";
 import {Selection} from "../components/FileBrowser";
 import {LeftMenu} from "../components/LeftMenu";
-import {AppContext} from "../App";
+import {AppContext} from "../AppContext";
 import {defaultGithubContext, fetcher} from "../services/github";
 import {SemanticEditor} from "../components/SemanticEditor";
 import {Content} from "../isaac-data-types";

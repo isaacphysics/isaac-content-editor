@@ -14,7 +14,7 @@ import { safeLowercase } from "../../../utils/strings";
 
 import styles from "../styles/editable.module.css";
 import classNames from "classnames";
-import {Markup} from "../../../isaac/markup";
+import {Markup} from "../../../isaac/markup/index";
 import CodeMirror, {EditorView} from "@uiw/react-codemirror";
 import {MarkupToolbar} from "../../MarkupToolbar";
 import {keyBindings} from "../../../utils/codeMirrorExtensions";

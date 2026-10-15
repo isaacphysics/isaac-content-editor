@@ -6,7 +6,7 @@ import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresent
 import { PresenterProps } from "../registry";
 import { BaseValuePresenter } from "./BaseValuePresenter";
 import {githubUpload, updateGitHubCacheKey, useGithubContents} from "../../../services/github";
-import { AppContext } from "../../../App";
+import { AppContext } from "../../../AppContext";
 import { dirname, generateGuid } from "../../../utils/strings";
 import { useFixedRef } from "../../../utils/hooks";
 

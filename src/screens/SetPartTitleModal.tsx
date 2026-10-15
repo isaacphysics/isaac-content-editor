@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Alert, Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Tooltip } from "reactstrap";
 
 import styles from "../styles/editor.module.css";
-import { AppContext } from "../App";
+import { AppContext } from "../AppContext";
 import { makeQuestionTitlesStandard } from "../utils/setQuestionTitles";
 import { Content } from "../isaac-data-types";
 

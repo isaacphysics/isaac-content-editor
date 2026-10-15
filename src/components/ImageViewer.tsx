@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Alert, Container, Spinner} from "reactstrap";
 
-import { AppContext } from "../App";
+import { AppContext } from "../AppContext";
 import { useGithubContents } from "../services/github";
 import { IMG_FILE_HEADERS } from "../utils/base64";
 import { TopMenu } from "./TopMenu";

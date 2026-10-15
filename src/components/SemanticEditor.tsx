@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import { Alert, Spinner } from "reactstrap";
 
-import { AppContext } from "../App";
+import { AppContext } from "../AppContext";
 import { decodeBase64 } from "../utils/base64";
 import { Content } from '../isaac-data-types';
 import { SemanticRoot } from "./semantic/SemanticRoot";

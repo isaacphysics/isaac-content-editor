@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Alert, Button, ButtonGroup, Container, Input, Spinner} from "reactstrap";
 import { Document, Page } from "react-pdf";
 
-import { AppContext } from "../App";
+import { AppContext } from "../AppContext";
 import { useGithubContents } from "../services/github";
 import { TopMenu } from "./TopMenu";
 import { PDF_FILE_HEADER } from "../utils/base64";
