@@ -35,7 +35,7 @@
  */
 
 import React, {FunctionComponent, MouseEvent, useRef, useState} from "react";
-import {Alert} from "reactstrap";
+import {Alert} from "react-bootstrap";
 
 import {Content} from "../../isaac-data-types";
 

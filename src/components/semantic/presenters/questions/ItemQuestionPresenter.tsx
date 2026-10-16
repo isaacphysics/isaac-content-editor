@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from "react";
-import {Alert, Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row} from "reactstrap";
+import {Alert, Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row} from "react-bootstrap";
 
 import {
     Content,

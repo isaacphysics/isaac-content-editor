@@ -1,5 +1,5 @@
 import React, {MouseEvent, MutableRefObject, useCallback, useMemo} from "react";
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 
 import {Content, ContentBase} from "../../../isaac-data-types";
 import {useFixedRef} from "../../../utils/hooks";

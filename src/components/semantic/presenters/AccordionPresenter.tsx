@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Input} from "reactstrap";
+import {Button, Form} from "react-bootstrap";
 
 import {EditableTitleProp} from "../props/EditableDocProp";
 import {TabsHeader, TabsMain, useTabs} from "./TabsPresenter";
@@ -66,10 +66,10 @@ function DisplayListEditor({displayList, setDisplayList, name, displayOptions}: 
         {displayList.length === 0 && "(default) "}
         {displayList.map((selection, i, selections) =>
             <span key={selection}>
-                <Input type="select" bsSize="sm" value={selection} onChange={updateSelection(setDisplayList, selection)}>
+                <Form.Control type="select" bsSize="sm" value={selection} onChange={updateSelection(setDisplayList, selection)}>
                     <option value={selection}>{selection}</option>
                     {remainingAudienceValues.map(option => <option key={option} value={option}>{option}</option>)}
-                </Input>
+                </Form.Control>
                 <Button size="sm" outline onClick={deleteSelection(setDisplayList, selection)}>
                     ➖
                 </Button>

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Alert, Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Tooltip } from "reactstrap";
+import { Alert, Button, FormGroup, Form, Modal, ModalBody, ModalFooter, ModalHeader, Tooltip } from "react-bootstrap";
 
 import styles from "../styles/editor.module.css";
 import { AppContext } from "../AppContext";
@@ -37,15 +37,15 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
                 (e.g. &quot;A.i&quot;, &quot;A.ii&quot;, &quot;B&quot;, etc)
             </span>
             <FormGroup check className="my-2">
-                <Input type="checkbox" id="overwrite-old-titles" checked={overwriteOldTitles}
+                <Form.Control type="checkbox" id="overwrite-old-titles" checked={overwriteOldTitles}
                     onChange={e => setOverwriteOldTitles(e.target.checked)} />
-                <Label check for="overwrite-old-titles">
+                <Form.Label check for="overwrite-old-titles">
                     <span className="me-2">Overwrite titles not already in the standard format</span>
                     <span style={{textDecoration: "underline", color:"blue"}} id="overwrite-tooltip">?</span>
                     <Tooltip isOpen={tooltipOpen} placement="bottom" target="overwrite-tooltip" toggle={() => setTooltipOpen(!tooltipOpen)}>
                         Titles in the standard format but incorrect position (or empty titles) will be overwritten regardless
                     </Tooltip>
-                </Label>
+                </Form.Label>
             </FormGroup>
             {content?.published && <Alert color="warning">Replacing question part titles on published content may lead to inconsistent progress stats, so should be avoided.</Alert>}
         </ModalBody>

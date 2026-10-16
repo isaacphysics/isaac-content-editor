@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Button, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
+import { Button, DropdownMenu, DropdownToggle, Dropdown } from "react-bootstrap";
 
 import { Box } from "./SemanticItem";
 import { InsertButton, InserterProps } from "./presenters/ListChildrenPresenter";
@@ -71,7 +71,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                 {blockTypes && Object.entries(blockTypes).map(([name, empty]) => {
                     {/* TODO remove pe-0 and text-start after BS5 upgrade :) */}
                     if (Array.isArray(empty)) {
-                        return <UncontrolledDropdown key={name} tag={"span"} className={styles.inserterDropdown}>
+                        return <Dropdown key={name} tag={"span"} className={styles.inserterDropdown}>
                             <DropdownToggle caret tag="span">
                                 <Button className="pe-0 pe-0" color="link" caret> 
                                     {name}
@@ -90,7 +90,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                                     })}
                                 </div>
                             </DropdownMenu>
-                        </UncontrolledDropdown>;
+                        </Dropdown>;
                     } else {
                         return <Button key={name} color="link" className="text-decoration-none" onClick={() => {
                             insert(position, {...empty});

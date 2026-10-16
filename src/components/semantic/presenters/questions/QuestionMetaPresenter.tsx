@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {EditableIDProp, EditableTitleProp} from "../../props/EditableDocProp";
 import styles from "../../styles/question.module.css";
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
+import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "react-bootstrap";
 import {
     AnyQuestion,
     Content,

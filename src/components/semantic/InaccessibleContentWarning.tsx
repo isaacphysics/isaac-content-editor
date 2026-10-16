@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Alert } from "reactstrap";
+import { Alert } from "react-bootstrap";
 import { AppContext } from "../../AppContext";
 
 export const InaccessibleContentWarning = ({tags}: {tags: string[]}) => {

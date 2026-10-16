@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input } from "reactstrap";
+import { Button, Form } from "react-bootstrap";
 import { GlossaryTerm } from "../../../isaac-data-types";
 
 import { PresenterProps } from "../registry";
@@ -69,7 +69,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
 
     return <div className={styles.wrapper}>
         {doc.stages?.map(stage => <Button key={stage} outline onClick={() => removeStage(stage)}>{stage} ➖</Button>)}
-        <Input value={searchString}
+        <Form.Control value={searchString}
             onChange={(e) => setSearchString(e.target.value.toLowerCase())}
             placeholder="Type to add stages..."
             innerRef={inputRef}

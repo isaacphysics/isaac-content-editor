@@ -3,7 +3,7 @@ import React from "react";
 import { AnvilApp } from "../../../isaac-data-types";
 
 import { PresenterProps } from "../registry";
-import { Alert } from "reactstrap";
+import { Alert } from "react-bootstrap";
 
 export function AnvilAppPresenter({doc}: PresenterProps<AnvilApp>) {
     return <>

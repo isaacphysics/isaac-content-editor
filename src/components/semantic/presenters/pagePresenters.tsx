@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "reactstrap";
+import { Button } from "react-bootstrap";
 
 import { IsaacBookDetailPage, IsaacBookIndexPage, IsaacEventPage, IsaacQuiz, IsaacQuizSection, SeguePage } from "../../../isaac-data-types";
 

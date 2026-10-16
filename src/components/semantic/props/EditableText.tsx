@@ -8,7 +8,7 @@ import React, {
     useRef,
     useState
 } from "react";
-import { Button, FormFeedback, Input, InputProps } from "reactstrap";
+import { Button, Form, FormControlProps } from "react-bootstrap";
 
 import { safeLowercase } from "../../../utils/strings";
 
@@ -49,7 +49,7 @@ export type EditableTextProps = {
     block?: boolean;
     format?: EditableTextFormat;
     previewWrapperChar?: "$" | "";
-    inputProps?: Omit<InputProps, "type"|"placeHolder"|"invalid"|"autoFocus"|"value"|"className">;
+    inputProps?: Omit<FormControlProps, "type"|"placeHolder"|"invalid"|"autoFocus"|"value"|"className">;
     buttonStrings?: [string, string][];
 };
 
@@ -233,7 +233,7 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                             >
                                 <MarkupToolbar set={save} cancel={cancel} encoding={"plaintext"} />
                             </CodeMirror>
-                            : <Input
+                            : <Form.Control
                                 type={multiLine ? "textarea" : "text"}
                                 autoFocus={autoFocus ?? false}
                                 value={state.value ?? ""}
@@ -252,7 +252,7 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
             <Button className="mb-2" color="primary" onClick={() => save()}>Set</Button>
         </Wrap>
         {isDefined(errorMessage) && errorMessage.length > 0 && <Wrap className="pb-2">
-            {errorMessage.map(e => <FormFeedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</FormFeedback>)}
+            {errorMessage.map(e => <Form.Control.Feedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</Form.Control.Feedback>)}
         </Wrap>}
         <Wrap ref={wrapperRef} className={`justify-content-start ${styles.isEditingWrapper}`}>
             {insertStringButtons}

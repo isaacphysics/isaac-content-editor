@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { Alert, Input, Button } from "reactstrap";
+import { Alert, Form, Button } from "react-bootstrap";
 import { ContentBase, Content } from "../../../isaac-data-types";
 import { PresenterProps } from "../registry";
 import styles from "../styles/tags.module.css";
@@ -106,7 +106,7 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
             </Droppable>
         </DragDropContext>
 
-        <Input value={context?.searchString} onChange={(e) => context?.setSearchString(e.target.value)}
+        <Form.Control value={context?.searchString} onChange={(e) => context?.setSearchString(e.target.value)}
             placeholder={`Type to add ${String(prop)}...`} className="mt-2"
         />
         {context?.searchString !== "" && <div>

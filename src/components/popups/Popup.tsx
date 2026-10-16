@@ -8,8 +8,7 @@ import React, {
     useState
 } from "react";
 import styles from "../../styles/editor.module.css";
-// @ts-ignore
-import Portal from "reactstrap/src/Portal";
+import Portal from 'react-overlays/Portal';
 
 export const PopupCloseContext = React.createContext<(() => void) | null>(null);
 

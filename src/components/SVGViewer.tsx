@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {Alert, Container, Spinner} from "reactstrap";
+import {Alert, Container, Spinner} from "react-bootstrap";
 
 import { AppContext } from "../AppContext";
 import { useGithubContents } from "../services/github";

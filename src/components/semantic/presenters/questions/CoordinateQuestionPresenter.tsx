@@ -1,7 +1,7 @@
 import React, {createContext, useContext} from "react";
 import {EditableDimensionalDocProp, EditableDocPropFor} from "../../props/EditableDocProp";
 import styles from "../../styles/question.module.css";
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 import {IsaacCoordinateQuestion} from "../../../../isaac-data-types";
 import {CheckboxDocProp} from "../../props/CheckboxDocProp";
 import {PresenterProps} from "../../registry";

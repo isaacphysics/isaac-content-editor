@@ -2,7 +2,7 @@ import {Content} from "../../../isaac-data-types";
 import {KeysWithValsOfType} from "../../../utils/types";
 import {PresenterProps} from "../registry";
 import React, {useEffect, useState} from "react";
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
+import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "react-bootstrap";
 
 export interface DropdownOptionsProps {
     disabled?: boolean;

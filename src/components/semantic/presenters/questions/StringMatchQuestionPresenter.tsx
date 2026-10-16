@@ -4,7 +4,7 @@ import styles from "../../styles/question.module.css";
 import { PresenterProps } from "../../registry";
 import { IsaacStringMatchQuestion } from "../../../../isaac-data-types";
 import { CheckboxDocProp } from "../../props/CheckboxDocProp";
-import { Alert } from "reactstrap";
+import { Alert } from "react-bootstrap";
 
 function FreeTextQuestionInstructions() {
     return <div>

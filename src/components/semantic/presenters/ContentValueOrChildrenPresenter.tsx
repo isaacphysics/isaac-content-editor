@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { Alert } from "reactstrap";
+import { Alert } from "react-bootstrap";
 
 import { Content } from "../../../isaac-data-types";
 

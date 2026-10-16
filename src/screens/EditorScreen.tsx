@@ -2,7 +2,7 @@ import React, {ContextType, useCallback, useEffect, useMemo, useRef, useState} f
 import {SWRConfig, useSWRConfig} from "swr";
 import {Params, useNavigate, useParams} from "react-router-dom";
 import {useBlocker, useLocation} from "react-router";
-import {Modal, Spinner} from "reactstrap";
+import {Modal, Spinner} from "react-bootstrap";
 import {ErrorBoundary} from "react-error-boundary";
 import {Selection} from "../components/FileBrowser";
 import {LeftMenu} from "../components/LeftMenu";

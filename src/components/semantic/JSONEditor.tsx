@@ -1,5 +1,5 @@
 import React, {useRef, useState} from "react";
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 import CodeMirror, {EditorView, rectangularSelection} from "@uiw/react-codemirror";
 import {json, jsonParseLinter} from "@codemirror/lang-json";
 import {linter, lintGutter} from "@codemirror/lint";

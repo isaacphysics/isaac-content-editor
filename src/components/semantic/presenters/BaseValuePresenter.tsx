@@ -2,7 +2,7 @@ import React, {FunctionComponent, MutableRefObject, useCallback, useImperativeHa
 import CodeMirror, {EditorView, ReactCodeMirrorRef} from '@uiw/react-codemirror';
 import {markdown} from '@codemirror/lang-markdown';
 import {html} from '@codemirror/lang-html';
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 
 import styles from "../styles/value.module.css";
 import {Content} from "../../../isaac-data-types";

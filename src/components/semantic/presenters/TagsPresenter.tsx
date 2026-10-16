@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input } from "reactstrap";
+import { Button, Form } from "react-bootstrap";
 import useSWR from "swr";
 
 import { stagingFetcher } from "../../../services/isaacApi";
@@ -68,7 +68,7 @@ export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {sub
 
     return <div className={styles.wrapper}>
         {doc.tags?.map(tag => <Button key={tag} outline onClick={() => removeTag(tag)}>{tag} ➖</Button>)}
-        <Input value={searchString}
+        <Form.Control value={searchString}
             onChange={(e) => setSearchString(e.target.value.toLowerCase())}
             placeholder={`Type to add ${subjectsOnly ? "subjects" : "tags"}...`}
             innerRef={inputRef}

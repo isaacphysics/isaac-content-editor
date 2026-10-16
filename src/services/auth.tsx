@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Spinner } from "reactstrap";
+import { Spinner } from "react-bootstrap";
 import Cookies from "js-cookie";
 
 import { GITHUB_TOKEN_COOKIE } from "./github";

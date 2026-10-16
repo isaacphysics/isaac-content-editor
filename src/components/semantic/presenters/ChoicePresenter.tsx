@@ -1,6 +1,6 @@
 import React, {MutableRefObject, useContext, useEffect, useRef, useState,} from "react";
-import {Alert, Button, Input, Label} from "reactstrap";
-import {InputType} from "reactstrap/lib/Input";
+import {Alert, Button, Form} from "react-bootstrap";
+import {InputType} from "react-bootstrap/lib/Input";
 
 import {
     ChemicalFormula,
@@ -53,9 +53,9 @@ interface LabeledInputProps<V extends Record<string, string | undefined>> {
 function LabeledInput<V extends Record<string, string | undefined>>({value, prop, label, className, type, warningFunction}: LabeledInputProps<V>) {
     const [warning, setWarning] = useState<string>();
 
-    return <Label className={className}>
+    return <Form.Label className={className}>
         {label}
-        <Input type={type ?? "text"}
+        <Form.Control type={type ?? "text"}
             autoFocus
             defaultValue={value.current?.[prop]}
             onChange={(e) => {
@@ -67,7 +67,7 @@ function LabeledInput<V extends Record<string, string | undefined>>({value, prop
             invalid={!!warning}
         />
         {warning && <div className="text-danger">{warning}</div>}
-    </Label>;
+    </Form.Label>;
 }
 
 export const QuantityPresenter = buildValuePresenter(
@@ -84,10 +84,10 @@ export const QuantityPresenter = buildValuePresenter(
             return <Markup trusted-markup-encoding="markdown">{html}</Markup>;
         } else {
             return <>
-                <LabeledInput value={value} prop="value" label="Quantity" />
+                <Form.LabeledInput value={value} prop="value" label="Quantity" />
                 {displayUnit ?
                     <Markup trusted-markup-encoding="markdown">{"$" + displayUnit + "$"}</Markup> :
-                    <LabeledInput value={value} prop="units" label="Units" />}
+                    <Form.LabeledInput value={value} prop="units" label="Units" />}
             </>;
         }
     },
@@ -113,8 +113,8 @@ export const FormulaPresenterInner = buildValuePresenter(
             }
         } else {
             return <>
-                <LabeledInput value={value} prop="value" label="LaTeX formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>
-                <LabeledInput value={value} prop="pythonExpression" label="Python expression" className={styles.fullWidth} />
+                <Form.LabeledInput value={value} prop="value" label="LaTeX formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>
+                <Form.LabeledInput value={value} prop="pythonExpression" label="Python expression" className={styles.fullWidth} />
             </>;
         }
     },
@@ -139,7 +139,7 @@ export const ChemicalFormulaPresenter = buildValuePresenter(
             }
         } else {
             return <>
-                <LabeledInput value={value} prop="mhchemExpression" label="mhchem formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>
+                <Form.LabeledInput value={value} prop="mhchemExpression" label="mhchem formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>
             </>;
         }
     },
@@ -208,7 +208,7 @@ export const GraphChoicePresenter = buildValuePresenter(
 
             return <pre>{doc.graphSpec}</pre>;
         } else {
-            return <LabeledInput value={value} prop="graphSpec" label="Graph spec" type="textarea" className={styles.graphSpec} />;
+            return <Form.LabeledInput value={value} prop="graphSpec" label="Graph spec" type="textarea" className={styles.graphSpec} />;
         }
     },
     (doc: GraphChoice) => ({graphSpec: doc.graphSpec}),

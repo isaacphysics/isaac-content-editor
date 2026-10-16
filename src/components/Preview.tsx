@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
-import {Spinner} from "reactstrap";
+import {Spinner} from "react-bootstrap";
 
 import {AppContext} from "../AppContext";
 import {Content, Media} from "../isaac-data-types";

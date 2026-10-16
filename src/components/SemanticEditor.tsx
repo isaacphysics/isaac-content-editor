@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import { Alert, Spinner } from "reactstrap";
+import { Alert, Spinner } from "react-bootstrap";
 
 import { AppContext } from "../AppContext";
 import { decodeBase64 } from "../utils/base64";

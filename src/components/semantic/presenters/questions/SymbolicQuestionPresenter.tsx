@@ -1,7 +1,7 @@
 import React from "react";
 import {EditableDocPropFor} from "../../props/EditableDocProp";
 import styles from "../../styles/question.module.css";
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 import {IsaacSymbolicChemistryQuestion, IsaacSymbolicQuestion} from "../../../../isaac-data-types";
 import {EditableText} from "../../props/EditableText";
 import {CheckboxDocProp} from "../../props/CheckboxDocProp";

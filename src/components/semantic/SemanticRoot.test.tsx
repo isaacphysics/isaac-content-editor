@@ -53,7 +53,7 @@ jest.mock("./presenters/TabsPresenter", () => {
 
 // TODO: Set up these mocks properly
 
-jest.mock("reactstrap/src/Portal", () => { 
+jest.mock("react-overlays/Portal", () => { 
     return;
 });
 

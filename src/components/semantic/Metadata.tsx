@@ -1,6 +1,6 @@
 import React, {ChangeEvent, ContextType, useContext, useState} from "react";
-import { Col, Form, FormText, Input, Label, Row } from "reactstrap";
-import { InputType } from "reactstrap/lib/Input";
+import { Col, Form, FormText, Row } from "react-bootstrap";
+import { InputType } from "react-bootstrap/lib/Input";
 
 import { Content } from "../../isaac-data-types";
 
@@ -88,7 +88,7 @@ export function MetaItemPresenter({doc, update, id, prop, name, options}: MetaIt
     const checkedOnChange = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.checked as unknown as string);
 
     return <>
-        <Input type={options?.type ?? "text"}
+        <Form.Control type={options?.type ?? "text"}
             value={options?.type !== "checkbox" ? value : undefined}
             checked={options?.type === "checkbox" ? value as unknown as boolean : undefined}
             onChange={options?.type !== "checkbox" ? valueOnChange : checkedOnChange}
@@ -116,7 +116,7 @@ export function MetadataPresenter(props: PresenterProps & { metadata: MetaItemKe
             const id = `meta-label-${metaLabelId++}`;
             return <Row key={prop} className={styles.row}>
                 <Col xs={2} className={styles.label}>
-                    <Label for={id}>{name}</Label>
+                    <Form.Label for={id}>{name}</Form.Label>
                 </Col>
                 <Col xs={10}>
                     <Presenter {...rest} prop={prop} id={id} name={name} options={options} />

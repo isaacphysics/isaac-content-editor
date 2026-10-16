@@ -1,5 +1,5 @@
 import React, {Fragment, useState} from "react";
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 
 import {AudienceContext, Difficulty, ExamBoard, RoleRequirement} from "../../../isaac-data-types";
 import {isAda, siteSpecific} from "../../../services/site";

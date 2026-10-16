@@ -4,7 +4,7 @@ import React, { forwardRef } from "react";
 import { KeysWithValsOfType } from "../../../utils/types";
 import { PresenterProps } from "../registry";
 import Select from "react-select";
-import { Label } from "reactstrap";
+import { Form } from "react-bootstrap";
 import { generateGuid } from "../../../utils/strings";
 
 export type CustomTextProps = Omit<EditableTextProps, "onSave" | "text">;
@@ -50,7 +50,7 @@ export const EditableDropdownDocPropFor = <
         const docProp = doc[prop] as unknown as string | undefined;
         const id = generateGuid();
         return <div className="d-flex align-items-center mb-3">
-            <Label for={id} className="m-0 me-2">{label || "Select style:"}</Label>
+            <Form.Label for={id} className="m-0 me-2">{label || "Select style:"}</Form.Label>
             <Select inputId={id}
                 isClearable
                 onChange={option => {
@@ -88,7 +88,7 @@ export const EditableDocPropWithStyle = <
         const docProp = doc[prop] as unknown as string | undefined;
         const id = generateGuid();
         return <div className="d-flex align-items-center mb-3">
-            <Label for={id} className="m-0 me-2">{label || "Select style:"}</Label>
+            <Form.Label for={id} className="m-0 me-2">{label || "Select style:"}</Form.Label>
             <Select inputId={id}
                 isClearable
                 onChange={option => {

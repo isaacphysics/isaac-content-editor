@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useImperativeHandle, useState } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
 
 import styles from "../styles/editor.module.css";
 

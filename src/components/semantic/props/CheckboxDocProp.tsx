@@ -1,4 +1,4 @@
-import { Input, Label } from "reactstrap";
+import { Form } from "react-bootstrap";
 import styles from "../styles/question.module.css";
 import React, { useEffect } from "react";
 import { PresenterProps } from "../registry";
@@ -32,8 +32,8 @@ export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: bool
         }
     }, [checkedIfUndefined, disabled, doc, prop, update]);
 
-    return <Label className={classNames(className, styles.checkboxLabel)} style={{color: disabled ? "gray" : "black"}}>
-        <Input type="checkbox"
+    return <Form.Label className={classNames(className, styles.checkboxLabel)} style={{color: disabled ? "gray" : "black"}}>
+        <Form.Control type="checkbox"
             disabled={disabled}
             checked={doc[prop] ?? checkedIfUndefined ?? false}
             onChange={(e) => {
@@ -45,5 +45,5 @@ export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: bool
             className="me-1"
         />
         {label}
-    </Label>;
+    </Form.Label>;
 }

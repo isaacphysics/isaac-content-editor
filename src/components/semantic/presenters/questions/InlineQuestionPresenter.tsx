@@ -13,7 +13,7 @@ import { extractValueOrChildrenText } from "../../../../utils/content";
 import { SemanticDocProp } from "../../props/SemanticDocProp";
 import { ChoicesPresenter } from "../ChoicesPresenter";
 import { MultipleChoiceQuestionPresenter } from "./MultipleChoiceQuestionPresenter";
-import { Button } from "reactstrap";
+import { Button } from "react-bootstrap";
 import styles from "../../styles/question.module.css";
 import { NumericQuestionPresenter } from "./NumericQuestionPresenter";
 

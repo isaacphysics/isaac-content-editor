@@ -1,5 +1,5 @@
 import React, {MouseEventHandler, useState} from "react";
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 import styles from "./styles/question.module.css";
 
 const MAX_CHARS_BEFORE_SHORTEN = 75;

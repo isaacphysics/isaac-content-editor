@@ -11,7 +11,7 @@ import {Content} from "../isaac-data-types";
 import {LiveServer, StagingServer} from "../services/isaacApi";
 import classNames from "classnames";
 import {BOOK_DETAIL_ID_SEPARATOR} from "../services/constants";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "react-bootstrap";
 
 function filePathToEntry(path: string | undefined, sha: string): Entry {
     const name = path?.substring(path?.lastIndexOf("/") + 1) ?? "";

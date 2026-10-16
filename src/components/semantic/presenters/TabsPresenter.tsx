@@ -1,6 +1,6 @@
 /* eslint-disable no-irregular-whitespace */  // For convenient construction of non-breaking spaces in custom strings
 import React, { MutableRefObject, ReactNode, useCallback, useMemo, useRef, useState } from "react";
-import {Button, ButtonGroup} from "reactstrap";
+import {Button, ButtonGroup} from "react-bootstrap";
 
 import { Content, IsaacTabs } from "../../../isaac-data-types";
 import { safeLowercase } from "../../../utils/strings";
