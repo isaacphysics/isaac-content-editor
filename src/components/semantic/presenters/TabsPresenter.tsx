@@ -58,8 +58,7 @@ export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styl
             <div className={styles.buttonsSpacer}/>
             {docRef.current.children?.map((child: Content, i) => {
                 return <Button key={child.id || `__index__${i}`}
-                    outline
-                    color={index === i ? "primary" : undefined}
+                    variant={index === i ? "outline-primary" : "outline-secondary"}
                     className={styles.button}
                     onMouseDown={(e) => {
                         e.preventDefault();
@@ -69,8 +68,7 @@ export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styl
                 </Button>;
             })}
             <Button key="__add"
-                outline
-                color="info"
+                variant="outline-info"
                 className={styles.button}
                 onMouseDown={(e) => {
                     e.preventDefault();
@@ -102,10 +100,10 @@ export function TabsMain({docRef, currentChild, updateCurrentChild, doRemove, do
                 <EditableIDProp doc={currentChild} update={updateCurrentChild} label={`${elementName} ID`} block={false} />
                 {extraButtons}
                 <ButtonGroup>
-                    <Button size="sm" disabled={index <= 0} onClick={() => doShift(-1)}>
+                    <Button variant="secondary" size="sm" disabled={index <= 0} onClick={() => doShift(-1)}>
                         {back}
                     </Button>
-                    <Button size="sm" disabled={index >= (docRef.current.children?.length ?? 1) - 1} onClick={() => doShift(1)}>
+                    <Button variant="secondary" size="sm" disabled={index >= (docRef.current.children?.length ?? 1) - 1} onClick={() => doShift(1)}>
                         {forward}
                     </Button>
                 </ButtonGroup>
@@ -212,7 +210,7 @@ export function TabsPresenter(props: PresenterProps<IsaacTabs>) {
                     placeHolder="Tab title" hideWhenEmpty /></h3>
             </div> : undefined
         } extraButtons={<>
-            {showTitles && currentChild && !currentChild.title && <Button size="sm" onClick={() => editTitleRef.current?.startEdit()}>Set tab title</Button>}
+            {showTitles && currentChild && !currentChild.title && <Button variant="secondary" size="sm" onClick={() => editTitleRef.current?.startEdit()}>Set tab title</Button>}
         </>}/>
     </div>;
 }

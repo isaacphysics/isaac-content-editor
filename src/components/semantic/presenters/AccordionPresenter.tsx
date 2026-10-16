@@ -70,14 +70,14 @@ function DisplayListEditor({displayList, setDisplayList, name, displayOptions}: 
                     <option value={selection}>{selection}</option>
                     {remainingAudienceValues.map(option => <option key={option} value={option}>{option}</option>)}
                 </Form.Control>
-                <Button size="sm" variant="outline-primary" onClick={deleteSelection(setDisplayList, selection)}>
+                <Button size="sm" variant="outline-secondary" onClick={deleteSelection(setDisplayList, selection)}>
                     ➖
                 </Button>
                 {i < selections.length - 1 && ", "}
             </span>)
         }
         {remainingAudienceValues.length > 0 &&
-            <Button size="sm" variant="outline-primary" onClick={addSelection(setDisplayList, remainingAudienceValues[0])}>
+            <Button size="sm" variant="outline-secondary" onClick={addSelection(setDisplayList, remainingAudienceValues[0])}>
                 ➕
             </Button>
         }
@@ -111,7 +111,7 @@ function AudienceDisplayControl({display, set, title}: AudienceDisplayControlPro
                 : "default"
             }
             &nbsp;&nbsp;
-            <Button size="sm" onClick={() => setEditing(true)}>Edit</Button>
+            <Button variant="secondary" size="sm" onClick={() => setEditing(true)}>Edit</Button>
         </div>;
     }
     return <div className={styles.audienceDisplayControls}>
@@ -119,7 +119,7 @@ function AudienceDisplayControl({display, set, title}: AudienceDisplayControlPro
         <DisplayListEditor displayList={audience} setDisplayList={setAudience} name="Audience" displayOptions={audienceOptions} />
         <DisplayListEditor displayList={nonAudience} setDisplayList={setNonAudience} name="Non-Audience" displayOptions={nonAudienceOptions} />
         <div className={styles.displayButtons}>
-            <Button size="sm" variant="primary" onClick={() => {
+            <Button size="sm" onClick={() => {
                 setEditing(false);
                 set({audience, nonAudience});
             }}>
@@ -190,7 +190,7 @@ export function AccordionPresenter(props: PresenterProps) {
                                 <small className={styles.audienceControlsLabel}>Audience:</small>
                                 <AudiencePresenter {...currentChildProps} type="accordion" />
                                 {currentChildDisplay === undefined &&
-                                    <Button size="sm" className={styles.audienceDisplayEdit} onClick={() => {
+                                    <Button variant="secondary" size="sm" className={styles.audienceDisplayEdit} onClick={() => {
                                         setCurrentChildDisplay({
                                             audience: [],
                                             nonAudience: []
@@ -207,7 +207,7 @@ export function AccordionPresenter(props: PresenterProps) {
                     </div>
                 </> : undefined
             } extraButtons={currentChild ? <>
-                {!currentChild.title && <Button onClick={() => editTitleRef.current?.startEdit()}>Set section title</Button>}
+                {!currentChild.title && <Button variant="secondary" onClick={() => editTitleRef.current?.startEdit()}>Set section title</Button>}
             </> : undefined}/>
         </div>
     </>;

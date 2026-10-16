@@ -69,7 +69,7 @@ function SymbolicMetaSymbols({doc, update, metaSymbols}: PresenterProps<IsaacSym
         {metaSymbols.map(([symbol, label]) =>
             <Button key={symbol}
                 size="sm"
-                color={hasSymbol(doc.availableSymbols, symbol) ? "primary" : "secondary"}
+                variant={hasSymbol(doc.availableSymbols, symbol) ? "primary" : "secondary"}
                 onClick={() => toggle(symbol)}>
                 {label}
             </Button>

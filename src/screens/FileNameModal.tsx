@@ -31,7 +31,7 @@ export function FileNameModal(props: FileNameModalProps) {
             </FormGroup>}
         </ModalBody>
         <ModalFooter>
-            <Button variant="primary" onClick={confirm}>{props.actionName}</Button>
+            <Button onClick={confirm}>{props.actionName}</Button>
             <Button variant="secondary" onClick={cancel}>Cancel</Button>
         </ModalFooter>
     </Modal>;

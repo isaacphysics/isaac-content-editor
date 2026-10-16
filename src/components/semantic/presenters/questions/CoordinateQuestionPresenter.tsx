@@ -80,7 +80,7 @@ export function CoordinateChoiceItemInserter({insert, position, lengthOfCollecti
     if (numberOfCoordinates !== undefined && lengthOfCollection >= numberOfCoordinates) {
         return null; // Max items reached in choice
     }
-    return <Button className={styles.itemsChoiceInserter} variant="primary" onClick={() => {
+    return <Button className={styles.itemsChoiceInserter} onClick={() => {
         insert(position, {type: "coordinateItem"});
     }}>Add</Button>;
 }

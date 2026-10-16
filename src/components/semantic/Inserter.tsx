@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Button, DropdownMenu, DropdownToggle, Dropdown } from "react-bootstrap";
+import { Button, Dropdown } from "react-bootstrap";
 
 import { Box } from "./SemanticItem";
 import { InsertButton, InserterProps } from "./presenters/ListChildrenPresenter";
@@ -72,12 +72,12 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                     {/* TODO remove pe-0 and text-start after BS5 upgrade :) */}
                     if (Array.isArray(empty)) {
                         return <Dropdown key={name} tag={"span"} className={styles.inserterDropdown}>
-                            <DropdownToggle caret tag="span">
+                            <Dropdown.Toggle variant="secondary" caret tag="span">
                                 <Button className="pe-0 pe-0" variant="link" caret> 
                                     {name}
                                 </Button>
-                            </DropdownToggle>
-                            <DropdownMenu container={"root"}>
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu container={"root"}>
                                 <div className={styles.inserterDropdownMenu}>
                                     {empty.map((option) => {
                                         const {name: embedName, ...rest} = option;
@@ -89,10 +89,10 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                                         </Button>;
                                     })}
                                 </div>
-                            </DropdownMenu>
+                            </Dropdown.Menu>
                         </Dropdown>;
                     } else {
-                        return <Button key={name} variant="link" className="text-decoration-none" onClick={() => {
+                        return <Button key={name} variant="none" onClick={() => {
                             insert(position, {...empty});
                             setInserting(false);
                         }}>

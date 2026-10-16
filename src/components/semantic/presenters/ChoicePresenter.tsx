@@ -195,7 +195,7 @@ export const RegexPatternPresenter = (props: ValuePresenterProps<RegexPattern>) 
         <CheckboxDocProp {...rest} prop="caseInsensitive" label="Case insensitive" />
         <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" disabled={inlineQuestionContext?.isInlineQuestion}/>
         <br />
-        <Button onClick={regexHelper}>Test Regex</Button>
+        <Button variant="secondary" onClick={regexHelper}>Test Regex</Button>
     </>;
 };
 
@@ -345,7 +345,7 @@ export function ChoicePresenter(props: PresenterProps<Choice>) {
     const choice = props.doc;
     const ChoiceValuePresenter = CHOICE_REGISTRY[choice.type as CHOICE_TYPES] ?? BaseValuePresenter;
     return <div className={styles.choice}>
-        <Button onClick={() => {
+        <Button variant="secondary" onClick={() => {
             props.update({
                 ...choice,
                 correct: !choice.correct,

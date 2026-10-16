@@ -134,7 +134,7 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
                         <option key={possibleOption} value={possibleOption}>{AUDIENCE_ITEM_MAP[possibleOption]}</option>
                     )}
                 </select>
-                {multiple && <Button outline size="sm" className="border-0 p-0 ms-1" onClick={() => {
+                {multiple && <Button variant="outline-secondary" size="sm" className="border-0 p-0 ms-1" onClick={() => {
                     // ESLint is very confused by the following line...
                     // eslint-disable-next-line react/prop-types
                     updateValues((values as string[]).filter(v => v !== value) as AudienceValue[]);
@@ -173,10 +173,10 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
                     : <> IN [{values.map((value, index) => <AudienceValue key={index} index={index}/>)}</>
                 }
 
-                {unusedOptions.length > 0 && <Button outline size="sm" className="border-0 p-0 ms-1" onClick={() => {
+                {unusedOptions.length > 0 && <Button variant="outline-secondary" size="sm" className="border-0 p-0 ms-1" onClick={() => {
                     updateValues([...values, unusedOptions[0]]);
                 }}>➕</Button>}
-                {key === "examBoard" && <Button outline size="sm" className="ms-1" onClick={() => {updateValues(examBoardsForStage(doc));}}>
+                {key === "examBoard" && <Button variant="outline-secondary" size="sm" className="ms-1" onClick={() => {updateValues(examBoardsForStage(doc));}}>
                     ALL
                 </Button>}
                 {values.length > 1 && "]"}
@@ -184,7 +184,7 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
 
             {key === "examBoard" && allExamBoardsForStagePresent(doc) && <Fragment>
                 {" IN [ALL]"}
-                <Button outline size="sm" className="ms-1" onClick={() => {const [_first, ...rest] = values; updateValues(rest);}}>
+                <Button variant="outline-secondary" size="sm" className="ms-1" onClick={() => {const [_first, ...rest] = values; updateValues(rest);}}>
                     NOT ALL
                 </Button>
             </Fragment>}
@@ -196,7 +196,7 @@ function AudienceContextPresenter({doc, update, possible}: PresenterProps<Audien
     });
     return <>
         {items}
-        {unusedKeysAndFirstOption.length > 0 && <>{" "}<Button outline size="sm" onClick={() => {
+        {unusedKeysAndFirstOption.length > 0 && <>{" "}<Button variant="outline-secondary" size="sm" onClick={() => {
             update({...doc, [unusedKeysAndFirstOption[0][0]]: [unusedKeysAndFirstOption[0][1]]});
         }}>AND ➕</Button></>}
     </>;
@@ -250,12 +250,12 @@ function AudienceEditor({doc, update, possible}: PresenterProps<AudienceContext[
                     }}
                     possible={possible}
                 />)
-                {doc.length > 1 && <Button outline size="sm" className="border-0 p-0 ms-1" onClick={() => {
+                {doc.length > 1 && <Button variant="outline-secondary" size="sm" className="border-0 p-0 ms-1" onClick={() => {
                     const audience = [...doc];
                     audience.splice(index, 1);
                     update(audience);
                 }}>➖</Button>}
-                {index === doc.length - 1 ? <Button outline size="sm" onClick={() => {
+                {index === doc.length - 1 ? <Button variant="outline-secondary" size="sm" onClick={() => {
                     update(siteSpecific([...doc, defaultAudience()], [...doc, defaultAudienceWithDifficulty(doc)]));
                 }}>OR ➕</Button> : " OR"}
             </div>;
@@ -306,7 +306,7 @@ export function AudiencePresenter({doc, update, type}: PresenterProps & {type?: 
     if (!editingAudience) {
         return <div key="view" className={`${styles.wrapper} ${styles.view}`}>
             {conciseAudiences(doc.audience, type)}
-            <Button size="sm" onClick={() => {
+            <Button variant="secondary" size="sm" onClick={() => {
                 setEditingAudience(doc.audience ?? [defaultAudience()]);
             }}>
                 Edit
@@ -330,7 +330,7 @@ export function AudiencePresenter({doc, update, type}: PresenterProps & {type?: 
                 <br/> 
             </> : null}
             Concise: {conciseAudiences(editingAudience)}
-            <Button size="sm" variant="primary" onClick={setChanges}>Set</Button>
+            <Button size="sm" onClick={setChanges}>Set</Button>
             <Button size="sm" variant="secondary" onClick={close}>Cancel</Button>
             <Button size="sm" variant="danger" onClick={() => {
                 close();

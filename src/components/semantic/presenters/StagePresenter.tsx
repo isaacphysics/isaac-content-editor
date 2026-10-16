@@ -68,7 +68,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     }
 
     return <div className={styles.wrapper}>
-        {doc.stages?.map(stage => <Button key={stage} outline onClick={() => removeStage(stage)}>{stage} ➖</Button>)}
+        {doc.stages?.map(stage => <Button key={stage} variant="outline-secondary" onClick={() => removeStage(stage)}>{stage} ➖</Button>)}
         <Form.Control value={searchString}
             onChange={(e) => setSearchString(e.target.value.toLowerCase())}
             placeholder="Type to add stages..."
@@ -76,11 +76,11 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
             onKeyPress={onKeyPress}
         />
         {searchString !== "" && <div>
-            <Button onClick={() => setShowStageList(!showStageList)}>
+            <Button variant="secondary" onClick={() => setShowStageList(!showStageList)}>
                 {showStageList ? "Hide stages" : "Show available stages"}
             </Button>
             {showStageList && (filteredStageList?.map((stage) =>
-                <Button key={stage} outline variant="primary" onClick={() => addStage(stage)}>{stage} ➕</Button>
+                <Button key={stage} variant="outline-primary" onClick={() => addStage(stage)}>{stage} ➕</Button>
             ) ?? <em>Loading...</em>)}
             <Button variant="success" onClick={() => addallStages()}>Add all stages ➕</Button>
         </div>}

@@ -50,8 +50,8 @@ export function JSONEditor({doc, update, close}: PresenterProps & { close: () =>
             <MarkupToolbar set={setDocChanges} cancel={cancelDocChanges} encoding={doc.encoding} />
         </CodeMirror>
         <div className={`mt-2 ${styles.editButtons}`}>
-            <Button onClick={cancelDocChanges}>Cancel</Button>
-            <Button variant="primary" disabled={!valid} onClick={setDocChanges}>Set</Button>
+            <Button variant="secondary" onClick={cancelDocChanges}>Cancel</Button>
+            <Button disabled={!valid} onClick={setDocChanges}>Set</Button>
         </div>
     </>;
 }

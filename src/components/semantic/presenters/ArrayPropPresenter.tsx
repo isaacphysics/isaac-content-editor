@@ -117,7 +117,7 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
                         return null;
                     }
                     return <Button 
-                        key={index} outline 
+                        key={index} variant="outline-secondary"
                         onClick={() => addItemToArray(context.mapContentToId(content))}
                         {...calculateButtonProps(content)}
                     >
@@ -126,7 +126,7 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
                     </Button>;
                 }) ?? <em>Loading...</em>)
                 : <Button 
-                    outline onClick={() => {
+                    variant="outline-secondary" onClick={() => {
                         addItemToArray(context.searchString);
                         context.setSearchString("");
                     }}

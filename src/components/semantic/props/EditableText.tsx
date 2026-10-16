@@ -210,7 +210,7 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
     const placeHolderLC = safeLowercase(placeHolder);
 
     const insertStringButtons = buttonStrings.map((buttonString, index) => (
-        <Button key={index} onClick={() => setCurrent((state.value ? state.value + ((state.value.at(-1) === "(" || buttonString[1] === ")") ? "" : ", ") : "") + buttonString[1])}>{buttonString[0]}</Button>
+        <Button key={index} variant="secondary" onClick={() => setCurrent((state.value ? state.value + ((state.value.at(-1) === "(" || buttonString[1] === ")") ? "" : ", ") : "") + buttonString[1])}>{buttonString[0]}</Button>
     ));
 
     const Wrap = block ? "div" : "span";
@@ -248,8 +248,8 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                     </>
                 </span>
             </span>
-            <Button className="mb-2" onClick={cancel}>Cancel</Button>
-            <Button className="mb-2" variant="primary" onClick={() => save()}>Set</Button>
+            <Button className="mb-2" variant="secondary" onClick={cancel}>Cancel</Button>
+            <Button className="mb-2" onClick={() => save()}>Set</Button>
         </Wrap>
         {isDefined(errorMessage) && errorMessage.length > 0 && <Wrap className="pb-2">
             {errorMessage.map(e => <Form.Control.Feedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</Form.Control.Feedback>)}
@@ -265,12 +265,12 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                 {labelElement}
                 {text === undefined ?
                     <i>{placeHolder}</i> : textFormatMap[format](previewWrapperChar + text + previewWrapperChar, multiLine)}
-                {onDelete.current && <Button onClick={() => onDelete.current && onDelete.current()}>Delete</Button>}
+                {onDelete.current && <Button variant="secondary" onClick={() => onDelete.current && onDelete.current()}>Delete</Button>}
             </button>
         </Wrap>;
     }
     return <Wrap className={styles.notEditingWrapper}>
-        <Button onClick={startEdit}>Set {labelLC || placeHolderLC}</Button>
+        <Button variant="secondary" onClick={startEdit}>Set {labelLC || placeHolderLC}</Button>
     </Wrap>;
 });
 

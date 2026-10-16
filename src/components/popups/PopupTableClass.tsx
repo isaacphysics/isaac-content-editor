@@ -78,7 +78,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                 <Form.Control id={"table-classes"} placeholder={"e.g. text-center"} value={classes} onChange={(e) => setClasses(e.target.value)}/>
                 <hr/>
                 <PopupCloseContext.Consumer>
-                    {close => <Button disabled={!classes && !expandable && !topScrollable} onClick={() => {
+                    {close => <Button variant="secondary" disabled={!classes && !expandable && !topScrollable} onClick={() => {
                         makeTableClass(classes)(codemirror.current?.view);
                         close?.();
                     }}>

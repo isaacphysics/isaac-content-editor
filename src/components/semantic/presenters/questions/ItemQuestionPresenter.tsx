@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from "react";
-import {Alert, Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row} from "react-bootstrap";
+import {Alert, Button, Col, Dropdown, Row} from "react-bootstrap";
 
 import {
     Content,
@@ -214,24 +214,24 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
 
     const dropdown = <Dropdown toggle={() => setOpen(toggle => !toggle)}
         isOpen={isOpen}>
-        <DropdownToggle variant="outline-primary" className={styles.dropdownButton}>
+        <Dropdown.Toggle variant="outline-secondary" className={styles.dropdownButton}>
             <ItemRow item={item} />
-        </DropdownToggle>
-        <DropdownMenu className={styles.itemChoiceDropdown}>
-            <DropdownItem key={item.id} className={styles.dropdownItem} active>
+        </Dropdown.Toggle>
+        <Dropdown.Menu className={styles.itemChoiceDropdown}>
+            <Dropdown.Item key={item.id} className={styles.dropdownItem} active>
                 <ItemRow item={item} />
-            </DropdownItem>
+            </Dropdown.Item>
             {remainingItems?.concat(staticItems).map((i) => {
-                return <DropdownItem key={i.id} className={styles.dropdownItem} onClick={() => {
+                return <Dropdown.Item key={i.id} className={styles.dropdownItem} onClick={() => {
                     update({
                         ...doc,
                         id: i.id,
                     });
                 }}>
                     <ItemRow item={i} />
-                </DropdownItem>;
+                </Dropdown.Item>;
             })}
-        </DropdownMenu>
+        </Dropdown.Menu>
     </Dropdown>;
 
     if (doc.type === "parsonsItem") {
@@ -269,24 +269,24 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
 
     return <>
         <Dropdown toggle={() => setOpen(toggle => !toggle)} show={isOpen}>
-            <DropdownToggle variant="outline-primary" className={styles.dropdownButton}>
+            <Dropdown.Toggle variant="outline-secondary" className={styles.dropdownButton}>
                 Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
-            </DropdownToggle>
-            <DropdownMenu className={styles.itemChoiceDropdown}>
-                <DropdownItem key={doc.dropZoneId} className={styles.dropdownItem}>
+            </Dropdown.Toggle>
+            <Dropdown.Menu className={styles.itemChoiceDropdown}>
+                <Dropdown.Item key={doc.dropZoneId} className={styles.dropdownItem}>
                     {doc.dropZoneId}
-                </DropdownItem>
+                </Dropdown.Item>
                 {Array.from(remainingDropZones ?? []).map((id) => {
-                    return <DropdownItem key={id} className={styles.dropdownItem} onClick={() => {
+                    return <Dropdown.Item key={id} className={styles.dropdownItem} onClick={() => {
                         update({
                             ...doc,
                             dropZoneId: id,
                         });
                     }}>
                         {id}
-                    </DropdownItem>;
+                    </Dropdown.Item>;
                 })}
-            </DropdownMenu>
+            </Dropdown.Menu>
         </Dropdown>
         {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert color="danger">
             {/* Shows if e.g. a dropzone ID has changed */}
@@ -305,21 +305,21 @@ export function DndChoicePresenter(props: PresenterProps<DndItem>) {
     return <div className={styles.itemsChoiceRow}>
         <DropZoneSelector {...props} />
         <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
-            <DropdownToggle variant="outline-primary" className={styles.dropdownButton}>
+            <Dropdown.Toggle variant="outline-secondary" className={styles.dropdownButton}>
                 {item ? <ItemRow item={item} /> : <div>⚠️ Select an item...</div>}
-            </DropdownToggle>
-            <DropdownMenu className={styles.itemChoiceDropdown}>
-                { item && <DropdownItem key={item.id} className={styles.dropdownItem} active>
+            </Dropdown.Toggle>
+            <Dropdown.Menu className={styles.itemChoiceDropdown}>
+                { item && <Dropdown.Item key={item.id} className={styles.dropdownItem} active>
                     <ItemRow item={item} />
-                </DropdownItem>}
+                </Dropdown.Item>}
                 {(remainingItems || []).map((i) => {
-                    return <DropdownItem key={i.id} className={styles.dropdownItem} onClick={() => {
+                    return <Dropdown.Item key={i.id} className={styles.dropdownItem} onClick={() => {
                         update({ ...doc, id: i.id, });
                     }}>
                         <ItemRow item={i} />
-                    </DropdownItem>;
+                    </Dropdown.Item>;
                 })}
-            </DropdownMenu>
+            </Dropdown.Menu>
         </Dropdown>
     </div>;
 }
@@ -339,7 +339,7 @@ export function ItemChoiceItemInserter({insert, position, lengthOfCollection}: I
     if (!item || (isClozeQuestion && (!dropZoneCount || lengthOfCollection >= dropZoneCount))) {
         return null; // No items remaining, or max items reached in choice (in case of cloze question)
     }
-    return <Button className={styles.itemsChoiceInserter} variant="primary" onClick={() => {
+    return <Button className={styles.itemsChoiceInserter} onClick={() => {
         const newItem: ParsonsItem = {type: item.type, id: item.id};
         if (newItem.type === "parsonsItem") {
             newItem.indentation = 0;
@@ -364,11 +364,11 @@ export function DndChoiceItemInserter({insert, insertMultiple, position, collect
     }
 
     return <>
-        {!isCorrect && <Button className={styles.itemsChoiceInserter} variant="primary" onClick={() => {
+        {!isCorrect && <Button className={styles.itemsChoiceInserter} onClick={() => {
             const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId: remainingDropZones[0]};
             insert(position, newItem);
         }}>Add single entry</Button>}
-        <Button className={styles.itemsChoiceInserter} variant="primary" onClick={() => {
+        <Button className={styles.itemsChoiceInserter} onClick={() => {
             insertMultiple(remainingDropZones.map((dropZoneId, index) => {
                 const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId};
                 return [position + index, newItem];

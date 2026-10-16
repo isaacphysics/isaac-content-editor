@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {EditableIDProp, EditableTitleProp} from "../../props/EditableDocProp";
 import styles from "../../styles/question.module.css";
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "react-bootstrap";
+import {Dropdown} from "react-bootstrap";
 import {
     AnyQuestion,
     Content,
@@ -52,22 +52,22 @@ export function QuestionTypeSelector({doc, update, questionTypes = HUMAN_QUESTIO
 
     const questionType = questionTypes[doc.type as QUESTION_TYPES];
 
-    return <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen} disabled={disabled}>
-        <DropdownToggle caret>
+    return <Dropdown onToggle={() => setOpen(toggle => !toggle)} show={isOpen}>
+        <Dropdown.Toggle variant="secondary" disabled={disabled}>
             {questionType}
-        </DropdownToggle>
-        <DropdownMenu>
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
             {Object.keys(questionTypes).map((key) => {
                 const possibleType = questionTypes[key as QUESTION_TYPES];
-                return <DropdownItem key={key} active={questionType === possibleType} onClick={() => {
+                return <Dropdown.Item key={key} active={questionType === possibleType} onClick={() => {
                     if (questionType !== possibleType) {
                         changeQuestionType({doc, update, newType: key as QUESTION_TYPES});
                     }
                 }}>
                     {possibleType}
-                </DropdownItem>;
+                </Dropdown.Item>;
             })}
-        </DropdownMenu>
+        </Dropdown.Menu>
     </Dropdown>;
 }
 

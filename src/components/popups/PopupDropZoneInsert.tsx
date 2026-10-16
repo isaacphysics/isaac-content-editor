@@ -88,7 +88,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
                 </InputGroup>
                 <hr/>
                 <PopupCloseContext.Consumer>
-                    {close => <Button disabled={!valid} onClick={() => {
+                    {close => <Button variant="secondary" disabled={!valid} onClick={() => {
                         generateAndInsertDropZone();
                         close?.();
                     }}>

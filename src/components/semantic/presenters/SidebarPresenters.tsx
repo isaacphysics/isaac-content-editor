@@ -59,7 +59,7 @@ export function SidebarEntryPresenter(props: PresenterProps<SidebarEntry>) {
                 </div>
             </>
         )}
-        {/* <Button variant="secondary" outline onClick={() => update({...doc, ...EMPTY_DOCUMENTS[doc.type]})}>
+        {/* <Button variant="outline-secondary" onClick={() => update({...doc, ...EMPTY_DOCUMENTS[doc.type]})}>
             Reset to empty {doc.type}
         </Button> */}
     </>;

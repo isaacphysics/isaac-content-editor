@@ -33,14 +33,13 @@ export function LinkedGameboardsPresenter({doc, update}: PresenterProps<IsaacTop
     }
 
     return <div className={styles.wrapper}>
-        {doc.linkedGameboards?.map(id => <Button key={id} outline onClick={() => removeGameboard(id)}>{id} ➖</Button>)}
+        {doc.linkedGameboards?.map(id => <Button key={id} variant="outline-secondary" onClick={() => removeGameboard(id)}>{id} ➖</Button>)}
         <Form.Control value={gameboardId}
             onChange={(e) => setGameboardId(e.target.value)}
             placeholder="Type to add related content..."
         />
         {gameboardId !== "" && <div>
-            <Button outline
-                color={error ? "danger" : (gameboard && gameboard.questions) ? "success" : "primary"}
+            <Button variant={error ? "outline-danger" : (gameboard && gameboard.questions) ? "outline-success" : "outline-primary"}
                 className={styles.gameboardButton}
                 onClick={() => addGameboard(gameboardId)}>
                 Id: {gameboardId}  ➕<br />

@@ -28,7 +28,7 @@ export interface InserterProps {
 export function InsertButton({onClick}: { onClick: () => void }) {
     return <div className={styles.inserter}>
         <div className={styles.inserterAdd}>
-            <Button size="lg" variant="link" className="text-decoration-none" onClick={(e) => {
+            <Button size="lg" variant="none" onClick={(e) => {
                 onClick();
                 e.currentTarget.blur();
             }}>➕</Button>

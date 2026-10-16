@@ -51,7 +51,7 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
             {content?.published && <Alert color="warning">Replacing question part titles on published content may lead to inconsistent progress stats, so should be avoided.</Alert>}
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="primary" onClick={() => {
+            <Button onClick={() => {
                 if (content) {
                     const newContent = makeQuestionTitlesStandard(content, overwriteOldTitles);
                     appContext.editor.setCurrentDoc(newContent);

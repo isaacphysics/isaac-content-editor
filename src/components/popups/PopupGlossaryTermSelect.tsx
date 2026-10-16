@@ -111,7 +111,7 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
                 }
                 <hr/>
                 <PopupCloseContext.Consumer>
-                    {close => <Button disabled={!glossaryTerm} onClick={() => {
+                    {close => <Button variant="secondary" disabled={!glossaryTerm} onClick={() => {
                         generateAndInsertGlossaryTerm();
                         close?.();
                     }}>

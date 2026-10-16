@@ -42,7 +42,7 @@ export function MenuModal({menuRef}: {menuRef: MutableRefObject<MenuModalRef|nul
         <ModalBody className={styles.menuModalButtons}>
             <p>{body}</p>
             {/* eslint-disable-next-line react/prop-types */}
-            {options.map(option => <Button key={option.value} onClick={() => {
+            {options.map(option => <Button key={option.value} variant="secondary" onClick={() => {
                 setOpen(false);
                 callback(option);
             }}>{option.caption}</Button>)}

@@ -67,7 +67,7 @@ export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {sub
     }
 
     return <div className={styles.wrapper}>
-        {doc.tags?.map(tag => <Button key={tag} outline onClick={() => removeTag(tag)}>{tag} ➖</Button>)}
+        {doc.tags?.map(tag => <Button key={tag} variant="outline-secondary" onClick={() => removeTag(tag)}>{tag} ➖</Button>)}
         <Form.Control value={searchString}
             onChange={(e) => setSearchString(e.target.value.toLowerCase())}
             placeholder={`Type to add ${subjectsOnly ? "subjects" : "tags"}...`}
@@ -75,13 +75,13 @@ export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {sub
             onKeyPress={onKeyPress}
         />
         {searchString !== "" && <div>
-            <Button onClick={() => setShowTagList(!showTagList)}>
+            <Button variant="secondary" onClick={() => setShowTagList(!showTagList)}>
                 {showTagList ? 
                     `Hide ${subjectsOnly ? "subjects" : "tags"}` :
                     `Show available ${subjectsOnly ? "subjects" : "tags"}`}
             </Button>
             {showTagList && (filteredTagList?.map((tag) =>
-                <Button key={tag} outline variant="primary" onClick={() => addTag(tag)}>{tag} ➕</Button>
+                <Button key={tag} variant="outline-primary" onClick={() => addTag(tag)}>{tag} ➕</Button>
             ) ?? <em>Loading...</em>)}
             {!subjectsOnly && // Don't allow the addition of new subjects if it is subjectsOnly
                 <Button variant="success" onClick={() => addTag(searchString)}>Create new tag: {searchString} ➕</Button>}

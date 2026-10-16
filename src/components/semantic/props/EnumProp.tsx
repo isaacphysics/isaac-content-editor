@@ -2,7 +2,7 @@ import {Content} from "../../../isaac-data-types";
 import {KeysWithValsOfType} from "../../../utils/types";
 import {PresenterProps} from "../registry";
 import React, {useEffect, useState} from "react";
-import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "react-bootstrap";
+import {Dropdown} from "react-bootstrap";
 
 export interface DropdownOptionsProps {
     disabled?: boolean;
@@ -23,12 +23,12 @@ export const EnumPropFor = <
         }, []);
 
         return <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen} disabled={disabled}>
-            <DropdownToggle caret>
+            <Dropdown.Toggle variant="secondary" caret>
                 {current ?? "-"}
-            </DropdownToggle>
-            <DropdownMenu>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
                 {Object.entries(options).map(([key, option]) => {
-                    return <DropdownItem key={key} active={current === option} onClick={() => {
+                    return <Dropdown.Item key={key} active={current === option} onClick={() => {
                         if (current !== option) {
                             update({
                                 ...doc,
@@ -37,9 +37,9 @@ export const EnumPropFor = <
                         }
                     }}>
                         {option}
-                    </DropdownItem>;
+                    </Dropdown.Item>;
                 })}
-            </DropdownMenu>
+            </Dropdown.Menu>
         </Dropdown>;
     };
 };
