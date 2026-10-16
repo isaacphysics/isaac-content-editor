@@ -6,7 +6,7 @@ import React, {
     useState
 } from "react";
 import {Button, Row, Modal, ModalBody, ModalFooter, Col, Alert} from "reactstrap";
-import {AppContext} from "../App";
+import {AppContext} from "../AppContext";
 import {
     githubCreate,
     githubDelete,

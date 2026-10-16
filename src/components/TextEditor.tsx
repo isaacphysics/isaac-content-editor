@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import { Alert, Spinner } from "reactstrap";
 import CodeMirror, {EditorView, ReactCodeMirrorRef} from '@uiw/react-codemirror';
 
-import { AppContext } from "../App";
+import { AppContext } from "../AppContext";
 import { decodeBase64 } from "../utils/base64";
 import { useGithubContents } from "../services/github";
 

@@ -1,6 +1,6 @@
 import React, {useContext, useRef, useState} from "react";
 
-import {AppContext} from "../App";
+import {AppContext} from "../AppContext";
 import {useGithubContents} from "../services/github";
 
 import {PopupMenu, PopupMenuRef} from "./popups/PopupMenu";

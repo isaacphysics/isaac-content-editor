@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Alert } from "reactstrap";
-import { AppContext } from "../../App";
+import { AppContext } from "../../AppContext";
 
 export const InaccessibleContentWarning = ({tags}: {tags: string[]}) => {
     const currentDoc = useContext(AppContext).editor.getCurrentDoc();

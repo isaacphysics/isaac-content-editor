@@ -6,7 +6,7 @@ import { Content } from "../../isaac-data-types";
 
 import { PresenterProps } from "./registry";
 import { MetaItems } from "./metaItems";
-import { AppContext } from "../../App";
+import { AppContext } from "../../AppContext";
 
 import styles from "./styles/metadata.module.css";
 
