@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Alert, Button, FormGroup, Form, Modal, ModalBody, ModalFooter, ModalHeader, Tooltip } from "react-bootstrap";
+import { Alert, Button, FormGroup, Form, Modal, Tooltip } from "react-bootstrap";
 
 import styles from "../styles/editor.module.css";
 import { AppContext } from "../AppContext";
@@ -29,36 +29,37 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
         setOpen?.(false);
     };
 
-    return <Modal isOpen={isOpen}>
-        <ModalHeader>Set question part titles</ModalHeader>
-        <ModalBody className={styles.menuModalButtons}>
+    return <Modal show={isOpen}>
+        <Modal.Header>Set question part titles</Modal.Header>
+        <Modal.Body className={styles.menuModalButtons}>
             <span>
                 Rename the titles of question parts <b>inside accordions</b> to match a standard format
                 (e.g. &quot;A.i&quot;, &quot;A.ii&quot;, &quot;B&quot;, etc)
             </span>
-            <FormGroup check className="my-2">
-                <Form.Control type="checkbox" id="overwrite-old-titles" checked={overwriteOldTitles}
-                    onChange={e => setOverwriteOldTitles(e.target.checked)} />
-                <Form.Label check for="overwrite-old-titles">
-                    <span className="me-2">Overwrite titles not already in the standard format</span>
-                    <span style={{textDecoration: "underline", color:"blue"}} id="overwrite-tooltip">?</span>
-                    <Tooltip isOpen={tooltipOpen} placement="bottom" target="overwrite-tooltip" toggle={() => setTooltipOpen(!tooltipOpen)}>
-                        Titles in the standard format but incorrect position (or empty titles) will be overwritten regardless
-                    </Tooltip>
-                </Form.Label>
+            <FormGroup className="my-2">
+                <Form.Check id="overwrite-old-titles">
+                    <Form.Check.Input checked={overwriteOldTitles} onChange={e => setOverwriteOldTitles(e.target.checked)}/>
+                    <Form.Check.Label>
+                        <span className="me-2">Overwrite titles not already in the standard format</span>
+                        <span style={{textDecoration: "underline", color:"blue"}} id="overwrite-tooltip">?</span>
+                        <Tooltip show={tooltipOpen} placement="bottom" onToggle={() => setTooltipOpen(!tooltipOpen)}>
+                            Titles in the standard format but incorrect position (or empty titles) will be overwritten regardless
+                        </Tooltip>
+                    </Form.Check.Label>
+                </Form.Check>
             </FormGroup>
             {content?.published && <Alert color="warning">Replacing question part titles on published content may lead to inconsistent progress stats, so should be avoided.</Alert>}
-        </ModalBody>
-        <ModalFooter>
-            <Button color="primary" onClick={() => {
+        </Modal.Body>
+        <Modal.Footer>
+            <Button variant="primary" onClick={() => {
                 if (content) {
                     const newContent = makeQuestionTitlesStandard(content, overwriteOldTitles);
                     appContext.editor.setCurrentDoc(newContent);
                     closeModal();
                 }
             }}>Set titles</Button>
-            <Button color="secondary" onClick={closeModal}>Cancel</Button>
-        </ModalFooter>
+            <Button variant="secondary" onClick={closeModal}>Cancel</Button>
+        </Modal.Footer>
     </Modal>;
 }
 

@@ -135,7 +135,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
     }
 
     return <Modal isOpen={open} toggle={toggle} size="xl">
-        <ModalHeader toggle={toggle}>Add figure regions</ModalHeader>
+        <ModalHeader onToggle={toggle}>Add figure regions</ModalHeader>
         <ModalBody className={styles.figureRegionModalBody}>
             <div className="d-flex flex-column justify-content-center">
                 <div id="figure-image-container" className={classNames(styles.figureRegionImageContainer, "align-self-center")} ref={imageContainerRef}>
@@ -153,7 +153,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                     <div>Displaying at width: <b>{containerWidth}px</b></div>
                     <div className="d-flex align-items-center">
                         Condensed mode max width:
-                        <Input
+                        <Form.Control
                             type="number"
                             min={0}
                             max={"inf"}

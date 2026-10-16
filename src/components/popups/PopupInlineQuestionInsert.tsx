@@ -79,7 +79,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
                     <a className="me-1" target="_blank" rel="noreferrer" href="https://github.com/isaacphysics/rutherford-content/wiki/Isaac-Content-Editor#inline-regions--inline-questions">Help</a>
                     ⋅
                     <Button 
-                        color="link"
+                        variant="link"
                         className="p-0 ms-1 mb-1 text-muted"
                         onClick={() => setMode(mode === "classes" ? "dimensions" : "classes")}
                     >

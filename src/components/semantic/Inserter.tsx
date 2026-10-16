@@ -73,7 +73,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                     if (Array.isArray(empty)) {
                         return <Dropdown key={name} tag={"span"} className={styles.inserterDropdown}>
                             <DropdownToggle caret tag="span">
-                                <Button className="pe-0 pe-0" color="link" caret> 
+                                <Button className="pe-0 pe-0" variant="link" caret> 
                                     {name}
                                 </Button>
                             </DropdownToggle>
@@ -81,7 +81,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                                 <div className={styles.inserterDropdownMenu}>
                                     {empty.map((option) => {
                                         const {name: embedName, ...rest} = option;
-                                        return <Button key={embedName} color="link" className="w-100 text-start text-start px-4" onClick={() => {
+                                        return <Button key={embedName} variant="link" className="w-100 text-start text-start px-4" onClick={() => {
                                             insert(position, {...rest});
                                             setInserting(false);
                                         }}>
@@ -92,7 +92,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                             </DropdownMenu>
                         </Dropdown>;
                     } else {
-                        return <Button key={name} color="link" className="text-decoration-none" onClick={() => {
+                        return <Button key={name} variant="link" className="text-decoration-none" onClick={() => {
                             insert(position, {...empty});
                             setInserting(false);
                         }}>

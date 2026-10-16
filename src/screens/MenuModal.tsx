@@ -47,7 +47,7 @@ export function MenuModal({menuRef}: {menuRef: MutableRefObject<MenuModalRef|nul
                 callback(option);
             }}>{option.caption}</Button>)}
         </ModalBody>
-        <ModalFooter><Button color="danger" onClick={() => {
+        <ModalFooter><Button variant="danger" onClick={() => {
             setOpen(false);
             callback(null);
         }}>Cancel</Button></ModalFooter>

@@ -249,7 +249,7 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                 </span>
             </span>
             <Button className="mb-2" onClick={cancel}>Cancel</Button>
-            <Button className="mb-2" color="primary" onClick={() => save()}>Set</Button>
+            <Button className="mb-2" variant="primary" onClick={() => save()}>Set</Button>
         </Wrap>
         {isDefined(errorMessage) && errorMessage.length > 0 && <Wrap className="pb-2">
             {errorMessage.map(e => <Form.Control.Feedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</Form.Control.Feedback>)}

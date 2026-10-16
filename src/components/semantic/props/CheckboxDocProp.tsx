@@ -33,7 +33,7 @@ export function CheckboxDocProp<K extends keyof D, D extends { [Key in K]?: bool
     }, [checkedIfUndefined, disabled, doc, prop, update]);
 
     return <Form.Label className={classNames(className, styles.checkboxLabel)} style={{color: disabled ? "gray" : "black"}}>
-        <Form.Control type="checkbox"
+        <Form.Check
             disabled={disabled}
             checked={doc[prop] ?? checkedIfUndefined ?? false}
             onChange={(e) => {

@@ -23,7 +23,7 @@ export function QuizPagePresenter(props: PresenterProps<IsaacQuiz>) {
         <PagePresenter {...props} />
         {props.doc.rubric ?
             <SemanticDocProp {...props} prop="rubric" name="Rubric" onDelete={() => props.update({...props.doc, rubric: undefined}, true)} /> :
-            <Button color="secondary" outline onClick={() => props.update({...props.doc, rubric: (EMPTY_DOCUMENTS['isaacQuiz'] as IsaacQuiz).rubric})}>
+            <Button variant="secondary" outline onClick={() => props.update({...props.doc, rubric: (EMPTY_DOCUMENTS['isaacQuiz'] as IsaacQuiz).rubric})}>
                 Add rubric
             </Button>}
         <h2>Test Sections</h2>
@@ -43,7 +43,7 @@ export function EventPagePresenter(props: PresenterProps<IsaacEventPage>) {
         <PagePresenter {...props} />
         {doc.location && <>
             {doc.location.address?.addressLine1 || doc.location.address?.county ?
-                <Button color="link">
+                <Button variant="link">
                     {doc.location.address?.addressLine1}, {doc.location.address?.county}
                 </Button>
                 : "Unknown location"

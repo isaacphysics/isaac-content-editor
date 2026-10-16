@@ -109,7 +109,7 @@ export function TabsMain({docRef, currentChild, updateCurrentChild, doRemove, do
                         {forward}
                     </Button>
                 </ButtonGroup>
-                <Button size="sm" color="danger" onClick={doRemove}>Delete {elementNameLC}</Button>
+                <Button size="sm" variant="danger" onClick={doRemove}>Delete {elementNameLC}</Button>
             </div>
             {contentHeader}
             <SemanticItem className={styles.hideMargins} doc={currentChild} update={updateCurrentChild}/>

@@ -81,10 +81,10 @@ export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {sub
                     `Show available ${subjectsOnly ? "subjects" : "tags"}`}
             </Button>
             {showTagList && (filteredTagList?.map((tag) =>
-                <Button key={tag} outline color="primary" onClick={() => addTag(tag)}>{tag} ➕</Button>
+                <Button key={tag} outline variant="primary" onClick={() => addTag(tag)}>{tag} ➕</Button>
             ) ?? <em>Loading...</em>)}
             {!subjectsOnly && // Don't allow the addition of new subjects if it is subjectsOnly
-                <Button color="success" onClick={() => addTag(searchString)}>Create new tag: {searchString} ➕</Button>}
+                <Button variant="success" onClick={() => addTag(searchString)}>Create new tag: {searchString} ➕</Button>}
         </div>}
     </div>;
 }

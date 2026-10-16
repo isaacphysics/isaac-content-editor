@@ -156,7 +156,7 @@ function Deprecated({doc, update, ...rest}: MetaItemPresenterProps<Content>) {
         });
     };
 
-    return <Form.Control type="checkbox" {...rest} checked={!!doc.deprecated} onChange={(e) => onChange(e.target.checked)} />;
+    return <Form.Check {...rest} checked={!!doc.deprecated} onChange={(e) => onChange(e.target.checked)} />;
 }
 
 function Expanded({doc, update, ...rest}: MetaItemPresenterProps<Content> & {className?: string}) {
@@ -167,7 +167,7 @@ function Expanded({doc, update, ...rest}: MetaItemPresenterProps<Content> & {cla
         });
     };
 
-    return <Form.Control type="checkbox" {...rest} checked={doc.layout === "expanded"} onChange={(e) => onChange(e.target.checked)} />;
+    return <Form.Check {...rest} checked={doc.layout === "expanded"} onChange={(e) => onChange(e.target.checked)} />;
 }
 
 export function ExpandedPresenter({doc, update}: Omit<MetaItemPresenterProps<Content>, "prop" | "name">) {
@@ -193,7 +193,7 @@ function HiddenFromStudentsAndTutors({doc, update, ...rest}: MetaItemPresenterPr
     };
 
     const currentlyHidden = doc.hiddenFromRoles?.includes("STUDENT") && doc.hiddenFromRoles?.includes("TUTOR");
-    return <Form.Control type="checkbox" {...rest} checked={currentlyHidden} onChange={(e) => onChange(e.target.checked)} />;
+    return <Form.Check {...rest} checked={currentlyHidden} onChange={(e) => onChange(e.target.checked)} />;
 }
 
 function DateTimeInput({doc, update, prop, options, ...rest}: MetaItemPresenterProps<IsaacEventPage>) {
@@ -262,7 +262,7 @@ function HiddenFromTeachers({doc, update, ...rest}: MetaItemPresenterProps<Isaac
         });
     };
 
-    return <Form.Control {...rest} type="checkbox" checked={!!doc.hiddenFromRoles?.includes("TEACHER")} onChange={(e) => onChange(e.target.checked)} />;
+    return <Form.Check {...rest} checked={!!doc.hiddenFromRoles?.includes("TEACHER")} onChange={(e) => onChange(e.target.checked)} />;
 }
 
 function LocationMetaPresenter({doc, update, prop, id}: MetaItemPresenterProps) {
@@ -351,9 +351,9 @@ function ResourcesMetaPresenter({doc, update, prop, name}: MetaItemPresenterProp
                         prop="url" name="URL"/>
                 </Col>
                 <Col xs={2}>
-                    <Button color="link" size="sm" onClick={() => shiftBy(index, -1)} disabled={index <= 0}>▲</Button>
-                    <Button color="link" size="sm" onClick={() => shiftBy(index, 1)} disabled={index >= resources.length - 1}>▼</Button>
-                    <Button color="link" size="sm" onClick={() => remove(index)}>❌</Button>
+                    <Button variant="link" size="sm" onClick={() => shiftBy(index, -1)} disabled={index <= 0}>▲</Button>
+                    <Button variant="link" size="sm" onClick={() => shiftBy(index, 1)} disabled={index >= resources.length - 1}>▼</Button>
+                    <Button variant="link" size="sm" onClick={() => remove(index)}>❌</Button>
                 </Col>
             </Row>;
         })}

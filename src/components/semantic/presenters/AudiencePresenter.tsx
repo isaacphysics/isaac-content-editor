@@ -330,9 +330,9 @@ export function AudiencePresenter({doc, update, type}: PresenterProps & {type?: 
                 <br/> 
             </> : null}
             Concise: {conciseAudiences(editingAudience)}
-            <Button size="sm" color="primary" onClick={setChanges}>Set</Button>
-            <Button size="sm" onClick={close}>Cancel</Button>
-            <Button size="sm" color="danger" onClick={() => {
+            <Button size="sm" variant="primary" onClick={setChanges}>Set</Button>
+            <Button size="sm" variant="secondary" onClick={close}>Cancel</Button>
+            <Button size="sm" variant="danger" onClick={() => {
                 close();
                 update({...doc, audience: undefined});
             }}>Clear</Button>

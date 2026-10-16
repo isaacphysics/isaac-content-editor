@@ -92,8 +92,8 @@ export function InlinePartInserter({insert, insertMultiple, position, collection
     }
 
     return <div className={styles.inlineItemsChoiceInserter}>
-        <Button color="primary" onClick={() => addMultipleParts(unusedParts)} disabled={lengthOfCollection === calculatedPartsFromContent.length}>Detect and add missing inline regions</Button>
-        <Button color="secondary" onClick={() => addPart(undefined)} disabled={collection?.some(part => part.id === undefined)}>Add new inline question part</Button>
+        <Button variant="primary" onClick={() => addMultipleParts(unusedParts)} disabled={lengthOfCollection === calculatedPartsFromContent.length}>Detect and add missing inline regions</Button>
+        <Button variant="secondary" onClick={() => addPart(undefined)} disabled={collection?.some(part => part.id === undefined)}>Add new inline question part</Button>
     </div>;
 }
 

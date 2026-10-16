@@ -214,7 +214,7 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
 
     const dropdown = <Dropdown toggle={() => setOpen(toggle => !toggle)}
         isOpen={isOpen}>
-        <DropdownToggle outline className={styles.dropdownButton}>
+        <DropdownToggle variant="outline-primary" className={styles.dropdownButton}>
             <ItemRow item={item} />
         </DropdownToggle>
         <DropdownMenu className={styles.itemChoiceDropdown}>
@@ -268,8 +268,8 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
     const [isOpen, setOpen] = useState(false);
 
     return <>
-        <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
-            <DropdownToggle outline className={styles.dropdownButton}>
+        <Dropdown toggle={() => setOpen(toggle => !toggle)} show={isOpen}>
+            <DropdownToggle variant="outline-primary" className={styles.dropdownButton}>
                 Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
             </DropdownToggle>
             <DropdownMenu className={styles.itemChoiceDropdown}>
@@ -305,7 +305,7 @@ export function DndChoicePresenter(props: PresenterProps<DndItem>) {
     return <div className={styles.itemsChoiceRow}>
         <DropZoneSelector {...props} />
         <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
-            <DropdownToggle outline className={styles.dropdownButton}>
+            <DropdownToggle variant="outline-primary" className={styles.dropdownButton}>
                 {item ? <ItemRow item={item} /> : <div>⚠️ Select an item...</div>}
             </DropdownToggle>
             <DropdownMenu className={styles.itemChoiceDropdown}>
@@ -339,7 +339,7 @@ export function ItemChoiceItemInserter({insert, position, lengthOfCollection}: I
     if (!item || (isClozeQuestion && (!dropZoneCount || lengthOfCollection >= dropZoneCount))) {
         return null; // No items remaining, or max items reached in choice (in case of cloze question)
     }
-    return <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
+    return <Button className={styles.itemsChoiceInserter} variant="primary" onClick={() => {
         const newItem: ParsonsItem = {type: item.type, id: item.id};
         if (newItem.type === "parsonsItem") {
             newItem.indentation = 0;
@@ -364,11 +364,11 @@ export function DndChoiceItemInserter({insert, insertMultiple, position, collect
     }
 
     return <>
-        {!isCorrect && <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
+        {!isCorrect && <Button className={styles.itemsChoiceInserter} variant="primary" onClick={() => {
             const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId: remainingDropZones[0]};
             insert(position, newItem);
         }}>Add single entry</Button>}
-        <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
+        <Button className={styles.itemsChoiceInserter} variant="primary" onClick={() => {
             insertMultiple(remainingDropZones.map((dropZoneId, index) => {
                 const newItem: DndItem = {type: DND_ITEM_TYPE, dropZoneId};
                 return [position + index, newItem];

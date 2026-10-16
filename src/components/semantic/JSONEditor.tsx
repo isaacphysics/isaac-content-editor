@@ -51,7 +51,7 @@ export function JSONEditor({doc, update, close}: PresenterProps & { close: () =>
         </CodeMirror>
         <div className={`mt-2 ${styles.editButtons}`}>
             <Button onClick={cancelDocChanges}>Cancel</Button>
-            <Button color="primary" disabled={!valid} onClick={setDocChanges}>Set</Button>
+            <Button variant="primary" disabled={!valid} onClick={setDocChanges}>Set</Button>
         </div>
     </>;
 }

@@ -70,14 +70,14 @@ function DisplayListEditor({displayList, setDisplayList, name, displayOptions}: 
                     <option value={selection}>{selection}</option>
                     {remainingAudienceValues.map(option => <option key={option} value={option}>{option}</option>)}
                 </Form.Control>
-                <Button size="sm" outline onClick={deleteSelection(setDisplayList, selection)}>
+                <Button size="sm" variant="outline-primary" onClick={deleteSelection(setDisplayList, selection)}>
                     ➖
                 </Button>
                 {i < selections.length - 1 && ", "}
             </span>)
         }
         {remainingAudienceValues.length > 0 &&
-            <Button size="sm" outline onClick={addSelection(setDisplayList, remainingAudienceValues[0])}>
+            <Button size="sm" variant="outline-primary" onClick={addSelection(setDisplayList, remainingAudienceValues[0])}>
                 ➕
             </Button>
         }
@@ -119,18 +119,18 @@ function AudienceDisplayControl({display, set, title}: AudienceDisplayControlPro
         <DisplayListEditor displayList={audience} setDisplayList={setAudience} name="Audience" displayOptions={audienceOptions} />
         <DisplayListEditor displayList={nonAudience} setDisplayList={setNonAudience} name="Non-Audience" displayOptions={nonAudienceOptions} />
         <div className={styles.displayButtons}>
-            <Button size="sm" color="primary" onClick={() => {
+            <Button size="sm" variant="primary" onClick={() => {
                 setEditing(false);
                 set({audience, nonAudience});
             }}>
                 Set
             </Button> &nbsp;
-            <Button size="sm" color="secondary" onClick={() => {
+            <Button size="sm" variant="secondary" onClick={() => {
                 setEditing(false);
             }}>
                 Cancel
             </Button> &nbsp;
-            <Button size="sm" color="danger" onClick={() => {
+            <Button size="sm" variant="danger" onClick={() => {
                 setEditing(false);
                 set(undefined);
             }}>

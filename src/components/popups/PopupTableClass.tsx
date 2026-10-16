@@ -53,7 +53,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
             <Container className={styles.cmPanelPopup}>
                 {isAda && <InputGroup className={"ps-4"}>
                     <Form.Label for={"table-expandable"}>Expandable</Form.Label>
-                    <Form.Control type="checkbox" id="table-expandable" checked={expandable} onChange={e => { 
+                    <Form.Check id="table-expandable" checked={expandable} onChange={e => { 
                         setExpandable(e.target.checked);
                         if (e.target.checked) {
                             setClasses(prev => prev ? `${prev} expandable` : "expandable");
@@ -65,7 +65,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                 </InputGroup>}
                 <InputGroup className={"ps-4"}>
                     <Form.Label for={"table-topScrollable"}>Top-scrollable</Form.Label>
-                    <Form.Control type="checkbox" id="table-topScrollable" checked={topScrollable} onChange={e => {
+                    <Form.Check id="table-topScrollable" checked={topScrollable} onChange={e => {
                         setTopScrollable(e.target.checked);
                         if (e.target.checked) {
                             setClasses(prev => prev ? `${prev} topScrollable` : "topScrollable");

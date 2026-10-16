@@ -80,9 +80,9 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
                 {showStageList ? "Hide stages" : "Show available stages"}
             </Button>
             {showStageList && (filteredStageList?.map((stage) =>
-                <Button key={stage} outline color="primary" onClick={() => addStage(stage)}>{stage} ➕</Button>
+                <Button key={stage} outline variant="primary" onClick={() => addStage(stage)}>{stage} ➕</Button>
             ) ?? <em>Loading...</em>)}
-            <Button color="success" onClick={() => addallStages()}>Add all stages ➕</Button>
+            <Button variant="success" onClick={() => addallStages()}>Add all stages ➕</Button>
         </div>}
     </div>;
 }

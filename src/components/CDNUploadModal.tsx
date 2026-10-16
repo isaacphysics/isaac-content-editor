@@ -5,7 +5,7 @@ import React, {
     useRef,
     useState
 } from "react";
-import {Button, Row, Modal, ModalBody, ModalFooter, Col, Alert} from "react-bootstrap";
+import {Button, Row, Modal, Col, Alert} from "react-bootstrap";
 import {AppContext} from "../AppContext";
 import {
     githubCreate,
@@ -171,22 +171,22 @@ export const CDNUploadModal = () => {
         if (open) setShowAccessibilityNotice(true);
     }, [open]);
 
-    return <Modal isOpen={open} toggle={toggle} size={"xl"} keyboard={false} backdrop={"static"}>
-        <div className={"modal-header w-100 d-block"}>
+    return <Modal show={open} toggle={toggle} size={"xl"} keyboard={false} backdrop={"static"}>
+        <Modal.Header className={"modal-header w-100 d-block"}>
             <Row className={"justify-content-end"}>
                 <Col xs={9} className={"pt-2 ps-4"}>
                     <h5 className={"modal-title"}>Upload to CDN</h5>
                 </Col>
                 <Col xs={3} className={"pe-4"}>
-                    <Button color={"secondary"} className={"w-100"} onClick={toggle}>
+                    <Button variant="secondary" className={"w-100"} onClick={toggle}>
                         Close
                     </Button>
                 </Col>
             </Row>
-        </div>
-        <ModalBody>
+        </Modal.Header>
+        <Modal.Body>
             {showAccessibilityNotice && <Alert color={"warning"}>
-                <div className={"w-100"}>Accessibility notice<Button color={"none"} className={"float-end mt-n2"} onClick={() => setShowAccessibilityNotice(false)}>✗</Button></div>
+                <div className={"w-100"}>Accessibility notice<Button variant="none" className={"float-end mt-n2"} onClick={() => setShowAccessibilityNotice(false)}>✗</Button></div>
                 <hr/>
                 <small>
                     We are legally required to make all documents on the site accessible, and PDFs especially are unlikely to meet our obligations.
@@ -226,7 +226,7 @@ export const CDNUploadModal = () => {
                                 {files.map((f, i) => (
                                     <li key={f.file.name} className={f.isValid ? "text-success" : "text-danger"}>
                                         <span style={{fontFamily: "monospace"}}>{f.file.name}</span> {f.isValid ? "✓" : "✗"} {f.error}
-                                        <Button color={"link"} className={"p-0 d-inline"} onClick={() => setFiles(files?.length === 1 ? null : files.filter((_, _i) => i !== _i))}>
+                                        <Button variant="link" className={"p-0 d-inline"} onClick={() => setFiles(files?.length === 1 ? null : files.filter((_, _i) => i !== _i))}>
                                             Remove
                                         </Button>
                                     </li>
@@ -247,7 +247,7 @@ export const CDNUploadModal = () => {
                     }
                    
                     {paths && paths.length > 0 && allFilesAreValid && selection?.isDir &&
-                        <Button color={"success"} className={"w-100"} onClick={uploadToCDN}>
+                        <Button variant="success" className={"w-100"} onClick={uploadToCDN}>
                             Upload file(s) to CDN
                         </Button>}
                     {uploadInProgress && 
@@ -264,15 +264,15 @@ export const CDNUploadModal = () => {
                     </Alert>}
                 </Col>
             </Row>
-        </ModalBody>
-        <ModalFooter>
+        </Modal.Body>
+        <Modal.Footer>
             <Row className={"w-100 justify-content-end"}>
                 <Col xs={3}>
-                    <Button color={"secondary"} className={"w-100"} onClick={toggle}>
+                    <Button variant="secondary" className={"w-100"} onClick={toggle}>
                         Close
                     </Button>
                 </Col>
             </Row>
-        </ModalFooter>
+        </Modal.Footer>
     </Modal>;
 };

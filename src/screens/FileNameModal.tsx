@@ -25,15 +25,14 @@ export function FileNameModal(props: FileNameModalProps) {
                 <Form.Label for="rename-input">Please type a new name for the file. If no extension is provided, &quot;.json&quot; will be assumed.</Form.Label>
                 <Form.Control id="rename-input" value={newName} onChange={e => setNewName(e.target.value)} autoFocus/>
             </FormGroup>
-            {isJson && <FormGroup check>
-                <Form.Control type="checkbox" id="update-image-paths" checked={updateImagePaths}
-                    onChange={e => setUpdateImagePaths(e.target.checked)} />
-                <Form.Label check for="update-image-paths">Update image paths</Form.Label>
+            {isJson && <FormGroup>
+                <Form.Check id="update-image-paths" checked={updateImagePaths}
+                    onChange={e => setUpdateImagePaths(e.target.checked)} label="Update image paths"/>
             </FormGroup>}
         </ModalBody>
         <ModalFooter>
-            <Button color="primary" onClick={confirm}>{props.actionName}</Button>
-            <Button color="secondary" onClick={cancel}>Cancel</Button>
+            <Button variant="primary" onClick={confirm}>{props.actionName}</Button>
+            <Button variant="secondary" onClick={cancel}>Cancel</Button>
         </ModalFooter>
     </Modal>;
 }
