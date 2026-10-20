@@ -202,7 +202,7 @@ const figure: RegistryEntry = {
         // hide altText if doc.altText is the empty string (i.e. has been marked as decorative)
         mediaMeta.indexOf("altText"), 
         1, 
-        (doc: Figure) => (doc.altText === "" ? undefined : "altText")
+        (doc: Figure) => (doc.decorative ? undefined : "altText")
     ),
 };
 const video: RegistryEntry = {
