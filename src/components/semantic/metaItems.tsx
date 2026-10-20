@@ -241,7 +241,7 @@ function DateTimeInput({doc, update, prop, options, ...rest}: MetaItemPresenterP
 
     return <>
         <Row>
-            <Col><Form.Control type="text" invalid={isDefined(warning)} {...rest} onChange={onChange} value={dateInput} placeholder="YYYY-MM-DD HH:mm" /></Col>
+            <Col><Form.Control type="text" isInvalid={isDefined(warning)} {...rest} onChange={onChange} value={dateInput} placeholder="YYYY-MM-DD HH:mm" /></Col>
             <Col>{dateOutput}</Col>
         </Row>
         {warning && <FormText className={"mb-1 mt-0"} color={"danger"}>{warning}</FormText>}

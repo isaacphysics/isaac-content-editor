@@ -71,9 +71,9 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                 {blockTypes && Object.entries(blockTypes).map(([name, empty]) => {
                     {/* TODO remove pe-0 and text-start after BS5 upgrade :) */}
                     if (Array.isArray(empty)) {
-                        return <Dropdown key={name} tag={"span"} className={styles.inserterDropdown}>
-                            <Dropdown.Toggle variant="secondary" caret tag="span">
-                                <Button className="pe-0 pe-0" variant="link" caret> 
+                        return <Dropdown key={name} as="span" className={styles.inserterDropdown}>
+                            <Dropdown.Toggle variant="secondary" as="span">
+                                <Button className="pe-0 pe-0" variant="link"> 
                                     {name}
                                 </Button>
                             </Dropdown.Toggle>

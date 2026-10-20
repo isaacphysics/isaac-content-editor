@@ -22,8 +22,8 @@ export const EnumPropFor = <
             update(doc);
         }, []);
 
-        return <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen} disabled={disabled}>
-            <Dropdown.Toggle variant="secondary" caret>
+        return <Dropdown onToggle={() => setOpen(toggle => !toggle)} open={isOpen} disabled={disabled}>
+            <Dropdown.Toggle variant="secondary">
                 {current ?? "-"}
             </Dropdown.Toggle>
             <Dropdown.Menu>

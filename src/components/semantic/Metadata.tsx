@@ -1,6 +1,5 @@
 import React, {ChangeEvent, ContextType, useContext, useState} from "react";
 import { Col, Form, FormText, Row } from "react-bootstrap";
-import { InputType } from "react-bootstrap/lib/Input";
 
 import { Content } from "../../isaac-data-types";
 
@@ -17,7 +16,7 @@ export type MetaOptions = {
     deleteIfEmpty?: boolean;
     options?: Record<string, string>;
 } & (
-    { type?: Exclude<InputType, "number">; min?: never; max?: never;} |
+    { type?: string; min?: never; max?: never;} |
     { type: "number"; min?: number; max?: number; }
 );
 
@@ -92,7 +91,7 @@ export function MetaItemPresenter({doc, update, id, prop, name, options}: MetaIt
             value={options?.type !== "checkbox" ? value : undefined}
             checked={options?.type === "checkbox" ? value as unknown as boolean : undefined}
             onChange={options?.type !== "checkbox" ? valueOnChange : checkedOnChange}
-            invalid={!!warning}
+            isInvalid={!!warning}
             // eslint-disable-next-line react/no-children-prop
             children={options?.options && Object.entries(options?.options).map(([key, label]) =>
                 <option key={key} value={key}>{label}</option>

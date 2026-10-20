@@ -1,6 +1,5 @@
 import React, {MutableRefObject, useContext, useEffect, useRef, useState,} from "react";
 import {Alert, Button, Form} from "react-bootstrap";
-import {InputType} from "react-bootstrap/lib/Input";
 
 import {
     ChemicalFormula,
@@ -46,7 +45,7 @@ interface LabeledInputProps<V extends Record<string, string | undefined>> {
     prop: keyof V;
     label: string;
     className?: string;
-    type?: InputType;
+    type?: string;
     warningFunction?: (inputText: string) => string;
 }
 
@@ -64,7 +63,7 @@ function LabeledInput<V extends Record<string, string | undefined>>({value, prop
                     setWarning(warningFunction ? warningFunction(e.target.value) : "");
                 }
             }}
-            invalid={!!warning}
+            isInvalid={!!warning}
         />
         {warning && <div className="text-danger">{warning}</div>}
     </Form.Label>;
@@ -84,10 +83,10 @@ export const QuantityPresenter = buildValuePresenter(
             return <Markup trusted-markup-encoding="markdown">{html}</Markup>;
         } else {
             return <>
-                <Form.LabeledInput value={value} prop="value" label="Quantity" />
+                <LabeledInput value={value} prop="value" label="Quantity" />
                 {displayUnit ?
                     <Markup trusted-markup-encoding="markdown">{"$" + displayUnit + "$"}</Markup> :
-                    <Form.LabeledInput value={value} prop="units" label="Units" />}
+                    <LabeledInput value={value} prop="units" label="Units" />}
             </>;
         }
     },

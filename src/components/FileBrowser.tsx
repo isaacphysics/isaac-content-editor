@@ -61,7 +61,7 @@ export const FileItem: FunctionComponent<FileItemProps> = (props) => {
     return <ListGroupItem
         action
         id={pathToId(path)}
-        tag="button"
+        as="button"
         className={`${className ?? ""} ${styles.fileBrowserItem} ${isSelected ? styles.fileBrowserItemSelected : ""}`}
         onClick={onClick}
         {...rest}

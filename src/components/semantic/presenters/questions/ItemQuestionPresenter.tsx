@@ -268,7 +268,7 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
     const [isOpen, setOpen] = useState(false);
 
     return <>
-        <Dropdown toggle={() => setOpen(toggle => !toggle)} show={isOpen}>
+        <Dropdown onToggle={() => setOpen(toggle => !toggle)} show={isOpen}>
             <Dropdown.Toggle variant="outline-secondary" className={styles.dropdownButton}>
                 Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
             </Dropdown.Toggle>
@@ -304,7 +304,7 @@ export function DndChoicePresenter(props: PresenterProps<DndItem>) {
 
     return <div className={styles.itemsChoiceRow}>
         <DropZoneSelector {...props} />
-        <Dropdown toggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
+        <Dropdown onToggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
             <Dropdown.Toggle variant="outline-secondary" className={styles.dropdownButton}>
                 {item ? <ItemRow item={item} /> : <div>⚠️ Select an item...</div>}
             </Dropdown.Toggle>

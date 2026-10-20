@@ -241,7 +241,7 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                                 onKeyDown={handleKey}
                                 placeholder={placeHolder}
                                 onBlur={onBlur}
-                                invalid={errorMessage && errorMessage.length > 0}
+                                isInvalid={errorMessage && errorMessage.length > 0}
                                 {...inputProps}
                             />
                         }
