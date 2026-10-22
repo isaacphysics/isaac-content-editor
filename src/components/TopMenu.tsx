@@ -82,7 +82,7 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
             Staging
         </a>}
         {selection && !selection.isDir && <Dropdown className="d-flex" show={isOpen} onToggle={() => setOpen(open => !open)}>
-            <Dropdown.Toggle variant="secondary" className={classNames(styles.iconButton, "px-1")}>▼</Dropdown.Toggle>
+            <Dropdown.Toggle variant="secondary" className={classNames(styles.iconButton, styles.noCaret, "px-1")}>▼</Dropdown.Toggle>
             <Dropdown.Menu>
                 {liveLink && <Dropdown.Item>
                     <a href={liveLink} target="_blank">View on live</a>

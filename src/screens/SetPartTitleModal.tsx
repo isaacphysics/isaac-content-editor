@@ -48,7 +48,7 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
                     </Form.Check.Label>
                 </Form.Check>
             </FormGroup>
-            {content?.published && <Alert color="warning">Replacing question part titles on published content may lead to inconsistent progress stats, so should be avoided.</Alert>}
+            {content?.published && <Alert variant="warning">Replacing question part titles on published content may lead to inconsistent progress stats, so should be avoided.</Alert>}
         </Modal.Body>
         <Modal.Footer>
             <Button onClick={() => {

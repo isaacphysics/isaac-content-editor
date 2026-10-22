@@ -185,7 +185,7 @@ export const CDNUploadModal = () => {
             </Row>
         </Modal.Header>
         <Modal.Body>
-            {showAccessibilityNotice && <Alert color={"warning"}>
+            {showAccessibilityNotice && <Alert variant="warning">
                 <div className={"w-100"}>Accessibility notice<Button variant="none" className={"float-end mt-n2"} onClick={() => setShowAccessibilityNotice(false)}>✗</Button></div>
                 <hr/>
                 <small>
@@ -251,10 +251,10 @@ export const CDNUploadModal = () => {
                             Upload file(s) to CDN
                         </Button>}
                     {uploadInProgress && 
-                        <Alert className="mt-2" color="warning">
+                        <Alert className="mt-2" variant="warning">
                             Processing uploads...
                         </Alert>}
-                    {successfulUploads && <Alert className={"mt-2"} color={"success"}>
+                    {successfulUploads && <Alert className="mt-2" variant="success">
                         Successfully uploaded files:
                         <ul>
                             {successfulUploads.map((s, i) => <li key={i}><code>{s}</code></li>)}

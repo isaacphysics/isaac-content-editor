@@ -45,19 +45,19 @@ export function SVGViewer() {
 
     if (error) {
         return <div className={styles.centered}>
-            <Alert color="danger">{error}</Alert>
+            <Alert variant="danger">{error}</Alert>
         </div>;
     }
 
     if (!data) {
         return <div className={styles.centered}>
-            <Spinner size="large" />
+            <Spinner />
         </div>;
     }
 
     if (invalid) {
         return <div className={styles.centered}>
-            <Alert color="warning">This content does not appear to be SVG.</Alert>
+            <Alert variant="warning">This content does not appear to be SVG.</Alert>
         </div>;
     }
 

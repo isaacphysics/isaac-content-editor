@@ -253,20 +253,20 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
 
     return <>
         {doc.type === "itemChoice" && <CheckboxDocProp {...props} doc={doc} update={props.update} prop="allowSubsetMatch" label="Enable wildcard matching of items (previously called subset matching)" />}
-        {doc.type === "itemChoice" && isClozeQuestion && !doc.allowSubsetMatch && doc.items?.find(i => i.id === NULL_CLOZE_ITEM_ID) && <Alert color={"warning"}>
+        {doc.type === "itemChoice" && isClozeQuestion && !doc.allowSubsetMatch && doc.items?.find(i => i.id === NULL_CLOZE_ITEM_ID) && <Alert variant={"warning"}>
             Please fill in all &quot;Any item&quot; placeholders. If you would like to use wildcard matching, tick the box above.
         </Alert>}
-        {doc.type === "itemChoice" && showClozeChoiceWarning && <Alert color={"danger"}>
+        {doc.type === "itemChoice" && showClozeChoiceWarning && <Alert variant={"danger"}>
             In order for cloze questions to work as expected, the choice must be the same length as the number of
             drop zones, and should contain &quot;Any item&quot; placeholders in slots that should be ignored (if using
             wildcard matching).<br/>
             If a choice does not have the same number of items as drop zones, <b>it will not be checked against the
                 users answer</b>.
         </Alert>}
-        {doc.type === "itemChoice" && requireAllItems && remainingItems.length !== 0 && !doc.allowSubsetMatch && <Alert color="warning">
+        {doc.type === "itemChoice" && requireAllItems && remainingItems.length !== 0 && !doc.allowSubsetMatch && <Alert variant="warning">
             All items are required when reordering within one list. If you would like to use wildcard matching, tick the box above.
         </Alert>}
-        {doc.type === "parsonsChoice" && requireAllItems && remainingItems.length !== 0 && <Alert color="warning">
+        {doc.type === "parsonsChoice" && requireAllItems && remainingItems.length !== 0 && <Alert variant="warning">
             All items are required when reordering within one list.
         </Alert>}
         <ItemsContext.Provider value={{items, remainingItems, remainingDropZones: undefined, withReplacement, disableIndentation, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
@@ -291,7 +291,7 @@ export const DndChoicePresenter = (props: ValuePresenterProps<DndChoice>) => {
         <ItemsContext.Provider value={{items, remainingItems, remainingDropZones, withReplacement, disableIndentation, allowSubsetMatch: undefined, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={update} prop="items" childTypeOverride="dndItem$choice" />
         </ItemsContext.Provider>
-        {dropZoneIds.length === 0 && <Alert color={"warning"} className="mt-3">
+        {dropZoneIds.length === 0 && <Alert variant={"warning"} className="mt-3">
             Add some drop zones to the question before adding choices.
         </Alert>}
     </>;

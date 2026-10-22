@@ -93,7 +93,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
                         close?.();
                     }}>Insert</Button>}
                 </PopupCloseContext.Consumer>
-                {invalid && <Alert color="danger" className="mt-2 mb-0 p-1 text-center">{invalid}</Alert>}
+                {invalid && <Alert variant="danger" className="mt-2 mb-0 p-1 text-center">{invalid}</Alert>}
             </Container>
         </Popup>
     </>;

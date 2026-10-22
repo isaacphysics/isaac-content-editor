@@ -339,7 +339,7 @@ export function EditorScreen() {
 
             <Modal show={actionRunning} contentClassName={styles.actionsModalContent}>
                 <div className={styles.centered}>
-                    <Spinner size="lg" />
+                    <Spinner />
                     <h2>Processing...</h2>
                 </div>
             </Modal>

@@ -63,20 +63,20 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
             <Container className={styles.cmPanelPopup}>
                 <Form.Label for={"drop-zone-width"}>Width:</Form.Label>
                 <Form.Control id={"drop-zone-width"} placeholder={"Default"} onChange={(e) => setWidth(e.target.value)} />
-                {widthInvalid && <Alert className="my-1" color="warning">Width must be a positive number</Alert>}
+                {widthInvalid && <Alert className="my-1" variant="warning">Width must be a positive number</Alert>}
                 <Form.Label className="mt-2" for={"drop-zone-height"}>Height:</Form.Label>
                 <Form.Control id={"drop-zone-height"} placeholder={"Default"} onChange={(e) => setHeight(e.target.value)} />
-                {heightInvalid && <Alert className="my-1" color="warning">Height must be a positive number</Alert>}
+                {heightInvalid && <Alert className="my-1" variant="warning">Height must be a positive number</Alert>}
                 <hr/>
                 {isClozeQuestion && <>
                     <Form.Label for={"drop-zone-index"}>Index override:</Form.Label>
                     <Form.Control id={"drop-zone-index"} placeholder={"None"} onChange={(e) => setIndex(e.target.value)} />
-                    {indexInvalid && <Alert className="my-1" color="warning">Index must be a positive integer</Alert>}
+                    {indexInvalid && <Alert className="my-1" variant="warning">Index must be a positive integer</Alert>}
                 </>}
                 {isDndQuestion && <>
                     <Form.Label for={"drop-zone-id"}>Drop-zone ID:</Form.Label>
                     <Form.Control id={"drop-zone-id"} defaultValue={nextDropZoneId()} onChange={(e) => setId(e.target.value)} />
-                    {idInvalid && <Alert className="my-1" color="danger">Drop zone missing ID!</Alert>}
+                    {idInvalid && <Alert className="my-1" variant="danger">Drop zone missing ID!</Alert>}
                 </>}
                 <hr/>
                 <Form.Label className="mt-2" for={"drop-zone-alt-text"}>Alt Text:</Form.Label>

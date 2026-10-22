@@ -80,7 +80,7 @@ const PreviewRenderer = ({doc, inlineableMedia, previewServer}: PreviewRendererP
             Preview for: <span className="fw-bold">{doc?.title ?? "undefined"}</span>
         </div>
         <iframe ref={iframeRef} className={`${styles.previewIframe} ${!ready ? styles.displayNone : ""}`} title="Isaac Preview" src={previewServer} />
-        {!ready && <div className={styles.centered}><Spinner size="lg" /></div>}
+        {!ready && <div className={styles.centered}><Spinner /></div>}
     </div>;
 };
 

@@ -245,10 +245,10 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
                     } />
                 </span>
             </div>
-            {disableIndentation && doc.indentation !== 0 && <Alert color="warning" className="mt-3">
+            {disableIndentation && doc.indentation !== 0 && <Alert variant="warning" className="mt-3">
                 Indentation is disabled for this question.
             </Alert>}
-            {!!doc.indentation && (doc.indentation < 0 || doc.indentation > 3) && <Alert color="warning" className="mt-3">
+            {!!doc.indentation && (doc.indentation < 0 || doc.indentation > 3) && <Alert variant="warning" className="mt-3">
                 Indentation must be between 0 and 3.
             </Alert>}
         </div>;
@@ -288,7 +288,7 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
                 })}
             </Dropdown.Menu>
         </Dropdown>
-        {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert color="danger">
+        {(!doc.dropZoneId || !dropZoneIds?.has(doc.dropZoneId)) && <Alert variant="danger">
             {/* Shows if e.g. a dropzone ID has changed */}
             This drop zone ID does not exist.
         </Alert>}

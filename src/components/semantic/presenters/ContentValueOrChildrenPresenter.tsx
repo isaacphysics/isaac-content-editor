@@ -31,7 +31,7 @@ function PromotableValuePresenter({doc: baseDoc, update: baseUpdate}: ValuePrese
 export const ContentValueOrChildrenPresenter = (props: ValuePresenterProps) => {
     const {doc, topLevel} = props;
     if (doc.value && doc.children) {
-        return <Alert color="warning">Error: this item contains both a value and children; please delete one.</Alert>;
+        return <Alert variant="warning">Error: this item contains both a value and children; please delete one.</Alert>;
     } else if (doc.children) {
         return <ListChildrenPresenter {...props} />;
     } else {

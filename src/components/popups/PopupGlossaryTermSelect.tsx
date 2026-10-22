@@ -105,7 +105,7 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
                         <Form.Control id={"term-text-input"} placeholder={glossaryTerm?.label ?? "None"} value={glossaryTermText} onChange={(e) => setGlossaryTermText(e.target.value)} />
                     </>
                     :
-                    <Alert color={"warning"}>
+                    <Alert variant={"warning"}>
                         Please note: non-inline glossary terms can <b>only</b> be placed at the beginning of a line.
                     </Alert>
                 }

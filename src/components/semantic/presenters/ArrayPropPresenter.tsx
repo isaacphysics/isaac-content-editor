@@ -46,13 +46,13 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
     const context = useContext(ArrayPropValueConstraintContext);
 
     if (doc[prop] !== undefined && !Array.isArray(doc[prop])) {
-        return <Alert color={"warning"}>
+        return <Alert variant={"warning"}>
             The property <code>{prop.toString()}</code> is not an array, but is expected to be.
         </Alert>;
     }
 
     if (!context) {
-        return <Alert color={"warning"}>
+        return <Alert variant={"warning"}>
             The <code>{prop.toString()}</code> presenter is missing a context provider. Try wrapping it in an <code>ArrayPropValueConstraintContext</code>.
         </Alert>;
     }

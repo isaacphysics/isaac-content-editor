@@ -7,7 +7,7 @@ import { Alert } from "react-bootstrap";
 
 export function AnvilAppPresenter({doc}: PresenterProps<AnvilApp>) {
     return <>
-        <Alert color="secondary">App height will be correct on live pages.</Alert>
+        <Alert variant="secondary">App height will be correct on live pages.</Alert>
         <iframe title="Anvil app" style={{width: "100%", height: "300px"}} src={"https://" + doc.appId + ".anvil.app/" + doc.appAccessKey}/>
     </>;
 }

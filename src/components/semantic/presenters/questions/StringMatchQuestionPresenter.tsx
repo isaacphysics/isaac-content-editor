@@ -9,7 +9,7 @@ import { Alert } from "react-bootstrap";
 function FreeTextQuestionInstructions() {
     return <div>
         <h5>Matching Rule Syntax</h5>
-        <Alert color="info">
+        <Alert variant="info">
             A fuller set of instructions can be found <a href="https://github.com/isaacphysics/rutherford-content/wiki/Editor-Notes#free-text-questions" target="_">here</a>.
         </Alert>
         <table className={styles.striped}>
