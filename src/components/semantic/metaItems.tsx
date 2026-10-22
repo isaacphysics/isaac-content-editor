@@ -15,6 +15,7 @@ import styles from "./styles/metadata.module.css";
 import questionStyles from "./styles/question.module.css";
 import {isDefined} from "../../utils/types";
 import {AppContext} from "../../AppContext";
+import classNames from "classnames";
 
 const TITLE_MAX_LENGTH = 32;
 
@@ -59,7 +60,7 @@ export const MetaItems = asMetaItems({
     }}],
     summary: "Summary",
     published: ["Published", {
-        type: "checkbox",
+        presenter: Form.Check,
         hasWarning: (value) => {
             const published = value as boolean;
             if (!published) {
@@ -120,7 +121,7 @@ export const MetaItems = asMetaItems({
 function ReservationsMetaPresenter(props: MetaItemPresenterProps<IsaacEventPage>) {
     const limitId = `${props.id}-limit`;
     return <Row className={styles.row}>
-        <Col xs={1}>
+        <Col xs={props.doc.allowGroupReservations ? 2 : 8}>
             <Form.Label for={props.id}>Enabled</Form.Label>
         </Col>
         <Col xs={1}>
@@ -171,7 +172,7 @@ function Expanded({doc, update, ...rest}: MetaItemPresenterProps<Content> & {cla
 }
 
 export function ExpandedPresenter({doc, update}: Omit<MetaItemPresenterProps<Content>, "prop" | "name">) {
-    return <Form.Label className={questionStyles.checkboxLabel}>
+    return <Form.Label className={classNames(questionStyles.checkboxLabel, "d-inline-flex")}>
         <Expanded doc={doc} update={update} prop="expanded" name="expanded" className="me-1"/>
         Enable expanded layout
     </Form.Label>;

@@ -132,6 +132,11 @@
 
 .audienceDisplayControls {
     margin-top: 0.5em;
+    &:global(.isEditing) {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
 }
 
 .audienceDisplayControls :global(.form-control) {

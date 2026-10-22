@@ -1,4 +1,4 @@
-import React, {ChangeEvent, ContextType, useContext, useState} from "react";
+import React, {ChangeEvent, ContextType, JSX, useContext, useState} from "react";
 import { Col, Form, FormText, Row } from "react-bootstrap";
 
 import { Content } from "../../isaac-data-types";
@@ -87,20 +87,36 @@ export function MetaItemPresenter({doc, update, id, prop, name, options}: MetaIt
     const checkedOnChange = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.checked as unknown as string);
 
     return <>
-        <Form.Control type={options?.type ?? "text"}
-            value={options?.type !== "checkbox" ? value : undefined}
-            checked={options?.type === "checkbox" ? value as unknown as boolean : undefined}
-            onChange={options?.type !== "checkbox" ? valueOnChange : checkedOnChange}
-            isInvalid={!!warning}
-            // eslint-disable-next-line react/no-children-prop
-            children={options?.options && Object.entries(options?.options).map(([key, label]) =>
-                <option key={key} value={key}>{label}</option>
-            )}
-            placeholder={name}
-            id={id}
-            min={options?.type === "number" ? options.min : undefined}
-            max={options?.type === "number" ? options.max : undefined}
-        />
+        {options?.type === "checkbox" ? 
+            <Form.Check 
+                checked={value as unknown as boolean}
+                onChange={checkedOnChange}
+                isInvalid={!!warning}
+                placeholder={name}
+                id={id}
+            /> : options?.type === "select" ? 
+                <Form.Select
+                    value={value}
+                    isInvalid={!!warning}
+                    id={id}
+                > 
+                    {options?.options && Object.entries(options?.options).map(([key, label]) =>
+                        <option key={key} value={key}>{label}</option>
+                    )}
+                </Form.Select>:
+                <Form.Control type={options?.type ?? "text"}
+                    value={value}
+                    onChange={valueOnChange}
+                    isInvalid={!!warning}
+                    // eslint-disable-next-line react/no-children-prop
+                    children={options?.options && Object.entries(options?.options).map(([key, label]) =>
+                        <option key={key} value={key}>{label}</option>
+                    )}
+                    placeholder={name}
+                    id={id}
+                    min={options?.type === "number" ? options.min : undefined}
+                    max={options?.type === "number" ? options.max : undefined}
+                />}
         {warning && <FormText>{warning}</FormText>}
     </>;
 }

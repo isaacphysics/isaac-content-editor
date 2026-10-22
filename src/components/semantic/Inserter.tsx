@@ -77,7 +77,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                                     {name}
                                 </Button>
                             </Dropdown.Toggle>
-                            <Dropdown.Menu container={"root"}>
+                            <Dropdown.Menu>
                                 <div className={styles.inserterDropdownMenu}>
                                     {empty.map((option) => {
                                         const {name: embedName, ...rest} = option;
@@ -92,7 +92,7 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                             </Dropdown.Menu>
                         </Dropdown>;
                     } else {
-                        return <Button key={name} variant="none" onClick={() => {
+                        return <Button key={name} className="text-decoration-none" variant="link" onClick={() => {
                             insert(position, {...empty});
                             setInserting(false);
                         }}>

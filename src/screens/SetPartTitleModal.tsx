@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Alert, Button, FormGroup, Form, Modal, Tooltip } from "react-bootstrap";
+import { Alert, Button, FormGroup, Form, Modal, Tooltip, OverlayTrigger } from "react-bootstrap";
 
 import styles from "../styles/editor.module.css";
 import { AppContext } from "../AppContext";
@@ -22,7 +22,6 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
 
     const {isOpen, setOpen} = props;
     const [overwriteOldTitles, setOverwriteOldTitles] = useState(true);
-    const [tooltipOpen, setTooltipOpen] = useState(false);
 
     const closeModal = () => {
         setOverwriteOldTitles(true);
@@ -41,10 +40,12 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
                     <Form.Check.Input checked={overwriteOldTitles} onChange={e => setOverwriteOldTitles(e.target.checked)}/>
                     <Form.Check.Label>
                         <span className="me-2">Overwrite titles not already in the standard format</span>
-                        <span style={{textDecoration: "underline", color:"blue"}} id="overwrite-tooltip">?</span>
-                        <Tooltip show={tooltipOpen} placement="bottom" onToggle={() => setTooltipOpen(!tooltipOpen)}>
-                            Titles in the standard format but incorrect position (or empty titles) will be overwritten regardless
-                        </Tooltip>
+                        <OverlayTrigger placement="bottom" overlay={
+                            <Tooltip>Titles in the standard format but incorrect position (or empty titles) will be overwritten regardless</Tooltip>
+                        }>
+                            <span style={{textDecoration: "underline", color:"blue"}} id="overwrite-tooltip">?</span>
+                        </OverlayTrigger>
+                        
                     </Form.Check.Label>
                 </Form.Check>
             </FormGroup>

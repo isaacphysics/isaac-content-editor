@@ -1,5 +1,5 @@
 /* eslint-disable no-irregular-whitespace */  // For convenient construction of non-breaking spaces in custom strings
-import React, { MutableRefObject, ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import React, { ReactNode, RefObject, useCallback, useMemo, useRef, useState } from "react";
 import {Button, ButtonGroup} from "react-bootstrap";
 
 import { Content, IsaacTabs } from "../../../isaac-data-types";
@@ -26,7 +26,7 @@ export type TabsSettings = {
 };
 
 export type TabsProps = {
-    docRef: MutableRefObject<Content>;
+    docRef: RefObject<Content>;
     currentChild: Content | undefined;
     doInsert: (newContent: Content) => void;
     doShift: (amount: number) => void;

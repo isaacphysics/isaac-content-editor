@@ -10,7 +10,7 @@ import { siteSpecific } from "../../../services/site";
 
 export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     const [searchString, setSearchString] = useState("");
-    const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const [showStageList, setShowStageList] = useState(true);
     const [filteredStageList, setFilteredStageList] = useState<string[]>();
 
@@ -60,7 +60,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
         update({...doc, stages: stages});
     }
 
-    function onKeyPress(e: React.KeyboardEvent) {
+    function onKeyDown(e: React.KeyboardEvent) {
         if (e.key === "Enter") {
             addStage(searchString);
             e.preventDefault();
@@ -72,8 +72,8 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
         <Form.Control value={searchString}
             onChange={(e) => setSearchString(e.target.value.toLowerCase())}
             placeholder="Type to add stages..."
-            innerRef={inputRef}
-            onKeyPress={onKeyPress}
+            ref={inputRef}
+            onKeyDown={onKeyDown}
         />
         {searchString !== "" && <div>
             <Button variant="secondary" onClick={() => setShowStageList(!showStageList)}>

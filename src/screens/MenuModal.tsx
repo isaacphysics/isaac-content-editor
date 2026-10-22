@@ -1,5 +1,5 @@
 import React, { MutableRefObject, useImperativeHandle, useState } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 
 import styles from "../styles/editor.module.css";
 
@@ -37,19 +37,19 @@ export function MenuModal({menuRef}: {menuRef: MutableRefObject<MenuModalRef|nul
     // eslint-disable-next-line react/prop-types
     const {title, body, options, callback} = props;
 
-    return <Modal isOpen={isOpen}>
-        <ModalHeader>{title}</ModalHeader>
-        <ModalBody className={styles.menuModalButtons}>
+    return <Modal show={isOpen}>
+        <Modal.Header>{title}</Modal.Header>
+        <Modal.Body className={styles.menuModalButtons}>
             <p>{body}</p>
             {/* eslint-disable-next-line react/prop-types */}
             {options.map(option => <Button key={option.value} variant="secondary" onClick={() => {
                 setOpen(false);
                 callback(option);
             }}>{option.caption}</Button>)}
-        </ModalBody>
-        <ModalFooter><Button variant="danger" onClick={() => {
+        </Modal.Body>
+        <Modal.Footer><Button variant="danger" onClick={() => {
             setOpen(false);
             callback(null);
-        }}>Cancel</Button></ModalFooter>
+        }}>Cancel</Button></Modal.Footer>
     </Modal>;
 }

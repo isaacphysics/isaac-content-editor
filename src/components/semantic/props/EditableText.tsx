@@ -49,7 +49,7 @@ export type EditableTextProps = {
     block?: boolean;
     format?: EditableTextFormat;
     previewWrapperChar?: "$" | "";
-    inputProps?: Omit<FormControlProps, "type"|"placeHolder"|"invalid"|"autoFocus"|"value"|"className">;
+    inputProps?: Omit<FormControlProps, "type"|"placeHolder"|"invalid"|"autoFocus"|"value">;
     buttonStrings?: [string, string][];
 };
 
@@ -234,7 +234,7 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                                 <MarkupToolbar set={save} cancel={cancel} encoding={"plaintext"} />
                             </CodeMirror>
                             : <Form.Control
-                                type={multiLine ? "textarea" : "text"}
+                                as={multiLine ? "textarea" : "input"}
                                 autoFocus={autoFocus ?? false}
                                 value={state.value ?? ""}
                                 onChange={e => setCurrent(e.target.value)}

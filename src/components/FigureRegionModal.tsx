@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useMemo, useRef, useState } from "react";
 import styles from "./semantic/styles/figure.module.css";
 import markupStyles from "../isaac/styles/markup.module.css";
-import { Form, Modal, ModalBody, ModalHeader } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 import { DropZoneQuestionContext } from "./semantic/presenters/questions/ItemQuestionPresenter";
 import throttle from "lodash/throttle";
 import { Figure, PositionableFigureRegionProps } from "../isaac-data-types";
@@ -134,9 +134,9 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
         return null;
     }
 
-    return <Modal isOpen={open} toggle={toggle} size="xl">
-        <ModalHeader onToggle={toggle}>Add figure regions</ModalHeader>
-        <ModalBody className={styles.figureRegionModalBody}>
+    return <Modal show={open} toggle={toggle} size="xl">
+        <Modal.Header onToggle={toggle}>Add figure regions</Modal.Header>
+        <Modal.Body className={styles.figureRegionModalBody}>
             <div className="d-flex flex-column justify-content-center">
                 <div id="figure-image-container" className={classNames(styles.figureRegionImageContainer, "align-self-center")} ref={imageContainerRef}>
                     <img id="figure-image" src={imgSrc} alt="" ref={imageRef} onLoad={setupResizeObserver} />
@@ -293,6 +293,6 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                 </button>
             </div>
 
-        </ModalBody>
+        </Modal.Body>
     </Modal>;
 };

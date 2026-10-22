@@ -76,7 +76,7 @@ export function FilesList({open, error, data, menuRef, refreshParent}: {open: bo
     if (!open) return null;
     if (error) return <div className={styles.fileBrowserList}><em>Error loading data, {error}</em></div>;
     if (!data) return <div className={styles.fileBrowserList}><Spinner size="sm" /> Loading...</div>;
-    return <ListGroup flush className={styles.fileBrowserList}>
+    return <ListGroup variant="flush" className={styles.fileBrowserList}>
         {data
             .sort((a: Entry, b: Entry) => a.type === b.type ? 0 : a.type === "dir" ? -1 : 1)
             .map((entry: Entry) => {

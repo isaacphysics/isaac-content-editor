@@ -250,8 +250,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     <td>
                         <div className="flex-fill">
                             <EditableText
-                                multiLine={true}
-                                block={true}
+                                multiLine block
                                 label="Marking formula"
                                 placeHolder="e.g. MIN(maxMarks, SUM(... all marks ...))"
                                 text={doc.markingFormulaString}

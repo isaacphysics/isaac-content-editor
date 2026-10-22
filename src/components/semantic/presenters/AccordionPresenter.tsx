@@ -8,6 +8,7 @@ import {AudiencePresenter} from "./AudiencePresenter";
 
 import styles from "../styles/accordion.module.css";
 import { ExpandedPresenter } from "../metaItems";
+import classNames from "classnames";
 
 type Display = { audience: string[]; nonAudience: string[] } | undefined;
 
@@ -21,7 +22,7 @@ const audienceOptions = ["open", "closed"];
 const nonAudienceOptions = ["closed", "de-emphasised", "hidden"];
 
 function updateSelection(set: (modifier: (current: string[]) => string[]) => void, old: string) {
-    return (e: React.ChangeEvent<HTMLInputElement>) => {
+    return (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newValue = e.target.value;
         set((existing) => {
             const result = [...existing];
@@ -61,15 +62,15 @@ interface DisplayListEditorProps {
 
 function DisplayListEditor({displayList, setDisplayList, name, displayOptions}: DisplayListEditorProps) {
     const remainingAudienceValues = getRemainingValues(displayOptions, displayList);
-    return <>
-        {name}:&nbsp;[
+    return <div className="d-flex">
+        {name}{": ["}
         {displayList.length === 0 && "(default) "}
         {displayList.map((selection, i, selections) =>
-            <span key={selection}>
-                <Form.Control type="select" bsSize="sm" value={selection} onChange={updateSelection(setDisplayList, selection)}>
+            <span key={selection} className="d-flex">
+                <Form.Select value={selection} onChange={updateSelection(setDisplayList, selection)}>
                     <option value={selection}>{selection}</option>
                     {remainingAudienceValues.map(option => <option key={option} value={option}>{option}</option>)}
-                </Form.Control>
+                </Form.Select>
                 <Button size="sm" variant="outline-secondary" onClick={deleteSelection(setDisplayList, selection)}>
                     ➖
                 </Button>
@@ -82,7 +83,7 @@ function DisplayListEditor({displayList, setDisplayList, name, displayOptions}: 
             </Button>
         }
         {"] "}
-    </>;
+    </div>;
 }
 
 function AudienceDisplayControl({display, set, title}: AudienceDisplayControlProps) {
@@ -114,7 +115,7 @@ function AudienceDisplayControl({display, set, title}: AudienceDisplayControlPro
             <Button variant="secondary" size="sm" onClick={() => setEditing(true)}>Edit</Button>
         </div>;
     }
-    return <div className={styles.audienceDisplayControls}>
+    return <div className={classNames(styles.audienceDisplayControls, "isEditing")}>
         {titleText}
         <DisplayListEditor displayList={audience} setDisplayList={setAudience} name="Audience" displayOptions={audienceOptions} />
         <DisplayListEditor displayList={nonAudience} setDisplayList={setNonAudience} name="Non-Audience" displayOptions={nonAudienceOptions} />

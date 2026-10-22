@@ -30,6 +30,7 @@ import {extractDropZoneIdsPerFigure, extractFigureRegionStartIndex, extractValue
 import {DND_ITEM_TYPE, dndDropZoneRegex, dropZoneRegex, NULL_CLOZE_ITEM, NULL_CLOZE_ITEM_ID} from "../../../../isaac/IsaacTypes";
 import { ExpandedPresenter } from "../../metaItems";
 import { InaccessibleContentWarning } from "../../InaccessibleContentWarning";
+import classNames from "classnames";
 
 interface ItemsContextType {
     items?: Item[];
@@ -114,9 +115,9 @@ export function ClozeDndQuestionPresenter(props: PresenterProps<IsaacClozeQuesti
         calculateDZIndexFromFigureId: (id) => extractFigureRegionStartIndex(doc, id),
     }}>
         <InaccessibleContentWarning tags={["access:motor"]} />
-        <CheckboxDocProp doc={doc} update={update} prop="withReplacement" label="Allow items to be used more than once" />
-        <CheckboxDocProp doc={doc} update={update} prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" />
-        <CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} />
+        <CheckboxDocProp doc={doc} update={update} className="d-inline-flex" prop="withReplacement" label="Allow items to be used more than once" />
+        <CheckboxDocProp doc={doc} update={update} className="d-inline-flex" prop="detailedItemFeedback" label="Indicate which items are incorrect in question feedback" />
+        <CheckboxDocProp doc={doc} update={update} className="d-inline-flex" prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} />
         {isDndQuestion(doc) && <DndQuestionInstructions />}
         {isClozeQuestion(doc) && <ClozeQuestionInstructions />}
         <ItemQuestionPresenter {...props} update={updateWithDropZoneCount}/>
@@ -127,9 +128,9 @@ export function ReorderParsonsQuestionPresenter(props: PresenterProps<IsaacReord
     const {doc, update} = props;
 
     return <>
-        {isParsonsQuestion(doc) && <CheckboxDocProp doc={doc} update={update} prop="disableIndentation" label="Disable indentation" />}
+        {isParsonsQuestion(doc) && <CheckboxDocProp className="d-inline-flex" doc={doc} update={update} prop="disableIndentation" label="Disable indentation" />}
         <ExpandedPresenter doc={doc} update={update}/>
-        <CheckboxDocProp doc={doc} update={update} prop="useSingleList" label="Reorder within one list" />
+        <CheckboxDocProp doc={doc} className="d-inline-flex" update={update} prop="useSingleList" label="Reorder within one list" />
         <ItemQuestionPresenter {...props} />
     </>;
 }
@@ -139,7 +140,7 @@ export function ItemQuestionPresenter(props: PresenterProps<ItemQuestionType>) {
 
     return <>
         {/* Defined above question instructions instead for cloze and dnd questions */}
-        {!isClozeQuestion(doc) && !isDndQuestion(doc) && <CheckboxDocProp doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} />}
+        {!isClozeQuestion(doc) && !isDndQuestion(doc) && <CheckboxDocProp className="d-inline-flex" doc={doc} update={update} prop="randomiseItems" label="Randomise items on question load" checkedIfUndefined={true} />}
         <ContentValueOrChildrenPresenter {...props} topLevel />
 
         <Box name="Items">
@@ -212,9 +213,8 @@ export function ItemChoicePresenter(props: PresenterProps<ParsonsItem>) {
     };
     const staticItems = isClozeQuestion && allowSubsetMatch && item.id !== NULL_CLOZE_ITEM_ID ? [NULL_CLOZE_ITEM] : [];
 
-    const dropdown = <Dropdown toggle={() => setOpen(toggle => !toggle)}
-        isOpen={isOpen}>
-        <Dropdown.Toggle variant="outline-secondary" className={styles.dropdownButton}>
+    const dropdown = <Dropdown onToggle={() => setOpen(toggle => !toggle)} show={isOpen}>
+        <Dropdown.Toggle variant="outline-secondary" className={classNames(styles.dropdownButton, styles.noCaret)}>
             <ItemRow item={item} />
         </Dropdown.Toggle>
         <Dropdown.Menu className={styles.itemChoiceDropdown}>
@@ -269,7 +269,7 @@ const DropZoneSelector = (props: PresenterProps<DndItem>) => {
 
     return <>
         <Dropdown onToggle={() => setOpen(toggle => !toggle)} show={isOpen}>
-            <Dropdown.Toggle variant="outline-secondary" className={styles.dropdownButton}>
+            <Dropdown.Toggle variant="outline-secondary" className={classNames(styles.dropdownButton, styles.noCaret)}>
                 Drop zone&nbsp;<b>{doc.dropZoneId}</b>:
             </Dropdown.Toggle>
             <Dropdown.Menu className={styles.itemChoiceDropdown}>
@@ -304,8 +304,8 @@ export function DndChoicePresenter(props: PresenterProps<DndItem>) {
 
     return <div className={styles.itemsChoiceRow}>
         <DropZoneSelector {...props} />
-        <Dropdown onToggle={() => setOpen(toggle => !toggle)} isOpen={isOpen}>
-            <Dropdown.Toggle variant="outline-secondary" className={styles.dropdownButton}>
+        <Dropdown onToggle={() => setOpen(toggle => !toggle)} show={isOpen}>
+            <Dropdown.Toggle variant="outline-secondary" className={classNames(styles.dropdownButton, styles.noCaret)}>
                 {item ? <ItemRow item={item} /> : <div>⚠️ Select an item...</div>}
             </Dropdown.Toggle>
             <Dropdown.Menu className={styles.itemChoiceDropdown}>

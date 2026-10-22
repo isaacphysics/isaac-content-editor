@@ -112,8 +112,8 @@ export const FormulaPresenterInner = buildValuePresenter(
             }
         } else {
             return <>
-                <Form.LabeledInput value={value} prop="value" label="LaTeX formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>
-                <Form.LabeledInput value={value} prop="pythonExpression" label="Python expression" className={styles.fullWidth} />
+                <LabeledInput value={value} prop="value" label="LaTeX formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>
+                <LabeledInput value={value} prop="pythonExpression" label="Python expression" className={styles.fullWidth} />
             </>;
         }
     },
@@ -137,9 +137,7 @@ export const ChemicalFormulaPresenter = buildValuePresenter(
                 return <Markup trusted-markup-encoding="html">{`$\\ce{${doc.mhchemExpression}}$`}</Markup>;
             }
         } else {
-            return <>
-                <Form.LabeledInput value={value} prop="mhchemExpression" label="mhchem formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>
-            </>;
+            return<LabeledInput value={value} prop="mhchemExpression" label="mhchem formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>;
         }
     },
     (doc: ChemicalFormula) => ({mhchemExpression: doc.mhchemExpression}),
@@ -207,7 +205,7 @@ export const GraphChoicePresenter = buildValuePresenter(
 
             return <pre>{doc.graphSpec}</pre>;
         } else {
-            return <Form.LabeledInput value={value} prop="graphSpec" label="Graph spec" type="textarea" className={styles.graphSpec} />;
+            return <LabeledInput value={value} prop="graphSpec" label="Graph spec" type="textarea" className={styles.graphSpec} />;
         }
     },
     (doc: GraphChoice) => ({graphSpec: doc.graphSpec}),
@@ -317,7 +315,7 @@ export const CoordinateChoicePresenter = (props: ValuePresenterProps<CoordinateC
     }, [numberOfCoordinates]);
 
     return <>
-        {<CheckboxDocProp {...props} doc={props.doc} update={props.update} prop="allowSubsetMatch" label="Enable subset matching" />}
+        <CheckboxDocProp {...props} doc={props.doc} update={props.update} prop="allowSubsetMatch" label="Enable subset matching" />
         <ListPresenterProp {...props} prop="items" childTypeOverride="coordinateItem$choice" />
     </>;
 };
@@ -344,12 +342,12 @@ export function ChoicePresenter(props: PresenterProps<Choice>) {
     const choice = props.doc;
     const ChoiceValuePresenter = CHOICE_REGISTRY[choice.type as CHOICE_TYPES] ?? BaseValuePresenter;
     return <div className={styles.choice}>
-        <Button variant="secondary" onClick={() => {
+        <Button onClick={() => {
             props.update({
                 ...choice,
                 correct: !choice.correct,
             });
-        }} color={choice.correct ? "success" : "danger"}>
+        }} variant={choice.correct ? "success" : "danger"}>
             {choice.correct ? "✓" : "✗"}
         </Button>
         <ValueWrapper className={styles.choiceValue} valueRef={choiceValueRef}>

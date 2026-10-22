@@ -27,7 +27,7 @@ export function RelatedContentPresenter({doc, update}: PresenterProps) {
         <ArrayPropPresenterInner 
             doc={doc} update={update} prop="relatedContent" getChildId={(c: string) => c ?? ""} 
             calculateButtonProps={(c: Content) => ({
-                color: c.type === "isaacQuestionPage" ? "success" : c.type === "isaacFastTrackQuestionPage" ? "secondary" : "primary",
+                variant: `outline-${c.type === "isaacQuestionPage" ? "success" : c.type === "isaacFastTrackQuestionPage" ? "secondary" : "primary"}`,
             })}
         />
     </ArrayPropValueConstraintContext.Provider>;

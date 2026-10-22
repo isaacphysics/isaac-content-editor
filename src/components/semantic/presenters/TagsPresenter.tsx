@@ -11,7 +11,7 @@ import styles from "../styles/tags.module.css";
 
 export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {subjectsOnly?: boolean}) {
     const [searchString, setSearchString] = useState("");
-    const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const {data: tagList} = useSWR<string[]>(
         searchString !== "" ? "content/tags" : null,
         stagingFetcher,
@@ -59,7 +59,7 @@ export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {sub
         update({...doc, tags});
     }
 
-    function onKeyPress(e: React.KeyboardEvent) {
+    function onKeyDown(e: React.KeyboardEvent) {
         if (e.key === "Enter") {
             addTag(searchString);
             e.preventDefault();
@@ -71,8 +71,8 @@ export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {sub
         <Form.Control value={searchString}
             onChange={(e) => setSearchString(e.target.value.toLowerCase())}
             placeholder={`Type to add ${subjectsOnly ? "subjects" : "tags"}...`}
-            innerRef={inputRef}
-            onKeyPress={onKeyPress}
+            ref={inputRef}
+            onKeyDown={onKeyDown}
         />
         {searchString !== "" && <div>
             <Button variant="secondary" onClick={() => setShowTagList(!showTagList)}>

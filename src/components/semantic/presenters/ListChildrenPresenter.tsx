@@ -1,4 +1,4 @@
-import React, {MouseEvent, MutableRefObject, useCallback, useMemo} from "react";
+import React, {JSX, MouseEvent, MutableRefObject, useCallback, useMemo} from "react";
 import {Button} from "react-bootstrap";
 
 import {Content, ContentBase} from "../../../isaac-data-types";

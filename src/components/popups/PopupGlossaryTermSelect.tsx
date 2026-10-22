@@ -93,13 +93,13 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
                 <hr/>
                 <InputGroup className={"ps-4"}>
                     <Form.Label for={"glossary-term-full-or-inline"}>Inline glossary term?</Form.Label>
-                    <Form.Control type={"checkbox"} id="glossary-term-full-or-inline" onChange={e => setIsInlineTerm(e.target.checked)} checked={isInlineTerm}/>
+                    <Form.Check id="glossary-term-full-or-inline" onChange={e => setIsInlineTerm(e.target.checked)} checked={isInlineTerm}/>
                 </InputGroup>
                 {isInlineTerm ?
                     <>
                         <InputGroup className={"ps-4"}>
                             <Form.Label for={"glossary-term-titled-or-not"}>Titled glossary term?</Form.Label>
-                            <Form.Control type={"checkbox"} id="glossary-term-titled-or-not" onChange={e => setIsTitledTerm(e.target.checked)} checked={isTitledTerm}/>
+                            <Form.Check id="glossary-term-titled-or-not" onChange={e => setIsTitledTerm(e.target.checked)} checked={isTitledTerm}/>
                         </InputGroup>
                         <Form.Label for={"term-text-input"}>Text to display:</Form.Label>
                         <Form.Control id={"term-text-input"} placeholder={glossaryTerm?.label ?? "None"} value={glossaryTermText} onChange={(e) => setGlossaryTermText(e.target.value)} />

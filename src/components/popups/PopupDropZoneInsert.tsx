@@ -84,7 +84,7 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
                 <hr/>
                 <InputGroup className={"ps-4"}>
                     <Form.Label for={"drop-zone-in-latex"}>Inside LaTeX?:</Form.Label>
-                    <Form.Check type={"checkbox"} className="ms-1 rounded-1" id={"drop-zone-in-latex"} onChange={() => setInLatex(b => !b)} checked={inLatex} />
+                    <Form.Check className="ms-1 rounded-1" id={"drop-zone-in-latex"} onChange={() => setInLatex(b => !b)} checked={inLatex} />
                 </InputGroup>
                 <hr/>
                 <PopupCloseContext.Consumer>
