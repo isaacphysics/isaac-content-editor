@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Alert, Button, FormGroup, Form, Modal, Tooltip, OverlayTrigger } from "react-bootstrap";
+import { Alert, Button, Form, Modal, Tooltip, OverlayTrigger } from "react-bootstrap";
 
 import styles from "../styles/editor.module.css";
 import { AppContext } from "../AppContext";
@@ -35,7 +35,7 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
                 Rename the titles of question parts <b>inside accordions</b> to match a standard format
                 (e.g. &quot;A.i&quot;, &quot;A.ii&quot;, &quot;B&quot;, etc)
             </span>
-            <FormGroup className="my-2">
+            <Form.Group className="my-2">
                 <Form.Check id="overwrite-old-titles">
                     <Form.Check.Input checked={overwriteOldTitles} onChange={e => setOverwriteOldTitles(e.target.checked)}/>
                     <Form.Check.Label>
@@ -48,7 +48,7 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
                         
                     </Form.Check.Label>
                 </Form.Check>
-            </FormGroup>
+            </Form.Group>
             {content?.published && <Alert variant="warning">Replacing question part titles on published content may lead to inconsistent progress stats, so should be avoided.</Alert>}
         </Modal.Body>
         <Modal.Footer>

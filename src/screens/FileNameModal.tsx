@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, FormGroup, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 
 export interface FileNameModalProps {
     actionName: string;
@@ -21,14 +21,14 @@ export function FileNameModal(props: FileNameModalProps) {
     return <Modal show={props.isOpen} toggle={cancel} onKeyDown={(e: React.KeyboardEvent) => e.key === "Enter" && confirm()} autoFocus={false}>
         <Modal.Header >File: {props.actionName}</Modal.Header>
         <Modal.Body>
-            <FormGroup>
+            <Form.Group>
                 <Form.Label for="rename-input">Please type a new name for the file. If no extension is provided, &quot;.json&quot; will be assumed.</Form.Label>
                 <Form.Control id="rename-input" value={newName} onChange={e => setNewName(e.target.value)} autoFocus/>
-            </FormGroup>
-            {isJson && <FormGroup>
+            </Form.Group>
+            {isJson && <Form.Group>
                 <Form.Check id="update-image-paths" checked={updateImagePaths}
                     onChange={e => setUpdateImagePaths(e.target.checked)} label="Update image paths"/>
-            </FormGroup>}
+            </Form.Group>}
         </Modal.Body>
         <Modal.Footer>
             <Button onClick={confirm}>{props.actionName}</Button>
