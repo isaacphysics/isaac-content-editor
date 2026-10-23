@@ -28,8 +28,8 @@ export function SetPartTitleModal(props: PartTitleModalProps) {
         setOpen?.(false);
     };
 
-    return <Modal show={isOpen}>
-        <Modal.Header>Set question part titles</Modal.Header>
+    return <Modal show={isOpen} onHide={closeModal}>
+        <Modal.Header closeButton>Set question part titles</Modal.Header>
         <Modal.Body className={styles.menuModalButtons}>
             <span>
                 Rename the titles of question parts <b>inside accordions</b> to match a standard format

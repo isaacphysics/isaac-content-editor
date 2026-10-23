@@ -18,8 +18,8 @@ export function FileNameModal(props: FileNameModalProps) {
     const confirm = () => props.onClose({ newName, updateImagePaths });
     const cancel = () => props.onClose(null);
 
-    return <Modal show={props.isOpen} toggle={cancel} onKeyDown={(e: React.KeyboardEvent) => e.key === "Enter" && confirm()} autoFocus={false}>
-        <Modal.Header >File: {props.actionName}</Modal.Header>
+    return <Modal show={props.isOpen} onHide={cancel} onKeyDown={(e: React.KeyboardEvent) => e.key === "Enter" && confirm()} autoFocus={false}>
+        <Modal.Header closeButton>File: {props.actionName}</Modal.Header>
         <Modal.Body>
             <Form.Group>
                 <Form.Label for="rename-input">Please type a new name for the file. If no extension is provided, &quot;.json&quot; will be assumed.</Form.Label>

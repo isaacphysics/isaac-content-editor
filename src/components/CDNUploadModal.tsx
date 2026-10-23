@@ -171,18 +171,11 @@ export const CDNUploadModal = () => {
         if (open) setShowAccessibilityNotice(true);
     }, [open]);
 
-    return <Modal show={open} toggle={toggle} size={"xl"} keyboard={false} backdrop={"static"}>
-        <Modal.Header className={"modal-header w-100 d-block"}>
-            <Row className={"justify-content-end"}>
-                <Col xs={9} className={"pt-2 ps-4"}>
-                    <h5 className={"modal-title"}>Upload to CDN</h5>
-                </Col>
-                <Col xs={3} className={"pe-4"}>
-                    <Button variant="secondary" className={"w-100"} onClick={toggle}>
-                        Close
-                    </Button>
-                </Col>
-            </Row>
+    return <Modal show={open} onHide={toggle} size={"xl"} keyboard={false} backdrop={"static"}>
+        <Modal.Header closeButton>
+            <Modal.Title>
+                Upload to CDN
+            </Modal.Title>
         </Modal.Header>
         <Modal.Body>
             {showAccessibilityNotice && <Alert variant="warning">

@@ -134,8 +134,8 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
         return null;
     }
 
-    return <Modal show={open} toggle={toggle} size="xl">
-        <Modal.Header onToggle={toggle}>Add figure regions</Modal.Header>
+    return <Modal show={open} onHide={toggle} size="xl">
+        <Modal.Header closeButton>Add figure regions</Modal.Header>
         <Modal.Body className={styles.figureRegionModalBody}>
             <div className="d-flex flex-column justify-content-center">
                 <div id="figure-image-container" className={classNames(styles.figureRegionImageContainer, "align-self-center")} ref={imageContainerRef}>
