@@ -1,4 +1,4 @@
-import React, {ChangeEvent, ContextType, JSX, useContext, useState} from "react";
+import React, {ChangeEvent, ContextType, useContext, useState} from "react";
 import { Col, Form, FormText, Row } from "react-bootstrap";
 
 import { Content } from "../../isaac-data-types";
