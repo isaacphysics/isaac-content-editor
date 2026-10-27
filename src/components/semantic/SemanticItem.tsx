@@ -35,7 +35,7 @@
  */
 
 import React, {FunctionComponent, MouseEvent, useRef, useState} from "react";
-import {Alert} from "reactstrap";
+import {Alert} from "react-bootstrap";
 
 import {Content} from "../../isaac-data-types";
 
@@ -168,7 +168,7 @@ export class SemanticItem extends React.Component<SemanticItemProps, { hasError:
         const entryType = getEntryType(doc);
         if (this.state.hasError) {
             return <Box name={name || entryType.name} {...rest}>
-                <Alert color="danger">
+                <Alert variant="danger">
                     <b>Error editing this component</b>
                     <br />
                     <small>{this.state.error}</small>

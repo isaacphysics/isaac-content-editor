@@ -161,6 +161,10 @@
     display: flex;
 }
 
+.noCaret::after {
+    display: none;
+}
+
 .editorWrapper {
     flex: 1;
     display: flex;

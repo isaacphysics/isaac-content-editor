@@ -1,6 +1,6 @@
 /* eslint-disable no-irregular-whitespace */  // For convenient construction of non-breaking spaces in custom strings
-import React, { MutableRefObject, ReactNode, useCallback, useMemo, useRef, useState } from "react";
-import {Button, ButtonGroup} from "reactstrap";
+import React, { ReactNode, RefObject, useCallback, useMemo, useRef, useState } from "react";
+import {Button, ButtonGroup} from "react-bootstrap";
 
 import { Content, IsaacTabs } from "../../../isaac-data-types";
 import { safeLowercase } from "../../../utils/strings";
@@ -26,7 +26,7 @@ export type TabsSettings = {
 };
 
 export type TabsProps = {
-    docRef: MutableRefObject<Content>;
+    docRef: RefObject<Content>;
     currentChild: Content | undefined;
     doInsert: (newContent: Content) => void;
     doShift: (amount: number) => void;
@@ -58,8 +58,7 @@ export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styl
             <div className={styles.buttonsSpacer}/>
             {docRef.current.children?.map((child: Content, i) => {
                 return <Button key={child.id || `__index__${i}`}
-                    outline
-                    color={index === i ? "primary" : undefined}
+                    variant={index === i ? "outline-primary" : "outline-secondary"}
                     className={styles.button}
                     onMouseDown={(e) => {
                         e.preventDefault();
@@ -69,8 +68,7 @@ export function TabsHeader({docRef, doInsert, index, setIndex, elementName, styl
                 </Button>;
             })}
             <Button key="__add"
-                outline
-                color="info"
+                variant="outline-info"
                 className={styles.button}
                 onMouseDown={(e) => {
                     e.preventDefault();
@@ -102,14 +100,14 @@ export function TabsMain({docRef, currentChild, updateCurrentChild, doRemove, do
                 <EditableIDProp doc={currentChild} update={updateCurrentChild} label={`${elementName} ID`} block={false} />
                 {extraButtons}
                 <ButtonGroup>
-                    <Button size="sm" disabled={index <= 0} onClick={() => doShift(-1)}>
+                    <Button variant="secondary" size="sm" disabled={index <= 0} onClick={() => doShift(-1)}>
                         {back}
                     </Button>
-                    <Button size="sm" disabled={index >= (docRef.current.children?.length ?? 1) - 1} onClick={() => doShift(1)}>
+                    <Button variant="secondary" size="sm" disabled={index >= (docRef.current.children?.length ?? 1) - 1} onClick={() => doShift(1)}>
                         {forward}
                     </Button>
                 </ButtonGroup>
-                <Button size="sm" color="danger" onClick={doRemove}>Delete {elementNameLC}</Button>
+                <Button size="sm" variant="danger" onClick={doRemove}>Delete {elementNameLC}</Button>
             </div>
             {contentHeader}
             <SemanticItem className={styles.hideMargins} doc={currentChild} update={updateCurrentChild}/>
@@ -212,7 +210,7 @@ export function TabsPresenter(props: PresenterProps<IsaacTabs>) {
                     placeHolder="Tab title" hideWhenEmpty /></h3>
             </div> : undefined
         } extraButtons={<>
-            {showTitles && currentChild && !currentChild.title && <Button size="sm" onClick={() => editTitleRef.current?.startEdit()}>Set tab title</Button>}
+            {showTitles && currentChild && !currentChild.title && <Button variant="secondary" size="sm" onClick={() => editTitleRef.current?.startEdit()}>Set tab title</Button>}
         </>}/>
     </div>;
 }

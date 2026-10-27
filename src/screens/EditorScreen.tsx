@@ -2,11 +2,11 @@ import React, {ContextType, useCallback, useEffect, useMemo, useRef, useState} f
 import {SWRConfig, useSWRConfig} from "swr";
 import {Params, useNavigate, useParams} from "react-router-dom";
 import {useBlocker, useLocation} from "react-router";
-import {Modal, Spinner} from "reactstrap";
+import {Modal, Spinner} from "react-bootstrap";
 import {ErrorBoundary} from "react-error-boundary";
 import {Selection} from "../components/FileBrowser";
 import {LeftMenu} from "../components/LeftMenu";
-import {AppContext} from "../App";
+import {AppContext} from "../AppContext";
 import {defaultGithubContext, fetcher} from "../services/github";
 import {SemanticEditor} from "../components/SemanticEditor";
 import {Content} from "../isaac-data-types";
@@ -337,9 +337,9 @@ export function EditorScreen() {
                 </div>
             </Split>
 
-            <Modal isOpen={actionRunning} contentClassName={styles.actionsModalContent}>
+            <Modal show={actionRunning} contentClassName={styles.actionsModalContent}>
                 <div className={styles.centered}>
-                    <Spinner size="lg" />
+                    <Spinner />
                     <h2>Processing...</h2>
                 </div>
             </Modal>

@@ -6,7 +6,7 @@ import React, {
     useState
 } from "react";
 
-import { AppContext } from "../../App";
+import { AppContext } from "../../AppContext";
 
 import { Entry } from "../FileBrowser";
 

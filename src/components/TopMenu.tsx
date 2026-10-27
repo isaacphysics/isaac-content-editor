@@ -1,6 +1,6 @@
 import React, {useContext, useRef, useState} from "react";
 
-import {AppContext} from "../App";
+import {AppContext} from "../AppContext";
 import {useGithubContents} from "../services/github";
 
 import {PopupMenu, PopupMenuRef} from "./popups/PopupMenu";
@@ -11,7 +11,7 @@ import {Content} from "../isaac-data-types";
 import {LiveServer, StagingServer} from "../services/isaacApi";
 import classNames from "classnames";
 import {BOOK_DETAIL_ID_SEPARATOR} from "../services/constants";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from "reactstrap";
+import {Dropdown} from "react-bootstrap";
 
 function filePathToEntry(path: string | undefined, sha: string): Entry {
     const name = path?.substring(path?.lastIndexOf("/") + 1) ?? "";
@@ -81,16 +81,16 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
         {previewable && selection && !selection.isDir && previewLink && <a href={previewLink} target="_blank" className={styles.iconButton} >
             Staging
         </a>}
-        {selection && !selection.isDir && <Dropdown className="d-flex" isOpen={isOpen} toggle={() => setOpen(open => !open)}>
-            <DropdownToggle className={classNames(styles.iconButton, "px-1")}>▼</DropdownToggle>
-            <DropdownMenu>
-                {liveLink && <DropdownItem>
+        {selection && !selection.isDir && <Dropdown className="d-flex" show={isOpen} onToggle={() => setOpen(open => !open)}>
+            <Dropdown.Toggle variant="secondary" className={classNames(styles.iconButton, styles.noCaret, "px-1")}>▼</Dropdown.Toggle>
+            <Dropdown.Menu>
+                {liveLink && <Dropdown.Item>
                     <a href={liveLink} target="_blank">View on live</a>
-                </DropdownItem>}
-                <DropdownItem>
+                </Dropdown.Item>}
+                <Dropdown.Item>
                     <a href={`${StagingServer}/admin/content_errors?path=${selection.path}`} target="_blank">View content errors</a>
-                </DropdownItem>
-            </DropdownMenu>
+                </Dropdown.Item>
+            </Dropdown.Menu>
         </Dropdown>}
         <PopupMenu menuRef={menuRef} />
     </div>;

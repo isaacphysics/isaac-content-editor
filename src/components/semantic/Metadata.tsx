@@ -1,12 +1,11 @@
 import React, {ChangeEvent, ContextType, useContext, useState} from "react";
-import { Col, Form, FormText, Input, Label, Row } from "reactstrap";
-import { InputType } from "reactstrap/lib/Input";
+import { Col, Form, FormText, Row } from "react-bootstrap";
 
 import { Content } from "../../isaac-data-types";
 
 import { PresenterProps } from "./registry";
 import { MetaItems } from "./metaItems";
-import { AppContext } from "../../App";
+import { AppContext } from "../../AppContext";
 
 import styles from "./styles/metadata.module.css";
 
@@ -17,7 +16,7 @@ export type MetaOptions = {
     deleteIfEmpty?: boolean;
     options?: Record<string, string>;
 } & (
-    { type?: Exclude<InputType, "number">; min?: never; max?: never;} |
+    { type?: string; min?: never; max?: never;} |
     { type: "number"; min?: number; max?: number; }
 );
 
@@ -88,20 +87,36 @@ export function MetaItemPresenter({doc, update, id, prop, name, options}: MetaIt
     const checkedOnChange = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.checked as unknown as string);
 
     return <>
-        <Input type={options?.type ?? "text"}
-            value={options?.type !== "checkbox" ? value : undefined}
-            checked={options?.type === "checkbox" ? value as unknown as boolean : undefined}
-            onChange={options?.type !== "checkbox" ? valueOnChange : checkedOnChange}
-            invalid={!!warning}
-            // eslint-disable-next-line react/no-children-prop
-            children={options?.options && Object.entries(options?.options).map(([key, label]) =>
-                <option key={key} value={key}>{label}</option>
-            )}
-            placeholder={name}
-            id={id}
-            min={options?.type === "number" ? options.min : undefined}
-            max={options?.type === "number" ? options.max : undefined}
-        />
+        {options?.type === "checkbox" ? 
+            <Form.Check 
+                checked={value as unknown as boolean}
+                onChange={checkedOnChange}
+                isInvalid={!!warning}
+                placeholder={name}
+                id={id}
+            /> : options?.type === "select" ? 
+                <Form.Select
+                    value={value}
+                    isInvalid={!!warning}
+                    id={id}
+                > 
+                    {options?.options && Object.entries(options?.options).map(([key, label]) =>
+                        <option key={key} value={key}>{label}</option>
+                    )}
+                </Form.Select>:
+                <Form.Control type={options?.type ?? "text"}
+                    value={value}
+                    onChange={valueOnChange}
+                    isInvalid={!!warning}
+                    // eslint-disable-next-line react/no-children-prop
+                    children={options?.options && Object.entries(options?.options).map(([key, label]) =>
+                        <option key={key} value={key}>{label}</option>
+                    )}
+                    placeholder={name}
+                    id={id}
+                    min={options?.type === "number" ? options.min : undefined}
+                    max={options?.type === "number" ? options.max : undefined}
+                />}
         {warning && <FormText>{warning}</FormText>}
     </>;
 }
@@ -116,7 +131,7 @@ export function MetadataPresenter(props: PresenterProps & { metadata: MetaItemKe
             const id = `meta-label-${metaLabelId++}`;
             return <Row key={prop} className={styles.row}>
                 <Col xs={2} className={styles.label}>
-                    <Label for={id}>{name}</Label>
+                    <Form.Label for={id}>{name}</Form.Label>
                 </Col>
                 <Col xs={10}>
                     <Presenter {...rest} prop={prop} id={id} name={name} options={options} />

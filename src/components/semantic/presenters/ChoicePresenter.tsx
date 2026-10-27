@@ -1,6 +1,5 @@
 import React, {MutableRefObject, useContext, useEffect, useRef, useState,} from "react";
-import {Alert, Button, Input, Label} from "reactstrap";
-import {InputType} from "reactstrap/lib/Input";
+import {Alert, Button, Form} from "react-bootstrap";
 
 import {
     ChemicalFormula,
@@ -46,16 +45,16 @@ interface LabeledInputProps<V extends Record<string, string | undefined>> {
     prop: keyof V;
     label: string;
     className?: string;
-    type?: InputType;
+    type?: string;
     warningFunction?: (inputText: string) => string;
 }
 
 function LabeledInput<V extends Record<string, string | undefined>>({value, prop, label, className, type, warningFunction}: LabeledInputProps<V>) {
     const [warning, setWarning] = useState<string>();
 
-    return <Label className={className}>
+    return <Form.Label className={className}>
         {label}
-        <Input type={type ?? "text"}
+        <Form.Control type={type ?? "text"}
             autoFocus
             defaultValue={value.current?.[prop]}
             onChange={(e) => {
@@ -64,10 +63,10 @@ function LabeledInput<V extends Record<string, string | undefined>>({value, prop
                     setWarning(warningFunction ? warningFunction(e.target.value) : "");
                 }
             }}
-            invalid={!!warning}
+            isInvalid={!!warning}
         />
         {warning && <div className="text-danger">{warning}</div>}
-    </Label>;
+    </Form.Label>;
 }
 
 export const QuantityPresenter = buildValuePresenter(
@@ -138,9 +137,7 @@ export const ChemicalFormulaPresenter = buildValuePresenter(
                 return <Markup trusted-markup-encoding="html">{`$\\ce{${doc.mhchemExpression}}$`}</Markup>;
             }
         } else {
-            return <>
-                <LabeledInput value={value} prop="mhchemExpression" label="mhchem formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>
-            </>;
+            return<LabeledInput value={value} prop="mhchemExpression" label="mhchem formula" className={styles.fullWidth} warningFunction={hasFiveOrMoreDigits()}/>;
         }
     },
     (doc: ChemicalFormula) => ({mhchemExpression: doc.mhchemExpression}),
@@ -195,7 +192,7 @@ export const RegexPatternPresenter = (props: ValuePresenterProps<RegexPattern>) 
         <CheckboxDocProp {...rest} prop="caseInsensitive" label="Case insensitive" />
         <CheckboxDocProp {...rest} prop="multiLineRegex" label="Multi-line regular expression" disabled={inlineQuestionContext?.isInlineQuestion}/>
         <br />
-        <Button onClick={regexHelper}>Test Regex</Button>
+        <Button variant="secondary" onClick={regexHelper}>Test Regex</Button>
     </>;
 };
 
@@ -254,20 +251,20 @@ export const ItemChoicePresenter = (props: ValuePresenterProps<ItemChoice>) => {
 
     return <>
         {doc.type === "itemChoice" && <CheckboxDocProp {...props} doc={doc} update={props.update} prop="allowSubsetMatch" label="Enable wildcard matching of items (previously called subset matching)" />}
-        {doc.type === "itemChoice" && isClozeQuestion && !doc.allowSubsetMatch && doc.items?.find(i => i.id === NULL_CLOZE_ITEM_ID) && <Alert color={"warning"}>
+        {doc.type === "itemChoice" && isClozeQuestion && !doc.allowSubsetMatch && doc.items?.find(i => i.id === NULL_CLOZE_ITEM_ID) && <Alert variant={"warning"}>
             Please fill in all &quot;Any item&quot; placeholders. If you would like to use wildcard matching, tick the box above.
         </Alert>}
-        {doc.type === "itemChoice" && showClozeChoiceWarning && <Alert color={"danger"}>
+        {doc.type === "itemChoice" && showClozeChoiceWarning && <Alert variant={"danger"}>
             In order for cloze questions to work as expected, the choice must be the same length as the number of
             drop zones, and should contain &quot;Any item&quot; placeholders in slots that should be ignored (if using
             wildcard matching).<br/>
             If a choice does not have the same number of items as drop zones, <b>it will not be checked against the
                 users answer</b>.
         </Alert>}
-        {doc.type === "itemChoice" && requireAllItems && remainingItems.length !== 0 && !doc.allowSubsetMatch && <Alert color="warning">
+        {doc.type === "itemChoice" && requireAllItems && remainingItems.length !== 0 && !doc.allowSubsetMatch && <Alert variant="warning">
             All items are required when reordering within one list. If you would like to use wildcard matching, tick the box above.
         </Alert>}
-        {doc.type === "parsonsChoice" && requireAllItems && remainingItems.length !== 0 && <Alert color="warning">
+        {doc.type === "parsonsChoice" && requireAllItems && remainingItems.length !== 0 && <Alert variant="warning">
             All items are required when reordering within one list.
         </Alert>}
         <ItemsContext.Provider value={{items, remainingItems, remainingDropZones: undefined, withReplacement, disableIndentation, allowSubsetMatch: doc.allowSubsetMatch, isCorrect: doc.correct}}>
@@ -292,7 +289,7 @@ export const DndChoicePresenter = (props: ValuePresenterProps<DndChoice>) => {
         <ItemsContext.Provider value={{items, remainingItems, remainingDropZones, withReplacement, disableIndentation, allowSubsetMatch: undefined, isCorrect: doc.correct}}>
             <ListPresenterProp {...props} doc={doc} update={update} prop="items" childTypeOverride="dndItem$choice" />
         </ItemsContext.Provider>
-        {dropZoneIds.length === 0 && <Alert color={"warning"} className="mt-3">
+        {dropZoneIds.length === 0 && <Alert variant={"warning"} className="mt-3">
             Add some drop zones to the question before adding choices.
         </Alert>}
     </>;
@@ -318,29 +315,29 @@ export const CoordinateChoicePresenter = (props: ValuePresenterProps<CoordinateC
     }, [numberOfCoordinates]);
 
     return <>
-        {<CheckboxDocProp {...props} doc={props.doc} update={props.update} prop="allowSubsetMatch" label="Enable subset matching" />}
+        <CheckboxDocProp {...props} doc={props.doc} update={props.update} prop="allowSubsetMatch" label="Enable subset matching" />
         <ListPresenterProp {...props} prop="items" childTypeOverride="coordinateItem$choice" />
     </>;
 };
 
-const CHOICE_REGISTRY: Record<CHOICE_TYPES, ValuePresenter<Choice>> = {
-    choice: BaseValuePresenter,
-    quantity: QuantityPresenter,
-    formula: FormulaPresenter,
-    chemicalFormula: ChemicalFormulaPresenter,
-    stringChoice: StringChoicePresenter,
-    freeTextRule: FreeTextRulePresenter,
-    logicFormula: FormulaPresenter,
-    graphChoice: GraphChoicePresenter,
-    regexPattern: RegexPatternPresenter,
-    itemChoice: ItemChoicePresenter,
-    parsonsChoice: ItemChoicePresenter,
-    dndChoice: DndChoicePresenter,
-    coordinateChoice: CoordinateChoicePresenter,
-};
-
 export function ChoicePresenter(props: PresenterProps<Choice>) {
     const choiceValueRef = useRef<ValuePresenterRef>(null);
+
+    const CHOICE_REGISTRY: Record<CHOICE_TYPES, ValuePresenter<Choice>> = {
+        choice: BaseValuePresenter,
+        quantity: QuantityPresenter,
+        formula: FormulaPresenter,
+        chemicalFormula: ChemicalFormulaPresenter,
+        stringChoice: StringChoicePresenter,
+        freeTextRule: FreeTextRulePresenter,
+        logicFormula: FormulaPresenter,
+        graphChoice: GraphChoicePresenter,
+        regexPattern: RegexPatternPresenter,
+        itemChoice: ItemChoicePresenter,
+        parsonsChoice: ItemChoicePresenter,
+        dndChoice: DndChoicePresenter,
+        coordinateChoice: CoordinateChoicePresenter,
+    };
 
     const choice = props.doc;
     const ChoiceValuePresenter = CHOICE_REGISTRY[choice.type as CHOICE_TYPES] ?? BaseValuePresenter;
@@ -350,7 +347,7 @@ export function ChoicePresenter(props: PresenterProps<Choice>) {
                 ...choice,
                 correct: !choice.correct,
             });
-        }} color={choice.correct ? "success" : "danger"}>
+        }} variant={choice.correct ? "success" : "danger"}>
             {choice.correct ? "✓" : "✗"}
         </Button>
         <ValueWrapper className={styles.choiceValue} valueRef={choiceValueRef}>

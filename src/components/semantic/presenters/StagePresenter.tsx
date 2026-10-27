@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input } from "reactstrap";
+import { Button, Form } from "react-bootstrap";
 import { GlossaryTerm } from "../../../isaac-data-types";
 
 import { PresenterProps } from "../registry";
@@ -10,7 +10,7 @@ import { siteSpecific } from "../../../services/site";
 
 export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     const [searchString, setSearchString] = useState("");
-    const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const [showStageList, setShowStageList] = useState(true);
     const [filteredStageList, setFilteredStageList] = useState<string[]>();
 
@@ -60,7 +60,7 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
         update({...doc, stages: stages});
     }
 
-    function onKeyPress(e: React.KeyboardEvent) {
+    function onKeyDown(e: React.KeyboardEvent) {
         if (e.key === "Enter") {
             addStage(searchString);
             e.preventDefault();
@@ -68,21 +68,21 @@ export function StagePresenter({doc, update}: PresenterProps<GlossaryTerm>) {
     }
 
     return <div className={styles.wrapper}>
-        {doc.stages?.map(stage => <Button key={stage} outline onClick={() => removeStage(stage)}>{stage} ➖</Button>)}
-        <Input value={searchString}
+        {doc.stages?.map(stage => <Button key={stage} variant="outline-secondary" onClick={() => removeStage(stage)}>{stage} ➖</Button>)}
+        <Form.Control value={searchString}
             onChange={(e) => setSearchString(e.target.value.toLowerCase())}
             placeholder="Type to add stages..."
-            innerRef={inputRef}
-            onKeyPress={onKeyPress}
+            ref={inputRef}
+            onKeyDown={onKeyDown}
         />
         {searchString !== "" && <div>
-            <Button onClick={() => setShowStageList(!showStageList)}>
+            <Button variant="secondary" onClick={() => setShowStageList(!showStageList)}>
                 {showStageList ? "Hide stages" : "Show available stages"}
             </Button>
             {showStageList && (filteredStageList?.map((stage) =>
-                <Button key={stage} outline color="primary" onClick={() => addStage(stage)}>{stage} ➕</Button>
+                <Button key={stage} variant="outline-primary" onClick={() => addStage(stage)}>{stage} ➕</Button>
             ) ?? <em>Loading...</em>)}
-            <Button color="success" onClick={() => addallStages()}>Add all stages ➕</Button>
+            <Button variant="success" onClick={() => addallStages()}>Add all stages ➕</Button>
         </div>}
     </div>;
 }

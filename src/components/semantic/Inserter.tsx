@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Button, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
+import { Button, Dropdown } from "react-bootstrap";
 
 import { Box } from "./SemanticItem";
 import { InsertButton, InserterProps } from "./presenters/ListChildrenPresenter";
@@ -71,17 +71,17 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                 {blockTypes && Object.entries(blockTypes).map(([name, empty]) => {
                     {/* TODO remove pe-0 and text-start after BS5 upgrade :) */}
                     if (Array.isArray(empty)) {
-                        return <UncontrolledDropdown key={name} tag={"span"} className={styles.inserterDropdown}>
-                            <DropdownToggle caret tag="span">
-                                <Button className="pe-0 pe-0" color="link" caret> 
+                        return <Dropdown key={name} as="span" className={styles.inserterDropdown}>
+                            <Dropdown.Toggle variant="secondary" as="span">
+                                <Button className="pe-0 pe-0" variant="link"> 
                                     {name}
                                 </Button>
-                            </DropdownToggle>
-                            <DropdownMenu container={"root"}>
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
                                 <div className={styles.inserterDropdownMenu}>
                                     {empty.map((option) => {
                                         const {name: embedName, ...rest} = option;
-                                        return <Button key={embedName} color="link" className="w-100 text-start text-start px-4" onClick={() => {
+                                        return <Button key={embedName} variant="link" className="w-100 text-start text-start px-4" onClick={() => {
                                             insert(position, {...rest});
                                             setInserting(false);
                                         }}>
@@ -89,10 +89,10 @@ export function Inserter({insert, forceOpen, position, blockTypes = defaultBlock
                                         </Button>;
                                     })}
                                 </div>
-                            </DropdownMenu>
-                        </UncontrolledDropdown>;
+                            </Dropdown.Menu>
+                        </Dropdown>;
                     } else {
-                        return <Button key={name} color="link" className="text-decoration-none" onClick={() => {
+                        return <Button key={name} className="text-decoration-none" variant="link" onClick={() => {
                             insert(position, {...empty});
                             setInserting(false);
                         }}>

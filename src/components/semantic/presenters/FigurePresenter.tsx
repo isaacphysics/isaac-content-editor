@@ -6,13 +6,13 @@ import { ContentValueOrChildrenPresenter } from "./ContentValueOrChildrenPresent
 import { PresenterProps } from "../registry";
 import { BaseValuePresenter } from "./BaseValuePresenter";
 import {githubUpload, updateGitHubCacheKey, useGithubContents} from "../../../services/github";
-import { AppContext } from "../../../App";
+import { AppContext } from "../../../AppContext";
 import { dirname, generateGuid } from "../../../utils/strings";
 import { useFixedRef } from "../../../utils/hooks";
 
 import styles from "../styles/figure.module.css";
 import {NON_STATIC_FIGURE_FLAG} from "../../../isaac/IsaacTypes";
-import {Alert, Input, Label} from "reactstrap";
+import {Alert, Form} from "react-bootstrap";
 import { DropZoneQuestionContext } from "./questions/ItemQuestionPresenter";
 import { FigureRegionModal } from "../../FigureRegionModal";
 import { isDefined } from "../../../utils/types";
@@ -191,7 +191,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
     }
 
     const figureNumberText = figureNumber === NON_STATIC_FIGURE_FLAG
-        ? <Alert color="info"><small>Figure is in a non-static context, so cannot be given a number</small></Alert>
+        ? <Alert variant="info"><small>Figure is in a non-static context, so cannot be given a number</small></Alert>
         : <h6>{figureNumber ? `Figure ${figureNumber}` : "Set ID to get a figure number"}</h6>;
 
     return <>
@@ -200,7 +200,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
                 <button onClick={imageClick} onDragOver={imageDragOver} onDrop={imageDrop}>
                     <img ref={imageRef} alt={doc.altText} width="250px" height="250px" src="/not-found.png"/>
                 </button>
-                <input type="file" ref={fileRef} className={styles.fileInput} onChange={fileChange} />
+                <Form.Control type="file" ref={fileRef} className={styles.fileInput} onChange={fileChange} />
                 {replacedFile && <div className="alert alert-warning text-center rounded-0 py-0" style={{width: 262}}>
                     Image Replaced
                 </div>}
@@ -239,8 +239,8 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
         </div>}
 
         {/*Set alt text to empty string for decorative images*/}
-        <Label>
-            <Input type="checkbox"
+        <Form.Label>
+            <Form.Check
                 checked={doc.decorative ?? false}
                 onChange={(e) => {
                     if (e.target.checked) {
@@ -260,6 +260,6 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
                 className="me-1"
             />
             Decorative (sets empty alt text)
-        </Label>
+        </Form.Label>
     </>;
 }

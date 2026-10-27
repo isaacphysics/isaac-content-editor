@@ -1,5 +1,5 @@
 import React, {useRef, useState} from "react";
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 import CodeMirror, {EditorState, EditorView, rectangularSelection} from "@uiw/react-codemirror";
 import {json, jsonParseLinter} from "@codemirror/lang-json";
 import {Diagnostic, linter, lintGutter} from "@codemirror/lint";
@@ -82,8 +82,8 @@ export function JSONEditor({doc, update, close}: PresenterProps & { close: () =>
             <MarkupToolbar set={setDocChanges} cancel={cancelDocChanges} encoding={doc.encoding} />
         </CodeMirror>
         <div className={`mt-2 ${styles.editButtons}`}>
-            <Button onClick={cancelDocChanges}>Cancel</Button>
-            <Button color="primary" disabled={!valid} onClick={setDocChanges}>Set</Button>
+            <Button variant="secondary" onClick={cancelDocChanges}>Cancel</Button>
+            <Button disabled={!valid} onClick={setDocChanges}>Set</Button>
         </div>
     </>;
 }

@@ -1,5 +1,5 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
-import {Button, Col, FormText, Input, Label, Row} from "reactstrap";
+import {Button, Col, FormText, Form, Row} from "react-bootstrap";
 
 import {Content, ExternalReference, IsaacEventPage, IsaacQuiz, Location,} from "../../isaac-data-types";
 import {useFixedRef} from "../../utils/hooks";
@@ -14,7 +14,8 @@ import {asMetaItems, checkWarning, MetaItemPresenter, MetaItemPresenterProps} fr
 import styles from "./styles/metadata.module.css";
 import questionStyles from "./styles/question.module.css";
 import {isDefined} from "../../utils/types";
-import {AppContext} from "../../App";
+import {AppContext} from "../../AppContext";
+import classNames from "classnames";
 
 const TITLE_MAX_LENGTH = 32;
 
@@ -59,7 +60,7 @@ export const MetaItems = asMetaItems({
     }}],
     summary: "Summary",
     published: ["Published", {
-        type: "checkbox",
+        presenter: Form.Check,
         hasWarning: (value) => {
             const published = value as boolean;
             if (!published) {
@@ -120,15 +121,15 @@ export const MetaItems = asMetaItems({
 function ReservationsMetaPresenter(props: MetaItemPresenterProps<IsaacEventPage>) {
     const limitId = `${props.id}-limit`;
     return <Row className={styles.row}>
-        <Col xs={1}>
-            <Label for={props.id}>Enabled</Label>
+        <Col xs={props.doc.allowGroupReservations ? 2 : 8}>
+            <Form.Label for={props.id}>Enabled</Form.Label>
         </Col>
         <Col xs={1}>
             <MetaItemPresenter {...props} prop="allowGroupReservations" name="Reservations Enabled" options={{type: "checkbox"}} />
         </Col>
         {props.doc.allowGroupReservations && <>
             <Col xs={3} className={styles.label}>
-                <Label for={`${limitId}`}>Per-teacher Limit</Label>
+                <Form.Label for={`${limitId}`}>Per-teacher Limit</Form.Label>
             </Col>
             <Col xs={5} className={styles.groupReservationLimit}>
                 <MetaItemPresenter {...props} id={limitId} prop="groupReservationLimit" name="Per-teacher Limit" options={{type: "number", defaultValue: 10}} />
@@ -156,7 +157,7 @@ function Deprecated({doc, update, ...rest}: MetaItemPresenterProps<Content>) {
         });
     };
 
-    return <Input type="checkbox" {...rest} checked={!!doc.deprecated} onChange={(e) => onChange(e.target.checked)} />;
+    return <Form.Check {...rest} checked={!!doc.deprecated} onChange={(e) => onChange(e.target.checked)} />;
 }
 
 function Expanded({doc, update, ...rest}: MetaItemPresenterProps<Content> & {className?: string}) {
@@ -167,14 +168,14 @@ function Expanded({doc, update, ...rest}: MetaItemPresenterProps<Content> & {cla
         });
     };
 
-    return <Input type="checkbox" {...rest} checked={doc.layout === "expanded"} onChange={(e) => onChange(e.target.checked)} />;
+    return <Form.Check {...rest} checked={doc.layout === "expanded"} onChange={(e) => onChange(e.target.checked)} />;
 }
 
 export function ExpandedPresenter({doc, update}: Omit<MetaItemPresenterProps<Content>, "prop" | "name">) {
-    return <Label className={questionStyles.checkboxLabel}>
+    return <Form.Label className={classNames(questionStyles.checkboxLabel, "d-inline-flex")}>
         <Expanded doc={doc} update={update} prop="expanded" name="expanded" className="me-1"/>
         Enable expanded layout
-    </Label>;
+    </Form.Label>;
 }
 
 function HiddenFromStudentsAndTutors({doc, update, ...rest}: MetaItemPresenterProps<IsaacQuiz>) {
@@ -193,7 +194,7 @@ function HiddenFromStudentsAndTutors({doc, update, ...rest}: MetaItemPresenterPr
     };
 
     const currentlyHidden = doc.hiddenFromRoles?.includes("STUDENT") && doc.hiddenFromRoles?.includes("TUTOR");
-    return <Input type="checkbox" {...rest} checked={currentlyHidden} onChange={(e) => onChange(e.target.checked)} />;
+    return <Form.Check {...rest} checked={currentlyHidden} onChange={(e) => onChange(e.target.checked)} />;
 }
 
 function DateTimeInput({doc, update, prop, options, ...rest}: MetaItemPresenterProps<IsaacEventPage>) {
@@ -241,7 +242,7 @@ function DateTimeInput({doc, update, prop, options, ...rest}: MetaItemPresenterP
 
     return <>
         <Row>
-            <Col><Input type="text" invalid={isDefined(warning)} {...rest} onChange={onChange} value={dateInput} placeholder="YYYY-MM-DD HH:mm" /></Col>
+            <Col><Form.Control type="text" isInvalid={isDefined(warning)} {...rest} onChange={onChange} value={dateInput} placeholder="YYYY-MM-DD HH:mm" /></Col>
             <Col>{dateOutput}</Col>
         </Row>
         {warning && <FormText className={"mb-1 mt-0"} color={"danger"}>{warning}</FormText>}
@@ -262,7 +263,7 @@ function HiddenFromTeachers({doc, update, ...rest}: MetaItemPresenterProps<Isaac
         });
     };
 
-    return <Input {...rest} type="checkbox" checked={!!doc.hiddenFromRoles?.includes("TEACHER")} onChange={(e) => onChange(e.target.checked)} />;
+    return <Form.Check {...rest} checked={!!doc.hiddenFromRoles?.includes("TEACHER")} onChange={(e) => onChange(e.target.checked)} />;
 }
 
 function LocationMetaPresenter({doc, update, prop, id}: MetaItemPresenterProps) {
@@ -298,16 +299,16 @@ function LocationMetaPresenter({doc, update, prop, id}: MetaItemPresenterProps) 
         <MetaItemPresenter {...addressProps} prop="country" name="Country" />
         <Row>
             <Col xs={5}>
-                <Label>
+                <Form.Label>
                     Longitude
                     <MetaItemPresenter {...locationProps} prop="longitude" name="Longitude" />
-                </Label>
+                </Form.Label>
             </Col>
             <Col xs={5}>
-                <Label>
+                <Form.Label>
                     Latitude
                     <MetaItemPresenter {...locationProps} prop="latitude" name="Latitude" />
-                </Label>
+                </Form.Label>
             </Col>
         </Row>
     </>;
@@ -351,13 +352,13 @@ function ResourcesMetaPresenter({doc, update, prop, name}: MetaItemPresenterProp
                         prop="url" name="URL"/>
                 </Col>
                 <Col xs={2}>
-                    <Button color="link" size="sm" onClick={() => shiftBy(index, -1)} disabled={index <= 0}>▲</Button>
-                    <Button color="link" size="sm" onClick={() => shiftBy(index, 1)} disabled={index >= resources.length - 1}>▼</Button>
-                    <Button color="link" size="sm" onClick={() => remove(index)}>❌</Button>
+                    <Button variant="link" size="sm" onClick={() => shiftBy(index, -1)} disabled={index <= 0}>▲</Button>
+                    <Button variant="link" size="sm" onClick={() => shiftBy(index, 1)} disabled={index >= resources.length - 1}>▼</Button>
+                    <Button variant="link" size="sm" onClick={() => remove(index)}>❌</Button>
                 </Col>
             </Row>;
         })}
-        <Button onClick={() => insert(resources?.length ?? 0, {title:"Event brochure", url:"somewhere/interesting.pdf"})}>
+        <Button variant="secondary" onClick={() => insert(resources?.length ?? 0, {title:"Event brochure", url:"somewhere/interesting.pdf"})}>
             Add {name.substring(0, name.length - 1)}
         </Button>
     </>;

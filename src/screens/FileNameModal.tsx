@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 
 export interface FileNameModalProps {
     actionName: string;
@@ -18,23 +18,22 @@ export function FileNameModal(props: FileNameModalProps) {
     const confirm = () => props.onClose({ newName, updateImagePaths });
     const cancel = () => props.onClose(null);
 
-    return <Modal isOpen={props.isOpen} toggle={cancel} onKeyDown={e => e.key === "Enter" && confirm()} autoFocus={false}>
-        <ModalHeader >File: {props.actionName}</ModalHeader>
-        <ModalBody>
-            <FormGroup>
-                <Label for="rename-input">Please type a new name for the file. If no extension is provided, &quot;.json&quot; will be assumed.</Label>
-                <Input id="rename-input" value={newName} onChange={e => setNewName(e.target.value)} autoFocus/>
-            </FormGroup>
-            {isJson && <FormGroup check>
-                <Input type="checkbox" id="update-image-paths" checked={updateImagePaths}
-                    onChange={e => setUpdateImagePaths(e.target.checked)} />
-                <Label check for="update-image-paths">Update image paths</Label>
-            </FormGroup>}
-        </ModalBody>
-        <ModalFooter>
-            <Button color="primary" onClick={confirm}>{props.actionName}</Button>
-            <Button color="secondary" onClick={cancel}>Cancel</Button>
-        </ModalFooter>
+    return <Modal show={props.isOpen} onHide={cancel} onKeyDown={(e: React.KeyboardEvent) => e.key === "Enter" && confirm()} autoFocus={false}>
+        <Modal.Header closeButton>File: {props.actionName}</Modal.Header>
+        <Modal.Body>
+            <Form.Group>
+                <Form.Label for="rename-input">Please type a new name for the file. If no extension is provided, &quot;.json&quot; will be assumed.</Form.Label>
+                <Form.Control id="rename-input" value={newName} onChange={e => setNewName(e.target.value)} autoFocus/>
+            </Form.Group>
+            {isJson && <Form.Group>
+                <Form.Check id="update-image-paths" checked={updateImagePaths}
+                    onChange={e => setUpdateImagePaths(e.target.checked)} label="Update image paths"/>
+            </Form.Group>}
+        </Modal.Body>
+        <Modal.Footer>
+            <Button onClick={confirm}>{props.actionName}</Button>
+            <Button variant="secondary" onClick={cancel}>Cancel</Button>
+        </Modal.Footer>
     </Modal>;
 }
 
