@@ -239,27 +239,25 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
         </div>}
 
         {/*Set alt text to empty string for decorative images*/}
-        <Form.Label>
-            <Form.Check
-                checked={doc.decorative ?? false}
-                onChange={(e) => {
-                    if (e.target.checked) {
-                        update({
-                            ...doc,
-                            decorative: true,
-                            altText: "",
-                        });
-                    } else {
-                        update({
-                            ...doc,
-                            decorative: false,
-                            altText: doc.altText === "" ? undefined : doc.altText,
-                        });
-                    }
-                }}
-                className="me-1"
-            />
-            Decorative (sets empty alt text)
-        </Form.Label>
+        <Form.Check
+            checked={doc.decorative ?? false}
+            label="Decorative (sets empty alt text)"
+            onChange={(e) => {
+                if (e.target.checked) {
+                    update({
+                        ...doc,
+                        decorative: true,
+                        altText: "",
+                    });
+                } else {
+                    update({
+                        ...doc,
+                        decorative: false,
+                        altText: doc.altText === "" ? undefined : doc.altText,
+                    });
+                }
+            }}
+            className="me-1"
+        />
     </>;
 }
