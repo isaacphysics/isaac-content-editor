@@ -80,7 +80,7 @@ export function Popup({ popUpRef, children, onClose }: {
     }, [onClose]);
 
     return isOpen ?
-        <Portal>
+        <Portal container={document.body}>
             <div
                 className={styles.popup}
                 style={{

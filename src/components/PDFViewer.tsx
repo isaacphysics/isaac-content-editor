@@ -84,7 +84,7 @@ export function PDFViewer() {
         </div>}
 
         <Container fluid className={styles.pdfContainer}>
-            <Document renderMode={"svg"} className={styles.pdfDocument} file={`data:pdf;base64,${appContext.editor.getCurrentDocAsString()}`} onLoadSuccess={onDocumentLoadSuccess}>
+            <Document renderMode={"canvas"} className={styles.pdfDocument} file={`data:pdf;base64,${appContext.editor.getCurrentDocAsString()}`} onLoadSuccess={onDocumentLoadSuccess}>
                 <Page renderAnnotationLayer={false} renderTextLayer={false} className={styles.pdfPage} pageNumber={pageNumber} />
             </Document>
         </Container>

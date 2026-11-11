@@ -18,7 +18,7 @@ const emptyDocuments: Document[] = [
                 type: "content",
                 encoding: "markdown",
                 value: "Add page content here",
-            },
+            } as Content
         ],
     } as Document,
     {
@@ -31,7 +31,7 @@ const emptyDocuments: Document[] = [
                 type: "content",
                 encoding: "markdown",
                 value: "Add page content here"
-            }
+            } as Content
         ]
     } as Document,
     {
@@ -43,7 +43,7 @@ const emptyDocuments: Document[] = [
                 type: "content",
                 encoding: "markdown",
                 value: "Add page content here"
-            }
+            } as Content
         ]
     } as Document,
     {
@@ -59,7 +59,7 @@ const emptyDocuments: Document[] = [
                 type: "content",
                 encoding: "markdown",
                 value: "This is a summary of a topic. You should write something sensible here!"
-            }
+            } as Content
         ]
     } as Document,
     {
@@ -76,7 +76,7 @@ const emptyDocuments: Document[] = [
                     type: "content",
                     value: "_Enter rubric here or remove this section if not wanted_",
                     encoding: "markdown"
-                }
+                } as Content
             ]
         },
         children: []
@@ -90,7 +90,7 @@ const emptyDocuments: Document[] = [
                 type: "content",
                 encoding: "markdown",
                 value: "Add page content here"
-            },
+            } as Content,
         ],
     } as Document,
     {
@@ -175,7 +175,7 @@ const emptyDocuments: Document[] = [
                 type: "content",
                 value: "Some details about the event here . . .",
                 encoding: "markdown"
-            }
+            } as Content
         ],
         location: {
             address: {

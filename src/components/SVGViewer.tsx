@@ -22,7 +22,7 @@ export function SVGViewer() {
     const [invalid, setInvalid] = useState(false);
     const [editing, setEditing] = useState(false);
 
-    const codemirror = useRef<ReactCodeMirrorRef>(null);
+    const codemirror = useRef<ReactCodeMirrorRef>(null!);
 
     useEffect(() => {
         if (data) {

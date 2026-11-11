@@ -322,7 +322,7 @@ export function EditorScreen() {
                 gutter={dragElement} gutterSize={20} collapsed={collapsed}
             >
                 <LeftMenu />
-                <ErrorBoundary FallbackComponent={buildPageError(selection?.path)} onResetKeysChange={() => setCurrentContent({})} onReset={() => setCurrentContent({})} resetKeys={[selection]}>
+                <ErrorBoundary FallbackComponent={buildPageError(selection?.path)} onReset={() => setCurrentContent({})} resetKeys={[selection]}>
                     <div>
                         {hasFileOpen
                             ? <FileEditor/>

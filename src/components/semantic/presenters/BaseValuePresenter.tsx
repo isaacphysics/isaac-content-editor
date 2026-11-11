@@ -38,7 +38,7 @@ export function buildValuePresenter<V, D extends Content = Content>(
 ): ValuePresenter<D> {
     const VP = ({doc, update, valueRef}: ValuePresenterProps<D>) => {
         const [editing, setEditing] = useState(false);
-        const value = useRef<V>();
+        const value = useRef<V>(null!);
         const startEdit = useCallback(() => {
             setEditing((currently) => {
                 if (!currently) {
@@ -88,7 +88,7 @@ export function buildValuePresenter<V, D extends Content = Content>(
 }
 
 export const BaseValue = ({doc, editing, value, set, cancel}: ValueProps<string | undefined>) => {
-    const codemirror = useRef<ReactCodeMirrorRef>(null);
+    const codemirror = useRef<ReactCodeMirrorRef>(null!);
     if (!editing) {
         if (!doc.value) {
             const entryType = getEntryType(doc);

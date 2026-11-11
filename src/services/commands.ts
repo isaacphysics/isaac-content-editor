@@ -185,7 +185,7 @@ async function doSaveAs(context: ContextType<typeof AppContext>, action: ActionF
         const basePath = dirname(oldPath);
         const newPath = basePath + "/" + choice.newName;
 
-        let alteredContent: Content | string;
+        let alteredContent: Content | string = context.editor.getCurrentDocAsString();
         try {
             alteredContent = {
                 ...context.editor.getCurrentDoc(),
