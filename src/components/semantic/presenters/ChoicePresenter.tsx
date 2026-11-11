@@ -63,6 +63,7 @@ function LabeledInput<V extends Record<string, string | undefined>>({value, prop
                     setWarning(warningFunction ? warningFunction(e.target.value) : "");
                 }
             }}
+            as={type === "textarea" ? "textarea" : "input"}
             isInvalid={!!warning}
         />
         {warning && <div className="text-danger">{warning}</div>}

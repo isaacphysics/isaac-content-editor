@@ -60,7 +60,7 @@ export const MetaItems = asMetaItems({
     }}],
     summary: "Summary",
     published: ["Published", {
-        presenter: Form.Check,
+        type: "checkbox",
         hasWarning: (value) => {
             const published = value as boolean;
             if (!published) {

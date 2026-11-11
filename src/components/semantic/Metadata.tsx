@@ -83,7 +83,7 @@ export function MetaItemPresenter({doc, update, id, prop, name, options}: MetaIt
         });
     };
 
-    const valueOnChange = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value);
+    const valueOnChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => onChange(e.target.value);
     const checkedOnChange = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.checked as unknown as string);
 
     return <>
@@ -99,6 +99,7 @@ export function MetaItemPresenter({doc, update, id, prop, name, options}: MetaIt
                     value={value}
                     isInvalid={!!warning}
                     id={id}
+                    onChange={valueOnChange}
                 > 
                     {options?.options && Object.entries(options?.options).map(([key, label]) =>
                         <option key={key} value={key}>{label}</option>
@@ -116,6 +117,7 @@ export function MetaItemPresenter({doc, update, id, prop, name, options}: MetaIt
                     id={id}
                     min={options?.type === "number" ? options.min : undefined}
                     max={options?.type === "number" ? options.max : undefined}
+                    as={options?.type === "textarea" ? "textarea" : "input"}
                 />}
         {warning && <FormText>{warning}</FormText>}
     </>;
