@@ -13,6 +13,7 @@ export const EditableStyleProp = EnumPropFor("subtitle", siteSpecific(
         sampleRun: "Sample Run",
         scenario: "Scenario",
         definition: "Definition",
+        careers: "Careers",
     }
 ));
 
