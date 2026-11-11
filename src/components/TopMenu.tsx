@@ -85,10 +85,10 @@ export function TopMenu({previewable, undoable}: {previewable?: boolean; undoabl
             <Dropdown.Toggle variant="secondary" className={classNames(styles.iconButton, styles.noCaret, "px-1")}>▼</Dropdown.Toggle>
             <Dropdown.Menu>
                 {liveLink && <Dropdown.Item href={liveLink} target="_blank">
-                    <a>View on live</a>
+                    View on live
                 </Dropdown.Item>}
                 <Dropdown.Item href={`${StagingServer}/admin/content_errors?path=${selection.path}`} target="_blank">
-                    <a>View content errors</a>
+                    View content errors
                 </Dropdown.Item>
             </Dropdown.Menu>
         </Dropdown>}
