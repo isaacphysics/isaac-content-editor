@@ -1,6 +1,6 @@
 import React, {useContext, useLayoutEffect} from "react";
 
-import {AppContext} from "../App";
+import {AppContext} from "../AppContext";
 import {FileBrowser, pathToId} from "./FileBrowser";
 
 import styles from "../styles/editor.module.css";

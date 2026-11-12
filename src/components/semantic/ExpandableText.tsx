@@ -1,5 +1,5 @@
 import React, {MouseEventHandler, useState} from "react";
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 import styles from "./styles/question.module.css";
 
 const MAX_CHARS_BEFORE_SHORTEN = 75;
@@ -16,7 +16,7 @@ export function ExpandableText({text}: {text?: string}) {
             {shortened ? shortenedText : text}<span>{shortened && "..."}</span>
             <br/>
             <div className={"w-100 text-center"}>
-                <Button size={"sm"} color="link" className={styles.expandTextButton} onClick={toggle}><small>(Show {shortened ? "more" : "less"})</small></Button>
+                <Button size={"sm"} variant="link" className={styles.expandTextButton} onClick={toggle}><small>(Show {shortened ? "more" : "less"})</small></Button>
             </div>
         </>;
     }

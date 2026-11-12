@@ -5,7 +5,7 @@ import { IsaacTopicSummaryPage } from "../../../isaac-data-types";
 import { liveFetcher } from "../../../services/isaacApi";
 
 import { PresenterProps } from "../registry";
-import { Button, Input } from "reactstrap";
+import { Button, Form } from "react-bootstrap";
 
 import styles from "../styles/tags.module.css";
 
@@ -33,14 +33,13 @@ export function LinkedGameboardsPresenter({doc, update}: PresenterProps<IsaacTop
     }
 
     return <div className={styles.wrapper}>
-        {doc.linkedGameboards?.map(id => <Button key={id} outline onClick={() => removeGameboard(id)}>{id} ➖</Button>)}
-        <Input value={gameboardId}
+        {doc.linkedGameboards?.map(id => <Button key={id} variant="outline-secondary" onClick={() => removeGameboard(id)}>{id} ➖</Button>)}
+        <Form.Control value={gameboardId}
             onChange={(e) => setGameboardId(e.target.value)}
             placeholder="Type to add related content..."
         />
         {gameboardId !== "" && <div>
-            <Button outline
-                color={error ? "danger" : (gameboard && gameboard.questions) ? "success" : "primary"}
+            <Button variant={error ? "outline-danger" : (gameboard && gameboard.questions) ? "outline-success" : "outline-primary"}
                 className={styles.gameboardButton}
                 onClick={() => addGameboard(gameboardId)}>
                 Id: {gameboardId}  ➕<br />

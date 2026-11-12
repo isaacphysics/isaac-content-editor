@@ -2,7 +2,7 @@ import React, {FunctionComponent, MutableRefObject, useCallback, useImperativeHa
 import CodeMirror, {EditorView, ReactCodeMirrorRef} from '@uiw/react-codemirror';
 import {markdown} from '@codemirror/lang-markdown';
 import {html} from '@codemirror/lang-html';
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 
 import styles from "../styles/value.module.css";
 import {Content} from "../../../isaac-data-types";
@@ -38,7 +38,7 @@ export function buildValuePresenter<V, D extends Content = Content>(
 ): ValuePresenter<D> {
     const VP = ({doc, update, valueRef}: ValuePresenterProps<D>) => {
         const [editing, setEditing] = useState(false);
-        const value = useRef<V>();
+        const value = useRef<V>(null!);
         const startEdit = useCallback(() => {
             setEditing((currently) => {
                 if (!currently) {
@@ -78,7 +78,7 @@ export function buildValuePresenter<V, D extends Content = Content>(
                 {component}
                 <div className={`mt-2 ${styles.editButtons}`}>
                     <Button onClick={(e) => {e.stopPropagation(); cancelChanges();}}>Cancel</Button>
-                    <Button color="primary" onClick={(e) => {e.stopPropagation(); setChanges();}}>Set</Button>
+                    <Button onClick={(e) => {e.stopPropagation(); setChanges();}}>Set</Button>
                 </div>
             </>;
         }
@@ -88,7 +88,7 @@ export function buildValuePresenter<V, D extends Content = Content>(
 }
 
 export const BaseValue = ({doc, editing, value, set, cancel}: ValueProps<string | undefined>) => {
-    const codemirror = useRef<ReactCodeMirrorRef>(null);
+    const codemirror = useRef<ReactCodeMirrorRef>(null!);
     if (!editing) {
         if (!doc.value) {
             const entryType = getEntryType(doc);

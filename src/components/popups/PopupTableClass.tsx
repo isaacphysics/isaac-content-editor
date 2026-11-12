@@ -1,6 +1,6 @@
 import React, {RefObject, useRef, useState} from "react";
 import {Popup, PopupCloseContext, PopupRef} from "./Popup";
-import {Button, Container, Input, InputGroup, Label} from "reactstrap";
+import {Button, Container, InputGroup, Form} from "react-bootstrap";
 import {EditorView, ReactCodeMirrorRef} from "@uiw/react-codemirror";
 import styles from "../../styles/editor.module.css";
 import { isAda } from "../../services/site";
@@ -52,8 +52,8 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
         <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
                 {isAda && <InputGroup className={"ps-4"}>
-                    <Label for={"table-expandable"}>Expandable</Label>
-                    <Input type="checkbox" id="table-expandable" checked={expandable} onChange={e => { 
+                    <Form.Label for={"table-expandable"}>Expandable</Form.Label>
+                    <Form.Check id="table-expandable" checked={expandable} onChange={e => { 
                         setExpandable(e.target.checked);
                         if (e.target.checked) {
                             setClasses(prev => prev ? `${prev} expandable` : "expandable");
@@ -64,8 +64,8 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                     />
                 </InputGroup>}
                 <InputGroup className={"ps-4"}>
-                    <Label for={"table-topScrollable"}>Top-scrollable</Label>
-                    <Input type="checkbox" id="table-topScrollable" checked={topScrollable} onChange={e => {
+                    <Form.Label for={"table-topScrollable"}>Top-scrollable</Form.Label>
+                    <Form.Check id="table-topScrollable" checked={topScrollable} onChange={e => {
                         setTopScrollable(e.target.checked);
                         if (e.target.checked) {
                             setClasses(prev => prev ? `${prev} topScrollable` : "topScrollable");
@@ -74,11 +74,11 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                         }
                     }}/>
                 </InputGroup>
-                <Label for={"table-classes"}>Class:</Label>
-                <Input id={"table-classes"} placeholder={"e.g. text-center"} value={classes} onChange={(e) => setClasses(e.target.value)}/>
+                <Form.Label for={"table-classes"}>Class:</Form.Label>
+                <Form.Control id={"table-classes"} placeholder={"e.g. text-center"} value={classes} onChange={(e) => setClasses(e.target.value)}/>
                 <hr/>
                 <PopupCloseContext.Consumer>
-                    {close => <Button disabled={!classes && !expandable && !topScrollable} onClick={() => {
+                    {close => <Button variant="secondary" disabled={!classes && !expandable && !topScrollable} onClick={() => {
                         makeTableClass(classes)(codemirror.current?.view);
                         close?.();
                     }}>

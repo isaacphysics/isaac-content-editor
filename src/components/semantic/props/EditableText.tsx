@@ -8,13 +8,13 @@ import React, {
     useRef,
     useState
 } from "react";
-import { Button, FormFeedback, Input, InputProps } from "reactstrap";
+import { Button, Form, FormControlProps } from "react-bootstrap";
 
 import { safeLowercase } from "../../../utils/strings";
 
 import styles from "../styles/editable.module.css";
 import classNames from "classnames";
-import {Markup} from "../../../isaac/markup";
+import {Markup} from "../../../isaac/markup/index";
 import CodeMirror, {EditorView} from "@uiw/react-codemirror";
 import {MarkupToolbar} from "../../MarkupToolbar";
 import {keyBindings} from "../../../utils/codeMirrorExtensions";
@@ -49,7 +49,7 @@ export type EditableTextProps = {
     block?: boolean;
     format?: EditableTextFormat;
     previewWrapperChar?: "$" | "";
-    inputProps?: Omit<InputProps, "type"|"placeHolder"|"invalid"|"autoFocus"|"value"|"className">;
+    inputProps?: Omit<FormControlProps, "type"|"placeHolder"|"invalid"|"autoFocus"|"value">;
     buttonStrings?: [string, string][];
 };
 
@@ -210,7 +210,7 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
     const placeHolderLC = safeLowercase(placeHolder);
 
     const insertStringButtons = buttonStrings.map((buttonString, index) => (
-        <Button key={index} onClick={() => setCurrent((state.value ? state.value + ((state.value.at(-1) === "(" || buttonString[1] === ")") ? "" : ", ") : "") + buttonString[1])}>{buttonString[0]}</Button>
+        <Button key={index} variant="secondary" onClick={() => setCurrent((state.value ? state.value + ((state.value.at(-1) === "(" || buttonString[1] === ")") ? "" : ", ") : "") + buttonString[1])}>{buttonString[0]}</Button>
     ));
 
     const Wrap = block ? "div" : "span";
@@ -233,26 +233,26 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                             >
                                 <MarkupToolbar set={save} cancel={cancel} encoding={"plaintext"} />
                             </CodeMirror>
-                            : <Input
-                                type={multiLine ? "textarea" : "text"}
+                            : <Form.Control
+                                as={multiLine ? "textarea" : "input"}
                                 autoFocus={autoFocus ?? false}
                                 value={state.value ?? ""}
                                 onChange={e => setCurrent(e.target.value)}
                                 onKeyDown={handleKey}
                                 placeholder={placeHolder}
                                 onBlur={onBlur}
-                                invalid={errorMessage && errorMessage.length > 0}
+                                isInvalid={errorMessage && errorMessage.length > 0}
                                 {...inputProps}
                             />
                         }
                     </>
                 </span>
             </span>
-            <Button className="mb-2" onClick={cancel}>Cancel</Button>
-            <Button className="mb-2" color="primary" onClick={() => save()}>Set</Button>
+            <Button className="mb-2" variant="secondary" onClick={cancel}>Cancel</Button>
+            <Button className="mb-2" onClick={() => save()}>Set</Button>
         </Wrap>
         {isDefined(errorMessage) && errorMessage.length > 0 && <Wrap className="pb-2">
-            {errorMessage.map(e => <FormFeedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</FormFeedback>)}
+            {errorMessage.map(e => <Form.Control.Feedback key={e} className={classNames(styles.feedback, "d-block")}>{e}</Form.Control.Feedback>)}
         </Wrap>}
         <Wrap ref={wrapperRef} className={`justify-content-start ${styles.isEditingWrapper}`}>
             {insertStringButtons}
@@ -265,12 +265,12 @@ export const EditableText = forwardRef<EditableTextRef, EditableTextProps>(({
                 {labelElement}
                 {text === undefined ?
                     <i>{placeHolder}</i> : textFormatMap[format](previewWrapperChar + text + previewWrapperChar, multiLine)}
-                {onDelete.current && <Button onClick={() => onDelete.current && onDelete.current()}>Delete</Button>}
+                {onDelete.current && <Button variant="secondary" onClick={() => onDelete.current && onDelete.current()}>Delete</Button>}
             </button>
         </Wrap>;
     }
     return <Wrap className={styles.notEditingWrapper}>
-        <Button onClick={startEdit}>Set {labelLC || placeHolderLC}</Button>
+        <Button variant="secondary" onClick={startEdit}>Set {labelLC || placeHolderLC}</Button>
     </Wrap>;
 });
 

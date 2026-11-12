@@ -2,11 +2,12 @@ import React, {
     ContextType,
     useContext,
     useEffect,
+    useMemo,
     useRef,
     useState
 } from "react";
-import {Button, Row, Modal, ModalBody, ModalFooter, Col, Alert} from "reactstrap";
-import {AppContext} from "../App";
+import {Button, Row, Modal, Col, Alert} from "react-bootstrap";
+import {AppContext} from "../AppContext";
 import {
     githubCreate,
     githubDelete,
@@ -92,13 +93,14 @@ const validateDir: (dir: string | undefined) => FileValidation = (dir: string | 
     if (dir.match(/^[a-zA-Z0-9_\-/]+$/) === null) return {error: "Directory is invalid: directory names can only contain alphanumeric characters, dashes and underscores"};
     return {isValid: true};
 };
+
 const FILE_TYPE_WHITELIST = ["JPG", "PNG", "GIF", "PDF", "CSV", "ODS", "XLSX", "SQLITE"];
 
 export const CDNUploadModal = () => {
     const appContext = useContext(AppContext);
     const {cdn: {open, toggle}} = appContext;
 
-    const [files, setFiles] = useState<({file: File} & FileValidation)[] | null>(null);
+    const [files, setFiles] = useState<File | File[] | null>(null);
     const [dir, setDir] = useState<{ path: string | undefined, isValid: boolean, error?: string }>();
     const [successfulUploads, setSuccessfulUploads] = useState<string[] | undefined>();
 
@@ -125,22 +127,23 @@ export const CDNUploadModal = () => {
         setDirAndUpdateSelection("isaac");
     }, []);
 
-    const allFilesAreValid = files?.every(f => f.isValid);
-    const paths = dir?.path && dir.isValid && files ? [...files].map((f) => dir?.path?.replace(/\/$/, "") + "/" + f.file.name) : [];
+    const fileList = useMemo(() => files ? (Array.isArray(files) ? files : [files]) : [], [files]);
+    const validatedFiles = fileList.map(file => ({file, ...validateFile(file)}));
+    const allFilesAreValid = validatedFiles.length > 0 && validatedFiles.every(f => f.isValid);
+    const paths = useMemo(() => dir?.path && dir.isValid ?
+        fileList.map(file => `${dir.path!.replace(/\/$/, "")}/${file.name}`) :
+        [],
+    [dir, fileList]);
 
-    useEffect(() => {
-        if (files && files.length === 0) setSuccessfulUploads(undefined);
-    }, [paths, files, dir]);
-
-    const readFile = (f: {file: File} & FileValidation): Promise<string> => new Promise(resolve => {
+    const readFile = (file: File): Promise<string> => new Promise(resolve => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result as string);
-        reader.readAsBinaryString(f.file);
+        reader.readAsBinaryString(file);
     });
 
     const uploadToCDN = async () => {
         const path = dir?.path;
-        if (!files || files.length === 0 || !path) return;
+        if (fileList.length === 0 || !allFilesAreValid || !path) return;
 
         if (path.search(/^isaac\//) === -1) {
             alert(`Couldn't upload file(s) to CDN. Directory path is malformed.`);
@@ -152,15 +155,18 @@ export const CDNUploadModal = () => {
 
         setSuccessfulUploads(undefined);
         setUploadInProgress(true);
-        for (const f of files) {
+        for (const file of fileList) {
             try {
-                const contents = await readFile(f);
-                await githubCreate(appContext, "isaac", `${dirPath}/${f.file.name}`, contents, "cdn");
-                setSuccessfulUploads(su => [...(su ?? []), path?.replace(/\/$/, "") + "/" + f.file.name]);
+                const contents = await readFile(file);
+                await githubCreate(appContext, "isaac", `${dirPath}/${file.name}`, contents, "cdn");
+                setSuccessfulUploads(su => [...(su ?? []), path?.replace(/\/$/, "") + "/" + file.name]);
             } catch (e) {
-                alert(`Couldn't upload file "${f.file.name}" to CDN. Perhaps it already exists.\n\nError details: ${e}`);
+                alert(`Couldn't upload file "${file.name}" to CDN. Perhaps it already exists.\n\nError details: ${e}`);
             } finally {
-                setFiles(f => f && f.length > 1 ? f?.slice(1, f.length) : null);
+                setFiles(files => {
+                    const otherFiles = (files ? (Array.isArray(files) ? files : [files]) : []).filter(item => item !== file);
+                    return otherFiles.length > 0 ? otherFiles : null;
+                });
             }
         }
         setUploadInProgress(false);
@@ -171,22 +177,15 @@ export const CDNUploadModal = () => {
         if (open) setShowAccessibilityNotice(true);
     }, [open]);
 
-    return <Modal isOpen={open} toggle={toggle} size={"xl"} keyboard={false} backdrop={"static"}>
-        <div className={"modal-header w-100 d-block"}>
-            <Row className={"justify-content-end"}>
-                <Col xs={9} className={"pt-2 ps-4"}>
-                    <h5 className={"modal-title"}>Upload to CDN</h5>
-                </Col>
-                <Col xs={3} className={"pe-4"}>
-                    <Button color={"secondary"} className={"w-100"} onClick={toggle}>
-                        Close
-                    </Button>
-                </Col>
-            </Row>
-        </div>
-        <ModalBody>
-            {showAccessibilityNotice && <Alert color={"warning"}>
-                <div className={"w-100"}>Accessibility notice<Button color={"none"} className={"float-end mt-n2"} onClick={() => setShowAccessibilityNotice(false)}>✗</Button></div>
+    return <Modal show={open} onHide={toggle} size={"xl"} keyboard={false} backdrop={"static"}>
+        <Modal.Header closeButton>
+            <Modal.Title>
+                Upload to CDN
+            </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            {showAccessibilityNotice && <Alert variant="warning">
+                <div className={"w-100"}>Accessibility notice<Button variant="none" className={"float-end mt-n2"} onClick={() => setShowAccessibilityNotice(false)}>✗</Button></div>
                 <hr/>
                 <small>
                     We are legally required to make all documents on the site accessible, and PDFs especially are unlikely to meet our obligations.
@@ -215,18 +214,24 @@ export const CDNUploadModal = () => {
                         maxSize={100}
                         fileOrFiles={files}
                         multiple
-                        handleChange={(files: FileList) => {
-                            setFiles(fs => (fs ?? []).concat([...files].map(f => ({file: f, ...validateFile(f)}))));
+                        handleChange={(incoming: File | File[] | FileList) => {
+                            setFiles(current => [
+                                ...(current ? (Array.isArray(current) ? current : [current]) : []),
+                                ...(incoming instanceof File ? [incoming] :  Array.from(incoming))
+                            ]);
                         }}
                         classes={"mb-2"}
                     />
-                    {files && files.length > 0
+                    {validatedFiles.length > 0
                         ? <>
                             <ul>
-                                {files.map((f, i) => (
+                                {validatedFiles.map((f, i) => (
                                     <li key={f.file.name} className={f.isValid ? "text-success" : "text-danger"}>
                                         <span style={{fontFamily: "monospace"}}>{f.file.name}</span> {f.isValid ? "✓" : "✗"} {f.error}
-                                        <Button color={"link"} className={"p-0 d-inline"} onClick={() => setFiles(files?.length === 1 ? null : files.filter((_, _i) => i !== _i))}>
+                                        <Button variant="link" className={"p-0 d-inline"} onClick={() => setFiles(current => {
+                                            const otherFiles = (current ? (Array.isArray(current) ? current : [current]) : []).filter((_, index) => index !== i);
+                                            return otherFiles.length ? otherFiles : null;
+                                        })}>
                                             Remove
                                         </Button>
                                     </li>
@@ -247,14 +252,14 @@ export const CDNUploadModal = () => {
                     }
                    
                     {paths && paths.length > 0 && allFilesAreValid && selection?.isDir &&
-                        <Button color={"success"} className={"w-100"} onClick={uploadToCDN}>
+                        <Button variant="success" className={"w-100"} onClick={uploadToCDN} disabled={uploadInProgress}>
                             Upload file(s) to CDN
                         </Button>}
                     {uploadInProgress && 
-                        <Alert className="mt-2" color="warning">
+                        <Alert className="mt-2" variant="warning">
                             Processing uploads...
                         </Alert>}
-                    {successfulUploads && <Alert className={"mt-2"} color={"success"}>
+                    {successfulUploads && <Alert className="mt-2" variant="success">
                         Successfully uploaded files:
                         <ul>
                             {successfulUploads.map((s, i) => <li key={i}><code>{s}</code></li>)}
@@ -264,15 +269,15 @@ export const CDNUploadModal = () => {
                     </Alert>}
                 </Col>
             </Row>
-        </ModalBody>
-        <ModalFooter>
+        </Modal.Body>
+        <Modal.Footer>
             <Row className={"w-100 justify-content-end"}>
                 <Col xs={3}>
-                    <Button color={"secondary"} className={"w-100"} onClick={toggle}>
+                    <Button variant="secondary" className={"w-100"} onClick={toggle}>
                         Close
                     </Button>
                 </Col>
             </Row>
-        </ModalFooter>
+        </Modal.Footer>
     </Modal>;
 };

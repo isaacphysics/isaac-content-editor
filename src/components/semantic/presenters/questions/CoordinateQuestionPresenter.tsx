@@ -1,7 +1,7 @@
 import React, {createContext, useContext} from "react";
 import {EditableDimensionalDocProp, EditableDocPropFor} from "../../props/EditableDocProp";
 import styles from "../../styles/question.module.css";
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 import {IsaacCoordinateQuestion} from "../../../../isaac-data-types";
 import {CheckboxDocProp} from "../../props/CheckboxDocProp";
 import {PresenterProps} from "../../registry";
@@ -80,7 +80,7 @@ export function CoordinateChoiceItemInserter({insert, position, lengthOfCollecti
     if (numberOfCoordinates !== undefined && lengthOfCollection >= numberOfCoordinates) {
         return null; // Max items reached in choice
     }
-    return <Button className={styles.itemsChoiceInserter} color="primary" onClick={() => {
+    return <Button className={styles.itemsChoiceInserter} onClick={() => {
         insert(position, {type: "coordinateItem"});
     }}>Add</Button>;
 }

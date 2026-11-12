@@ -1,34 +1,11 @@
-import React, {createContext, MutableRefObject, useEffect} from "react";
+import React, {useEffect} from "react";
 import {Navigate, Route} from "react-router-dom";
-import {createBrowserRouter, createRoutesFromElements, NavigateFunction, RouterProvider, useLocation, useParams} from "react-router";
+import {createBrowserRouter, createRoutesFromElements, RouterProvider, useLocation, useParams} from "react-router";
 
-import {defaultSelectedContext} from "./components/FileBrowser";
-import {defaultEditorState} from "./components/SemanticEditor";
 import {Closer, isLoggedIn, LoadingScreen, LoginPrompt, Logout} from "./services/auth";
 import {defaultGithubContext, githubComparisonPath, processCode} from "./services/github";
 import {EditorScreen} from "./screens/EditorScreen";
-import {defaultDispatch} from "./services/commands";
-import {MenuModalRef} from "./screens/MenuModal";
-import {defaultPreview} from "./components/Preview";
-import {defaultCdn} from "./components/CDNUploadModal";
-import { FileNameResult } from "./screens/FileNameModal";
 
-
-export const AppContext = createContext({
-    selection: defaultSelectedContext,
-    editor: defaultEditorState,
-    github: defaultGithubContext,
-    dispatch: defaultDispatch,
-    navigate: (() => {
-        throw new Error("Can't navigate outside of AppContext");
-    }) as NavigateFunction,
-    menuModal: {current: null} as MutableRefObject<MenuModalRef | null>,
-    showFileNameModal: async (_: string, __: string) => null as FileNameResult | null,
-    showPartTitleModal: () => {},
-    setActionRunning: (_: boolean) => {},
-    preview: defaultPreview,
-    cdn: defaultCdn,
-});
 
 function RedirectOldOrDefault() {
     const location = useLocation();

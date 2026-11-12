@@ -3,7 +3,7 @@ import { RefObject, useCallback, useContext, useRef, useState } from "react";
 import React from "react";
 import styles from "../../styles/editor.module.css";
 import { Popup, PopupCloseContext, PopupRef } from "./Popup";
-import { Alert, Button, Container, Input, Label } from "reactstrap";
+import { Alert, Button, Container, Form } from "react-bootstrap";
 import { generateGuid } from "../../utils/strings";
 import { InlineQuestionContext } from "../semantic/presenters/questions/InlineQuestionPresenter";
 
@@ -61,25 +61,25 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
         }}>{wide ? "Add inline question part" : "➕ inline part"}</button>
         <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
-                <Label for={"inline-part-index"}>Part ID</Label>
-                <Input id={"inline-part-index"} placeholder={"Default"} onChange={ifContainsNoSpacesThen(setID)} />
+                <Form.Label for={"inline-part-index"}>Part ID</Form.Label>
+                <Form.Control id={"inline-part-index"} placeholder={"Default"} onChange={ifContainsNoSpacesThen(setID)} />
                 <hr className="mb-1"/>
                 {mode === "classes" ? <>
-                    <Label for={"inline-part-classes"}>Classes:</Label>
-                    <Input id={"inline-part-classes"} placeholder={"e.g. wf-8"} onChange={(e) => setClasses(e.target.value)}/>
+                    <Form.Label for={"inline-part-classes"}>Classes:</Form.Label>
+                    <Form.Control id={"inline-part-classes"} placeholder={"e.g. wf-8"} onChange={(e) => setClasses(e.target.value)}/>
                 </> : <>
-                    <Label for={"inline-part-width"}>Width (px):</Label>
-                    <Input id={"inline-part-width"} placeholder={"Default (100)"} onChange={ifValidNumericalInputThen(setWidth)}/>
+                    <Form.Label for={"inline-part-width"}>Width (px):</Form.Label>
+                    <Form.Control id={"inline-part-width"} placeholder={"Default (100)"} onChange={ifValidNumericalInputThen(setWidth)}/>
                     <hr/>
-                    <Label for={"inline-part-height"}>Height (px):</Label>
-                    <Input id={"inline-part-height"} placeholder={"Default (27)"} onChange={ifValidNumericalInputThen(setHeight)}/>
+                    <Form.Label for={"inline-part-height"}>Height (px):</Form.Label>
+                    <Form.Control id={"inline-part-height"} placeholder={"Default (27)"} onChange={ifValidNumericalInputThen(setHeight)}/>
                 </>}
                 <hr className="my-1"/>
                 <div className="float-end mb-2">
                     <a className="me-1" target="_blank" rel="noreferrer" href="https://github.com/isaacphysics/rutherford-content/wiki/Isaac-Content-Editor#inline-regions--inline-questions">Help</a>
                     ⋅
                     <Button 
-                        color="link"
+                        variant="link"
                         className="p-0 ms-1 mb-1 text-muted"
                         onClick={() => setMode(mode === "classes" ? "dimensions" : "classes")}
                     >
@@ -93,7 +93,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
                         close?.();
                     }}>Insert</Button>}
                 </PopupCloseContext.Consumer>
-                {invalid && <Alert color="danger" className="mt-2 mb-0 p-1 text-center">{invalid}</Alert>}
+                {invalid && <Alert variant="danger" className="mt-2 mb-0 p-1 text-center">{invalid}</Alert>}
             </Container>
         </Popup>
     </>;

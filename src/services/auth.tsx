@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Spinner } from "reactstrap";
+import { Spinner } from "react-bootstrap";
 import Cookies from "js-cookie";
 
 import { GITHUB_TOKEN_COOKIE } from "./github";
@@ -44,7 +44,7 @@ export function LoginPrompt() {
 export function LoadingScreen({message = "Logging in..."}: { message?: string }) {
     // FIXME should these be ${styles.centered} ${styles.flexFill}?
     return <div className={`m-5 text-center {styles.centered} {styles.flexFill}`}>
-        <Spinner size="large" />
+        <Spinner />
         <br />
         <h4>{message}</h4>
     </div>;

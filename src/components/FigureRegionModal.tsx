@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useMemo, useRef, useState } from "react";
 import styles from "./semantic/styles/figure.module.css";
 import markupStyles from "../isaac/styles/markup.module.css";
-import { Input, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Form, Modal } from "react-bootstrap";
 import { DropZoneQuestionContext } from "./semantic/presenters/questions/ItemQuestionPresenter";
 import throttle from "lodash/throttle";
 import { Figure, PositionableFigureRegionProps } from "../isaac-data-types";
@@ -134,9 +134,9 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
         return null;
     }
 
-    return <Modal isOpen={open} toggle={toggle} size="xl">
-        <ModalHeader toggle={toggle}>Add figure regions</ModalHeader>
-        <ModalBody className={styles.figureRegionModalBody}>
+    return <Modal show={open} onHide={toggle} size="xl">
+        <Modal.Header closeButton>Add figure regions</Modal.Header>
+        <Modal.Body className={styles.figureRegionModalBody}>
             <div className="d-flex flex-column justify-content-center">
                 <div id="figure-image-container" className={classNames(styles.figureRegionImageContainer, "align-self-center")} ref={imageContainerRef}>
                     <img id="figure-image" src={imgSrc} alt="" ref={imageRef} onLoad={setupResizeObserver} />
@@ -153,7 +153,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                     <div>Displaying at width: <b>{containerWidth}px</b></div>
                     <div className="d-flex align-items-center">
                         Condensed mode max width:
-                        <Input
+                        <Form.Control
                             type="number"
                             min={0}
                             max={"inf"}
@@ -191,21 +191,21 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                         return <tr key={i}>
                             <td className="text-muted">{alphabetIndex(i)}</td>
                             <td>
-                                <input type={"text"} pattern="[a-zA-Z0-9_\-]+" value={id} onChange={event => {
+                                <Form.Control type={"text"} pattern="[a-zA-Z0-9_\-]+" value={id} onChange={event => {
                                     const newRegionStates = [...regions];
                                     newRegionStates[i].id = event.target.value;
                                     setRegions(newRegionStates);
                                 }}/>
                             </td>
                             <td>
-                                <input type={"text"} value={minWidth} onChange={event => {
+                                <Form.Control type={"text"} value={minWidth} onChange={event => {
                                     const newRegionStates = [...regions];
                                     newRegionStates[i].minWidth = event.target.value;
                                     setRegions(newRegionStates);
                                 }}/>
                             </td>
                             <td>
-                                <input type={"number"} step={0.1} value={width} onChange={event => {
+                                <Form.Control type={"number"} step={0.1} value={width} onChange={event => {
                                     const newValue = clamp(parseFloat(event.target.value), 0, 100);
                                     const newRegionStates = [...regions];
                                     newRegionStates[i].width = event.target.value !== "" ? newValue : 0;
@@ -213,7 +213,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                                 }}/>
                             </td>
                             <td>
-                                <input type={"number"} step={0.1} value={percentageLeft[i]} onChange={event => {
+                                <Form.Control type={"number"} step={0.1} value={percentageLeft[i]} onChange={event => {
                                     const newValue = clamp(parseFloat(event.target.value), 0, 100);
                                     const newRegionStates = [...regions];
                                     const newPercentageLeft = [...percentageLeft];
@@ -228,7 +228,7 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                                 }}/>
                             </td>
                             <td>
-                                <input type={"number"} step={0.1} value={percentageTop[i]} onChange={event => {
+                                <Form.Control type={"number"} step={0.1} value={percentageTop[i]} onChange={event => {
                                     const newValue = clamp(parseFloat(event.target.value), 0, 100);
                                     const newRegionStates = [...regions];
                                     const newPercentageTop = [...percentageTop];
@@ -293,6 +293,6 @@ export const FigureRegionModal = (props: FigureDropZoneModalProps) => {
                 </button>
             </div>
 
-        </ModalBody>
+        </Modal.Body>
     </Modal>;
 };

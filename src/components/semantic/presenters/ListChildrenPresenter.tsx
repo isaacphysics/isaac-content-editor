@@ -1,5 +1,5 @@
-import React, {MouseEvent, MutableRefObject, useCallback, useMemo} from "react";
-import {Button} from "reactstrap";
+import React, {JSX, MouseEvent, MutableRefObject, useCallback, useMemo} from "react";
+import {Button} from "react-bootstrap";
 
 import {Content, ContentBase} from "../../../isaac-data-types";
 import {useFixedRef} from "../../../utils/hooks";
@@ -28,7 +28,7 @@ export interface InserterProps {
 export function InsertButton({onClick}: { onClick: () => void }) {
     return <div className={styles.inserter}>
         <div className={styles.inserterAdd}>
-            <Button color="link" size="lg" onClick={(e) => {
+            <Button size="lg" variant="none" onClick={(e) => {
                 onClick();
                 e.currentTarget.blur();
             }}>➕</Button>
