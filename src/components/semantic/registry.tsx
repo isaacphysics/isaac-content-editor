@@ -189,6 +189,11 @@ const isaacLLMFreeTextQuestion: RegistryEntry = {
     bodyPresenter: ContentValueOrChildrenPresenter,
     footerPresenter: LLMQuestionPresenter,
 };
+// "I have completed this section": students see a checkbox, so there are no choices, answer or hints
+const isaacCompletionQuestion: RegistryEntry = {
+    ...question,
+    footerPresenter: undefined,
+};
 const item = {
     bodyPresenter: ItemPresenter,
 };
@@ -400,6 +405,7 @@ export const REGISTRY: Record<ContentType, RegistryEntry> = {
     isaacFreeTextQuestion: isaacStringMatchQuestion,
     freeTextRule: choice,
     isaacLLMFreeTextQuestion,
+    isaacCompletionQuestion,
     isaacRegexMatchQuestion: isaacStringMatchQuestion,
     inlineQuestionPart: isaacInlineQuestionPart,
     isaacInlineRegion: isaacInlineRegion,

@@ -25,6 +25,7 @@ const choicesType: Record<QUESTION_TYPES, CHOICE_TYPES | null> = {
     isaacClozeQuestion: "itemChoice",
     isaacDndQuestion: "dndChoice",
     isaacCoordinateQuestion: "coordinateChoice",
+    isaacCompletionQuestion: null,
 };
 
 export function ChoicesPresenter(props: PresenterProps<IsaacQuestionBase>) {

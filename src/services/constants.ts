@@ -131,6 +131,7 @@ export type QUESTION_TYPES =
     | "isaacFreeTextQuestion"
     | "isaacLLMFreeTextQuestion"
     | "isaacGraphSketcherQuestion"
+    | "isaacCompletionQuestion"
 ;
 
 export const HUMAN_QUESTION_TYPES: Record<QUESTION_TYPES, string> = {
@@ -151,6 +152,7 @@ export const HUMAN_QUESTION_TYPES: Record<QUESTION_TYPES, string> = {
     isaacFreeTextQuestion: "Free Text Question",
     isaacLLMFreeTextQuestion: "LLM-Marked Free Text Question",
     isaacGraphSketcherQuestion: "Graph Sketcher Question",
+    isaacCompletionQuestion: "Completion Checkbox",
 };
 
 export const QUESTION_TYPE_FIELDS: Record<QUESTION_TYPES, (keyof AnyQuestion)[]> = {
@@ -172,6 +174,7 @@ export const QUESTION_TYPE_FIELDS: Record<QUESTION_TYPES, (keyof AnyQuestion)[]>
     isaacFreeTextQuestion: [],
     isaacLLMFreeTextQuestion: ["markScheme", "maxMarks", "additionalMarkingInstructions", "markingFormula", "markingFormulaString", "markedExamples"],
     isaacGraphSketcherQuestion: ["maxNumCurves", "axisLabelX", "axisLabelY"],
+    isaacCompletionQuestion: [],
 };
 
 export const QUESTION_TYPE_DEFAULTS: Partial<Record<QUESTION_TYPES, Partial<AnyQuestion>>> = {

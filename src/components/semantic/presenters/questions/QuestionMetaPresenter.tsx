@@ -37,10 +37,14 @@ function changeQuestionType({doc, update, newType}: PresenterProps & {newType: Q
         delete newDoc.defaultFeedback;
     }
 
-    if (newType === "isaacLLMFreeTextQuestion") {
+    if (newType === "isaacLLMFreeTextQuestion" || newType === "isaacCompletionQuestion") {
         delete newDoc.answer;
         delete newDoc.choices;
         delete newDoc.defaultFeedback;
+    }
+
+    if (newType === "isaacCompletionQuestion") {
+        delete newDoc.hints;
     }
 
     update(newDoc);
