@@ -77,7 +77,7 @@ export function buildValuePresenter<V, D extends Content = Content>(
             return <>
                 {component}
                 <div className={`mt-2 ${styles.editButtons}`}>
-                    <Button onClick={(e) => {e.stopPropagation(); cancelChanges();}}>Cancel</Button>
+                    <Button onClick={(e) => {e.stopPropagation(); cancelChanges();}} variant="secondary">Cancel</Button>
                     <Button onClick={(e) => {e.stopPropagation(); setChanges();}}>Set</Button>
                 </div>
             </>;

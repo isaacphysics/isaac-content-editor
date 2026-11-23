@@ -88,7 +88,7 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
                 </div>
                 <br/>
                 <PopupCloseContext.Consumer>
-                    {close => <Button disabled={!!invalid} onClick={() => {
+                    {close => <Button variant="secondary" disabled={!!invalid} onClick={() => {
                         generateAndInsertInlinePart();
                         close?.();
                     }}>Insert</Button>}
