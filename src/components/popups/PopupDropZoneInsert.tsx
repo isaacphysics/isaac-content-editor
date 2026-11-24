@@ -61,29 +61,29 @@ export const PopupDropZoneInsert = ({wide, codemirror}: { wide?: boolean, codemi
         }}>{wide ? `Add ${isDndQuestion ? "DnD" : "cloze"} drop-zone` : "➕ drop-zone"}</button>
         <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
-                <Form.Label for={"drop-zone-width"}>Width:</Form.Label>
+                <Form.Label htmlFor={"drop-zone-width"}>Width:</Form.Label>
                 <Form.Control id={"drop-zone-width"} placeholder={"Default"} onChange={(e) => setWidth(e.target.value)} />
                 {widthInvalid && <Alert className="my-1" variant="warning">Width must be a positive number</Alert>}
-                <Form.Label className="mt-2" for={"drop-zone-height"}>Height:</Form.Label>
+                <Form.Label className="mt-2" htmlFor={"drop-zone-height"}>Height:</Form.Label>
                 <Form.Control id={"drop-zone-height"} placeholder={"Default"} onChange={(e) => setHeight(e.target.value)} />
                 {heightInvalid && <Alert className="my-1" variant="warning">Height must be a positive number</Alert>}
                 <hr/>
                 {isClozeQuestion && <>
-                    <Form.Label for={"drop-zone-index"}>Index override:</Form.Label>
+                    <Form.Label htmlFor={"drop-zone-index"}>Index override:</Form.Label>
                     <Form.Control id={"drop-zone-index"} placeholder={"None"} onChange={(e) => setIndex(e.target.value)} />
                     {indexInvalid && <Alert className="my-1" variant="warning">Index must be a positive integer</Alert>}
                 </>}
                 {isDndQuestion && <>
-                    <Form.Label for={"drop-zone-id"}>Drop-zone ID:</Form.Label>
+                    <Form.Label htmlFor={"drop-zone-id"}>Drop-zone ID:</Form.Label>
                     <Form.Control id={"drop-zone-id"} defaultValue={nextDropZoneId()} onChange={(e) => setId(e.target.value)} />
                     {idInvalid && <Alert className="my-1" variant="danger">Drop zone missing ID!</Alert>}
                 </>}
                 <hr/>
-                <Form.Label className="mt-2" for={"drop-zone-alt-text"}>Alt Text:</Form.Label>
+                <Form.Label className="mt-2" htmlFor={"drop-zone-alt-text"}>Alt Text:</Form.Label>
                 <Form.Control id={"drop-zone-alt-text"} placeholder={"Default"} onChange={(e) => setAltText(e.target.value)} />
                 <hr/>
                 <InputGroup className={"ps-4"}>
-                    <Form.Label for={"drop-zone-in-latex"}>Inside LaTeX?:</Form.Label>
+                    <Form.Label htmlFor={"drop-zone-in-latex"}>Inside LaTeX?:</Form.Label>
                     <Form.Check className="ms-1 rounded-1" id={"drop-zone-in-latex"} onChange={() => setInLatex(b => !b)} checked={inLatex} />
                 </InputGroup>
                 <hr/>

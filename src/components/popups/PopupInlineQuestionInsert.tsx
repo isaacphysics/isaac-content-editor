@@ -61,17 +61,17 @@ export const PopupInlineQuestionInsert = ({wide, codemirror}: { wide?: boolean, 
         }}>{wide ? "Add inline question part" : "➕ inline part"}</button>
         <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
-                <Form.Label for={"inline-part-index"}>Part ID</Form.Label>
+                <Form.Label htmlFor={"inline-part-index"}>Part ID</Form.Label>
                 <Form.Control id={"inline-part-index"} placeholder={"Default"} onChange={ifContainsNoSpacesThen(setID)} />
                 <hr className="mb-1"/>
                 {mode === "classes" ? <>
-                    <Form.Label for={"inline-part-classes"}>Classes:</Form.Label>
+                    <Form.Label htmlFor={"inline-part-classes"}>Classes:</Form.Label>
                     <Form.Control id={"inline-part-classes"} placeholder={"e.g. wf-8"} onChange={(e) => setClasses(e.target.value)}/>
                 </> : <>
-                    <Form.Label for={"inline-part-width"}>Width (px):</Form.Label>
+                    <Form.Label htmlFor={"inline-part-width"}>Width (px):</Form.Label>
                     <Form.Control id={"inline-part-width"} placeholder={"Default (100)"} onChange={ifValidNumericalInputThen(setWidth)}/>
                     <hr/>
-                    <Form.Label for={"inline-part-height"}>Height (px):</Form.Label>
+                    <Form.Label htmlFor={"inline-part-height"}>Height (px):</Form.Label>
                     <Form.Control id={"inline-part-height"} placeholder={"Default (27)"} onChange={ifValidNumericalInputThen(setHeight)}/>
                 </>}
                 <hr className="my-1"/>

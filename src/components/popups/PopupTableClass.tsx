@@ -52,7 +52,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
         <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
                 {isAda && <InputGroup className={"ps-4"}>
-                    <Form.Label for={"table-expandable"}>Expandable</Form.Label>
+                    <Form.Label htmlFor={"table-expandable"}>Expandable</Form.Label>
                     <Form.Check id="table-expandable" checked={expandable} onChange={e => { 
                         setExpandable(e.target.checked);
                         if (e.target.checked) {
@@ -64,7 +64,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                     />
                 </InputGroup>}
                 <InputGroup className={"ps-4"}>
-                    <Form.Label for={"table-topScrollable"}>Top-scrollable</Form.Label>
+                    <Form.Label htmlFor={"table-topScrollable"}>Top-scrollable</Form.Label>
                     <Form.Check id="table-topScrollable" checked={topScrollable} onChange={e => {
                         setTopScrollable(e.target.checked);
                         if (e.target.checked) {
@@ -74,7 +74,7 @@ export const PopupTableClass = ({wide, codemirror}: {wide: boolean, codemirror: 
                         }
                     }}/>
                 </InputGroup>
-                <Form.Label for={"table-classes"}>Class:</Form.Label>
+                <Form.Label htmlFor={"table-classes"}>Class:</Form.Label>
                 <Form.Control id={"table-classes"} placeholder={"e.g. text-center"} value={classes} onChange={(e) => setClasses(e.target.value)}/>
                 <hr/>
                 <PopupCloseContext.Consumer>

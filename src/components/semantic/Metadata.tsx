@@ -133,7 +133,7 @@ export function MetadataPresenter(props: PresenterProps & { metadata: MetaItemKe
             const id = `meta-label-${metaLabelId++}`;
             return <Row key={prop} className={styles.row}>
                 <Col xs={2} className={styles.label}>
-                    <Form.Label for={id}>{name}</Form.Label>
+                    <Form.Label htmlFor={id}>{name}</Form.Label>
                 </Col>
                 <Col xs={10}>
                     <Presenter {...rest} prop={prop} id={id} name={name} options={options} />

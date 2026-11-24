@@ -50,7 +50,7 @@ export const EditableDropdownDocPropFor = <
         const docProp = doc[prop] as unknown as string | undefined;
         const id = generateGuid();
         return <div className="d-flex align-items-center mb-3">
-            <Form.Label for={id} className="m-0 me-2">{label || "Select style:"}</Form.Label>
+            <Form.Label htmlFor={id} className="m-0 me-2">{label || "Select style:"}</Form.Label>
             <Select inputId={id}
                 isClearable
                 onChange={option => {
@@ -88,7 +88,7 @@ export const EditableDocPropWithStyle = <
         const docProp = doc[prop] as unknown as string | undefined;
         const id = generateGuid();
         return <div className="d-flex align-items-center mb-3">
-            <Form.Label for={id} className="m-0 me-2">{label || "Select style:"}</Form.Label>
+            <Form.Label htmlFor={id} className="m-0 me-2">{label || "Select style:"}</Form.Label>
             <Select inputId={id}
                 isClearable
                 onChange={option => {

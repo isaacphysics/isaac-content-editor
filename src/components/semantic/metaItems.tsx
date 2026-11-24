@@ -122,14 +122,14 @@ function ReservationsMetaPresenter(props: MetaItemPresenterProps<IsaacEventPage>
     const limitId = `${props.id}-limit`;
     return <Row className={styles.row}>
         <Col xs={props.doc.allowGroupReservations ? 2 : 8}>
-            <Form.Label for={props.id}>Enabled</Form.Label>
+            <Form.Label htmlFor={props.id}>Enabled</Form.Label>
         </Col>
         <Col xs={1}>
             <MetaItemPresenter {...props} prop="allowGroupReservations" name="Reservations Enabled" options={{type: "checkbox"}} />
         </Col>
         {props.doc.allowGroupReservations && <>
             <Col xs={3} className={styles.label}>
-                <Form.Label for={`${limitId}`}>Per-teacher Limit</Form.Label>
+                <Form.Label htmlFor={`${limitId}`}>Per-teacher Limit</Form.Label>
             </Col>
             <Col xs={5} className={styles.groupReservationLimit}>
                 <MetaItemPresenter {...props} id={limitId} prop="groupReservationLimit" name="Per-teacher Limit" options={{type: "number", defaultValue: 10}} />

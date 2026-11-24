@@ -22,7 +22,7 @@ export function FileNameModal(props: FileNameModalProps) {
         <Modal.Header closeButton>File: {props.actionName}</Modal.Header>
         <Modal.Body>
             <Form.Group>
-                <Form.Label for="rename-input">Please type a new name for the file. If no extension is provided, &quot;.json&quot; will be assumed.</Form.Label>
+                <Form.Label htmlFor="rename-input">Please type a new name for the file. If no extension is provided, &quot;.json&quot; will be assumed.</Form.Label>
                 <Form.Control id="rename-input" value={newName} onChange={e => setNewName(e.target.value)} autoFocus/>
             </Form.Group>
             {isJson && <Form.Group>

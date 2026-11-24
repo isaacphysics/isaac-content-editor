@@ -72,36 +72,36 @@ export const PopupGlossaryTermSelect = ({wide, codemirror}: { wide?: boolean, co
         <Popup popUpRef={popupRef} onClose={resetState}>
             <Container className={styles.cmPanelPopup}>
                 {isPhy && <>
-                    <Form.Label for={"glossary-subject-select"}>Select subject:</Form.Label>
+                    <Form.Label htmlFor={"glossary-subject-select"}>Select subject:</Form.Label>
                     <Select inputId="glossary-subject-select"
                         isClearable
                         onChange={e => setFilterSubject(e ? e.value : undefined)}
                         options={subjectListOptions}
                         placeholder={"Type to search subjects"} />
-                    <Form.Label for={"glossary-stage-select"}>Select stage:</Form.Label>
+                    <Form.Label htmlFor={"glossary-stage-select"}>Select stage:</Form.Label>
                     <Select inputId="glossary-stage-select"
                         isClearable
                         onChange={e => setFilterStage(e ? e.value : undefined)}
                         options={stageListOptions}
                         placeholder={"Type to search stages"} />
                 </>}
-                <Form.Label for={"glossary-term-id-select"}>Select glossary term:</Form.Label>
+                <Form.Label htmlFor={"glossary-term-id-select"}>Select glossary term:</Form.Label>
                 <Select inputId="glossary-term-id-select"
                     onChange={e => setGlossaryTerm(e ? {value: e.value, label: e.label} : undefined)}
                     options={glossaryTermOptions}
                     placeholder={"Type to search terms"} />
                 <hr/>
                 <InputGroup className={"ps-4"}>
-                    <Form.Label for={"glossary-term-full-or-inline"}>Inline glossary term?</Form.Label>
+                    <Form.Label htmlFor={"glossary-term-full-or-inline"}>Inline glossary term?</Form.Label>
                     <Form.Check id="glossary-term-full-or-inline" onChange={e => setIsInlineTerm(e.target.checked)} checked={isInlineTerm}/>
                 </InputGroup>
                 {isInlineTerm ?
                     <>
                         <InputGroup className={"ps-4"}>
-                            <Form.Label for={"glossary-term-titled-or-not"}>Titled glossary term?</Form.Label>
+                            <Form.Label htmlFor={"glossary-term-titled-or-not"}>Titled glossary term?</Form.Label>
                             <Form.Check id="glossary-term-titled-or-not" onChange={e => setIsTitledTerm(e.target.checked)} checked={isTitledTerm}/>
                         </InputGroup>
-                        <Form.Label for={"term-text-input"}>Text to display:</Form.Label>
+                        <Form.Label htmlFor={"term-text-input"}>Text to display:</Form.Label>
                         <Form.Control id={"term-text-input"} placeholder={glossaryTerm?.label ?? "None"} value={glossaryTermText} onChange={(e) => setGlossaryTermText(e.target.value)} />
                     </>
                     :
