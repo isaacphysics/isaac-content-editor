@@ -240,6 +240,7 @@ export function FigurePresenter(props: PresenterProps<Figure>) {
 
         {/*Set alt text to empty string for decorative images*/}
         <Form.Check
+            id="decorative-figure"
             checked={doc.decorative ?? false}
             label="Decorative (sets empty alt text)"
             onChange={(e) => {
