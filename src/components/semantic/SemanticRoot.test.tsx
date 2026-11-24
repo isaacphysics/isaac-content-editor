@@ -114,6 +114,8 @@ function testFile(file: string) {
 }
 
 let errorLog: unknown[] = [];
+// NOTE: These tests require a local content reposity to run, so can't be run on GitHub Actions
+// TODO: Fix these tests so they can actually run locally
 describe.skip("can render existing docs without errors", () => {
     // Capture any errors thrown when rendering
      
