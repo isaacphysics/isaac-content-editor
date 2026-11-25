@@ -1,7 +1,7 @@
 import React, {useContext, useMemo, useState} from "react";
 import {contentsPath, GitHubRepository} from "../services/github";
 import {components, GroupBase, InputActionMeta, SingleValue} from "react-select";
-import {AppContext} from "../App";
+import {AppContext} from "../AppContext";
 import useSWR from "swr";
 import CreatableSelect from "react-select/creatable";
 

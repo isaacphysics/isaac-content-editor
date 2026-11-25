@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input } from "reactstrap";
+import { Button, Form } from "react-bootstrap";
 import useSWR from "swr";
 
 import { stagingFetcher } from "../../../services/isaacApi";
@@ -11,7 +11,7 @@ import styles from "../styles/tags.module.css";
 
 export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {subjectsOnly?: boolean}) {
     const [searchString, setSearchString] = useState("");
-    const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const {data: tagList} = useSWR<string[]>(
         searchString !== "" ? "content/tags" : null,
         stagingFetcher,
@@ -59,7 +59,7 @@ export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {sub
         update({...doc, tags});
     }
 
-    function onKeyPress(e: React.KeyboardEvent) {
+    function onKeyDown(e: React.KeyboardEvent) {
         if (e.key === "Enter") {
             addTag(searchString);
             e.preventDefault();
@@ -67,24 +67,24 @@ export function TagsPresenter({doc, update, subjectsOnly}: PresenterProps & {sub
     }
 
     return <div className={styles.wrapper}>
-        {doc.tags?.map(tag => <Button key={tag} outline onClick={() => removeTag(tag)}>{tag} ➖</Button>)}
-        <Input value={searchString}
+        {doc.tags?.map(tag => <Button key={tag} variant="outline-secondary" onClick={() => removeTag(tag)}>{tag} ➖</Button>)}
+        <Form.Control value={searchString}
             onChange={(e) => setSearchString(e.target.value.toLowerCase())}
             placeholder={`Type to add ${subjectsOnly ? "subjects" : "tags"}...`}
-            innerRef={inputRef}
-            onKeyPress={onKeyPress}
+            ref={inputRef}
+            onKeyDown={onKeyDown}
         />
         {searchString !== "" && <div>
-            <Button onClick={() => setShowTagList(!showTagList)}>
+            <Button variant="secondary" onClick={() => setShowTagList(!showTagList)}>
                 {showTagList ? 
                     `Hide ${subjectsOnly ? "subjects" : "tags"}` :
                     `Show available ${subjectsOnly ? "subjects" : "tags"}`}
             </Button>
             {showTagList && (filteredTagList?.map((tag) =>
-                <Button key={tag} outline color="primary" onClick={() => addTag(tag)}>{tag} ➕</Button>
+                <Button key={tag} variant="outline-primary" onClick={() => addTag(tag)}>{tag} ➕</Button>
             ) ?? <em>Loading...</em>)}
             {!subjectsOnly && // Don't allow the addition of new subjects if it is subjectsOnly
-                <Button color="success" onClick={() => addTag(searchString)}>Create new tag: {searchString} ➕</Button>}
+                <Button variant="success" onClick={() => addTag(searchString)}>Create new tag: {searchString} ➕</Button>}
         </div>}
     </div>;
 }

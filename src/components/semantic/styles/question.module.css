@@ -74,6 +74,10 @@
     color: #000 !important;
 }
 
+.noCaret::after {
+    display: none;
+}
+
 .itemsChoiceInserter {
     margin-top: 0.5em;
     width: 100%;

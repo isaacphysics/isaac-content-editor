@@ -7,7 +7,7 @@ import { CheckboxDocProp } from "../../props/CheckboxDocProp";
 import { parseMarkingFormula } from "../../../../services/llmMarkingFormula";
 import styles from "../../styles/editable.module.css";
 import { evaluateMarkingFormula, evaluateMarkTotal, tallyMarkUses } from "../../../../utils/llmMarkingFormula";
-import { FormFeedback } from "reactstrap";
+import { Form } from "react-bootstrap";
 import { HintsPresenter } from "./QuestionMetaPresenter";
 
 export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuestion>) {
@@ -195,7 +195,7 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                     <td>
                         <strong><pre>maxMarks</pre></strong>
                         {doc.maxMarks === undefined && 
-                            <FormFeedback className={styles.feedback}> maxMarks is a required field </FormFeedback>
+                            <Form.Control.Feedback className={styles.feedback}> maxMarks is a required field </Form.Control.Feedback>
                         }
                     </td>
                     <td>
@@ -213,9 +213,9 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                         <strong>Pass mark</strong>
                         <div>
                             {(doc.passMark === undefined && doc.maxMarks !== undefined) ?
-                                <FormFeedback className={styles.feedback}> Using maxMarks value as default pass mark </FormFeedback> :
+                                <Form.Control.Feedback className={styles.feedback}> Using maxMarks value as default pass mark </Form.Control.Feedback> :
                                 (doc.passMark !== undefined && doc.maxMarks !== undefined && doc.passMark > doc.maxMarks) &&
-                                <FormFeedback className={styles.feedback}> Pass mark cannot be greater than max marks </FormFeedback>
+                                <Form.Control.Feedback className={styles.feedback}> Pass mark cannot be greater than max marks </Form.Control.Feedback>
                             }
                         </div>
                     </td>
@@ -236,22 +236,21 @@ export function LLMQuestionPresenter(props: PresenterProps<IsaacLLMFreeTextQuest
                         <br/>
                         <div>
                             {(!!validateMarkingFormula(doc.markingFormulaString) || !doc.markingFormulaString) && 
-                                <FormFeedback className={styles.feedback}> Using default marking formula </FormFeedback>
+                                <Form.Control.Feedback className={styles.feedback}> Using default marking formula </Form.Control.Feedback>
                             }
                         </div>
                         <div>
                             {doc.markingFormulaString && missingMarks.length > 0 && 
-                                <FormFeedback className={styles.feedback}>
+                                <Form.Control.Feedback className={styles.feedback}>
                                     {"Missing the following mark(s): " + missingMarks.reduce((markList, currentMark) => markList + ", " + currentMark)}
-                                </FormFeedback>
+                                </Form.Control.Feedback>
                             }
                         </div>
                     </td>
                     <td>
                         <div className="flex-fill">
                             <EditableText
-                                multiLine={true}
-                                block={true}
+                                multiLine block
                                 label="Marking formula"
                                 placeHolder="e.g. MIN(maxMarks, SUM(... all marks ...))"
                                 text={doc.markingFormulaString}

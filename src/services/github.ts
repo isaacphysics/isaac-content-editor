@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import useSWR, {Cache, mutate} from "swr";
 
 import {authorizationURL, doAuth} from "./auth";
-import {AppContext} from "../App";
+import {AppContext} from "../AppContext";
 import {encodeBase64} from "../utils/base64";
 import {Entry} from "../components/FileBrowser";
 import {dirname, resolveRelativePath} from "../utils/strings";

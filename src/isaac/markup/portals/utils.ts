@@ -1,4 +1,4 @@
-import {useCallback, useState} from "react";
+import {JSX, useCallback, useState} from "react";
 
 export type PortalInHtmlHook = (html: string) => [string, (ref?: HTMLElement) => JSX.Element[]];
 
@@ -38,9 +38,9 @@ export const useTableCompatiblePortalsInHtml = portalsInHtmlHookBuilder(TABLE_CO
 
 // This is a hook that abstracts the callback ref pattern, allowing for updates to a refs value (specifically one
 // referring to an element) to cause component updates
-export function useStatefulElementRef<T>(): [T | undefined, (ref: any) => void] {
+export function useStatefulElementRef<T>(): [T | undefined, (ref: T) => void] {
     const [ ref, setRef ] = useState<T>();
-    const updateRef = useCallback(ref => {
+    const updateRef = useCallback((ref: T) => {
         if (ref !== null) {
             setRef(ref);
         }
