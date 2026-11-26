@@ -1,6 +1,6 @@
 import { ContextType } from "react";
 
-import { AppContext } from "../App";
+import { AppContext } from "../AppContext";
 import { dirname, extname, generateGuid, resolveRelativePath } from "../utils/strings";
 import { ContentType } from "../components/semantic/registry";
 import { Content } from "../isaac-data-types";
@@ -185,7 +185,7 @@ async function doSaveAs(context: ContextType<typeof AppContext>, action: ActionF
         const basePath = dirname(oldPath);
         const newPath = basePath + "/" + choice.newName;
 
-        let alteredContent: Content | string;
+        let alteredContent: Content | string = context.editor.getCurrentDocAsString();
         try {
             alteredContent = {
                 ...context.editor.getCurrentDoc(),

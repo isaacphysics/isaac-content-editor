@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { Alert, Input, Button } from "reactstrap";
+import { Alert, Form, Button } from "react-bootstrap";
 import { ContentBase, Content } from "../../../isaac-data-types";
 import { PresenterProps } from "../registry";
 import styles from "../styles/tags.module.css";
@@ -46,13 +46,13 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
     const context = useContext(ArrayPropValueConstraintContext);
 
     if (doc[prop] !== undefined && !Array.isArray(doc[prop])) {
-        return <Alert color={"warning"}>
+        return <Alert variant={"warning"}>
             The property <code>{prop.toString()}</code> is not an array, but is expected to be.
         </Alert>;
     }
 
     if (!context) {
-        return <Alert color={"warning"}>
+        return <Alert variant={"warning"}>
             The <code>{prop.toString()}</code> presenter is missing a context provider. Try wrapping it in an <code>ArrayPropValueConstraintContext</code>.
         </Alert>;
     }
@@ -106,7 +106,7 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
             </Droppable>
         </DragDropContext>
 
-        <Input value={context?.searchString} onChange={(e) => context?.setSearchString(e.target.value)}
+        <Form.Control value={context?.searchString} onChange={(e) => context?.setSearchString(e.target.value)}
             placeholder={`Type to add ${String(prop)}...`} className="mt-2"
         />
         {context?.searchString !== "" && <div>
@@ -117,7 +117,7 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
                         return null;
                     }
                     return <Button 
-                        key={index} outline 
+                        key={index} variant="outline-secondary"
                         onClick={() => addItemToArray(context.mapContentToId(content))}
                         {...calculateButtonProps(content)}
                     >
@@ -126,7 +126,7 @@ export function ArrayPropPresenterInner<T extends ContentBase>({doc, update, pro
                     </Button>;
                 }) ?? <em>Loading...</em>)
                 : <Button 
-                    outline onClick={() => {
+                    variant="outline-secondary" onClick={() => {
                         addItemToArray(context.searchString);
                         context.setSearchString("");
                     }}

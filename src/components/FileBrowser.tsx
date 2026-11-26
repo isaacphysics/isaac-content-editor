@@ -8,9 +8,9 @@ import React, {
     useRef,
     useState
 } from "react";
-import { ListGroup, ListGroupItem, Spinner, } from "reactstrap";
+import { ListGroup, ListGroupItem, Spinner, } from "react-bootstrap";
 
-import { AppContext } from "../App";
+import { AppContext } from "../AppContext";
 import styles from "../styles/editor.module.css";
 import { PopupMenu, PopupMenuRef } from "./popups/PopupMenu";
 import {GitHubRepository, useGithubContents} from "../services/github";
@@ -61,7 +61,7 @@ export const FileItem: FunctionComponent<FileItemProps> = (props) => {
     return <ListGroupItem
         action
         id={pathToId(path)}
-        tag="button"
+        as="button"
         className={`${className ?? ""} ${styles.fileBrowserItem} ${isSelected ? styles.fileBrowserItemSelected : ""}`}
         onClick={onClick}
         {...rest}
@@ -76,7 +76,7 @@ export function FilesList({open, error, data, menuRef, refreshParent}: {open: bo
     if (!open) return null;
     if (error) return <div className={styles.fileBrowserList}><em>Error loading data, {error}</em></div>;
     if (!data) return <div className={styles.fileBrowserList}><Spinner size="sm" /> Loading...</div>;
-    return <ListGroup flush className={styles.fileBrowserList}>
+    return <ListGroup variant="flush" className={styles.fileBrowserList}>
         {data
             .sort((a: Entry, b: Entry) => a.type === b.type ? 0 : a.type === "dir" ? -1 : 1)
             .map((entry: Entry) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Label } from "reactstrap";
+import { Form } from "react-bootstrap";
 
 import { GlossaryTerm } from "../../../isaac-data-types";
 
@@ -16,9 +16,9 @@ export function GlossaryTermPresenter(props: PresenterProps<GlossaryTerm>) {
         <div className={styles.controls}>
             <EditableValueProp {...props} placeHolder="Glossary term" block />
             <EditableIDProp {...props} label="Term ID" block />
-            <Label>{siteSpecific("Subjects", "Tags")}</Label> <TagsPresenter {...props} subjectsOnly={isPhy} />
+            <Form.Label>{siteSpecific("Subjects", "Tags")}</Form.Label> <TagsPresenter {...props} subjectsOnly={isPhy} />
             {isPhy && <>
-                <Label>Stage</Label> <StagePresenter {...props} />
+                <Form.Label>Stage</Form.Label> <StagePresenter {...props} />
             </>}
         </div>
         <div className={styles.explanation}>

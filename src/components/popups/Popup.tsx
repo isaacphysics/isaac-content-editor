@@ -8,8 +8,7 @@ import React, {
     useState
 } from "react";
 import styles from "../../styles/editor.module.css";
-// @ts-ignore
-import Portal from "reactstrap/src/Portal";
+import Portal from 'react-overlays/Portal';
 
 export const PopupCloseContext = React.createContext<(() => void) | null>(null);
 
@@ -81,7 +80,7 @@ export function Popup({ popUpRef, children, onClose }: {
     }, [onClose]);
 
     return isOpen ?
-        <Portal>
+        <Portal container={document.body}>
             <div
                 className={styles.popup}
                 style={{

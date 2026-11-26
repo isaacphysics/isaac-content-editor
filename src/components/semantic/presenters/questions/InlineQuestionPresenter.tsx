@@ -13,7 +13,7 @@ import { extractValueOrChildrenText } from "../../../../utils/content";
 import { SemanticDocProp } from "../../props/SemanticDocProp";
 import { ChoicesPresenter } from "../ChoicesPresenter";
 import { MultipleChoiceQuestionPresenter } from "./MultipleChoiceQuestionPresenter";
-import { Button } from "reactstrap";
+import { Button } from "react-bootstrap";
 import styles from "../../styles/question.module.css";
 import { NumericQuestionPresenter } from "./NumericQuestionPresenter";
 
@@ -92,8 +92,8 @@ export function InlinePartInserter({insert, insertMultiple, position, collection
     }
 
     return <div className={styles.inlineItemsChoiceInserter}>
-        <Button color="primary" onClick={() => addMultipleParts(unusedParts)} disabled={lengthOfCollection === calculatedPartsFromContent.length}>Detect and add missing inline regions</Button>
-        <Button color="secondary" onClick={() => addPart(undefined)} disabled={collection?.some(part => part.id === undefined)}>Add new inline question part</Button>
+        <Button onClick={() => addMultipleParts(unusedParts)} disabled={lengthOfCollection === calculatedPartsFromContent.length}>Detect and add missing inline regions</Button>
+        <Button variant="secondary" onClick={() => addPart(undefined)} disabled={collection?.some(part => part.id === undefined)}>Add new inline question part</Button>
     </div>;
 }
 

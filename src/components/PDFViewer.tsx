@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Alert, Button, ButtonGroup, Container, Input, Spinner} from "reactstrap";
+import {Alert, Button, ButtonGroup, Container, Form, Spinner} from "react-bootstrap";
 import { Document, Page } from "react-pdf";
 
-import { AppContext } from "../App";
+import { AppContext } from "../AppContext";
 import { useGithubContents } from "../services/github";
 import { TopMenu } from "./TopMenu";
 import { PDF_FILE_HEADER } from "../utils/base64";
@@ -36,19 +36,19 @@ export function PDFViewer() {
 
     if (error) {
         return <div className={styles.centered}>
-            <Alert color="danger">{error}</Alert>
+            <Alert variant="danger">{error}</Alert>
         </div>;
     }
 
     if (!data) {
         return <div className={styles.centered}>
-            <Spinner size="large" />
+            <Spinner />
         </div>;
     }
 
     if (invalid) {
         return <div className={styles.centered}>
-            <Alert color="warning">This content does not appear to be a PDF.</Alert>
+            <Alert variant="warning">This content does not appear to be a PDF.</Alert>
         </div>;
     }
 
@@ -66,25 +66,25 @@ export function PDFViewer() {
         <TopMenu />
         {loaded && <div className={styles.pdfNavigation}>
             <ButtonGroup className={styles.pdfNavButtons}>
-                <Button disabled={pageNumber <= 1} onClick={() => setPageNumber(p => Math.max(p - 1, 1))}>&lt;</Button>
-                <Button disabled={pageNumber >= numPages} onClick={() => setPageNumber(p => Math.min(p + 1, numPages))}>&gt;</Button>
+                <Button variant="secondary" disabled={pageNumber <= 1} onClick={() => setPageNumber(p => Math.max(p - 1, 1))}>&lt;</Button>
+                <Button variant="secondary" disabled={pageNumber >= numPages} onClick={() => setPageNumber(p => Math.min(p + 1, numPages))}>&gt;</Button>
             </ButtonGroup>
             <h5>Page {editingPageNum
                 ? <>
-                    <Input
+                    <Form.Control
                         className={"d-inline-block"}
                         value={pendingPageNumber}
                         onChange={e => setPendingPageNumber(parseInt(e.target.value) || pageNumber)}
                         onKeyDown={e => e.key === "Enter" && updatePageNumber()}
                     />
-                    <Button onClick={updatePageNumber} className={"d-inline-block ms-2"}>Go</Button>
+                    <Button variant="secondary" onClick={updatePageNumber} className={"d-inline-block ms-2"}>Go</Button>
                 </>
                 : <button onClick={() => {setEditingPageNum(true); setPendingPageNumber(pageNumber);}}>{pageNumber}/{numPages}</button>
             }</h5>
         </div>}
 
         <Container fluid className={styles.pdfContainer}>
-            <Document renderMode={"svg"} className={styles.pdfDocument} file={`data:pdf;base64,${appContext.editor.getCurrentDocAsString()}`} onLoadSuccess={onDocumentLoadSuccess}>
+            <Document renderMode={"canvas"} className={styles.pdfDocument} file={`data:pdf;base64,${appContext.editor.getCurrentDocAsString()}`} onLoadSuccess={onDocumentLoadSuccess}>
                 <Page renderAnnotationLayer={false} renderTextLayer={false} className={styles.pdfPage} pageNumber={pageNumber} />
             </Document>
         </Container>

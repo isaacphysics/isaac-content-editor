@@ -1,7 +1,7 @@
 import React from "react";
 import {EditableDocPropFor} from "../../props/EditableDocProp";
 import styles from "../../styles/question.module.css";
-import {Button} from "reactstrap";
+import {Button} from "react-bootstrap";
 import {IsaacSymbolicChemistryQuestion, IsaacSymbolicQuestion} from "../../../../isaac-data-types";
 import {EditableText} from "../../props/EditableText";
 import {CheckboxDocProp} from "../../props/CheckboxDocProp";
@@ -69,7 +69,7 @@ function SymbolicMetaSymbols({doc, update, metaSymbols}: PresenterProps<IsaacSym
         {metaSymbols.map(([symbol, label]) =>
             <Button key={symbol}
                 size="sm"
-                color={hasSymbol(doc.availableSymbols, symbol) ? "primary" : "secondary"}
+                variant={hasSymbol(doc.availableSymbols, symbol) ? "primary" : "secondary"}
                 onClick={() => toggle(symbol)}>
                 {label}
             </Button>
@@ -91,10 +91,10 @@ export function SymbolicChemistryQuestionPresenter(props: PresenterProps<IsaacSy
         <SymbolicQuestionPresenterHead {...props}/>
         {!props.doc.isNuclear && <SymbolicMetaSymbols {...props} metaSymbols={availableChemistryMetaSymbols} />}
         <hr />
-        <CheckboxDocProp {...props} className="d-inline-block" prop="isNuclear" label="Nuclear question" />
-        <CheckboxDocProp {...props} className="d-inline-block" prop="allowPermutations" label="Allow molecule permutations" disabled={props.doc.isNuclear} />
-        <CheckboxDocProp {...props} className="d-inline-block" prop="allowScalingCoefficients" label="Allow coefficient scaling" disabled={props.doc.isNuclear} />
-        <CheckboxDocProp {...props} prop="showInequalitySeed" label="Show seed in inequality before opening the editor" />
+        <CheckboxDocProp {...props} className="d-inline-flex" prop="isNuclear" label="Nuclear question" />
+        <CheckboxDocProp {...props} className="d-inline-flex" prop="allowPermutations" label="Allow molecule permutations" disabled={props.doc.isNuclear} />
+        <CheckboxDocProp {...props} className="d-inline-flex" prop="allowScalingCoefficients" label="Allow coefficient scaling" disabled={props.doc.isNuclear} />
+        <CheckboxDocProp {...props} className="d-inline-flex" prop="showInequalitySeed" label="Show seed in inequality before opening the editor" />
         <div className={styles.editableFullwidth}>
             <EditableFormulaSeed {...props}/>
         </div>

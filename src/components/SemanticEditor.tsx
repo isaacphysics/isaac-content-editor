@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react';
-import { Alert, Spinner } from "reactstrap";
+import { Alert, Spinner } from "react-bootstrap";
 
-import { AppContext } from "../App";
+import { AppContext } from "../AppContext";
 import { decodeBase64 } from "../utils/base64";
 import { Content } from '../isaac-data-types';
 import { SemanticRoot } from "./semantic/SemanticRoot";
@@ -74,14 +74,14 @@ export function SemanticEditor() {
 
     if (error) {
         return <div className={styles.centered}>
-            <Alert color="danger">{error}</Alert>
+            <Alert variant="danger">{error}</Alert>
         </div>;
     }
 
     // If we don't have github data yet, or the doc is waiting to be updated, then show a spinner
     if (!data || (appContext.selection.getSelection()?.path !== appContext.editor.getCurrentDocPath())) {
         return <div className={styles.centered}>
-            <Spinner size="large" />
+            <Spinner/>
         </div>;
     }
 
