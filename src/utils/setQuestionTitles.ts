@@ -7,6 +7,9 @@ const formatTitle = (accordionIndex: number, questionIndex: number, onlyQuestion
     return `${formatTabIndex(accordionIndex, "alphabetical")}${onlyQuestion ? "" : `.${convertNumberToRoman(questionIndex + 1).toLowerCase()}`}`;
 };
 
+// Completion checkboxes count as questions but students never see their titles, so they aren't numbered
+const isNumberedQuestion = (content: Content) => (content.type || "") in HUMAN_QUESTION_TYPES && content.type !== "isaacCompletionQuestion";
+
 const isTitleStandardFormat = (title?: string) => {
     if (!title) return true;
 
@@ -25,14 +28,14 @@ const doQuestionTitleLoop = (content: Content | string, writeNewTitles?: boolean
             const accordion = child as Content;
             accordion.children?.forEach((accordionChild, accordionIndex) => {
                 const accordionSection = accordionChild as Content;
-                const questionCount = accordionSection.children?.filter(c => (c.type || "") in HUMAN_QUESTION_TYPES).length ?? 0;
+                const questionCount = accordionSection.children?.filter(c => isNumberedQuestion(c as Content)).length ?? 0;
                 const inlineQuestionCount = accordionSection.children?.reduce((acc, c) => acc + (c.type === "isaacInlineRegion" ?
                     (c as IsaacInlineQuestion).inlineQuestions?.length ?? 0 : 0), 0) ?? 0;
                 const containsOneQuestion = questionCount + inlineQuestionCount === 1;
 
                 let questionIndex = 0;
                 accordionSection.children?.forEach((sectionChild) => {
-                    if ((sectionChild.type || "") in HUMAN_QUESTION_TYPES) {
+                    if (isNumberedQuestion(sectionChild as Content)) {
                         const sectionQuestion = sectionChild as Content;
                         if (writeNewTitles && (overrideOldTitles || isTitleStandardFormat(sectionQuestion.title))) {
                             sectionQuestion.title = formatTitle(accordionIndex, questionIndex, containsOneQuestion);
