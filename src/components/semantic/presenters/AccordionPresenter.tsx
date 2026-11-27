@@ -158,6 +158,7 @@ export function AccordionPresenter(props: PresenterProps) {
 
     const {keyList, index, updateCurrentChild} = allProps;
 
+    const currentChildTags = currentChild?.tags ?? [];
     const currentChildDisplay = currentChild?.display as Display;
     const setCurrentChildDisplay = (display: Display | undefined) => updateCurrentChild({
         ...currentChild,
@@ -183,7 +184,20 @@ export function AccordionPresenter(props: PresenterProps) {
                 currentChild ? <>
                     <div className={styles.meta}>
                         <h3><EditableTitleProp ref={editTitleRef} {...currentChildProps} placeHolder="Section title" hideWhenEmpty /></h3>
-                        <div className="d-flex justify-content-end">
+                        <div className="d-flex flex-column align-items-end">
+                            <Form.Label className="d-inline-flex">
+                                <Form.Check
+                                    className="me-1"
+                                    checked={currentChildTags.includes("noIndex")}
+                                    onChange={(e) => updateCurrentChild({
+                                        ...currentChild,
+                                        tags: e.target.checked
+                                            ? [...currentChildTags, "noIndex"]
+                                            : currentChildTags.filter(tag => tag !== "noIndex"),
+                                    })}
+                                />
+                                {"Disable section index display"}
+                            </Form.Label>
                             <ExpandedPresenter {...currentChildProps}/>
                         </div>
                         <div className={styles.allAudienceControls}>
