@@ -188,15 +188,15 @@ export function AccordionPresenter(props: PresenterProps) {
                             <Form.Label className="d-inline-flex">
                                 <Form.Check
                                     className="me-1"
-                                    checked={currentChildTags.includes("noIndex")}
+                                    checked={currentChildTags.includes("disableIndexDisplay")}
                                     onChange={(e) => updateCurrentChild({
                                         ...currentChild,
                                         tags: e.target.checked
-                                            ? [...currentChildTags, "noIndex"]
-                                            : currentChildTags.filter(tag => tag !== "noIndex"),
+                                            ? [...currentChildTags, "disableIndexDisplay"]
+                                            : currentChildTags.filter(tag => tag !== "disableIndexDisplay"),
                                     })}
                                 />
-                                {"Disable section index display"}
+                                Disable section index display
                             </Form.Label>
                             <ExpandedPresenter {...currentChildProps}/>
                         </div>
